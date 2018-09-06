@@ -311,11 +311,16 @@ export default {
     height: 32px;
     border-radius: 50%;
     overflow: hidden;
+    position: relative;
   }
   .header_user_avatar img{
-    width: 32px;
-    height: 32px;
-    float: left;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
   }
 </style>
 

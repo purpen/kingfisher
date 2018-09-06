@@ -34,8 +34,8 @@
       </Form>
       <!-------------------->
       <Form v-show="current === 1" ref="form" :model="form" :rules="ruleForm" class="wid-360 prepend-63">
-        <FormItem label="" prop="username">
-          <Input type="text" v-model="form.username" placeholder="您的账户名和登录名">
+        <FormItem label="" prop="userName">
+          <Input type="text" v-model="form.userName" placeholder="您的账户名和登录名">
             <span slot="prepend">用户名</span>
           </Input>
         </FormItem>
@@ -315,7 +315,7 @@
         }
       }
       return {
-        current: 0,          // 步骤条
+        current: 2,          // 步骤条
         isLoadingBtn: false, // loading
         time: 0,             // 验证码时间
         sendSms: false,      // 验证码发送成功后提示
@@ -336,7 +336,7 @@
           smsCode: '',        // 短信验证码
           password: '',       // 密码
           checkPassword: '',  // 重复密码
-          username: '',       // 用户名
+          userName: '',       // 用户名
           // ----------
           name: '',             // 姓名
           store_name: '',       // 门店名称
@@ -344,6 +344,11 @@
           buyer_city: '',       // 市
           buyer_county: '',     // 区
           buyer_township: '',   // 镇
+          enter_province: '',  // 企业省
+          enter_city: '',     // 企业市
+          enter_county: '',   // 企业区
+          ein: '',           // 税号
+          enter_phone: '',           // 企业电话
           store_address: ''    // 门店详细地址
           // main: ''              // 主要情况
         },
@@ -392,7 +397,7 @@
         },
         // 2
         ruleForm: {
-          username: [
+          userName: [
             {required: true, message: '请输入用户名', trigger: 'blur'},
             { min: 2, max: 6, message: '用户名长度在2-6字符之间！', trigger: 'blur' }
           ],
@@ -488,21 +493,24 @@
               phone: this.form.phone,                 // 手机号
               code: this.form.smsCode,                // 短信验证码
               password: this.form.password,           // 密码
-              account: this.form.username,            // 用户名
+              account: this.form.userName,            // 用户名
               name: this.form.name,                   // 姓名
               store_name: this.form.name,             // 门店名称
-              buyer_province: this.form.buyer_province,   // 省
-              buyer_city: this.form.buyer_city,       // 市
-              buyer_county: this.form.buyer_county,   // 区
-              store_address: this.form.store_address, // 详细地址
-              random: this.random,                    // 随机数
-              operation_situation: '',                // 主要情况
-              position: '',                           // 职位
+              province_id: this.form.buyer_province,   // 省
+              city_id: this.form.buyer_city,       // 市
+              county_id: this.form.buyer_county,   // 区
+              enter_province: this.form.enter_province,   // 企业省
+              enter_city: this.form.enter_city,       // 企业市
+              enter_county: this.form.enter_county,   // 企业区
+              ein: this.form.ein,                     // 税号
+              enter_phone: this.form.enter_phone,     // 企业电话
+              random: this.random,                      // 随机数
+              operation_situation: '',                  // 主要情况
+              position: '',                             // 职位
               full_name: '',        // 企业全称
               legal_person: '',     // 法人姓名
               legal_phone: '',      // 法人手机号
-              legal_number: '',     // 法人身份证
-              credit_code: ''       // 社会信用代码
+              legal_number: ''     // 法人身份证
             }
             that.isLoadingBtn = true
             // 验证通过，注册

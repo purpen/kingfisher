@@ -72,7 +72,7 @@
                     <!--<p>待付款</p>-->
                     <!--<p>待收货</p>-->
                     <!--<p>已取消</p>-->
-                    <router-link to="/login"><p class="font-12"></p>订单详情</router-link>
+                    <router-link :to="{name: 'orderDetails'}"><p class="font-12"></p>订单详情</router-link>
                   </td>
                   <td class="wid_15 border-l text-style-p-linhei text-style-p-color" style="width: 15%">
                     <div class="display-felx-c">
