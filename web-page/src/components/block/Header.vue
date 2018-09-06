@@ -30,8 +30,7 @@
                   <div class="header_user_avatar">
                     <img :src="isUserImg" alt="">
                   </div>
-                    <!--{{ eventUser.account }}-->
-                  韦鹏888
+                    {{ eventUser.account }}
                 </template>
                     <Menu-item name="my">个人中心</Menu-item>
                     <Menu-item name="myProduct">我的产品</Menu-item>

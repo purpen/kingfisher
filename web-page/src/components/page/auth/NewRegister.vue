@@ -399,7 +399,7 @@
         ruleForm: {
           userName: [
             {required: true, message: '请输入用户名', trigger: 'blur'},
-            { min: 2, max: 6, message: '用户名长度在2-6字符之间！', trigger: 'blur' }
+            { min: 2, max: 16, message: '用户名长度在2-16字符之间！', trigger: 'blur' }
           ],
           password: [
             { required: true, message: '请输入密码', trigger: 'change' },

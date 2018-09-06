@@ -43,11 +43,11 @@
                             <Option :value="d.value" v-for="(d, index) in enterpriseCounty.list" :key="index">{{ d.label }}</Option>
                           </Select>
                         </Col>
-                        <Col :span="4">
-                          <Select v-model="enterpriseTown.id" number label-in-value @on-change="enterpriseTownChange" placeholder="请选择" v-if="town.show">
-                            <Option :value="d.value" v-for="(d, index) in enterpriseTown.list" :key="index">{{ d.label }}</Option>
-                          </Select>
-                        </Col>
+                        <!--<Col :span="4">-->
+                          <!--<Select v-model="enterpriseTown.id" number label-in-value @on-change="enterpriseTownChange" placeholder="请选择" v-if="town.show">-->
+                            <!--<Option :value="d.value" v-for="(d, index) in enterpriseTown.list" :key="index">{{ d.label }}</Option>-->
+                          <!--</Select>-->
+                        <!--</Col>-->
                       </Row>
                     </FormItem>
                   </Col>
@@ -214,11 +214,11 @@
                             <Option :value="d.value" v-for="(d, index) in county.list" :key="index">{{ d.label }}</Option>
                           </Select>
                         </Col>
-                        <Col :span="4">
-                          <Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">
-                            <Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>
-                          </Select>
-                        </Col>
+                        <!--<Col :span="4">-->
+                          <!--<Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">-->
+                            <!--<Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>-->
+                          <!--</Select>-->
+                        <!--</Col>-->
                       </Row>
                     </FormItem>
                   </Col>
@@ -994,11 +994,11 @@ export default {
         this.$refs[ruleName].validate((valid) => {
           if (valid) {
             // enterpriseProvince,enterpriseCity,enterpriseCounty
-            if (!self.enterpriseProvince.name || !self.enterpriseCity.name || !self.enterpriseCounty.name) {
+            if (!self.enterpriseProvince.id || !self.enterpriseCity.id || !self.enterpriseCounty.id) {
               self.$Message.error('请选择所在地区!')
               return false
             }
-            if (!self.province.name || !self.city.name || !self.county.name) {
+            if (!self.province.id || !self.city.id || !self.county.id) {
               self.$Message.error('请选择所在地区!')
               return false
             }
@@ -1092,12 +1092,29 @@ export default {
   created: function () {
     if (localStorage.getItem('storesInfo')) {
       this.form = JSON.parse(localStorage.getItem('storesInfo'))
-      this.form.category_id = this.form.category_id.split(',')
-      this.form.authorization_id = this.form.authorization_id.split(',')
-      // this.AuthorizationList = this.form.authorization_id
-    }
-    // this.form.category_id = this.form.category_id.split(',').join(',').substring(0, this.form.category_id.length - 1)
+      this.enterpriseProvince.id = this.form.province_id    // 获企业取省市id
+      this.enterpriseFetchCity(this.form.province_id, 2)    // 调用企业城市id
+      this.enterpriseCity.id = this.form.city_id            // 获取企业城市id
+      this.enterpriseFetchCity(this.form.city_id, 3)        // 调用企业城市id
+      this.enterpriseCounty.id = this.form.county_id        // 获取企业区县
+      // ----------------/
+      this.province.id = this.form.enter_province    // 获取门店省市id
+      this.fetchCity(this.form.enter_province, 2)    // 调用门店城市id
+      this.city.id = this.form.enter_city    // 获取门店市id
+      this.fetchCity(this.form.enter_city, 3)    // 调用门店城市id
+      this.county.id = this.form.enter_county    // 获取门店区id
 
+      if (this.form.category_id === '') {
+        this.form.category_id = this.form.category_id.split(',')
+      } else {
+        this.form.category_id = this.form.category_id
+      }
+      if (this.form.authorization_id === '') {
+        this.form.authorization_id = this.form.authorization_id.split(',')
+      } else {
+        this.AuthorizationList = this.form.authorization_id
+      }
+    }
     let token = this.$store.state.event.token
     let self = this
     // 获取图片上传信息
@@ -1149,6 +1166,7 @@ export default {
           if (response.data.data) {
             self.province.list = response.data.data
             self.enterpriseProvince.list = response.data.data
+            console.log(self.enterpriseProvince.list)
             // self.fetchCity(token, 2)
           }
         }
