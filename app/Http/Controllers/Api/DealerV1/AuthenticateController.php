@@ -819,7 +819,7 @@ class AuthenticateController extends BaseController
                 if ($user){
                     $distributors = new DistributorModel();
                     $distributor =DB::table('distributor')
-                        ->where('id','=',$this->auth_user_id)
+                        ->where('user_id','=',$this->auth_user_id)
                         ->update(['name'=>$request['realname'],'phone'=>$request['phone']]);
                 }
             }else{
