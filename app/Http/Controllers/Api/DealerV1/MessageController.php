@@ -102,11 +102,6 @@ class MessageController extends BaseController
 
                 $authorizations = explode(',', $v['authorization_id']);
                 $categorys = explode(',', $v['category_id']);
-
-                $assets_a = AssetsModel::where(['target_id' => $v->id, 'type' => 17]) ->orderBy('id','desc')->first();
-                $assets_b = AssetsModel::where(['target_id' => $v->id, 'type' => 18]) ->orderBy('id','desc')->first();
-                $assets_c = AssetsModel::where(['target_id' => $v->id, 'type' => 20]) ->orderBy('id','desc')->first();
-                $assets_d = AssetsModel::where(['target_id' => $v->id, 'type' => 21]) ->orderBy('id','desc')->first();
                 }
 
                 $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('id','title')->get();
@@ -148,24 +143,6 @@ class MessageController extends BaseController
                 $distributors[0]['e_province'] = '';
                 $distributors[0]['e_city'] = '';
                 $distributors[0]['e_county'] = '';
-            }
-
-            if ($assets_a){
-                $distributors[0]['front'] = $assets_a->file->small;
-            }else{
-                $distributors[0]['front'] = url('images/default/erp_product.png');
-            } if ($assets_b){
-                $distributors[0]['Inside'] = $assets_b->file->small;
-            }else{
-                $distributors[0]['Inside'] = url('images/default/erp_product.png');
-            } if ($assets_c){
-                $distributors[0]['portrait'] = $assets_c->file->small;
-            }else{
-                $distributors[0]['portrait'] = url('images/default/erp_product.png');
-            } if ($assets_d){
-                $distributors[0]['national_emblem'] = $assets_d->file->small;
-            }else{
-                $distributors[0]['national_emblem'] = url('images/default/erp_product.png');
             }
         }
         return $this->response->collection($distributors, new DistributorTransformer())->setMeta(ApiHelper::meta());
@@ -490,7 +467,7 @@ class MessageController extends BaseController
             'bank_number' => 'max:19',
             'bank_name' => 'max:20',
             'authorization_id' => 'max:50',
-            'business_license_number' => 'max:15',
+            'business_license_number' => 'max:18',
             'province_id' => 'integer',
             'city_id' => 'integer',
             'county_id' => 'integer',

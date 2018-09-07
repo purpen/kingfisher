@@ -69,9 +69,10 @@ class DistributorModel extends BaseModel
     public function getFirstFrontAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 17])
-            ->orderBy('id','desc')
-            ->first();
+            ::find($this->front_id);
+//            ::where(['target_id' => $this->id, 'type' => 17])
+//            ->orderBy('id','desc')
+//            ->first();
 
         if($asset){
             return $asset->file->srcfile;
@@ -86,9 +87,10 @@ class DistributorModel extends BaseModel
     public function getFirstInsideAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 18])
-            ->orderBy('id','desc')
-            ->first();
+            ::find($this->Inside_id);
+//            ::where(['target_id' => $this->id, 'type' => 18])
+//            ->orderBy('id','desc')
+//            ->first();
         if($asset){
             return $asset->file->srcfile;
         }else{
@@ -102,9 +104,10 @@ class DistributorModel extends BaseModel
     public function getFirstPortraitAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 20])
-            ->orderBy('id','desc')
-            ->first();
+            ::find($this->portrait_id);
+//            ::where(['target_id' => $this->id, 'type' => 20])
+//            ->orderBy('id','desc')
+//            ->first();
         if($asset){
             return $asset->file->srcfile;
         }else{
@@ -118,9 +121,10 @@ class DistributorModel extends BaseModel
     public function getFirstNationalEmblemAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 21])
-            ->orderBy('id','desc')
-            ->first();
+            ::find($this->national_emblem_id);
+//            ::where(['target_id' => $this->id, 'type' => 21])
+//            ->orderBy('id','desc')
+//            ->first();
         if($asset){
             return $asset->file->srcfile;
         }else{
