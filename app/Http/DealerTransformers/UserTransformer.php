@@ -7,18 +7,18 @@ use League\Fractal\TransformerAbstract;
 class UserTransformer extends TransformerAbstract
 {
 
-    public function transform(UserModel $user)
+    public function transform(UserModel $users)
     {
         return [
-            'id' => (int)$user->id,
-            'phone' => $user->phone,
-            'account' => $user->account,
-            'realname' => $user->realname,
-            'status' => (int)$user->status,
-            'type' => (int)$user->type,
-            'file' => $user->file,
-            'verify_status' => (int)$user->verify_status,
-            'distributor_status'=>$user->distributor_status,
+            'id' => (int)$users->id,
+            'phone' => $users->phone,
+            'account' => $users->account,
+            'realname' => $users->realname,
+            'status' => (int)$users->status,
+            'type' => (int)$users->type,
+            'file' => $users->file,
+            'verify_status' => (int)$users->verify_status,
+            'distributor_status'=>$users->distributor_status,
         ];
     }
 }

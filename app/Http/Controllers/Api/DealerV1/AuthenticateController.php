@@ -816,6 +816,12 @@ class AuthenticateController extends BaseController
                 $users->verify_status = 1;
                 $users->supplier_distributor_type = 3;
                 $user = $users->update($all);
+                if ($user){
+                    $distributors = new DistributorModel();
+                    $distributor =DB::table('distributor')
+                        ->where('id','=',$this->auth_user_id)
+                        ->update(['name'=>$request['realname'],'phone'=>$request['phone']]);
+                }
             }else{
                 return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
             }
