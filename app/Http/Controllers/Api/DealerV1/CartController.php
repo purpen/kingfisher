@@ -185,10 +185,10 @@ class CartController extends BaseController
      *      {
      *      "product_id": 2,                      // 商品id
      *      "sku_id": 2,                      // sku id
-     *      product_name :"大米",                   商品名称
-     *      cover_url   ：1.img ,              图片url
+     *      "product_name" :"大米",            //       商品名称
+     *      "cover_url"   ：1.img ,          //    图片url
      *      "price": "200.00",            // 商品价格
-     *      "mode":颜色：白色 ,                   类型
+     *      "mode":颜色：白色 ,               //    类型
      *      "number": 1,                       // 购买数量
      *      }
      *   ],
