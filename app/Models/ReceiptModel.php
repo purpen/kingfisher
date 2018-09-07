@@ -36,6 +36,6 @@ class ReceiptModel extends BaseModel
         return $this->belongsTo('App\Models\ProductsSkuModel', 'sku_id');
     }
 
-    
+   
 
 }
