@@ -3,7 +3,7 @@
     <div class="blank20"></div>
     <Row :gutter="20">
       <Col :span="3" class="left-menu">
-        <v-menu currentName="account"></v-menu>
+        <v-menu currentName="identify_show"></v-menu>
       </Col>
 
       <Col :span="21">
@@ -54,6 +54,13 @@
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
+                    <FormItem label="企业详细地址" prop="enterAddress">
+                      <Input v-model="form.enterAddress" placeholder="请输入详细地址"></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
                     <FormItem label="企业电话" prop="enter_phone">
                       <Input v-model="form.enter_phone" placeholder="请输入企业电话"></Input>
                     </FormItem>
@@ -68,7 +75,7 @@
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="税号" prop="enterprise_ein">
+                    <FormItem label="税号 (选填)" prop="enterprise_ein">
                       <Input v-model="form.ein" placeholder="请输入税号"></Input>
                     </FormItem>
                   </Col>
@@ -84,13 +91,15 @@
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
-                  <Col :span="5">
+                  <Col :span="8">
                     <FormItem label="开户行" prop="bank_name">
                       <Input v-model="form.bank_name" placeholder=""></Input>
                     </FormItem>
                   </Col>
-                  <Col :span="5">
-                    <FormItem label="银行卡账号" prop="bank_number">
+                </Row>
+                <Row>
+                  <Col :span="8">
+                    <FormItem label="银行账号" prop="bank_number">
                       <Input v-model="form.bank_number" placeholder=""></Input>
                     </FormItem>
                   </Col>
@@ -225,6 +234,13 @@
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
+                    <FormItem label="详细地址" prop="storeAddress">
+                      <Input v-model="form.storeAddress" placeholder="请输入详细地址"></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="24">
                     <FormItem label="商品分类" prop="category_id">
                       <CheckboxGroup v-model="form.category_id">
                         <Checkbox  v-for="(item, index) of categoryList" :key="index" :label="item.id">{{item.title}}</Checkbox>
@@ -233,7 +249,7 @@
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
-                  <Col :span="8">
+                  <Col :span="24">
                     <FormItem label="授权条件" prop="authorization_id">
                       <CheckboxGroup v-model="form.authorization_id">
                         <Checkbox  v-for="(item, index) of AuthorizationList" :key="index" :label="item.id">{{item.title}}</Checkbox>
@@ -266,13 +282,6 @@
                   <!--<Col :span="8">-->
                     <!--<FormItem label="邮箱" prop="storeEmail">-->
                       <!--<Input v-model="form.storeEmail" placeholder="请输入邮箱"></Input>-->
-                    <!--</FormItem>-->
-                  <!--</Col>-->
-                <!--</Row>-->
-                <!--<Row :gutter="10" class="content">-->
-                  <!--<Col :span="8">-->
-                    <!--<FormItem label="详细地址" prop="storeAddress">-->
-                      <!--<Input v-model="form.storeAddress" placeholder="请输入详细地址"></Input>-->
                     <!--</FormItem>-->
                   <!--</Col>-->
                 <!--</Row>-->
@@ -381,7 +390,7 @@
                 <div class="form-btn">
                   <FormItem>
                     <!--<Button type="ghost" style="margin-left: 8px" @click="backShow" v-if="id === 2">取消</Button>-->
-                    <Button type="primary" :loading="btnLoading" @click="submit('form')">提交</Button>
+                    <Button type="primary" :loading="btnLoading" @click="submit('form')" class="btn_140">提交</Button>
                   </FormItem>
                 </div>
               </div>
@@ -479,6 +488,7 @@ export default {
         full_name: '',      // 企业全称
         legal_person: '',   // 法人姓名
         enter_phone: '',    // 企业电话
+        enterAddress: '',   // 企业详细地址
         legal_phone: '',     // 法人手机号
         ein: '',      // 税号
         legal_number: '',    // 法人身份证号
@@ -575,6 +585,11 @@ export default {
           { required: true, message: '企业电话', trigger: 'blur' },
           { validator: validatePhone, trigger: 'blur' }
         ],
+        // 企业详细地址
+        enter_Address: [
+          { required: true, message: '企业详细地址不能为空', trigger: 'blur' },
+          { type: 'string', min: 4, max: 30, message: '名称范围在4-30字符之间', trigger: 'blur' }
+        ],
         // 法人手机号
         legal_phone: [
           { required: true, message: '手机号不能为空', trigger: 'blur' },
@@ -637,10 +652,10 @@ export default {
           { required: true, validator: validateAuthorization, trigger: 'blur' }
         ],
         // 门店详细地址
-        // storeAddress: [
-        //   { required: true, message: '详细地址不能为空', trigger: 'blur' },
-        //   { type: 'string', min: 4, max: 30, message: '名称范围在4-30字符之间', trigger: 'blur' }
-        // ],
+        storeAddress: [
+          { required: true, message: '门店详细地址不能为空', trigger: 'blur' },
+          { type: 'string', min: 4, max: 30, message: '名称范围在4-30字符之间', trigger: 'blur' }
+        ],
         // 经营情况
         operation_situation: [
           { required: true, message: '请选择经营情况', trigger: 'blur' },
@@ -1026,6 +1041,7 @@ export default {
               id: self.form.id,                                 // showid
               full_name: self.form.full_name,        // 企业全称
               enter_phone: self.form.enter_phone,    // 企业电话
+              enter_Address: self.form.enterAddress,  // 企业详细地址
               legal_person: self.form.legal_person,  // 法人姓名
               legal_phone: self.form.legal_phone,     // 法人手机号
               legal_number: self.form.legal_number,   // 法人身份证
@@ -1046,7 +1062,7 @@ export default {
               enter_province: self.enterpriseProvince.id,   // 企业省
               enter_city: self.enterpriseCity.id,           // 企业市
               enter_county: self.enterpriseCounty.id,       // 企业区
-              // store_address: self.form.storeAddress,      // 门店详细地址
+              store_address: self.form.storeAddress,      // 门店详细地址
               operation_situation: self.form.operation_situation,  // 经营情况
               business_license_number: self.form.business_license_number, // 营业执照号
               // license_id: self.form.license_id,   // 营业执照id

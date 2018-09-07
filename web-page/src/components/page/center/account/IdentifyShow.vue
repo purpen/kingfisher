@@ -23,6 +23,10 @@
                 <p class="p-val">{{ enterpriseCity }}</p>
               </div>
               <div class="item">
+                <p class="p-key">企业详细地址:</p>
+                <p class="p-val">{{ item.enter_Address }}</p>
+              </div>
+              <div class="item">
                 <p class="p-key">企业电话:</p>
                 <p class="p-val">{{ item.enter_phone }}</p>
               </div>
@@ -104,6 +108,11 @@
               </div>
 
               <div class="item">
+                <p class="p-key">门店详细地址:</p>
+                <p class="p-val">{{ item.store_address   }}</p>
+              </div>
+
+              <div class="item">
                 <p class="p-key">商品分类:</p>
                 <p class="p-val">{{ item.category }}</p>
               </div>
@@ -169,12 +178,12 @@
               </div>
               <div class="rz-stat" v-if="item.length === 0 || item.status === 0 || item.status === undefined">
                 <router-link :to="{name: 'centerIdentifySubmit'}" class="item">
-                  <Button class="is-custom" type="primary">填写信息</Button>
+                  <Button class="is-custom btn_140" type="primary">填写信息</Button>
                 </router-link>
               </div>
               <div class="rz-stat" v-else-if="item.status !== 0 || item.status !== 2">
                 <router-link :to="{name: 'centerIdentifySubmit'}" class="item">
-                  <Button class="is-custom" type="primary">修改信息</Button>
+                  <Button class="is-custom btn_140" type="primary">修改信息</Button>
                 </router-link>
               </div>
             </div>

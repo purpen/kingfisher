@@ -35,7 +35,7 @@
                     {{ eventUser.account }}
                 </template>
                     <Menu-item name="my">个人中心</Menu-item>
-                    <Menu-item name="myProduct">我的产品</Menu-item>
+                    <!--<Menu-item name="myProduct">我的产品</Menu-item>-->
                     <Menu-item name="myOrder">我的订单</Menu-item>
                     <!--<Menu-item name="centerSurvey">销售与趋势</Menu-item>-->
                     <Menu-item name="logout">登出</Menu-item>

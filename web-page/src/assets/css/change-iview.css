@@ -2,6 +2,9 @@
   background: #ffffff;
 }
 
+.ivu-form-item-required .ivu-form-item-label:before {
+ content: '';
+}
 /*弹框底部按钮*/
 .viseble_none .ivu-modal-footer {
   display: none;
