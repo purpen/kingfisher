@@ -171,6 +171,66 @@ class CartController extends BaseController
 
 
 
+    /**
+     * @api {get} /DealerApi/settlement 点击结算
+     * @apiVersion 1.0.0
+     * @apiName Cart settlement
+     * @apiGroup Cart
+     * @apiParam {string} id 1:一个或多个进货单id(数组形式传参)
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     *      {
+     *      "product_id": 2,                      // 商品id
+     *      "sku_id": 2,                      // sku id
+     *      product_name :"大米",                   商品名称
+     *      cover_url   ：1.img ,              图片url
+     *      "price": "200.00",            // 商品价格
+     *      "mode":颜色：白色 ,                   类型
+     *      "number": 1,                       // 购买数量
+     *      }
+     *   ],
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *           "data" : $data,
+     *       }
+     *   }
+     * }
+     */
+    public function settlement(Request $request)
+    {
+//        $user_id = $this->auth_user_id;
+        $id = $request->input('id') ? $request->input('id') : '';
+
+        $data = array();
+        foreach($id as $k=>$v){
+            $carts = ReceiptModel::find($v);
+
+            if ($carts->product->assets) {
+                $cover_url = $carts->product->assets->file->avatar;
+            }
+
+            $data[$k]=array(
+                'product_id' => $carts->product_id,
+                'sku_id'       => $carts->sku_id,
+                'number'        => $carts->number,
+                'price'         => $carts->price,
+                'product_name'  => $carts->product->title,
+                'mode'          => $carts->sku->mode,
+                'cover_url'     =>$cover_url,
+
+            );
+
+        }
+
+        return $this->response->array(ApiHelper::success('Success.', 200, $data));
+    }
+
+
+
 
 
     /**
@@ -420,7 +480,7 @@ class CartController extends BaseController
      */
     public function deleted(Request $request)
     {
-        $user_id = $this->auth_user_id; 
+        $user_id = $this->auth_user_id;
         $ids = $request->input('id') ? $request->input('id') : '';
         if (empty($ids)) {
             return $this->response->array(ApiHelper::error('缺少请求参数！', 412));

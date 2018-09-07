@@ -34,6 +34,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'cart.emptyShopping', 'uses' => 'CartController@emptyShopping'
     ]);
 
+    // 点击结算
+    $api->get('/DealerApi/cart/settlement', [
+        'as' => 'cart.settlement', 'uses' => 'CartController@settlement'
+    ]);
+
     // 购物车增减单个产品数量
     $api->get('/DealerApi/cart/reduce', [
         'as' => 'cart.reduce', 'uses' => 'CartController@reduce'
