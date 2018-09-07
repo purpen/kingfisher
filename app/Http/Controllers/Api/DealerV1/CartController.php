@@ -420,7 +420,7 @@ class CartController extends BaseController
      */
     public function deleted(Request $request)
     {
-        $user_id = $this->auth_user_id;
+        $user_id = $this->auth_user_id; 
         $ids = $request->input('id') ? $request->input('id') : '';
         if (empty($ids)) {
             return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
