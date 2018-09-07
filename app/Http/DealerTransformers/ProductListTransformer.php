@@ -17,7 +17,7 @@ class ProductListTransformer extends TransformerAbstract
             'name' => $products->title,
             'price' => $products->market_price,
             'inventory' => intval($products->inventory),
-            'image' => $products->first_img,
+            'image' => $products->big_img,
             'product_details' =>$products->detial_img,
             'categories' => $products->categories?$products->categories:'',
             'follow' => $products->follow

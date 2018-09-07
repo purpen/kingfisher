@@ -88,15 +88,15 @@
             <div class="row">
                 <div class="col-sm-12">
 
-                    <button type="button" id="batch-verify" class="btn btn-success mr-2r">
-                        <i class="glyphicon glyphicon-ok"></i> 通过审核
-                    </button>
-                    <button type="button" id="batch-close" class="btn btn-danger mr-2r">
-                        <i class="glyphicon glyphicon-remove"></i> 驳回
-                    </button>
+                    {{--<button type="button" id="batch-verify" class="btn btn-success mr-2r">--}}
+                        {{--<i class="glyphicon glyphicon-ok"></i> 通过审核--}}
+                    {{--</button>--}}
+                    {{--<button type="button" id="batch-close" class="btn btn-danger mr-2r">--}}
+                        {{--<i class="glyphicon glyphicon-remove"></i> 驳回--}}
+                    {{--</button>--}}
 
 
-                </div>
+                {{--</div>--}}
             </div>
             @if (session('error_message'))
                 <div class="alert alert-success error_message">
@@ -114,7 +114,6 @@
                             <th>门店名称</th>
                             <th>姓名</th>
                             <th>所在省份</th>
-                            <th>商品分类</th>
                             <th>审核状态</th>
                             <th>操作</th>
                         </tr>
@@ -129,7 +128,6 @@
                                     <td>{{ $distributor['store_name'] }}</td>
                                     <td>{{ $distributor['name'] }}</td>
                                     <td>{{ $distributor['province'] }} </td>
-                                    <td>{{ $distributor['category'] }} </td>
                                     <td>
                                         @if($distributor['status'] == 1)
                                             待审核

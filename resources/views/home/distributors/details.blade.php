@@ -79,8 +79,6 @@
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>门店联系人手机号:</b>{{ $user->phone }}</li>
                                 {{--<li for="phone" class="mb-0r control-label col-md-6"><b>用户名:</b>{{ $user->account }}</li>--}}
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>门店联系人职位:</b>{{ $distributors->position }}</li>
-                                <li for="category_id" class="mb-0r control-label col-md-6"><b>商品分类:</b>{{ $distributors->category }}</li>
-                                <li for="authorization_id" class="mb-0r control-label col-md-6"><b>授权条件:</b>{{ $distributors->authorization }}</li>
                             </ul>
 
 
@@ -140,8 +138,55 @@
                                 @endif
                                 </li>
                                 {{--<li for="msg" class="mb-0r control-label col-md-6"><b>原因:</b>{{ $supplier->msg}}</li>--}}
-
                             </ul>
+                            <input type="hidden" name="id" value="{{$distributors->id}}">
+
+                            <h5>商品分类</h5>
+                            <hr>
+                            <div class="form-group">
+                                <label for="category_id" class="col-sm-2 control-label">选择商品分类<em>*</em></label>
+                                <div class="col-sm-3">
+                                    <div class="input-group  col-md-12">
+                                        <div class="col-sm-8" style="padding-top:5px">
+                                            @foreach($categorys as $list)
+                                                @if($list['type'] == 1)
+                                        <input type="checkbox" name="category_id" id="category_id" class="checkcla" required value="{{ $list->id }}">{{ $list->title }}
+                                        @endif
+                                            @endforeach
+
+                                        </div>
+                                        <input type="hidden" name="diyu" id="diyu" value="@Model.diyu" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="authorization_id" class="col-sm-2 control-label">选择授权类型<em>*</em></label>
+                                <div class="col-sm-3">
+                                    <div class="input-group  col-md-12">
+                                        <div class="col-sm-8" style="padding-top:5px">
+                                            @foreach($authorization as $list)
+                                                @if($list['type'] == 2)
+                                                    <input type="checkbox" name="authorization_id" id="authorization_id" class="checkcla" required value="{{ $list->id }}">{{ $list->title }}
+                                                @endif
+                                            @endforeach
+
+                                        </div>
+                                        <input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" style="text-align: center">
+
+                                <button type="button" id="batch-verify" class="btn btn-success mr-2r">
+                                <i class="glyphicon glyphicon-ok"></i> 通过审核
+                                </button>
+                                <button type="button" id="batch-close" class="btn btn-danger mr-2r">
+                                <i class="glyphicon glyphicon-remove"></i> 驳回
+                                </button>
+
+                                </div>
                         </div>
 
                     </div>
@@ -149,9 +194,77 @@
             </div>
         </div>
 	</div>
+    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 @endsection
 
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+@endsection
+
+@section('customize_js')
+    @parent
+
+    {{--<script>--}}
+    var _token = $('#_token').val();
+    {{--授权条件--}}
+    $("input[name='authorization_id']").change(function(){
+    $('#Jszzdm').val($("input[name='authorization_id']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    })
+
+    {{--商品分类--}}
+    $("input[name='category_id']").change(function(){
+    $('#diyu').val($("input[name='category_id']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    })
+
+
+
+    $(document).on("click","#batch-verify",function(obj){
+    layer.confirm('确认要通过审核吗？',function(index){
+    var id =  $("input[name='id']").val();
+    var Jszzdm =  $("input[name='Jszzdm']").val();
+    var diyu =  $("input[name='diyu']").val();
+
+    $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu}, function (data) {
+    if(data.status == 0){
+    layer.msg('操作成功！');
+    location.reload();
+    }else if(data.status == 1){
+    alert(data.message);
+    }else{
+    location.reload();
+    }
+    },'json');
+    });
+    });
+
+
+    {{--经销商关闭--}}
+
+    $(document).on("click","#batch-close",function(obj){
+    layer.confirm('确认要驳回审核吗？',function(index){
+    var distributors = [];
+    $("input[name='Order']").each(function () {
+    if($(this).is(':checked')){
+    distributors.push($(this).attr('value'));
+    }
+    });
+
+    $.post('{{url('/distributors/ajaxClose')}}',{'_token': _token,'distributors': distributors}, function (e) {
+
+    if(e.status == 0){
+    layer.msg('操作成功！');
+    location.reload();
+    }else if(e.status == 1){
+    alert(e.message);
+    }else{
+    location.reload();
+    }
+    },'json');
+    });
+    });
 @endsection

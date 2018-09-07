@@ -106,8 +106,8 @@ class MessageController extends BaseController
 
                 $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('id','title')->get();
                 $category = CategoriesModel::whereIn('id', $categorys)->where('type',1)->select('id','title')->get();
-                $authorizations = array_column($authorization->toArray(),'id');
-                $categorys = array_column($category->toArray(),'id');
+//                $authorizations = array_column($authorization->toArray(),'id');
+//                $categorys = array_column($category->toArray(),'id');
             if ($authorization) {
                 $str = '';
                 foreach ($authorization as $value) {
@@ -124,8 +124,8 @@ class MessageController extends BaseController
 
                 $distributors[0]['authorization'] = $str;
                 $distributors[0]['category'] = $tit;
-                $distributors[0]['authorizations'] = $authorizations;
-                $distributors[0]['categorys'] = $categorys;
+//                $distributors[0]['authorizations'] = $authorizations;
+//                $distributors[0]['categorys'] = $categorys;
             if (count($province) > 0 && count($city) > 0 && count($county) > 0) {
                 $distributors[0]['province'] = $province->toArray()['name'];
                 $distributors[0]['city'] = $city->toArray()['name'];
@@ -402,12 +402,12 @@ class MessageController extends BaseController
      * @apiParam {string} legal_person 法人姓名
      * @apiParam {string} legal_phone 法人手机号
      * @apiParam {string} enter_phone 企业电话
-     * @apiParam {string} category_id 商品分类id
-     * @apiParam {string} authorization_id 授权条件id
      * @apiParam {string} legal_number 法人身份证号
      * @apiParam {string} ein 税号
      * @apiParam {string} taxpayer 纳税人类型
      * @apiParam {string} bank_name 开户行
+     * @apiParam {string} store_address 门店详细地址
+     * @apiParam {string} enter_Address 企业详细地址
      * @apiParam {string} business_license_number 营业执照号
      *
      * @apiSuccessExample 成功响应:
@@ -426,8 +426,6 @@ class MessageController extends BaseController
     *      "enter_province": 1,                // 企业省份oID
     *      "enter_city": 1,                    // 企业城市oID
     *      "enter_county": 1,                   //企业区县oID
-    *      "category_id": "11,12,13",          // 商品分类id
-    *      "authorization_id": "11,2,12",      // 授权条件
     *      "operation_situation": 非常好,      //  经营情况
     *      "front_id": "1",                  //   门店正面照片
     *      "Inside_id": "2",                  //  门店内部照片
@@ -442,6 +440,8 @@ class MessageController extends BaseController
      *      "legal_person"                      //法人姓名
      *      "legal_phone"                       //法人手机号
      *      "legal_number"                      //法人身份证号
+     *      "store_address"                      //门店详细地址
+     *      "enter_Address"                      //企业详细地址
      *      "taxpayer": 1,                      //纳税人类型:1.一般纳税人 2.小规模纳税人
      *      "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\DealerV1;
 use App\Http\ApiHelper;
 use App\Http\DealerTransformers\CategoryTransformer;
 use App\Http\DealerTransformers\CityTransformer;
+use App\Http\DealerTransformers\OrderListTransformer;
 use App\Http\DealerTransformers\OrderTransformer;
+use App\Models\AssetsModel;
 use App\Models\AuditingModel;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
@@ -34,45 +36,45 @@ class OrderController extends BaseController{
      * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
      * @apiSuccessExample 成功响应:
-    {
-    "data": [
-    {
-    "id": 25918,
-    "number": "11969757068000",
-    "buyer_name": "冯宇",
-    "buyer_phone": "13588717651",
-    "buyer_address": "长庆街青春坊16幢2单元301室",
-    "pay_money": "119.00",
-    "user_id": 19,
-    "count": 1,
-    "logistics_name": "",
-    "express_no": "需要您输入快递号",
-    "order_start_time": "0000-00-00 00:00:00",
-    "buyer_summary": null,
-    "seller_summary": "",
-    "status": 8,
-    "status_val": "待发货",
-    "buyer_province": "浙江",
-    "buyer_city": "杭州市",
-    "buyer_county": "下城区",
-    "buyer_township": ""
-    }
-    ],
-    "meta": {
-    "message": "Success.",
-    "status_code": 200,
-    "pagination": {
-    "total": 717,
-    "count": 2,
-    "per_page": 2,
-    "current_page": 1,
-    "total_pages": 359,
-    "links": {
-    "next": "http://www.work.com/DealerApi/orders?page=2"
-    }
-    }
-    }
-    }
+     *  {
+     * "data": [
+     * {
+     *  "id": 25918,
+     *   "number": "11969757068000",       //订单编号
+     *  "buyer_name": "冯宇",               //收货人
+     *  "pay_money": "119.00",              //支付总金额
+     *  "user_id": 19,
+     * "order_start_time": "0000-00-00 00:00:00", //下单时间
+     * "status": 8,
+     * "status_val": "待发货",                 //订单状态
+     * "payment_type": "在线支付"               //支付方式
+     * "total_money": "299.00",             //商品总金额
+     * "count": 1,                            //商品总数量
+     * "sku_relation": [
+     * {
+     * "sku_id": 42,
+     * "price":   单价
+     * "product_title": "小风扇",                   //商品名称
+     * "quantity": 1,                      //订单明细数量
+     * "sku_mode": "黑色",                     // 颜色/型号
+     * "image": "http://www.work.com/images/default/erp_product1.png",   //sku图片
+     * }
+     * ],
+     *  "meta": {
+     *  "message": "Success.",
+     *  "status_code": 200,
+     *  "pagination": {
+     *  "total": 717,
+     *  "count": 2,
+     *  "per_page": 2,
+     *  "current_page": 1,
+     *  "total_pages": 359,
+     *  "links": {
+     *  "next": "http://www.work.com/DealerApi/orders?page=2"
+     *  }
+     *  }
+     *  }
+     *   }
      *
      */
     public function orders(Request $request)
@@ -81,18 +83,21 @@ class OrderController extends BaseController{
         $per_page = (int)$request->input('per_page', 10);
         $user_id = $this->auth_user_id;
         $query = array();
-        $query['user_id'] = $user_id;
+        if($user_id == 0){
+            return $this->response->array(ApiHelper::error('请先登录', 404));
+        }else{
+            $query['user_id'] = $user_id;
+        }
         if(!empty($status)){
             if ($status === -1) {
                 $status = 0;
             }
             $query['status'] = $status;
-            $orders = OrderModel::where($query)->orderBy('id', 'desc')->paginate($per_page);
+            $orders = OrderModel::where($query)->where('type',8)->orderBy('id', 'desc')->paginate($per_page);
         }else{
-            $orders = OrderModel::orderBy('id', 'desc')->where('user_id' , $user_id)->paginate($per_page);
+            $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
         }
-
-        return $this->response->paginator($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
 
     }
 
@@ -106,42 +111,66 @@ class OrderController extends BaseController{
      * @apiParam {string} token token
 
      * @apiSuccessExample 成功响应:
-    {
-    "data": {
-    "id": 25918,
-    "number": "11969757068000",
-    "buyer_name": "冯宇",
-    "buyer_phone": "13588717651",
-    "buyer_address": "长庆街青春坊16幢2单元301室",
-    "pay_money": "119.00",
-    "user_id": 19,
-    "count": 1,
-    "logistics_name": "",
-    "express_no": "需要您输入快递号",
-    "order_start_time": "0000-00-00 00:00:00",
-    "buyer_summary": null,
-    "seller_summary": "",
-    "status": 8,
-    "status_val": "待发货",
-    "buyer_province": "浙江",
-    "buyer_city": "杭州市",
-    "buyer_county": "下城区",
-    "buyer_township": ""
-    },
-    "meta": {
-    "message": "Success.",
-    "status_code": 200
-    }
-    }
+     * {
+     *  "data": {
+     *  "id": 25918,
+     *  "number": "11969757068000",  //订单编号
+     *  "pay_money": "119.00",   //应付总金额
+     *  "total_money": "299.00",    //商品总金额
+     *  "count": 1,                 //商品总数量
+     *  "user_id": 19,             //用户id
+     *  "express_id": 3,        // 物流id
+     *  "express": 圆通快递,        //快递名称
+     *  "express_no": 536728987,     //快递单号
+     *  "order_start_time": "0000-00-00 00:00:00", //发货时间
+     *  "status": 8,
+     *  "status_val": "待发货",
+     *  "invoice_type": "111",          //发票类型
+     *  "invoice_header": "1",          //发票抬头
+     *  "invoice_value": "1453",        //发票金额
+     *
+     *  "address_list":[
+     *  "id":1,
+     *  "name": "shusyh"                 //收件人
+     *  "province_id":1         省份oid
+     *  "city_id":2             城市oid
+     *  "county_id":3           区/县oid
+     *  "town_id":4             城镇/乡oid
+     *  "province":1         省份
+     *  "city":2             城市
+     *  "county":3           区/县
+     *  "town":4             城镇/乡
+     *  "address":798艺术广场     详细地址
+     * "phone"：13432522222     电话
+     * ]
+     * "orderSkus": [
+     * {
+     * "sku_id": 42,
+     * "price":   单价
+     * "product_title": "小风扇",                   //商品名称
+     * "quantity": 1,                      //订单明细数量
+     * "sku_mode": "黑色",                     // 颜色/型号
+     * "image": "http://www.work.com/images/default/erp_product1.png",   //sku图片
+     * }
+     * ]
+     *  },
+     * "meta": {
+     *  "message": "Success.",
+     * "status_code": 200
+     * }
+     * }
      */
     public function order(Request $request)
     {
-        $order_id = $request->input('order_id');
+//        $order_id = $request->input('order_id');
+        $order_id =13;
         $user_id = $this->auth_user_id;
         if(!empty($order_id)){
             $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
             if($orders){
-                $orderSku = $orders->orderSkuRelation;
+                $orderSku = $orders->orderSkuRelation;//订单详情表
+                $address = $orders->address;//地址表
+                $invoice = InvoiceModel::where('order_id',$orders->id)->where('xxx',0)->first();//发票历史表状态为0的
             }
 
             if(!empty($orderSku)){
@@ -161,6 +190,12 @@ class OrderController extends BaseController{
                     $orders->order_skus = $order_sku;
                 }
             }
+            if (!empty($address)){
+                $orders->address_list = $address;
+            }
+            if (!empty($invoice)){
+
+            }
         }else{
             return $this->response->array(ApiHelper::error('订单id不能为空', 200));
         }
@@ -175,24 +210,13 @@ class OrderController extends BaseController{
      * @apiName Order store
      * @apiGroup Order
      *
-     * @apiParam {string} outside_target_id 站外订单号
-     * @apiParam {string} buyer_name 收货人
-     * @apiParam {string} buyer_tel 电话
-     * @apiParam {string} buyer_phone 手机号
-     * @apiParam {string} buyer_zip 邮编
-     * @apiParam {string} buyer_address 收获地址
-     * @apiParam {string} buyer_province 省
-     * @apiParam {string} buyer_city 市
-     * @apiParam {string} buyer_county 县
-     * @apiParam {string} buyer_township 镇
-     * @apiParam {string} buyer_summary 买家备注
-     * @apiParam {string} seller_summary 卖家备注
+     * @apiParam {integer} address_id 收获地址ID
      * @apiParam {string} payment_type 付款方式：4：月结；5：现结；
-     * @apiParam {string} invoice_type 发票类型
+     * @apiParam {string} invoice_id 发票id
+     * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
      *
      *
-     * @apiParam {string} token token
      */
     public function store(Request $request)
     {
@@ -253,28 +277,18 @@ class OrderController extends BaseController{
             }
         }
 
-        $all['outside_target_id'] = $request->input('outside_target_id');
-        $all['buyer_name'] = $request->input('buyer_name');
-        $all['buyer_tel'] = $request->input('buyer_tel') ? $request->input('buyer_tel') : '';
-        $all['buyer_phone'] = $request->input('buyer_phone');
-        $all['buyer_zip'] = $request->input('buyer_zip') ? $request->input('buyer_zip') : '';
-        $all['buyer_address'] = $request->input('buyer_address');
-        $all['buyer_province'] = $request->input('buyer_province') ? $request->input('buyer_province') : '';
-        $all['buyer_city'] = $request->input('buyer_city') ? $request->input('buyer_city') : '';
-        $all['buyer_county'] = $request->input('buyer_county') ? $request->input('buyer_county') : '';
-        $all['buyer_township'] = $request->input('buyer_township') ? $request->input('buyer_township') : '';
-        $all['buyer_summary'] = $request->input('buyer_summary') ? $request->input('buyer_summary') : '' ;
-        $all['seller_summary'] = $request->input('seller_summary') ? $request->input('seller_summary') : '';
+        $all['address_id'] = $request->input('address_id');
         $all['order_start_time'] = date("Y-m-d H:i:s");
         $all['user_id'] = $user_id;
         $all['distributor_id'] = $this->auth_user_id;
-        $all['status'] = 5;
+//        $all['status'] = 5;
+        $all['status'] = 1;//待付款
         $all['total_money'] = $total_money;
         $all['pay_money'] = $total_money;
         $all['count'] = $count;
         $all['type'] = 8;
         $all['from_type'] = 4;
-        $all['invoice_type'] = $request->input('invoice_type');
+        $all['invoice_id'] = $request->input('invoice_id');
         $all['user_id_sales'] = config('constant.D3IN_user_id_sales');
         $all['store_id'] = config('constant.D3IN_store_id');
         $all['storage_id'] = config('constant.D3IN_storage_id');
@@ -282,24 +296,15 @@ class OrderController extends BaseController{
         $all['number'] = $number;
 
         $rules = [
-            'outside_target_id' => 'required|max:20',
-            'buyer_name' => 'required|max:20',
-            'buyer_phone' => 'required|max:20',
-            'buyer_address' => 'required|max:200',
-            'invoice_type' => 'required|max:20',
+            'address_id' => 'required|integer',
+            'invoice_id' => 'required|integer',
         ];
 
         $massage = [
-            'outside_target_id.required' => '站外订单号不能为空',
-            'outside_target_id.max' => '站外订单号不能超过20字',
-            'buyer_name.required' => '收货人不能为空',
-            'buyer_name.max' => '收货人不能超过20字符',
-            'buyer_phone.required' => '收货人电话不能为空',
-            'buyer_phone.max' => '收货人不能超过20字符',
-            'buyer_address.required' => '收货人地址不能为空',
-            'buyer_address.max' => '收货人地址不能超过200字符',
-            'invoice_type.required' => '发票类型不能为空',
-            'invoice_type.max' => '发票类型不能超过20字符',
+            'address_id.required' => '收货id不能为空',
+            'address_id.address_id' => '收货id格式不对',
+            'invoice_id.required' => '发票id不能为空',
+            'invoice_id.invoice_id' => '发票id格式不对',
         ];
 
         $validator = Validator::make($all, $rules, $massage);
@@ -346,8 +351,8 @@ class OrderController extends BaseController{
             if(!$order_sku_model->save()){
                 return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
             }
-            //订单付款占货(无论现结还是月结下单后都要假定为已付款然后占货)
-            if(!$productSku->increasePayCount($order_sku_model->sku_id,$order_sku_model->quantity)){
+            //订单未付款占货(假定为未付款然后占货)
+            if(!$productSku->increaseReserveCount($order_sku_model->sku_id,$order_sku_model->quantity)){
                 return ajax_json(0,'付款占货关联操作失败');
             }
 
@@ -369,8 +374,8 @@ class OrderController extends BaseController{
                 if(!$order_sku_model->save()){
                     return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
                 }
-                //订单付款占货(无论现结还是月结下单后都要假定为已付款然后占货)
-                if(!$productSku->increasePayCount($sku_id,$v['quantity'])){
+                //订单未付款占货(假定为未付款然后占货)
+                if(!$productSku->increaseReserveCount($sku_id,$v['quantity'])){
                     return ajax_json(0,'付款占货关联操作失败');
                 }
             }

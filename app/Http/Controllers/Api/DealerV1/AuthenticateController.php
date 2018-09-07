@@ -183,12 +183,12 @@ class AuthenticateController extends BaseController
      * @apiParam {string} legal_person 法人姓名
      * @apiParam {string} legal_phone 法人手机号
      * @apiParam {string} enter_phone 企业电话
-     * @apiParam {string} category_id 商品分类id
-     * @apiParam {string} authorization_id 授权条件id
      * @apiParam {string} legal_number 法人身份证号
      * @apiParam {string} ein 税号
      * @apiParam {string} taxpayer 纳税人类型
      * @apiParam {string} bank_name 开户行
+     * @apiParam {string} store_address  企业详细地址
+     * @apiParam {string} enter_Address 门店详细地址
      * @apiParam {string} business_license_number 营业执照号
      * @apiSuccessExample 成功响应:
      *  {
@@ -270,8 +270,8 @@ class AuthenticateController extends BaseController
             $distributors->city_id = (int)$request['city_id'];//市oid
             $distributors->county_id = (int)$request['county_id'];//区oid
             $distributors->phone = $request['phone'];//电话
-            $distributors->category_id = $request->input('category_id','');//商品分类为多选
-            $distributors->authorization_id = $request->input('authorization_id','');//授权条件为多选
+//            $distributors->category_id = $request->input('category_id','');//商品分类为多选
+//            $distributors->authorization_id = $request->input('authorization_id','');//授权条件为多选
             $distributors->operation_situation = $request['operation_situation'];
             $distributors->front_id = $request->input('front_id', 0);
             $distributors->Inside_id = $request->input('Inside_id', 0);
@@ -286,6 +286,8 @@ class AuthenticateController extends BaseController
             $distributors->legal_person = $request->input('legal_person','');
             $distributors->legal_phone = $request->input('legal_phone','');
             $distributors->legal_number = $request->input('legal_number','');
+            $distributors->store_address = $request->input('store_address','');
+            $distributors->enter_Address = $request->input('enter_Address','');
             $distributors->status = 1;
             $result = $distributors->save();
             if ($result) {
@@ -762,7 +764,7 @@ class AuthenticateController extends BaseController
            $assets = AssetsModel
                ::find($users->cover_id);
            if (count($assets)>0){
-               $users->file = $assets->file->small;
+               $users->file = $assets->file->p500;
            }else{
                $users->file = url('images/default/erp_product.png');
            }

@@ -27,19 +27,19 @@ class DistributorsController extends Controller
         }
         if (count($distributor)>0){
             foreach ($distributor as $k=>$v){
-                $categories = explode(',',$v['category_id']);
+//                $categories = explode(',',$v['category_id']);
                 $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
-                $category = CategoriesModel::whereIn('id',$categories)->select('type',1)->select('title')->get();
+//                $category = CategoriesModel::whereIn('id',$categories)->select('type',1)->select('title')->get();
 
-                $str = '';
-                if (count($category)>0) {
-                    foreach ($category as $value) {
-                        $str .= $value['title'] . ',';
-                    }
-                    $distributor[$k]['category'] = substr($str,0,-1);
-                }else{
-                    $distributor[$k]['category'] = '';
-                }
+//                $str = '';
+//                if (count($category)>0) {
+//                    foreach ($category as $value) {
+//                        $str .= $value['title'] . ',';
+//                    }
+//                    $distributor[$k]['category'] = substr($str,0,-1);
+//                }else{
+//                    $distributor[$k]['category'] = '';
+//                }
                 if ($province) {
                     $distributor[$k]['province'] = $province->name;
                 }else{
@@ -65,23 +65,25 @@ class DistributorsController extends Controller
     {
         $id = $request->input('id');
         $distributors = DistributorModel::where('id' , $id)->first();
+        $categorys = CategoriesModel::where('type','=',1)->where('status',1)->get();//所有商品分类列表
+        $authorization = CategoriesModel::where('type','=',2)->where('status',1)->get();//获取授权条件
         if (count($distributors)>0) {
-            $categories = explode(',',$distributors->category_id);
-            $authorizations = explode(',', $distributors['authorization_id']);
+//            $categories = explode(',',$distributors->category_id);
+//            $authorizations = explode(',', $distributors['authorization_id']);
             $province = ChinaCityModel::where('oid', $distributors->province_id)->select('name')->first();
             $city = ChinaCityModel::where('oid', $distributors->city_id)->select('name')->first();
             $enter_province = ChinaCityModel::where('oid', $distributors->enter_province)->select('name')->first();
             $enter_city = ChinaCityModel::where('oid', $distributors->enter_city)->select('name')->first();
-            $category = CategoriesModel::whereIn('id', $categories)->where('type',1)->select('title')->get();
-            $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('title')->get();
-            $str = '';
-            foreach ($authorization as $value) {
-                $str .= $value['title'] . ',';
-            }
-            $tit = '';
-            foreach ($category as $val) {
-                $tit .= $val['title'] . ',';
-            }
+//            $category = CategoriesModel::whereIn('id', $categories)->where('type',1)->select('title')->get();
+//            $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('title')->get();
+//            $str = '';
+//            foreach ($authorization as $value) {
+//                $str .= $value['title'] . ',';
+//            }
+//            $tit = '';
+//            foreach ($category as $val) {
+//                $tit .= $val['title'] . ',';
+//            }
             if ($province && $city) {
                 $distributors['address'] = $province->toArray()['name'].','.$city->toArray()['name'];
             }else{
@@ -92,8 +94,8 @@ class DistributorsController extends Controller
             }else{
                 $distributors['enter_address'] = '';
             }
-            $distributors['category'] =  substr($tit,0,-1);
-            $distributors['authorization'] = substr($str, 0, -1);
+//            $distributors['category'] =  substr($tit,0,-1);
+//            $distributors['authorization'] = substr($str, 0, -1);
         }
 
         $assets_front = AssetsModel::where(['target_id' => $id, 'type' =>17])->orderBy('id','desc')->first();
@@ -103,6 +105,8 @@ class DistributorsController extends Controller
         $user = UserModel::where('id',$distributors->user_id)->select('phone','realname','account')->first();
         return view('home/distributors.details', [
             'distributors' => $distributors,
+            'categorys' => $categorys,
+            'authorization' => $authorization,
             'user' => $user,
             'assets_front' => $assets_front,
             'assets_Inside' => $assets_Inside,
@@ -163,18 +167,24 @@ class DistributorsController extends Controller
      */
     public function ajaxVerify(Request $request)
     {
-        $distributors_id_array = $request->input('distributors')?$request->input('distributors'):'';
-        if ($distributors_id_array !='') {
-            foreach ($distributors_id_array as $id) {
-                $distributorsModel = DistributorModel::find($id);
-                $user =  DB::update("update users set verify_status=3,status=1 where id=$distributorsModel->user_id");
 
-                if (!$distributorsModel->verify($id)) {
-                    return ajax_json(1, '警告：审核失败');
+        $id = $request->input('id');
+        $model = DistributorModel::find($id);
+        if(!$model){
+            return ajax_json(1,'没有找到该供应商信息');
+        }
+        $category_id = $request->input('Jszzdm')?$request->input('Jszzdm'):'';
+        $authorization_id = $request->input('diyu')?$request->input('diyu'):'';
+        $distributorsModel = DistributorModel::find($id);
+        $user =  DB::update("update users set verify_status=3,status=1 where id=$distributorsModel->user_id");
+        if(!$user){
+            return ajax_json(1,'警告：用户信息保存失败');
+        }
+        if ($category_id !='' && $authorization_id !='') {
+            $distributors = DB::update("update distributor set category_id='$category_id',authorization_id='$authorization_id' where id=$id");
+                if (!$distributors) {
+                    return ajax_json(1, '警告：分类信息保存失败');
                 }
-            }
-        }else{
-            return ajax_json(1,'您还没有勾选经销商！');
         }
         return ajax_json(0, '操作成功！');
     }
