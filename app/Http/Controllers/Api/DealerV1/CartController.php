@@ -202,7 +202,6 @@ class CartController extends BaseController
      */
     public function settlement(Request $request)
     {
-//        $user_id = $this->auth_user_id;
         $id = $request->input('id') ? $request->input('id') : '';
 
         $data = array();
