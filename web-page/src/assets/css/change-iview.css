@@ -1,3 +1,6 @@
+.ivu-menu-horizontal.ivu-menu-light:after {
+  background: #ffffff;
+}
 /*侧边栏*/
 .menu-list .item.is-active {
   color: #ED3A4A;
@@ -83,6 +86,23 @@
   border: none;
 }
 
+.userOrderInfo td {
+  vertical-align: top;
+}
+
+.orderInfo .ivu-table-border td {
+  border-right: none;
+}
+.center-right{
+  float: right;
+}
+
+.invoice .ivu-tooltip-inner {
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+/*end*/
 /*上传取消阴影*/
 .ivu-btn-ghost:focus {
   box-shadow: 0 0 0 0
@@ -114,6 +134,7 @@
 .testImg img {
   width: 220px;
 }
+
 /*end*/
 
 .addOrder .ivu-table-row {

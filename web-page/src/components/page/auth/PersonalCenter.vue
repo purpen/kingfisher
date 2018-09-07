@@ -187,6 +187,7 @@
                   self.$Message.success('修改成功')
                   self.$http.get(api.user)
                     .then((response) => {
+                      console.log(response.data.data)
                       auth.write_user(response.data.data)
                     })
                   // self.$router.push('/center/order')
@@ -283,7 +284,7 @@
   }
 
   .personalInfo {
-    margin-top: 80px;
+    margin-top: 40px;
     padding: 0 230px;
   }
 

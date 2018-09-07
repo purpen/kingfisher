@@ -233,6 +233,36 @@ const routes = [
     },
     component: require('@/components/page/center/order/OrderDetails')
   },
+  // // 结算页
+  {
+    path: '/center/order/settlement',
+    name: 'orderSettiement',
+    meta: {
+      title: '结算',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/order/Settlement')
+  },
+  // 选择付款方式
+  {
+    path: '/center/order/paymentmethod',
+    name: 'PaymentMethod',
+    meta: {
+      title: '选择付款方式',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/order/PaymentMethod')
+  },
+  // 扫码支付
+  {
+    path: '/center/order/sweeppay',
+    name: 'SweepPay',
+    meta: {
+      title: '支付',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/order/SweepPay')
+  },
   // 创建订单
   {
     path: '/center/order/submit',

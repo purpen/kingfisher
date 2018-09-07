@@ -33,7 +33,7 @@
             </tr>
             <tr class="userOrderInfo_tr">
               <td>
-                <div class="padd-t-19">
+                <div class="padd-b-15">
                   <div class="display-flex-algin padd-r-40">
                     <p class="wid-90">收货人：</p>
                     <span>张三</span>
@@ -83,6 +83,16 @@
         </div>
         <div class="orderInfo">
           <Table border :columns="tableTitle" :data="data1"></Table>
+          <div class="money">
+            <div class="display-flex-ju-end" style="margin-bottom: 5px">
+              <p class="font-12 color_666">商品总额:</p>
+              <span class="color_666">￥899.00</span>
+            </div>
+            <div class="display-flex-ju-end">
+              <p class="font-12 color_666">应付总额:</p>
+              <span class="font-16 color_ed3a">￥899.00</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -255,5 +265,33 @@
 
   .wid-200 {
     width: 200px;
+  }
+
+  .money {
+    width: 100%;
+    height: 70px;
+    border: 1px solid #dcdee2;
+    border-top: none;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 20px;
+  }
+
+  .display-flex-ju-end {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .display-flex-ju-end p {
+    width: 60px;
+    text-align: left;
+  }
+
+  .display-flex-ju-end span {
+    width: 80px;
+    text-align: right;
   }
 </style>

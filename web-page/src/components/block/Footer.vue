@@ -85,7 +85,7 @@ export default {
   .footer {
     margin-top: 20px;
     padding: 0 97px 12px 97px;
-    border-top: 1px solid rgba(200,200,200,1);
+    box-shadow: 4px -2px 14px #f3f3f3;
   }
 
   .mar-b-26 {

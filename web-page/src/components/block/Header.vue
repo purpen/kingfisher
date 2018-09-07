@@ -11,14 +11,14 @@
               <!--<a href="">首页</a>-->
               首页
             </Menu-item>
-            <Menu-item name="supplier">
-              <!--<a href="">品牌</a>-->
-              品牌
-            </Menu-item>
-            <Menu-item name="trader">
-              <!--<a href="">渠道</a>-->
-              渠道
-            </Menu-item>
+            <!--<Menu-item name="supplier">-->
+              <!--&lt;!&ndash;<a href="">品牌</a>&ndash;&gt;-->
+              <!--品牌-->
+            <!--</Menu-item>-->
+            <!--<Menu-item name="trader">-->
+              <!--&lt;!&ndash;<a href="">渠道</a>&ndash;&gt;-->
+              <!--渠道-->
+            <!--</Menu-item>-->
             <Menu-item name="LibraryOfGoodsIndex">
               <!--<a href="">商品库</a>-->
               商品库

@@ -396,6 +396,7 @@
 <script>
 import api from '@/api/api'
 import vMenu from '@/components/page/center/Menu'
+import auth from '@/helper/auth'
 import '@/assets/js/math_format'
 export default {
   name: 'centerIdentifySubmit',
@@ -1069,6 +1070,11 @@ export default {
                 self.btnLoading = false
                 if (response.data.meta.status_code === 200) {
                   self.$Message.success('操作成功！')
+                  self.$http.get(api.user)
+                    .then((response) => {
+                      console.log(response.data.data)
+                      auth.write_user(response.data.data)
+                    })
                   self.$router.push({name: 'centerIdentifyShow'})
                 } else {
                   self.$Message.error(response.data.meta.message)

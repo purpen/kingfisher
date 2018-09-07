@@ -517,6 +517,7 @@ img.avatar {
  * Header Start
  */
 #header-layout, .header {
+  box-shadow: 4px 2px 14px #f3f3f3;
 }
 
 .layout-logo{
