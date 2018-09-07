@@ -55,7 +55,6 @@
       methods: {
         theme_Shoppings_ids (ids) {
           this.$router.push({name: 'commodityDetailsIndex', params: {id: ids}})
-          console.log(ids) // 通过id进入详情界面
         },
         theme_Shoppings_click (e, ids) {
           // 改变状态请求数据关注未关注

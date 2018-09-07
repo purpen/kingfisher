@@ -90,7 +90,7 @@ export default {
       } else {
         if (Number.length <= 0) {
           this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
-        } else {
+        } else { // 这里请求接口数量的传出去
           this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
         }
       }

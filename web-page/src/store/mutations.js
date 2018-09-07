@@ -1,4 +1,4 @@
-import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME, PLATFORM, HIDE_HEADER, GLOBAL_SEARCH_LIBRARY_OF_GOODS, GLOBAL_SEARCH_LIBRARY_OF_GOODS_CLEAR, THE_SHOPPING_CART_LENGTH_THEBACKGROUND, THE_SHOPPING_CART_LENGTH_THEBACKGROUND_CLEAR, THE_ORDER_SHOPPING_CART_IDS_GLOBAL, THE_ORDER_SHOPPING_CART_IDS_GLOBAL_CLEAR, THE_ORDER_SHOPPING_NUMBER, THE_ORDER_SHOPPING_NUMBER_CLEAR } from './mutation-types.js'
+import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME, PLATFORM, HIDE_HEADER, GLOBAL_SEARCH_LIBRARY_OF_GOODS, GLOBAL_SEARCH_LIBRARY_OF_GOODS_CLEAR, THE_SHOPPING_CART_LENGTH_THEBACKGROUND, THE_SHOPPING_CART_LENGTH_THEBACKGROUND_CLEAR, THE_ORDER_SHOPPING_CART_IDS_GLOBAL, THE_ORDER_SHOPPING_CART_IDS_GLOBAL_CLEAR, THE_ORDER_SHOPPING_NUMBER, THE_ORDER_SHOPPING_NUMBER_CLEAR, THE_ORDER_SKUID_SHOPPING, THE_ORDER_SKUID_SHOPPING_CLEAR } from './mutation-types.js'
 
 // 判断是否登录
 var isLoggedIn = function () {
@@ -76,7 +76,8 @@ const state = {
   global_Search_Library_Of_Goods: '', // 全局搜索商品
   The_shopping_cart_length_Thebackground: 15, // 购物车商品数量
   The_order_shopping_cart_ids_global: '', // 订单id
-  The_order_shopping_Number: [] // 进货单记录数量
+  The_order_shopping_Number: [], // 进货单记录数量
+  The_order_Skuid_shopping: [] // skuid
 }
 
 const mutations = {
@@ -143,6 +144,12 @@ const mutations = {
   },
   [THE_ORDER_SHOPPING_NUMBER_CLEAR] (state) {
     state.The_order_shopping_Number = []
+  },
+  [THE_ORDER_SKUID_SHOPPING] (state, skuid) {
+    state.The_order_Skuid_shopping = skuid
+  },
+  [THE_ORDER_SKUID_SHOPPING_CLEAR] (state) {
+    state.The_order_Skuid_shopping = []
   }
 }
 

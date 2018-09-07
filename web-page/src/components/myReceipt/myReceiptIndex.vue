@@ -37,12 +37,14 @@
       </div>
       </Col>
       <Col span="24" v-else>
-        <Spin v-show="myReceiptIndexcenter_list_center_loading" fix></Spin>
-        <div class="myReceiptIndexcenter_list_center">
+        <div class="myReceiptIndexcenter_list_center_loading" v-if="myReceiptIndexcenter_list_center_loading">
+          <Spin class="myReceiptIndexcenter_list_center_loading" fix></Spin>
+        </div>
+        <div class="myReceiptIndexcenter_list_center" v-else>
           <div class="myReceiptIndexcenter_list_centerNumber"
-             v-for="(commodity_list_mys,index) in commodity_list_my"
-             :key="index"
-             :class="commodity_list_mys.status ? 'list_centerNumber' : ''"
+               v-for="(commodity_list_mys, index) in commodity_list_my"
+               :key="index"
+               :class="commodity_list_mys.status ? 'list_centerNumber' : ''"
           >
             <div class="check_all_div check_all_div_Checkbox">
               <CheckboxGroup v-model="fruitIds" @on-change="checkAllGroupChange">
@@ -51,17 +53,17 @@
                   @click.native="addClasse(index)"
                 ></Checkbox>
                 <!--v-model="commodity_list_mys.status"-->
-                  <!--@click.native="Checkbox_click(index)"-->
+                <!--@click.native="Checkbox_click(index)"-->
               </CheckboxGroup>
             </div>
-            <div class="commodity_div" @click="entrance_particulars()">
+            <div class="commodity_div" @click="entrance_particulars(commodity_list_mys.product_id)">
               <img :src="commodity_list_mys.cover_url" alt="">
               <p>{{commodity_list_mys.product_name}}</p>
               <p class="specification_p">{{commodity_list_mys.mode}}</p>
             </div>
             <div class="price_div">
               &#165;&nbsp;{{Number(commodity_list_mys.price).toFixed(2)}}
-            </div>
+                </div>
             <div class="munber_div">
               <div class="LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping">
                 <ul>
@@ -79,7 +81,7 @@
             </div>
             <div class="subtotal_div">
               &#165;&nbsp;{{Number(commodity_list_mys.price_once).toFixed(2)}}
-            </div>
+                </div>
             <div class="operation_div">
               <ul>
                 <li>
@@ -102,20 +104,20 @@
               @click.prevent.native="handleCheckAll">全选</Checkbox>
           </div>
           <div class="clear_my_purchase_list">
-            <span @click="ckear_checkall_shopping">删除选中的商品</span>
+            <span @click="ckear_checkall_shopping()">删除选中的商品</span>
           </div>
           <div class="empty_purchase_list">
             <span @click="empty_purchase_order">清空进货单</span>
           </div>
           <div class="close_an_account">
-            <Button type="primary" :loading="close_an_account_loading">去结算</Button>
+            <Button type="primary" :loading="close_an_account_loading" @click.native="close_an_account">去结算</Button>
           </div>
           <div class="total_prices">
             总价&nbsp;:&nbsp;&nbsp;<span>&#165;&nbsp;{{Number(total_prices).toFixed(2)}}</span>
           </div>
           <div class="quantity_of_commodity">
             已选<span>{{select_commodity}}</span>件商品
-          </div>
+              </div>
         </div>
       </Col>
       <Col span="24">
@@ -146,7 +148,7 @@
           query: { // 分页初始,每页条数总条数
             page: 1,
             size: 20,
-            count: 0,
+            count: 100,
             sort: 1,
             test: null
           },
@@ -155,25 +157,184 @@
           fruitIdsAll: [], // 全选准备
           indeterminate: false, // 全选之前的显示
           myReceiptIndexcenter_list_center_loading: false, // 商品列表加载
-          social: [],
-          titles: [
-            {state: false, ids: 0, number: 1},
-            {state: false, ids: 0, number: 1},
-            {state: false, ids: 0, number: 1},
-            {state: false, ids: 0, number: 1}
-          ],
-          checkAll: false,
-          add_number: ''
+          checkAll: false // 全选
         }
       },
       components: {},
       methods: {
-        searchBox_Value () { // 请求搜索本页面数据
+        searchBox_Value () { // 请求搜索本页面数据(搜索数据的时候也提前请求一下接口看看有没有值要穿的)
           this.searchBoxValue = this.searchBoxValue.replace(/(^\s*)|(\s*$)/g, '')
+          let _this = this
           if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null || this.searchBoxValue === 'undefined') {
-            this.$Message.warning('搜索输入不能为空')
+//            this.$Message.warning('搜索输入不能为空')
+            this.quantity_statistics()
+            this.myReceiptIndexcenter_list_center_loading = true
+            this.quantity_statistics()
+            setTimeout(function () {
+              let shopping = [
+                {
+                  id: '654321', // 品类id结算的时候用
+                  product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+                  inventory: 1000, // 商品库存
+                  product_id: 2, // 商品id收藏的时候用
+                  price: 0, // 单个品类初始价格
+                  number: 101, // 已选择购买数量
+                  cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                  mode: '黑色/64G', // 品种型号
+                  status: true, // 是否是立即购买传值
+                  sku_region: [
+                    {
+                      min: 1, // 最小批发数字
+                      max: 10, // 最大批发数字
+                      sell_price: 100.00 // 批发阶段价格
+                    },
+                    {
+                      min: 11, // 最小批发数字
+                      max: 100, // 最大批发数字
+                      sell_price: 85.50 // 批发阶段价格
+                    },
+                    {
+                      min: 101, // 最小批发数字
+                      max: 1000, // 最大批发数字
+                      sell_price: 50.50 // 批发阶段价格
+                    }
+                  ],
+                  focus: 1 // 是否关注
+                },
+                {
+                  id: '1234', // 品类id结算的时候用
+                  product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+                  inventory: 100, // 商品库存
+                  product_id: 2, // 商品id收藏的时候用
+                  price: 0, // 单个品类初始价格
+                  number: 9, // 已选择购买数量
+                  cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                  mode: '黑色/64G', // 品种型号
+                  status: false, // 是否是立即购买传值
+                  sku_region: [
+                    {
+                      min: 1, // 最小批发数字
+                      max: 10, // 最大批发数字
+                      sell_price: 100.00 // 批发阶段价格
+                    },
+                    {
+                      min: 11, // 最小批发数字
+                      max: 100, // 最大批发数字
+                      sell_price: 85.50 // 批发阶段价格
+                    },
+                    {
+                      min: 101, // 最小批发数字
+                      max: 1000, // 最大批发数字
+                      sell_price: 50.50 // 批发阶段价格
+                    }
+                  ],
+                  focus: 1 // 是否关注
+                }
+              ]
+              _this.myReceiptIndexcenter_list_center_loading = false
+              _this.this_change_goods(shopping)
+            }, 1000)
           } else {
-
+            this.myReceiptIndexcenter_list_center_loading = true
+            this.quantity_statistics()
+            setTimeout(function () {
+              let shopping = [
+                {
+                  id: '123456', // 品类id结算的时候用
+                  product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                  inventory: 10000, // 商品库存
+                  product_id: 1, // 商品id收藏的时候用
+                  price: 0, // 单个品类初始价格
+                  number: 11, // 已选择购买数量
+                  cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                  mode: '黑色/64G', // 品种型号
+                  status: true, // 是否是立即购买传值
+                  sku_region: [
+                    {
+                      min: 1, // 最小批发数字
+                      max: 10, // 最大批发数字
+                      sell_price: 1000.00 // 批发阶段价格
+                    },
+                    {
+                      min: 11, // 最小批发数字
+                      max: 100, // 最大批发数字
+                      sell_price: 855.05 // 批发阶段价格
+                    },
+                    {
+                      min: 101, // 最小批发数字
+                      max: 1000, // 最大批发数字
+                      sell_price: 500.05 // 批发阶段价格
+                    },
+                    {
+                      min: 1001, // 最小批发数字
+                      max: 10000, // 最大批发数字
+                      sell_price: 250.05 // 批发阶段价格
+                    }
+                  ],
+                  focus: 0 // 是否关注
+                },
+                {
+                  id: '654321', // 品类id结算的时候用
+                  product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+                  inventory: 1000, // 商品库存
+                  product_id: 2, // 商品id收藏的时候用
+                  price: 0, // 单个品类初始价格
+                  number: 101, // 已选择购买数量
+                  cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                  mode: '黑色/64G', // 品种型号
+                  status: true, // 是否是立即购买传值
+                  sku_region: [
+                    {
+                      min: 1, // 最小批发数字
+                      max: 10, // 最大批发数字
+                      sell_price: 100.00 // 批发阶段价格
+                    },
+                    {
+                      min: 11, // 最小批发数字
+                      max: 100, // 最大批发数字
+                      sell_price: 85.50 // 批发阶段价格
+                    },
+                    {
+                      min: 101, // 最小批发数字
+                      max: 1000, // 最大批发数字
+                      sell_price: 50.50 // 批发阶段价格
+                    }
+                  ],
+                  focus: 1 // 是否关注
+                },
+                {
+                  id: '1234', // 品类id结算的时候用
+                  product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+                  inventory: 100, // 商品库存
+                  product_id: 2, // 商品id收藏的时候用
+                  price: 0, // 单个品类初始价格
+                  number: 9, // 已选择购买数量
+                  cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                  mode: '黑色/64G', // 品种型号
+                  status: false, // 是否是立即购买传值
+                  sku_region: [
+                    {
+                      min: 1, // 最小批发数字
+                      max: 10, // 最大批发数字
+                      sell_price: 100.00 // 批发阶段价格
+                    },
+                    {
+                      min: 11, // 最小批发数字
+                      max: 100, // 最大批发数字
+                      sell_price: 85.50 // 批发阶段价格
+                    },
+                    {
+                      min: 101, // 最小批发数字
+                      max: 1000, // 最大批发数字
+                      sell_price: 50.50 // 批发阶段价格
+                    }
+                  ],
+                  focus: 1 // 是否关注
+                }
+              ]
+              _this.myReceiptIndexcenter_list_center_loading = false
+              _this.this_change_goods(shopping)
+            }, 1000)
           }
           // 我的订单页面返回商品库界面搜索
         },
@@ -196,6 +357,8 @@
               this.commodity_list_my[i].status = false
             }
           }
+          this.select_commodity = this.fruitIds.length
+          this.total_priceser()
         },
         checkAllGroupChange (data) { // 单个选择
           if (data.length === this.commodity_list_my.length) {
@@ -208,6 +371,8 @@
             this.indeterminate = false
             this.checkAll = false
           }
+          this.select_commodity = data.length
+          this.total_priceser()
         },
         addClasse (index) {
           if (this.commodity_list_my[index].status === false) {
@@ -223,6 +388,8 @@
             this.commodity_list_my[e].number--
           }
           this.change_unit_price(e)
+          this.total_priceser()
+          this.Record_the_number()
         },
         adds_number (e) { // 计算加法
           if (this.commodity_list_my[e].number >= this.commodity_list_my[e].inventory) {
@@ -231,6 +398,8 @@
             this.commodity_list_my[e].number++
           }
           this.change_unit_price(e)
+          this.total_priceser()
+          this.Record_the_number()
         },
         amount_change (e) { // 改变数值输入框
           this.commodity_list_my[e].number = this.commodity_list_my[e].number.replace(/^[0]+[0-9]*$/gi, '')
@@ -241,21 +410,217 @@
             this.commodity_list_my[e].number = this.commodity_list_my[e].inventory
           }
           this.change_unit_price(e)
+          this.total_priceser()
+          this.Record_the_number()
         },
-        entrance_particulars () { // 通过id进入详情页
-
+        entrance_particulars (ids) { // 通过id进入详情页
+          this.$router.push({name: 'commodityDetailsIndex', params: {id: ids}})
+        },
+        Record_the_number () { // 记录加减的数据
+          let shoping = []
+          for (let i = 0; i < this.commodity_list_my.length; i++) {
+            shoping.push({product_id: this.commodity_list_my[i].product_id, number: this.commodity_list_my[i].number})
+          }
+          this.$store.commit('THE_ORDER_SHOPPING_NUMBER', shoping)
         },
         ckear_checkall_shopping () { // 删除选中的商品
-
+          let _this = this
+          if (this.fruitIds.length <= 0) {
+            this.$Message.warning('请选中一个商品再进行删除')
+          } else {
+            let shoping = []
+            for (let i = 0; i < this.commodity_list_my.length; i++) {
+              if (this.commodity_list_my[i].status === true) {
+                shoping.push({id: this.commodity_list_my[i].id})
+              }
+            }
+            this.myReceiptIndexcenter_list_center_loading = true
+            setTimeout(function () {
+              let shopping = [
+                {
+                  id: '12346', // 品类id结算的时候用
+                  product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                  inventory: 10000, // 商品库存
+                  product_id: 1, // 商品id收藏的时候用
+                  price: 0, // 单个品类初始价格
+                  number: 110, // 已选择购买数量
+                  cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                  mode: '黑色/64G', // 品种型号
+                  status: true, // 是否是立即购买传值
+                  sku_region: [
+                    {
+                      min: 1, // 最小批发数字
+                      max: 10, // 最大批发数字
+                      sell_price: 10000.00 // 批发阶段价格
+                    },
+                    {
+                      min: 11, // 最小批发数字
+                      max: 100, // 最大批发数字
+                      sell_price: 8550.05 // 批发阶段价格
+                    },
+                    {
+                      min: 101, // 最小批发数字
+                      max: 1000, // 最大批发数字
+                      sell_price: 5000.05 // 批发阶段价格
+                    },
+                    {
+                      min: 1001, // 最小批发数字
+                      max: 10000, // 最大批发数字
+                      sell_price: 2500.05 // 批发阶段价格
+                    }
+                  ],
+                  focus: 0 // 是否关注
+                },
+                {
+                  id: '123546', // 品类id结算的时候用
+                  product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                  inventory: 10000, // 商品库存
+                  product_id: 1, // 商品id收藏的时候用
+                  price: 0, // 单个品类初始价格
+                  number: 10, // 已选择购买数量
+                  cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                  mode: '黑色/64G', // 品种型号
+                  status: true, // 是否是立即购买传值
+                  sku_region: [
+                    {
+                      min: 1, // 最小批发数字
+                      max: 10, // 最大批发数字
+                      sell_price: 10000.00 // 批发阶段价格
+                    },
+                    {
+                      min: 11, // 最小批发数字
+                      max: 100, // 最大批发数字
+                      sell_price: 8550.05 // 批发阶段价格
+                    },
+                    {
+                      min: 101, // 最小批发数字
+                      max: 1000, // 最大批发数字
+                      sell_price: 5000.05 // 批发阶段价格
+                    },
+                    {
+                      min: 1001, // 最小批发数字
+                      max: 10000, // 最大批发数字
+                      sell_price: 2500.05 // 批发阶段价格
+                    }
+                  ],
+                  focus: 0 // 是否关注
+                }
+              ]
+              _this.this_change_goods(shopping)
+              _this.$Message.success('删除成功')
+              _this.searchBoxValue = ''
+              _this.myReceiptIndexcenter_list_center_loading = false
+            }, 1000)
+          }
         },
         empty_purchase_order () { // 清空进货单
-
+          let _this = this
+          this.myReceiptIndexcenter_list_center_loading = true
+          setTimeout(function () {
+            let shopping = []
+            _this.this_change_goods(shopping)
+            _this.$Message.success('清空进货单成功')
+            _this.searchBoxValue = ''
+            _this.myReceiptIndexcenter_list_center_loading = false
+          }, 1000)
         },
         delete_single (e) { // 删除单个商品分类
-
+          let thisIds = []
+          thisIds.push({id: this.commodity_list_my[e].id})
+          this.myReceiptIndexcenter_list_center_loading = true
+          let _this = this
+          setTimeout(function () {
+            let shopping = [
+              {
+                id: '12346', // 品类id结算的时候用
+                product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                inventory: 10000, // 商品库存
+                product_id: 1, // 商品id收藏的时候用
+                price: 0, // 单个品类初始价格
+                number: 110, // 已选择购买数量
+                cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                mode: '黑色/64G', // 品种型号
+                status: true, // 是否是立即购买传值
+                sku_region: [
+                  {
+                    min: 1, // 最小批发数字
+                    max: 10, // 最大批发数字
+                    sell_price: 10000.00 // 批发阶段价格
+                  },
+                  {
+                    min: 11, // 最小批发数字
+                    max: 100, // 最大批发数字
+                    sell_price: 8550.05 // 批发阶段价格
+                  },
+                  {
+                    min: 101, // 最小批发数字
+                    max: 1000, // 最大批发数字
+                    sell_price: 5000.05 // 批发阶段价格
+                  },
+                  {
+                    min: 1001, // 最小批发数字
+                    max: 10000, // 最大批发数字
+                    sell_price: 2500.05 // 批发阶段价格
+                  }
+                ],
+                focus: 0 // 是否关注
+              }
+            ]
+            _this.this_change_goods(shopping)
+            _this.$Message.success('删除成功')
+            _this.searchBoxValue = ''
+            _this.myReceiptIndexcenter_list_center_loading = false
+          }, 1000)
         },
         focus_onclick_this (e) { // 关注商品
-
+          let productId = _this.commodity_list_my[e].product_id
+          this.commodity_list_my[e].focus = 1
+          console.log(productId)
+          this.myReceiptIndexcenter_list_center_loading = true
+          let _this = this
+          setTimeout(function () {
+            let shopping = [
+              {
+                id: '12346', // 品类id结算的时候用
+                product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                inventory: 10000, // 商品库存
+                product_id: 1, // 商品id收藏的时候用
+                price: 0, // 单个品类初始价格
+                number: 110, // 已选择购买数量
+                cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                mode: '黑色/64G', // 品种型号
+                status: true, // 是否是立即购买传值
+                sku_region: [
+                  {
+                    min: 1, // 最小批发数字
+                    max: 10, // 最大批发数字
+                    sell_price: 10000.00 // 批发阶段价格
+                  },
+                  {
+                    min: 11, // 最小批发数字
+                    max: 100, // 最大批发数字
+                    sell_price: 8550.05 // 批发阶段价格
+                  },
+                  {
+                    min: 101, // 最小批发数字
+                    max: 1000, // 最大批发数字
+                    sell_price: 5000.05 // 批发阶段价格
+                  },
+                  {
+                    min: 1001, // 最小批发数字
+                    max: 10000, // 最大批发数字
+                    sell_price: 2500.05 // 批发阶段价格
+                  }
+                ],
+                focus: 0 // 是否关注
+              }
+            ]
+            _this.this_change_goods(shopping)
+            _this.$Message.success('关注成功')
+            _this.searchBoxValue = ''
+            _this.myReceiptIndexcenter_list_center_loading = false
+          }, 1000)
+          // 调用关注商品接口之后回调整个商品接口
         },
         change_unit_price (e) { // 价格根据数量改变
           let skus = this.commodity_list_my[e].sku_region
@@ -271,21 +636,96 @@
         LibraryOfGoodsList_handleCurrentChange (currentPage) { // page分页点击的结果
           this.query.page = currentPage
           if (this.relative_pages_loding === false) {
-
+            console.log(currentPage)
+            this.quantity_statistics()
+            this.myReceiptIndexcenter_list_center_loading = true
+            this.relative_pages_loding = true
+            let _this = this
+            setTimeout(function () {
+              let shopping = [
+                {
+                  id: '12346', // 品类id结算的时候用
+                  product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                  inventory: 10000, // 商品库存
+                  product_id: 1, // 商品id收藏的时候用
+                  price: 0, // 单个品类初始价格
+                  number: 110, // 已选择购买数量
+                  cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                  mode: '黑色/64G', // 品种型号
+                  status: false, // 是否是立即购买传值
+                  sku_region: [
+                    {
+                      min: 1, // 最小批发数字
+                      max: 10, // 最大批发数字
+                      sell_price: 10000.00 // 批发阶段价格
+                    },
+                    {
+                      min: 11, // 最小批发数字
+                      max: 100, // 最大批发数字
+                      sell_price: 8550.05 // 批发阶段价格
+                    },
+                    {
+                      min: 101, // 最小批发数字
+                      max: 1000, // 最大批发数字
+                      sell_price: 5000.05 // 批发阶段价格
+                    },
+                    {
+                      min: 1001, // 最小批发数字
+                      max: 10000, // 最大批发数字
+                      sell_price: 2500.05 // 批发阶段价格
+                    }
+                  ],
+                  focus: 0 // 是否关注
+                },
+                {
+                  id: '1', // 品类id结算的时候用
+                  product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                  inventory: 10000, // 商品库存
+                  product_id: 1, // 商品id收藏的时候用
+                  price: 0, // 单个品类初始价格
+                  number: 110, // 已选择购买数量
+                  cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                  mode: '黑色/64G', // 品种型号
+                  status: false, // 是否是立即购买传值
+                  sku_region: [
+                    {
+                      min: 1, // 最小批发数字
+                      max: 10, // 最大批发数字
+                      sell_price: 10000.00 // 批发阶段价格
+                    },
+                    {
+                      min: 11, // 最小批发数字
+                      max: 100, // 最大批发数字
+                      sell_price: 8550.05 // 批发阶段价格
+                    },
+                    {
+                      min: 101, // 最小批发数字
+                      max: 1000, // 最大批发数字
+                      sell_price: 5000.05 // 批发阶段价格
+                    },
+                    {
+                      min: 1001, // 最小批发数字
+                      max: 10000, // 最大批发数字
+                      sell_price: 2500.05 // 批发阶段价格
+                    }
+                  ],
+                  focus: 0 // 是否关注
+                }
+              ]
+              _this.this_change_goods(shopping)
+              _this.$Message.success('关注成功')
+              _this.searchBoxValue = ''
+              _this.myReceiptIndexcenter_list_center_loading = false
+              _this.relative_pages_loding = false
+            }, 1000)
           } else {
             this.$Message.warning('请等待数据返回之后再进行翻页操作')
           }
         },
         readay_shopping () {
-          let Number = this.$store.state.event.The_order_shopping_Number
-          if (Number.length <= 0) {
-            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
-          } else { // Number有值就请求一下没有就不请求了(防止用户刷新页面的操作)
-            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
-          }
           let shopping = [
             {
-              id: 123456, // 品类id结算的时候用
+              id: '123456', // 品类id结算的时候用
               product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
               inventory: 10000, // 商品库存
               product_id: 1, // 商品id收藏的时候用
@@ -319,7 +759,7 @@
               focus: 0 // 是否关注
             },
             {
-              id: 654321, // 品类id结算的时候用
+              id: '654321', // 品类id结算的时候用
               product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
               inventory: 1000, // 商品库存
               product_id: 2, // 商品id收藏的时候用
@@ -348,7 +788,500 @@
               focus: 1 // 是否关注
             },
             {
-              id: 1234, // 品类id结算的时候用
+              id: '1234', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '1', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '2', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '3', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '4', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '5', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '6', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '7', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '8', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '9', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '0', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '11', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '12', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '13', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '14', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '15', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '16', // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 9, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.50 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: '17', // 品类id结算的时候用
               product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
               inventory: 100, // 商品库存
               product_id: 2, // 商品id收藏的时候用
@@ -377,8 +1310,23 @@
               focus: 1 // 是否关注
             }
           ]
+          this.this_change_goods(shopping)
+          this.quantity_statistics() // 数量统计
+        },
+        quantity_statistics () { // 数量做统计
+          let Number = this.$store.state.event.The_order_shopping_Number
+          if (Number.length <= 0) {
+            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+          } else { // Number有值就请求一下没有就不请求了(防止用户刷新页面的操作)
+            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+          }
+        },
+        this_change_goods (shopping) { // 处理主逻辑
           this.fruitIds = []
           this.fruitIdsAll = []
+          this.commodity_list_my = []
+          this.checkAll = false
+          this.indeterminate = false
           for (let i = 0; i < shopping.length; i++) { // 价格显示
             this.$set(shopping[i], 'price_once', 0)
             if (shopping[i].status === true) {
@@ -396,10 +1344,18 @@
           }
           if (this.fruitIds.length > 0) {
             this.indeterminate = true
+            if (this.fruitIds.length === this.fruitIdsAll.length) {
+              this.indeterminate = false
+              this.checkAll = true
+            } else {
+              this.indeterminate = true
+              this.checkAll = false
+            }
           } else {
             this.indeterminate = false
           }
           this.commodity_list_my = shopping
+          this.select_commodity = this.fruitIds.length
           this.unit_price_readay() // 计算初始化单个总价
           this.total_priceser() // 计算总价
         },
@@ -425,17 +1381,36 @@
           let prices = this.commodity_list_my[e]
           unitPrice += (prices.price * 100) * prices.number / 100
           prices.price_once = parseFloat(unitPrice)
+        },
+        close_an_account () {
+          let closeAn = []
+          let Skuid = []
+          this.relative_pages_loding = true
+          this.close_an_account_loading = true
+          for (let i = 0; i < this.commodity_list_my.length; i++) {
+            if (this.commodity_list_my[i].status === true) {
+              closeAn.push({
+                id: this.commodity_list_my[i].id, // 商品skuid
+                number: this.commodity_list_my[i].number // 数量
+              })
+              Skuid.push({id: this.commodity_list_my[i].id})
+            }
+          }
+          let _this = this
+          setTimeout(function () {
+            _this.relative_pages_loding = false
+            _this.close_an_account_loading = false
+            _this.$store.commit('THE_ORDER_SKUID_SHOPPING', Skuid)
+            let Number = _this.$store.state.event.The_order_Skuid_shopping
+            console.log(Number)
+          }, 1000)
         }
       },
       created: function () {
         const self = this
         const id = this.$route.params.id
         self.myReceiptIndexId = id
-        let focusers = []
-        for (let i = 0; i < 10; i++) {
-          focusers.push({a: i, b: i + 1})
-        }
-        this.$store.commit('THE_ORDER_SHOPPING_NUMBER', focusers)
+        this.$store.commit('THE_ORDER_SKUID_SHOPPING_CLEAR')
         this.readay_shopping()
       },
       mounted () {
@@ -719,6 +1694,9 @@
     text-align: center;
     font-size: 14px;
   }
+  .myReceiptIndexcenter_list_centerNumber .operation_div ul li span{
+    cursor:pointer;
+  }
   .myReceiptIndexcenter_list_close_footer{
     width: 1180px;
     height: 76px;
@@ -804,6 +1782,10 @@
     width: 280px;
     height: 280px;
     margin: 59px auto;
+  }
+  .myReceiptIndexcenter_list_center_loading{
+    width: 100%;
+    min-height: 600px;
   }
   .active{
     background: #000;
