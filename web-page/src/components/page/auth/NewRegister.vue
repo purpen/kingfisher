@@ -20,7 +20,7 @@
         <FormItem prop="smsCode" class="appendColor">
           <Input v-model="form.smsCode" placeholder="输入验证码">
             <span slot="prepend" class="background-fff border-r-fff">手机验证码</span>
-            <span slot="append"><Button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></span>
+            <span slot="append"><Button type="primary" class="code-btn" @click.native="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></span>
           </Input>
         </FormItem>
         <div class="display-flex-algin" v-if="sendSms">
@@ -256,7 +256,7 @@
               </Col>
             </Row>
           </div>
-          <Modal title="查看" v-model="visible">
+          <Modal title="查看" v-model="visible" class="viseble_none">
             <img :src="imgName" v-if="visible" style="width: 100%">
           </Modal>
         </FormItem>

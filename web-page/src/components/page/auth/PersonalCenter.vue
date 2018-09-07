@@ -41,7 +41,7 @@
                     <span>选择图片</span>
                   </div>
                 </Upload>
-                <Modal title="查看" v-model="visible">
+                <Modal title="查看" v-model="visible" class="viseble_none">
                   <img :src="imgName" v-if="visible" style="width: 100%">
                 </Modal>
               </div>
@@ -112,8 +112,8 @@
       }
       const validName = (rule, value, callback) => {
         if (value) {
-          if (value.length > 5) {
-            callback(new Error('长度最大为5'))
+          if (value.length > 15) {
+            callback(new Error('长度最大为15'))
           } else {
             callback()
           }
@@ -187,7 +187,6 @@
                   self.$Message.success('修改成功')
                   self.$http.get(api.user)
                     .then((response) => {
-                      console.log(response.data.data)
                       auth.write_user(response.data.data)
                     })
                   // self.$router.push('/center/order')
@@ -241,7 +240,6 @@
     },
     created () {
       let userInfo = this.$store.state.event.user
-      console.log(userInfo)
       for (let attr in userInfo) {
         this.personalform[attr] = userInfo[attr]
       }

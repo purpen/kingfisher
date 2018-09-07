@@ -249,13 +249,13 @@ export default {
                 if (item.province) {
                   self.storesCity = item.province + '/' + item.city + '/' + item.county
                 } else {
-                  self.storesCity = '暂无地址'
+                  self.storesCity = ''
                 }
                 // 企业
                 if (item.e_province) {
                   self.enterpriseCity = item.e_province + '/' + item.e_city + '/' + item.e_county
                 } else {
-                  self.enterpriseCity = '暂无地址'
+                  self.enterpriseCity = ''
                 }
               })
               if (self.item.authorization) {

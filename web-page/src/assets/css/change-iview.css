@@ -1,6 +1,11 @@
 .ivu-menu-horizontal.ivu-menu-light:after {
   background: #ffffff;
 }
+
+/*弹框底部按钮*/
+.viseble_none .ivu-modal-footer {
+  display: none;
+}
 /*侧边栏*/
 .menu-list .item.is-active {
   color: #ED3A4A;

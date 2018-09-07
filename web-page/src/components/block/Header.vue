@@ -28,7 +28,9 @@
             <Submenu name="" class="">
                 <template slot="title">
                   <div class="header_user_avatar">
-                    <img :src="isUserImg" alt="">
+                    <div>
+                      <img :src="isUserImg" alt="">
+                    </div>
                   </div>
                     {{ eventUser.account }}
                 </template>
