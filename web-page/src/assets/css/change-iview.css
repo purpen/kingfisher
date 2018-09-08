@@ -419,7 +419,7 @@
 /*头部样式*/
 .LibraryOfGoodsIndex_search_box .ivu-input{
   padding-left: 10px;
-  padding-right: 5px;
+  padding-right: 40px;
   border: 1px solid #999;
   border-radius: 0;
   color: #999;
@@ -440,6 +440,7 @@
 }
 .LibraryOfGoodsIndex_search_box div.search_box_search .ivu-input-suffix{
   bottom: 0;
+  margin-right: 8px;
 }
 .LibraryOfGoodsIndex_search_box div.search_box_search .ivu-input-suffix i{
   font-size: 20px;
@@ -534,20 +535,21 @@
 }
 .LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-total{
   color: #666;
-  font-size: 16px;
+  font-size: 14px;
   margin-right: 25px;
   height: 40px;
+  line-height: 40px;
 }
 .LibraryOfGoodsList_relative_pages .ivu-page span.ivu-page-total{
 }
 .LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-custom-text{
   height: 40px;
-  width: 90px;
-  font-size: 16px;
+  width: 80px;
+  font-size: 12px;
   color: #CFD0D0;
   border: 1px solid #CFD0D0;
+  border-radius: 0;
   line-height: 40px;
-  border-radius: 10px;
 }
 .LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-custom-text:hover{
   border: 1px solid #515a6e;
@@ -565,8 +567,8 @@
   line-height: 40px;
   background: rgba(248,248,248,1);
   border: 1px solid rgba(200,200,200,1);
-  font-size: 16px;
-  border-radius: 10px;
+  border-radius: 0;
+  font-size: 14px;
 }
 .LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item:hover{
   background: #fff;
@@ -590,13 +592,13 @@
   height: 40px;
 }
 .LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-options .ivu-page-options-elevator input{
-  width:50px;
+  width:40px;
   height:40px;
   background:rgba(248,248,248,1);
-  border-radius:10px;
   border: 1px solid rgba(200,200,200,1);
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
+  border-radius: 0;
 }
 .LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-options .ivu-page-options-elevator input:focus{
   border: 1px solid #333333;
@@ -728,4 +730,98 @@
 }
 .myReceiptIndexcenter_list_centerNumber .check_all_div .ivu-checkbox + span{
   display: none;
+}
+
+/*地址管理*/
+.AddressManagementTable_the_new_address .ivu-btn{
+  width:110px;
+  height:30px;
+  font-size:12px;
+  color: #666666;
+  background-color: rgba(240,240,240,1);
+  border: 1px solid rgba(200,200,200,1);
+  float: right;
+  border-radius: 0;
+}
+.AddressManagementTable_the_new_address .ivu-btn:hover{
+  border: 1px solid #ED3A4A;
+  background: #ED3A4A;
+  color: #fff;
+}
+.shipping_address_wrapper_div_button .ivu-btn{
+  float: right;
+  margin-left: 10px;
+  height: 30px;
+  width: 54px;
+  border: 1px solid rgba(200,200,200,1);
+  color: rgba(200,200,200,1);
+  background:rgba(240,240,240,1);
+  padding: 0;
+  font-size: 12px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 0;
+}
+.shipping_address_wrapper_div_button .ivu-btn:hover{
+  border: 1px solid #ED3A4A;
+  background: #ED3A4A;
+  color: #fff;
+}
+.shipping_address_wrapper_div_button .ivu-btn.big_ivu-btn{
+  width: 80px;
+}
+/*.AddressManagementShippingAddress .ivu-modal{*/
+  /*top: 50%;*/
+  /*position: absolute;*/
+  /*left: 50%;*/
+  /*transform: translate(-50%, -50%);*/
+/*}*/
+.AddressManagementShippingAddress .ivu-modal .ivu-modal-content{
+  border-radius: 0;
+  border:1px solid rgba(200,200,200,1);
+}
+.AddressManagementShippingAddress_odal-footer .ivu-btn{
+  width: 90px;
+  height: 30px;
+  border-radius: 0;
+  border: 1px solid rgba(200,200,200,1);
+  background:rgba(240,240,240,1);
+  color: #333333;
+  font-size: 14px;
+  line-height: 16px;
+}
+.AddressManagementShippingAddress_odal-footer .ivu-btn:hover{
+  border: 1px solid #ED3A4A;
+  background: #ED3A4A;
+  color: #fff;
+}
+.AddressManagementShippingAddress_odal-center .ivu-select-single .ivu-select-selection{
+  font-size: 12px;
+  color: #666666;
+  border-radius: 0;
+}
+.AddressManagementShippingAddress_odal-center .ivu-input{
+  border-radius: 0;
+  font-size: 12px;
+}
+.AddressManagementShippingAddress_odal-center textarea{
+  width: 498px;
+  font-size: 12px;
+  line-height: 16px;
+  resize: none;
+  height: 40px;
+}
+.AddressManagementShippingAddress_modal-footer .ivu-btn{
+  width: 71px;
+  height: 30px;
+  border: 1px solid rgba(200,200,200,1);
+  background:rgba(240,240,240,1);
+  color: #666666;
+  border-radius: 0;
+  line-height: 15px;
+}
+.AddressManagementShippingAddress_modal-footer .ivu-btn:hover{
+  border: 1px solid #ED3A4A;
+  background: #ED3A4A;
+  color: #fff;
 }

@@ -2,20 +2,21 @@
   <div>
     <Modal
       v-model="bounced"
-      :styles="{top: '50px'}"
-      width="720"
+      :styles="{top: '38%'}"
+      width="300"
       :mask-closable="false"
       :closable="false"
       class-name="vertical-center-modal AddressManagementShippingAddress"
     >
+      <Icon type="md-close" class="close_this" @click.native="cancel()" />
       <div class="save_success">
-        <p><Icon type="md-checkmark-circle" /></p>
-        <p>保存成功</p>
+        <p><img src="../../assets/images/icon/icon46.png" alt=""></p>
+        <p>设置成功</p>
       </div>
-      <div class="modal-footer">
-        <Button type="text" @click.native="cancel">取消</Button>
-        <Button type="primary" @click.native="asyncOK">确定</Button>
-      </div>
+      <!--<div class="modal-footer">-->
+        <!--<Button type="text" @click.native="cancel">取消</Button>-->
+        <!--<Button type="primary" @click.native="asyncOK">确定</Button>-->
+      <!--</div>-->
     </Modal>
   </div>
 </template>
@@ -70,13 +71,65 @@
     line-height: 30px;
     margin-top: 20px;
     text-align: center;
-    font-size: 20px;
-    margin-bottom: 20px;
+    font-size:16px;
+    margin-bottom: 14px;
+  }
+  .save_success p:last-child{
+    margin-top: 5px;
+  }
+  .save_success p img{
+    width: 70px;
+    height: 63px;
   }
   .save_success i {
     margin: 0 auto;
     font-size: 50px;
     display: inline-block;
     color: #00ff00;
+  }
+  .close_this{
+    font-size: 22px;
+    position: absolute;
+    color: #C8C8C8;
+    right: 16px;
+    top: 12px;
+  } .vertical-center-modal .ivu-modal{
+      top: 0;
+    }
+  .modal-footer{
+    border-top: 1px solid #e8eaec;
+    padding: 12px 18px 0 18px;
+    text-align: right;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+  .save_success p{
+    width: 100%;
+    height: auto;
+    line-height: 30px;
+    margin-top: 20px;
+    text-align: center;
+    font-size:16px;
+    margin-bottom: 14px;
+  }
+  .save_success p:last-child{
+    margin-top: 5px;
+  }
+  .save_success p img{
+    width: 70px;
+    height: 63px;
+  }
+  .save_success i {
+    margin: 0 auto;
+    font-size: 50px;
+    display: inline-block;
+    color: #00ff00;
+  }
+  .close_this{
+    font-size: 22px;
+    position: absolute;
+    color: #C8C8C8;
+    right: 16px;
+    top: 12px;
   }
 </style>

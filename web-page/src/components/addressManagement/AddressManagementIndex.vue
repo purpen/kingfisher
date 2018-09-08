@@ -6,19 +6,22 @@
       <Col :span="3" class="left-menu">
       <v-menu currentName="management_index"></v-menu>
       </Col>
-      <Col :span="21">
+      <Col :span="21" class="AddressManagementTable_the_new_address_width">
       <div class="management-index-box">
         <h3>地址管理</h3>
-        <Button @click.native="the_new_address()"><i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i> 新增收货地址</Button>
-        <div class="management-index-remind">
-          <Icon type="ios-information-circle" />
-          您以创建{{management_index_beforeNumber}}个收货地址,最多可创建{{management_index_afterNumber}}个
+        <div class="AddressManagementTable_the_new_address">
+          <Button @click.native="the_new_address()">新增收货地址</Button>
+          <!--<p>以创建{{management_index_beforeNumber}}个收货地址,最多可创建{{management_index_afterNumber}}个</p>-->
         </div>
         <div class="management-index-list">
-          <Spin size="large" fix v-if="isLoading"></Spin>
           <div class="blank20"></div>
+          <Spin v-show="relative_pages_loding" fix></Spin>
           <address-management-table :dataTable="dataTable"></address-management-table>
         </div>
+        <!--<div class="AddressManagementTable_the_new_address">-->
+          <!--<Button @click.native="the_new_address()">新增收货地址</Button>-->
+          <!--<p>以创建{{management_index_beforeNumber}}个收货地址,最多可创建{{management_index_afterNumber}}个</p>-->
+        <!--</div>-->
       </div>
       </Col>
     </Row>
@@ -27,6 +30,7 @@
   <address-management-savesuccess v-if="isShoShippingOk"></address-management-savesuccess>
   <address-management-shipping-address-new v-if="isShoShippingNew"></address-management-shipping-address-new>
   <address-management-savesuccess-new v-if="isShoShippingOkNew"></address-management-savesuccess-new>
+  <adders-managenebt-counetersign v-if="isCounetersign"></adders-managenebt-counetersign>
 </div>
 </template>
 
@@ -37,101 +41,22 @@ import AddressManagementShippingAddress from '@/components/addressManagement/Add
 import AddressManagementSavesuccess from '@/components/addressManagement/AddressManagementSavesuccess'
 import AddressManagementShippingAddressNew from '@/components/addressManagement/AddressManagementShippingAddressNew'
 import AddressManagementSavesuccessNew from '@/components/addressManagement/AddressManagementSavesuccessNew'
+import AddersManagenebtCounetersign from '@/components/addressManagement/AddersManagenebtCountersign'
 export default {
   name: 'addressManagementIndex',
   data () {
     return {
       Bus: this.$BusFactory(this), // bus方法
-      management_index_beforeNumber: 2, // 已经创建了几个地址
+      management_index_beforeNumber: 0, // 已经创建了几个地址
       management_index_afterNumber: 5, // 最多能创建几个地址
       shipping_address: false, // 修改地址是否显示
       isShoShipping: false, // 显示修改地址弹框组件
       isShoShippingOk: false, // 显示修改地址成功提示
       isShoShippingNew: false, // 新增收货地址
       isShoShippingOkNew: false, // 新增收货地址确认
-      dataTable: [
-        {
-          name: '刘旭阳',
-          theConsignee: '刘旭阳',
-          region: '北京朝阳',
-          address: '朝阳区大西洋新城100栋1005室',
-          mobilePhone: '15811678945',
-          fixedTelephone: '010-12345678',
-          email: '3206599456@qq.com',
-          state: '1',
-          ids: 'asdk123',
-          zip: '101500', // 邮编
-          province_id: 11, // 省份ID
-          city_id: 870, // 城市ID
-          county_id: 875, // 区县ID
-          town_id: 14360 // 城镇／乡ID
-        },
-        {
-          name: '刘旭阳0',
-          theConsignee: '刘旭阳0',
-          region: '北京朝阳0',
-          address: '朝阳区大西洋新城100栋1005室0',
-          mobilePhone: '158116789450',
-          fixedTelephone: '010-123456780',
-          email: '3206599456@qq.com0',
-          state: '0',
-          ids: '1234567',
-          zip: '101500', // 邮编
-          province_id: 11, // 省份ID
-          city_id: 870, // 城市ID
-          county_id: 875, // 区县ID
-          town_id: 0 // 城镇／乡ID
-        },
-        {
-          name: '刘旭阳0',
-          theConsignee: '刘旭阳0',
-          region: '北京朝阳0',
-          address: '朝阳区大西洋新城100栋1005室0',
-          mobilePhone: '158116789450',
-          fixedTelephone: '010-123456780',
-          email: '3206599456@qq.com0',
-          state: '0',
-          ids: '1234567',
-          zip: '101500', // 邮编
-          province_id: 11, // 省份ID
-          city_id: 870, // 城市ID
-          county_id: 875, // 区县ID
-          town_id: 0 // 城镇／乡ID
-        },
-        {
-          name: '刘旭阳0',
-          theConsignee: '刘旭阳0',
-          region: '北京朝阳0',
-          address: '朝阳区大西洋新城100栋1005室0',
-          mobilePhone: '158116789450',
-          fixedTelephone: '010-123456780',
-          email: '3206599456@qq.com0',
-          state: '0',
-          ids: '1234567',
-          zip: '101500', // 邮编
-          province_id: 11, // 省份ID
-          city_id: 870, // 城市ID
-          county_id: 875, // 区县ID
-          town_id: 14360 // 城镇／乡ID
-        },
-        {
-          name: '刘旭阳0',
-          theConsignee: '刘旭阳0',
-          region: '北京朝阳0',
-          address: '朝阳区大西洋新城100栋1005室0',
-          mobilePhone: '158116789450',
-          fixedTelephone: '010-123456780',
-          email: '3206599456@qq.com0',
-          state: '0',
-          ids: '1234567',
-          zip: '101500', // 邮编
-          province_id: 11, // 省份ID
-          city_id: 870, // 城市ID
-          county_id: 875, // 区县ID
-          town_id: 14360 // 城镇／乡ID
-        }
-      ], // 请求回来的地址参数
-      isLoading: false // loading
+      isCounetersign: false, // 是否删除
+      dataTable: [], // 请求回来的地址参数
+      relative_pages_loding: false // loding
     }
   },
   components: {
@@ -140,7 +65,8 @@ export default {
     AddressManagementShippingAddress,
     AddressManagementSavesuccess,
     AddressManagementShippingAddressNew,
-    AddressManagementSavesuccessNew
+    AddressManagementSavesuccessNew,
+    AddersManagenebtCounetersign
   },
   methods: {
     the_new_address: function () {
@@ -155,10 +81,101 @@ export default {
       } else if (this.management_index_beforeNumber > 5) {
         this.management_index_beforeNumber = 5
       }
+    },
+    readay () {
+      this.relative_pages_loding = true
+      let readay = []
+      readay.push(
+        {
+          name: '刘旭阳',
+//          theConsignee: '刘旭阳',
+          region: '北京朝阳',
+          address: '朝阳区大西洋新城100栋1005室',
+          mobilePhone: '15811678945',
+//          fixedTelephone: '010-12345678',
+//          email: '3206599456@qq.com',
+          state: 1,
+          ids: 'asdk123',
+//          zip: '101500', // 邮编
+          province_id: 11, // 省份ID
+          city_id: 870, // 城市ID
+          county_id: 875, // 区县ID
+          town_id: 14360 // 城镇／乡ID
+        },
+        {
+          name: '刘旭阳',
+//          theConsignee: '刘旭阳',
+          region: '北京朝阳',
+          address: '朝阳区大西洋新城100栋1005室',
+          mobilePhone: '15811678945',
+//          fixedTelephone: '010-12345678',
+//          email: '3206599456@qq.com',
+          state: 0,
+          ids: 'asdk123',
+//          zip: '101500', // 邮编
+          province_id: 11, // 省份ID
+          city_id: 870, // 城市ID
+          county_id: 875, // 区县ID
+          town_id: 14360 // 城镇／乡ID
+        },
+        {
+          name: '刘旭阳',
+//          theConsignee: '刘旭阳',
+          region: '北京朝阳',
+          address: '朝阳区大西洋新城100栋1005室',
+          mobilePhone: '15811678945',
+//          fixedTelephone: '010-12345678',
+//          email: '3206599456@qq.com',
+          state: 0,
+          ids: 'asdk123',
+//          zip: '101500', // 邮编
+          province_id: 11, // 省份ID
+          city_id: 870, // 城市ID
+          county_id: 875, // 区县ID
+          town_id: 14360 // 城镇／乡ID
+        },
+        {
+          name: '刘旭阳',
+//          theConsignee: '刘旭阳',
+          region: '北京朝阳',
+          address: '朝阳区大西洋新城100栋1005室',
+          mobilePhone: '15811678945',
+//          fixedTelephone: '010-12345678',
+//          email: '3206599456@qq.com',
+          state: 0,
+          ids: 'asdk123',
+//          zip: '101500', // 邮编
+          province_id: 11, // 省份ID
+          city_id: 870, // 城市ID
+          county_id: 875, // 区县ID
+          town_id: 14360 // 城镇／乡ID
+        },
+        {
+          name: '刘旭阳',
+//          theConsignee: '刘旭阳',
+          region: '北京朝阳',
+          address: '朝阳区大西洋新城100栋1005室',
+          mobilePhone: '15811678945',
+//          fixedTelephone: '010-12345678',
+//          email: '3206599456@qq.com',
+          state: 0,
+          ids: 'asdk123',
+//          zip: '101500', // 邮编
+          province_id: 11, // 省份ID
+          city_id: 870, // 城市ID
+          county_id: 875, // 区县ID
+          town_id: 14360 // 城镇／乡ID
+        })
+      let _this = this
+      setTimeout(function () {
+        _this.relative_pages_loding = false
+        _this.dataTable = readay
+      }, 2000)
     }
   },
   created: function () {
-
+//    this.management_index_beforeNumber = this.dataTable.length
+    this.readay()
   },
   beforeMount () {
 
@@ -166,7 +183,22 @@ export default {
   mounted () {
     this.Bus.$on('erp-address-management-deletion', (em) => {
       // 删除地址
-      console.log(em)
+      this.isCounetersign = true
+      let _this = this
+      setTimeout(function () {
+        _this.Bus.$emit('erp-address-management-isoks', em)
+      }, 120)
+    })
+    this.Bus.$on('erp-address-management-isoks_close', (em) => {
+      // 关闭删除弹框
+      let _this = this
+      setTimeout(function () {
+        _this.isCounetersign = false
+      }, 100)
+    })
+    this.Bus.$on('erp-address-management-isoks_okclose', (em) => {
+      // 删除地址请求
+      this.Bus.$emit('erp-address-management-isoks_is', 'ok') // 删除是否成功
     })
     this.Bus.$on('erp-address-management-modifyThe', (em) => {
       // 修改地址
@@ -190,6 +222,7 @@ export default {
     this.Bus.$on('erp-address-management-setTheDefault', (em) => {
       // 默认地址
       console.log(em)
+      this.$Message.success('设置成功')
     })
     this.Bus.$on('AddressManagementShippingAddress_hide', (em) => {
       let _this = this
@@ -301,29 +334,34 @@ export default {
 </script>
 
 <style scoped>
+  .AddressManagementTable_the_new_address_width{
+    min-width: 850px;
+  }
+  .AddressManagementTable_the_new_address {
+    width: 747px;
+    margin: 0 auto;
+    height: 30px;
+    clear: both;
+  }
+  .AddressManagementTable_the_new_address p{
+    margin-left: 12px;
+    width: 300px;
+    color: #666;
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    float: left;
+  }
   .management-index-box h3{
-    font-size: 1.8rem;
+    font-size: 12px;
     color: #222;
-    line-height: 2;
-    margin-bottom: 15px;
-  }
-  .management-index-remind{
-    margin-top: 16px;
-    padding: 8px 48px 8px 38px;
-    border: 1px solid #abdcff;
-    background-color: #f0faff;
-    position: relative;
-  }
-  .ivu-icon-ios-information-circle{
-    color: #2d8cf0;
-    position: absolute;
-    font-size: 16px;
-    top: 8px;
-    left: 17px;
+    line-height: 16px;
+    margin-bottom: 12px;
+    margin-top: 11px;
   }
   .management-index-list{
-    width: 100%;
+    width: 747px;
+    margin: 0 auto;
     min-height: 300px;
-    padding-bottom: 50px;
   }
 </style>

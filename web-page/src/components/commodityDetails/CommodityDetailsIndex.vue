@@ -8,11 +8,11 @@
             <div class="LibraryOfGoodsIndex_center_title">
               <p>{{titles}}</p>
             </div>
-            <div class="LibraryOfGoodsIndex_search_box">
-              <Input v-model="searchBoxValue" placeholder="商品名称" class="search_box_search" @on-keydown.13="searchBox_Value">
-              <Icon type="ios-search" slot="suffix" :loading="search_box_loading" @click.active="searchBox_Value" />
-              </Input>
-            </div>
+            <!--<div class="LibraryOfGoodsIndex_search_box">-->
+              <!--<Input v-model="searchBoxValue" placeholder="商品名称" class="search_box_search" @on-keydown.13="searchBox_Value">-->
+              <!--<Icon type="ios-search" slot="suffix" :loading="search_box_loading" @click.active="searchBox_Value" />-->
+              <!--</Input>-->
+            <!--</div>-->
           </div>
           <div class="LibraryOfGoodsIndex_center_content">
             <div class="LibraryOfGoodsIndex_center_content_carousel">
@@ -25,21 +25,32 @@
                     <img src="../../assets/images/product_500.png" alt="">
                   </div>
                 </div>
-                <div class="LibraryOfGoodsIndex_center_content_samll">
-                  <ul>
-                    <li
-                      v-for="(data_smalls, index) in data_small"
-                      :key="index"
-                      :class="{actives : index == page_index}"
-                      @mouseover="page_index_change(index,data_smalls.images)"
-                      v-if="data_smalls.images"
-                    >
-                      <img :src="data_smalls.images" alt="">
-                    </li>
-                    <li v-else @mouseover="page_index_change(index,'')">
-                      <img src="../../assets/images/product_500.png" alt="">
-                    </li>
-                  </ul>
+                <div class="small_imgs">
+                  <div class="small_imgs_left">
+                    <Icon type="ios-arrow-back" @click.native="left" id="left" />
+                  </div>
+                  <div class="comment">
+                  <div class="LibraryOfGoodsIndex_center_content_samll" ref="widths" style="left: 0;">
+                    <ul>
+                      <li
+                        v-for="(data_smalls, index) in data_small"
+                        :key="index"
+                        :class="{actives : index == page_index}"
+                        @mouseover="page_index_change(index,data_smalls.images)"
+                        v-if="data_smalls.images"
+                        ref="comment_center_div"
+                      >
+                        <img :src="data_smalls.images" alt="">
+                      </li>
+                      <li v-else @mouseover="page_index_change(index,'')">
+                        <img src="../../assets/images/product_500.png" alt="">
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                  <div class="small_imgs_right">
+                    <Icon type="ios-arrow-forward" @click.native="right" id="right"/>
+                  </div>
                 </div>
                 <div class="LibraryOfGoodsIndex_center_content_like" @click="like_this_shooping()">
                   <img src="../../assets/images/libraryOfGoods/icon-redxin.png"  v-if="like_Value_Show" alt="">
@@ -132,6 +143,11 @@
       </div>
       </Col>
     </Row>
+    <!--<div class="comment">-->
+      <!--<div class="comment_center">-->
+        <!--<div v-for="items in 16" ref="comment_center_div" class="comment_center_div">{{items}}</div>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 <script>
@@ -164,23 +180,54 @@
           Button_right_loding: false, // 立即购买等待
           Button_right_disabled: false, // 立即购买禁用
           LibraryOfGoodsIndex_The_introduction: '', // 商品介绍
-          this_follow: false // 关注防止误点击
+          this_follow: false, // 关注防止误点击
+          rights: 0, // 距离距离
+          rights_number: 0
         }
       },
       components: {
         imgZoom
       },
       methods: {
-        searchBox_Value () { // 请求搜索数据
-          this.searchBoxValue = this.searchBoxValue.replace(/(^\s*)|(\s*$)/g, '')
-          if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null || this.searchBoxValue === 'undefined') {
-            this.$Message.warning('搜索输入不能为空')
+//        searchBox_Value () { // 请求搜索数据
+//          this.searchBoxValue = this.searchBoxValue.replace(/(^\s*)|(\s*$)/g, '')
+//          if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null || this.searchBoxValue === 'undefined') {
+//            this.$Message.warning('搜索输入不能为空')
+//          } else {
+//            this.$store.commit('GLOBAL_SEARCH_LIBRARY_OF_GOODS', this.searchBoxValue)
+//            this.searchBoxValue = ''
+//            this.$router.push({name: 'libraryOfGoodsIndex'})
+//          }
+//          // 详情页面搜素点击搜素之后跳回
+//        },
+        left () {
+          let ids = this.$refs.widths
+          this.$nextTick(() => {
+            this.rights_number = this.$refs.comment_center_div.length
+          })
+          let newLength = Math.ceil(this.rights_number / 5) * 5
+          let total = 75 * newLength
+          let widths = ids.offsetWidth
+          let Nowwidths = widths + 375
+          console.log(Nowwidths)
+          if (Nowwidths >= total) {
+            ids.style.left = '-' + (total - 375) + 'px'
+            this.rights = total - 375
           } else {
-            this.$store.commit('GLOBAL_SEARCH_LIBRARY_OF_GOODS', this.searchBoxValue)
-            this.searchBoxValue = ''
-            this.$router.push({name: 'libraryOfGoodsIndex'})
+            ids.style.left = '-' + (Nowwidths - 380) + 'px'
+            this.rights = Nowwidths - 380
           }
-          // 详情页面搜素点击搜素之后跳回
+        },
+        right () {
+          let ids = this.$refs.widths
+          let widths = ids.offsetWidth
+          console.log(this.rights)
+          if (widths <= 380) {
+            ids.style.left = '0px'
+          } else {
+            this.rights = this.rights - 375
+            ids.style.left = '-' + (this.rights) + 'px'
+          }
         },
         like_this_shooping () {
           if (this.this_follow === false) {
@@ -409,9 +456,11 @@
                   this.data_small.push({images: images[i]})
                 }
                 this.data.min = this.data_small[0].images
+                this.rights_number = this.data_small.length
               } else {
                 this.data_small.push({images})
                 this.data.min = this.data_small[0].images
+                this.rights_number = this.data_small.length
               }
               this.product_information = skuse
               for (let a = 0; a < this.product_information.length; a++) { // 产品种类
@@ -509,7 +558,7 @@
     clear: both;
   }
   .LibraryOfGoodsIndex_center_title{
-    width: 950px;
+    width: 1180px;
     padding: 10px 20px;
     padding-left: 0;
     float: left;
@@ -532,6 +581,7 @@
   }
   .LibraryOfGoodsIndex_center_content_carousel_ceter{
     width: 420px;
+    margin-bottom: 25px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_like{
@@ -543,7 +593,7 @@
     vertical-align:middle;
     position: absolute;
     left: 50%;
-    bottom: -15px;
+    bottom: -22px;
     transform: translate(-50%,-50%);
   }
   .LibraryOfGoodsIndex_center_content_like img{
@@ -562,49 +612,85 @@
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_bigimg{
-    width: 420px;
-    height: 420px;
+    width: 418px;
+    height: 418px;
+    border: 1px solid #ccc;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_bigimg_none{
-    width: 420px;
-    height: 420px;
+    width: 416px;
+    height: 416px;
     background: #ccc;
   }
   .LibraryOfGoodsIndex_center_content_bigimg_none img{
-    width: 420px;
-    height: 420px;
+    width: 416px;
+    height: 416px;
   }
   .LibraryOfGoodsIndex_center_content_bigimg img{
-    width: 420px;
-    height: 420px;
+    width: 416px;
+    height: 416px;
     float: left;
+  }
+  .small_imgs{
+    width: 420px;
+    height: 94px;
+    position: relative;
+    float: left;
+  }
+  .small_imgs_left{
+    position: absolute;
+    left: 0;
+    top:0;
+    height: 67px;
+    width: 20px;
+    text-align: center;
+    line-height: 67px;
+    font-size: 20px;
+  }
+  .small_imgs_right{
+    position: absolute;
+    right: 0;
+    top:0;
+    height: 67px;
+    width: 20px;
+    text-align: center;
+    line-height: 67px;
+    font-size: 20px;
+  }
+  .comment{
+    width: 380px;
+    height: 67px;
+    overflow: hidden;
+    position: relative;
+    margin: 0 20px 27px 20px;
   }
   .LibraryOfGoodsIndex_center_content_samll{
-    margin-top: 25px;
     float: left;
-    width: 420px;
-    min-height: 76px;
-    margin-bottom: 27px;
+    max-width: 9000px;
+    min-height: 67px;
+    position: absolute;
+    left: 0;
+    transition: left .5s;
+    top: 0;
   }
   .LibraryOfGoodsIndex_center_content_samll ul{
-    width: 420px;
     float: left;
+    height: 67px;
   }
   .LibraryOfGoodsIndex_center_content_samll ul li{
-    width: 69px;
-    height: 69px;
-    margin-right: 15px;
-    margin-bottom: 15px;
+    width: 65px;
+    height: 65px;
+    margin-right: 10px;
     float: left;
-    border: 1px solid #fff;
+    border: 1px solid #ccc;
+    margin-bottom: 3px;
   }
   .LibraryOfGoodsIndex_center_content_samll ul li.actives{
     border: 1px solid #ED3A4A;
   }
   .LibraryOfGoodsIndex_center_content_samll ul li img{
-    width: 67px;
-    height: 67px;
+    width: 63px;
+    height: 63px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_centers{
@@ -616,7 +702,7 @@
   .LibraryOfGoodsIndex_center_content_merchandise_selection{
     width: 735px;
     min-height: 503px;
-    max-height: 570px;
+    max-height: 503px;
     overflow-y: auto;
     overflow-x: hidden;
     float: right;
@@ -648,8 +734,8 @@
   }
   .LibraryOfGoodsIndex_center_content_merchandise_selectioncenter{
     width: 726px;
-    height: 152px;
-    margin-bottom: 20px;
+    height: 142px;
+    margin-bottom: 6px;
     border-radius: 10px;
     overflow: hidden;
     clear: both;
@@ -663,29 +749,29 @@
   }
   .LibraryOfGoodsIndex_center_content_merchandise_leftwholesale{
     width: 435px;
-    height: 120px;
+    height: 110px;
     float: left;
     border: 1px solid rgba(240,240,240,1);
   }
   .LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice{
     width: 434px;
-    height: 59px;
+    height: 54px;
     border-bottom: 1px solid rgba(240,240,240,1);
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice ul{
     width: 434px;
-    height: 59px;
+    height: 54px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice ul li{
     width: 115px;
     float: left;
     font-size: 18px;
-    height: 59px;
+    height: 54px;
     color: #ED3A4A;
     text-align: center;
-    line-height: 59px;
+    line-height: 54px;
     font-weight: 500;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice ul li.wholesale_li{
@@ -697,21 +783,21 @@
   }
   .LibraryOfGoodsIndex_center_content_merchandise_Thebatch{
     width: 434px;
-    height: 60px;
+    height: 55px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_Thebatch ul{
     width: 434px;
-    height: 60px;
+    height: 55px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_Thebatch ul li{
     width: 115px;
     float: left;
     font-size: 14px;
-    height: 59px;
+    height: 54px;
     text-align: center;
-    line-height: 59px;
+    line-height: 54px;
     font-weight: 500;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_Thebatch ul li.Thebatch_li{
@@ -723,7 +809,7 @@
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory{
     width: 291px;
-    height: 120px;
+    height: 110px;
     padding-right: 22px;
     border: 1px solid rgba(240,240,240,1);
     border-left: 0;
@@ -731,21 +817,21 @@
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_maxquantity{
     width: 134px;
-    height: 120px;
+    height: 110px;
     text-align: center;
-    line-height: 120px;
+    line-height: 110px;
     float: left;
     font-size: 14px;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping{
     width: 134px;
-    height: 120px;
+    height: 110px;
     float: right;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul{
     width: 110px;
     height: 30px;
-    margin: 45px 23px;
+    margin: 40px 23px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li{
@@ -798,7 +884,9 @@
     border: 1px solid rgba(240,240,240,1);
     float: left;
     border-radius: 0;
+    font-size: 14px;
     padding: 4px;
+    text-align: right;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li input:focus{
     border: 1px solid rgba(240,240,240,1);
@@ -808,7 +896,7 @@
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_ok{
-    margin: 54px 196px 0 196px;
+    margin: 8px 196px 0 196px;
     width: 345px;
     height: 36px;
     float: left;

@@ -58,7 +58,7 @@
           query: { // 分页初始,每页条数总条数
             page: 1,
             size: 20,
-            count: 0,
+            count: 50,
             sort: 1,
             test: null
           },
@@ -298,7 +298,7 @@
         }
       },
       created: function () {
-        this.readay_seach()
+//        this.readay_seach()
       },
       mounted () {
         this.Bus.$on('theme_Shoppings_click_attention', (em) => {
@@ -386,7 +386,7 @@
 .LibraryOfGoodsIndex_center{
   width: 1070px;
   margin: 0 auto;
-  min-height: 645px;
+  min-height: 577px;
   clear: both;
 }
 .LibraryOfGoodsIndex_search_box{
@@ -416,7 +416,7 @@
 }
 .LibraryOfGoodsIndex_Switch_Options{
   width: 100%;
-  margin-top: 15px;
+  margin-top: 16px;
   height: 40px;
   margin-bottom: 22px;
 }
@@ -444,6 +444,6 @@
 .LibraryOfGoodsList_relative_pages{
   margin-top: 15px;
   height: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 15px;
 }
 </style>

@@ -160,7 +160,7 @@
   max-height: 380px;
   min-height: 300px;
   margin: 0 auto;
-  margin-bottom: 26px;
+  margin-bottom: 21px;
   border: 1px solid rgba(240,240,240,1);
   overflow: hidden;
   clear: both;
@@ -246,10 +246,10 @@
 .LibraryOfGoodsList_Text_Description {
   width: 100%;
   padding: 0 13px;
-  margin-top: 13px;
+  margin-top: 11px;
 }
 .LibraryOfGoodsList_Text_Description p{
-  font-size:16px;
+  font-size:14px;
   text-align: left;
   width: 100%;
   line-height: 18px;

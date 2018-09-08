@@ -1,139 +1,50 @@
 <template>
   <div>
-    <div class="adderss-table-wrapper">
-      <div class="headers">
-        <table>
-          <thead>
-          <tr>
-            <th class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span class="">姓名</span>
-              </div>
-            </th>
-            <th class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span class="">收货人</span>
-              </div>
-            </th>
-            <th class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span class="">所在地区</span>
-              </div>
-            </th>
-            <th class="ivu-table-column-left width200">
-              <div class="ivu-table-cell">
-                <span class="">地址</span>
-              </div>
-            </th>
-            <th class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span class="">手机</span>
-              </div>
-            </th>
-            <th class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span class="">固定电话</span>
-              </div>
-            </th>
-            <th class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span class="">电子邮箱</span>
-              </div>
-            </th>
-            <th class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span class="">邮编</span>
-              </div>
-            </th>
-            <th class="ivu-table-column-left width120">
-              <div class="ivu-table-cell">
-                <span class="">操作</span>
-              </div>
-            </th>
-            <th class="ivu-table-column-left width100">
-              <div class="ivu-table-cell">
-              </div>
-            </th>
-          </tr>
-          </thead>
-          <tbody v-if="dataTable.length>0">
-          <tr class="table-row-hover" v-for="dataTables in dataTable">
-            <td class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span>{{dataTables.name}}</span>
-              </div>
-            </td>
-            <td class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span>{{dataTables.theConsignee}}</span>
-              </div>
-            </td>
-            <td class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span>{{dataTables.region}}</span>
-              </div>
-            </td>
-            <td class="ivu-table-column-left width200">
-              <div class="ivu-table-cell">
-                <span>{{dataTables.address}}</span>
-              </div>
-            </td>
-            <td class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span>{{dataTables.mobilePhone}}</span>
-              </div>
-            </td>
-            <td class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <span>{{dataTables.fixedTelephone}}</span>
-              </div>
-            </td>
-            <td class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <div>{{dataTables.email}}</div>
-              </div>
-            </td>
-            <td class="ivu-table-column-left">
-              <div class="ivu-table-cell">
-                <div>{{dataTables.zip}}</div>
-              </div>
-            </td>
-            <td class="ivu-table-column-left width120">
-              <div class="ivu-table-cell">
-                <div class="operations">
-                  <span class="sapn-color" @click="modifyThe(
+    <div class="shipping_address_wrapper">
+      <div class="LibraryOfGoodsIndex_center_content_merchandise_selectionnone" v-if="dataTable.length<=0">
+        <img src="../../assets/images/empty-data.png" alt="">
+      </div>
+      <div class="shipping_address_wrapper_div" v-for="(dataTables, index) in dataTable" :key="index">
+        <div class="shipping_address_wrapper_div_p">
+          {{dataTables.name}}
+          <span v-if="dataTables.state==1">默认地址</span>
+        </div>
+        <div class="shipping_address_wrapper_div_ul">
+          <ul>
+            <li>
+              <span>收货人</span>
+              <p>{{dataTables.name}}</p>
+            </li>
+            <li>
+              <span>手机</span>
+              <p>{{dataTables.mobilePhone}}</p>
+            </li>
+            <li>
+              <span>所在地区</span>
+              <p>{{dataTables.region}}</p>
+            </li>
+            <li>
+              <span>地址</span>
+              <p>{{dataTables.address}}</p>
+            </li>
+          </ul>
+        </div>
+        <div class="shipping_address_wrapper_div_button">
+          <Button @click.native="deletes(dataTables.ids)">删除</Button>
+          <Button @click="modifyThe(
                       {
                       name:dataTables.name,
-                      theConsignee:dataTables.theConsignee,
                       region:dataTables.region,
                       address:dataTables.address,
                       mobilePhone:dataTables.mobilePhone,
-                      fixedTelephone:dataTables.fixedTelephone,
-                      email:dataTables.email,
                       state:dataTables.state,
                       ids:dataTables.ids,
-                      zip:dataTables.zip,
                       province_id:dataTables.province_id,
                       city_id:dataTables.city_id,
                       county_id:dataTables.county_id,
                       town_id:dataTables.town_id
-                      })">修改</span>
-                  <span>&ensp;|&ensp;</span>
-                  <span class="sapn-color" @click="deletes(dataTables.ids)">删除</span>
-                </div>
-              </div>
-            </td>
-            <td class="ivu-table-column-left width100">
-              <div class="ivu-table-cell">
-                <Button type="text" :size="buttonSize" v-if="dataTables.state==0" @click.native="setTheDefault(dataTables.ids)">设为默认</Button>
-                <Button type="warning" :size="buttonSize" v-else-if="dataTables.state==1">默认地址</Button>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <div class="table-row-hover-tr" v-if="dataTable.length==0">
-          暂无数据
+                      })">编辑</Button>
+          <Button class="big_ivu-btn" v-if="dataTables.state==0" @click.native="setTheDefault(dataTables.ids)">设为默认</Button>
         </div>
       </div>
     </div>
@@ -187,110 +98,83 @@ export default {
 </script>
 
 <style scoped>
-  .adderss-table-wrapper{
-    position: relative;
-    border: 1px solid #dcdee2;
-    border-bottom: 0;
-    border-right: 0;
+  .shipping_address_wrapper{
+    width: 749px;
+    margin: 12px auto 55px auto;
   }
-  .headers {
-    overflow: hidden;
+  .shipping_address_wrapper_div{
+    width: 747px;
+    height: 209px;
+    border: 1px solid rgba(240,240,240,1);
+    margin-bottom: 18px;
   }
-  .headers table {
-    table-layout: fixed;
-    width: 100%;
-  }
-  .headers thead{
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-  }
-  .headers tr{
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-  }
-  .headers th{
-    text-align: center;
-    border-right: 1px solid #e8eaec;
-    height: 40px;
-    white-space: nowrap;
-    overflow: hidden;
-    background-color: #f8f8f9;
-    min-width: 0;
-    box-sizing: border-box;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-    border-bottom: 1px solid #e8eaec;
-  }
-  .width200{
-    width: 200px;
-  }
-  .width120{
-    width: 120px;
-  }
-  .width100{
-    width: 100px;
-  }
-  .headers table{
-    table-layout: fixed;
-    border-collapse: collapse;
-    border-spacing: 0;
-  }
-  .headers tbody {
-    display: table-row-group;
-  }
-  .headers tr{
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-    display: table-row;
-  }
-  .headers td{
-    text-align: center;
-    background-color: #fff;
-    transition: background-color 0.2s ease-in-out;
-    min-width: 0;
-    height: 48px;
-    box-sizing: border-box;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-    border-bottom: 1px solid #e8eaec;
-    border-right: 1px solid #e8eaec;
-  }
-  .headers tr.table-row-hover:hover td{
-    background-color: #ebf7ff;
-  }
-  .operations span{
+  .shipping_address_wrapper_div_p{
+    margin-top: 12px;
+    margin-bottom: 14px;
+    width: 749px;
+    padding: 0 47px;
+    font-size: 14px;
+    height: 20px;
     line-height: 20px;
+    text-align: left;
   }
-  .sapn-color:hover{
-    color: #2d8cf0;
+  .shipping_address_wrapper_div_p span{
+    font-size: 12px;
+    float: right;
+    color:rgba(153,153,153,1);
   }
-  .ivu-btn-text:hover {
-    background: rgba(0,0,0,0);
-    color: #2d8cf0;
+  .shipping_address_wrapper_div_ul{
+    width: 749px;
+    padding: 0 95px;
+    height: 95px;
+    margin-bottom: 15px;
+    float: left;
   }
-  .ivu-btn-warning:hover{
-    color: #fff;
-    background-color: #ff9900;
-    border-color: #ff9900;
+  .shipping_address_wrapper_div_ul ul{
+    width: 100%;
+    height: 115px;
+    float: left;
   }
-  .table-row-hover-tr{
-    width: calc( 100% - 0.5px );
-    height: 48px;
-    line-height: 48px;
-    border-bottom: 1px solid #e8eaec;
-    border-right: 1px solid #e8eaec;
+  .shipping_address_wrapper_div_ul ul li{
+    width: 100%;
+    height: 18px;
+    margin-bottom: 7px;
+    line-height: 18px;
+    font-size: 12px;
+    color: #999999;
+  }
+  .shipping_address_wrapper_div_ul ul li span{
+    display: inline-block;
+    width: 70px;
+    margin-right: 10px;
+    text-align: left;
+    float: left;
+  }
+  .shipping_address_wrapper_div_ul ul li p{
+    width: 479px;
+    height: 18px;
+    line-height: 18px;
+    text-align: left;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    float: right;
+  }
+  .shipping_address_wrapper_div_button{
+    width: 749px;
+    padding: 0 47px;
+    height: 30px;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_selectionnone{
+    width: 749px;
+    height: 503px;
+    font-size: 18px;
     text-align: center;
+    margin: 0 auto;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_selectionnone img{
+    width: 280px;
+    height: 280px;
+    margin: 108px 227px;
   }
 </style>
