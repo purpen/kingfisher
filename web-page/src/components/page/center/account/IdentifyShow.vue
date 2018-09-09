@@ -24,7 +24,7 @@
               </div>
               <div class="item">
                 <p class="p-key">企业详细地址:</p>
-                <p class="p-val">{{ item.enter_Address }}</p>
+                <p class="p-val">{{ item.enterAddress }}</p>
               </div>
               <div class="item">
                 <p class="p-key">企业电话:</p>
@@ -109,7 +109,7 @@
 
               <div class="item">
                 <p class="p-key">门店详细地址:</p>
-                <p class="p-val">{{ item.store_address   }}</p>
+                <p class="p-val">{{ item.storeAddress }}</p>
               </div>
 
               <div class="item">

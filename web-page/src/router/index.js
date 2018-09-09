@@ -215,7 +215,7 @@ const routes = [
   },
   // 我的订单
   {
-    path: '/center/orderlist',
+    path: '/center/order/orderlist',
     name: 'centerOrder',
     meta: {
       title: '我的订单',

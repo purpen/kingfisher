@@ -9,6 +9,49 @@
 .viseble_none .ivu-modal-footer {
   display: none;
 }
+.newAddress .ivu-modal-content {
+  border-radius: 0;
+  padding-bottom: 30px;
+}
+
+.showinvoice .ivu-modal-content {
+  border-radius: 0;
+  padding-bottom: 30px;
+}
+
+.showDeleteAddress .ivu-modal-content {
+  border-radius: 0;
+}
+
+.showinvoice .ivu-radio-group {
+  width: 100%;
+}
+.showinvoice .ivu-radio-wrapper {
+  width: 100%;
+}
+.showinvoice .ivu-radio {
+  float: right;
+  margin-top: 7px;
+}
+
+.showinvoice .ivu-modal-content{
+  border: 6px solid rgba(240,240,240,1);
+}
+
+.newAddress ivu-modal-footer{
+  text-align: left;
+  border-top: none;
+}
+
+.newAddress .ivu-modal-footer .ivu-btn {
+  width: 70px;
+  height: 30px;
+  line-height: 1;
+  border-radius: 0;
+  background: rgba(240,240,240,1);
+  border: 1px solid rgba(200,200,200,1);
+  color: #666666;
+}
 /*侧边栏*/
 .menu-list .item.is-active {
   color: #ED3A4A;
@@ -185,6 +228,9 @@
 /*end*/
 
 /*input*/
+.newAddress .ivu-input {
+  height: 32px;
+}
 .ivu-input:hover {
   border-color: #dcdee2;
 }
