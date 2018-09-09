@@ -232,7 +232,9 @@
     $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu}, function (data) {
     if(data.status == 0){
     layer.msg('操作成功！');
-    location.reload();
+    {{--window.location.go(-1);--}}
+    window.history.go(-1);
+{{--    location.href = '{{url('/distributors')}}';--}}
     }else if(data.status == 1){
     alert(data.message);
     }else{
@@ -247,18 +249,15 @@
 
     $(document).on("click","#batch-close",function(obj){
     layer.confirm('确认要驳回审核吗？',function(index){
-    var distributors = [];
-    $("input[name='Order']").each(function () {
-    if($(this).is(':checked')){
-    distributors.push($(this).attr('value'));
-    }
-    });
+    var id =  $("input[name='id']").val();
+    var Jszzdm =  $("input[name='Jszzdm']").val();
+    var diyu =  $("input[name='diyu']").val();
 
-    $.post('{{url('/distributors/ajaxClose')}}',{'_token': _token,'distributors': distributors}, function (e) {
+    $.post('{{url('/distributors/ajaxClose')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu}, function (e) {
 
     if(e.status == 0){
     layer.msg('操作成功！');
-    location.reload();
+    location.href = '{{url('/distributors')}}';
     }else if(e.status == 1){
     alert(e.message);
     }else{

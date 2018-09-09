@@ -169,22 +169,29 @@ class DistributorsController extends Controller
     {
 
         $id = $request->input('id');
-        $model = DistributorModel::find($id);
-        if(!$model){
-            return ajax_json(1,'没有找到该供应商信息');
-        }
         $category_id = $request->input('Jszzdm')?$request->input('Jszzdm'):'';
         $authorization_id = $request->input('diyu')?$request->input('diyu'):'';
         $distributorsModel = DistributorModel::find($id);
-        $user =  DB::update("update users set verify_status=3,status=1 where id=$distributorsModel->user_id");
-        if(!$user){
-            return ajax_json(1,'警告：用户信息保存失败');
-        }
-        if ($category_id !='' && $authorization_id !='') {
-            $distributors = DB::update("update distributor set category_id='$category_id',authorization_id='$authorization_id' where id=$id");
+        if($distributorsModel !='') {
+
+            $users = UserModel::where('id', '=', $distributorsModel->user_id)->where('verify_status', '!=', 3)->where('status', '!=', 1)->first();
+            if ($users) {
+                $user = DB::update("update users set verify_status=3,status=1 where id=$distributorsModel->user_id");
+                if (!$user) {
+                    return ajax_json(1, '警告：用户信息保存失败');
+                }
+            }
+            if ($category_id != '' && $authorization_id != '') {
+                $distributors = DB::update("update distributor set category_id='$category_id',authorization_id='$authorization_id' where id=$id");
                 if (!$distributors) {
                     return ajax_json(1, '警告：分类信息保存失败');
                 }
+            }
+            if (!$distributorsModel->verify($id)) {
+                return ajax_json(1, '警告：审核失败');
+            }
+        }else{
+            return ajax_json(1, '没有找到该供应商信息');
         }
         return ajax_json(0, '操作成功！');
     }
@@ -198,18 +205,24 @@ class DistributorsController extends Controller
      */
     public function ajaxClose(Request $request)
     {
-        $distributors_id_array = $request->input('distributors')?$request->input('distributors'):'';
+        $id = $request->input('id');
+        $model = DistributorModel::find($id);
+        if(!$model){
+            return ajax_json(1,'没有找到该供应商信息');
+        }
 
-        if ($distributors_id_array != '') {
-            foreach ($distributors_id_array as $id) {
+//        $distributors_id_array = $request->input('distributors')?$request->input('distributors'):'';
+
+//        if ($distributors_id_array != '') {
+//            foreach ($distributors_id_array as $id) {
                 $distributorsModel = new DistributorModel();
                 if (!$distributorsModel->close($id)) {
-                    return ajax_json('0', '关闭失败');
+                    return ajax_json(1, '关闭失败');
                 }
-            }
-        }else{
-            return ajax_json(1, '您还没有勾选经销商！');
-        }
+//            }
+//        }else{
+//            return ajax_json(1, '您还没有勾选经销商！');
+//        }
         return ajax_json(0, '操作成功');
     }
 
