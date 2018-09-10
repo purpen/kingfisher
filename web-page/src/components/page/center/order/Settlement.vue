@@ -138,7 +138,7 @@
           </div>
           <div class="width_135 display-felx-space margin-l-77">
             <span>商品明细</span>
-            <span class="span_hover">修改</span>
+            <span class="span_hover cursor">修改</span>
           </div>
           <div class="width_285 margin-l-254 padding-r-20 text-right">
             <span><i class="color_ed3a">3</i> 件商品,</span>
