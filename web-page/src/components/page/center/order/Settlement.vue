@@ -10,10 +10,10 @@
             <p class="font-16">收货人信息</p>
             <p class="font-14 cursor add_address" @click="addNewAddress">新增收货地址</p>
           </div>
-          <div class="addressInfo margin-t-15">
+          <div class="addressInfo margin-t-15" v-if="showAddressList.length !== 0">
             <ul class="addressInfo-ul">
               <li v-for="(item, index) of showAddressList">
-                <div class="wid-200 display-flex-ju-center text-center border-e" @click="setCurrentAddress(index)" :class="{back_icon: item.chooseAddress === 1}">
+                <div class="wid-200 display-flex-ju-center text-center" @click="setCurrentAddress(index)" :class="{back_icon: item.chooseAddress === 1, border_test: item.chooseAddress !== 1}">
                   <p class="font-14">{{item.name}}</p>
                 </div>
                 <div class="flex-1 text-left margin-l-40">
@@ -24,8 +24,8 @@
                   <Button v-if="item.is_default === 1" style="opacity: 1">默认地址</Button>
                   <div class="display-space-b address_operation" v-if="item.is_default !== 1">
                     <p class="color_ed3a" @click="setDefaultAddress(item, index)">设置默认地址</p>
-                    <p>编辑</p>
-                    <p @click="deleteAddress(item, index)" v-if="item.chooseAddress !== 1">删除</p>
+                    <p @click="editorAddress(item, index)">编辑</p>
+                    <span @click="deleteAddress(item, index)" v-if="item.chooseAddress !== 1">删除</span>
                   </div>
                 </div>
                 <Modal
@@ -42,17 +42,20 @@
               </li>
             </ul>
             <div class="display-f" v-show="!isshowAddress">
-              <div class="display-f show_hide_img" @click="anAddressList" v-if="address.data.length !== 1">
+              <div class="display-f show_hide_img" @click="anAddressList" v-if="address.data.length !== 1" style="align-items: center">
                 <p class="margin-r-5">展开地址</p>
                 <img src="../../../../assets/images/icon/icon05.png" alt="">
               </div>
             </div>
             <div class="display-f wid_80" @click="packUpAddressList" v-show="isshowAddress">
-              <div class="display-f show_hide_img" v-if="address.data.length !== 1">
+              <div class="display-f show_hide_img" v-if="address.data.length !== 1" style="align-items: center">
                 <p class="margin-r-5">收起地址</p>
                 <img src="../../../../assets/images/icon/icon06.png" alt="">
               </div>
             </div>
+          </div>
+          <div v-else>
+            <p>暂无地址</p>
           </div>
         </div>
         <!--支付方式-->
@@ -118,12 +121,22 @@
               <Button  @click="invoiceConfirm">确认选择</Button>
             </div>
             <RadioGroup v-model="noInvoice" vertical>
-              <div class="border_200 noinvoece margin-b-15">
+              <div class="border_200 noinvoece_30 margin-b-15">
                 <Radio label="1">不开发票</Radio>
               </div>
               <div class="border_200 noinvoece margin-b-15">
                 <Radio label="2">
-                  北京太火红鸟科技有限公司
+                  <div class="invoice_info display-space-b">
+                    <div class="display-f-c">
+                      <p>增值税专用发票</p>
+                      <p>北京铟立方科技有限公司</p>
+                      <p>税号：410489012489ML490128490</p>
+                    </div>
+                    <div class="display-flex-algin operation">
+                      <Button>查看</Button>
+                      <Button>修改</Button>
+                    </div>
+                  </div>
                 </Radio>
               </div>
               {{noInvoice}}
@@ -138,10 +151,10 @@
           </div>
           <div class="width_135 display-felx-space margin-l-77">
             <span>商品明细</span>
-            <span class="span_hover cursor">修改</span>
+            <span class="span_hover cursor" @click="show_invoice">修改</span>
           </div>
           <div class="width_285 margin-l-254 padding-r-20 text-right">
-            <span><i class="color_ed3a">3</i> 件商品,</span>
+            <!--<span><i class="color_ed3a">3</i> 件商品,</span>-->
             <span>总商品金额:</span>
             <span>￥8876.00</span>
           </div>
@@ -256,7 +269,7 @@
         showinvoice: false,      // 发票提示框
         isShowpay: 1,        // 选择支付方式
         isshowAddress: false,      // 显示隐藏地址
-        noInvoice: '',        // 不开发票
+        noInvoice: '1',        // 不开发票
         setAddressDefault: 0,   // 设置默认地址
         add_address: false,      // 新增收货地址
         address: {
@@ -357,6 +370,10 @@
           this.$Message.error('最多只能创建五个收货地址')
         }
       },
+      // 编辑
+      editorAddress () {
+        this.add_address = true
+      },
       // 删除收货地址
       confirmDelete () {
         this.address.data.forEach((item, key) => {
@@ -451,6 +468,10 @@
       // 选择支付类型
       payType (num) {
         this.isShowpay = num
+      },
+      // 发票弹框
+      show_invoice () {
+        this.showinvoice = true
       },
       // 新增发票
       addinvoice () {},
@@ -633,9 +654,6 @@
     width: 125px;
     height: 40px;
   }
-  .border-e {
-    /*border: 2px solid #ED3A4A;*/
-  }
 
   .flex-1 {
     flex: 1;
@@ -677,7 +695,9 @@
     font-size: 12px;
     cursor: pointer;
   }
-
+  .border_e .text-center :first-child{
+    border: 1px solid red;
+  }
   .addressInfo-ul li:hover .address_operation {
     opacity: 1;
   }
@@ -689,7 +709,7 @@
   .display-f {
     display: flex;
     cursor: pointer;
-    align-items: center;
+    /*align-items: center;*/
   }
 
   .border_200 {
@@ -841,7 +861,14 @@
   }
 
   .noinvoece {
-    height: 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 18px;
+    color: #666666;
+    margin-top: 30px;
+  }
+  .noinvoece_30 {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -909,5 +936,52 @@
     background:rgba(240,240,240,1);
     border:1px solid rgba(200,200,200,1);
     color: #666666;
+  }
+
+  .display-f-c {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 65px;
+  }
+  .invoice_info p {
+    font-size: 12px;
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+
+  .invoice_info p:first-child {
+    color: #ED3A4A;
+  }
+  .invoice_info p:last-child {
+    margin-bottom: 0;
+  }
+
+  .operation .ivu-btn {
+    width: 54px;
+    height: 24px;
+    font-size: 12px;
+    line-height: 1;
+    border-radius: 0;
+  }
+  .operation .ivu-btn:last-child {
+    width: 54px;
+    height: 24px;
+    font-size: 12px;
+    line-height: 1;
+    margin-left: 12px;
+    background:rgba(240,240,240,1);
+    border: 1px solid rgba(200,200,200,1);
+    color: #666666;
+  }
+
+  .addressInfo-ul li .border_test:first-child:hover {
+    border: 1px solid red;
+  }
+  .address_operation p:hover {
+    color: #ED3A4A;
+  }
+  .address_operation span:hover {
+    color: #ED3A4A;
   }
 </style>
