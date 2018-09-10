@@ -125,9 +125,10 @@ class OrderController extends BaseController{
      *  "order_start_time": "0000-00-00 00:00:00", //发货时间
      *  "status": 8,
      *  "status_val": "待发货",
-     *  "invoice_type": "111",          //发票类型
-     *  "invoice_header": "1",          //发票抬头
+     *  "receiving_id": "111",          //发票类型
+     *  "company_name": "1",          //发票抬头
      *  "invoice_value": "1453",        //发票金额
+     *  "over_time": "0000-00-00 00:00:00",  //过期时间
      *
      *  "address_list":[
      *  "id":1,
@@ -162,15 +163,17 @@ class OrderController extends BaseController{
      */
     public function order(Request $request)
     {
-//        $order_id = $request->input('order_id');
-        $order_id =13;
+        $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
         if(!empty($order_id)){
             $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
             if($orders){
                 $orderSku = $orders->orderSkuRelation;//订单详情表
                 $address = $orders->address;//地址表
-                $invoice = InvoiceModel::where('order_id',$orders->id)->where('xxx',0)->first();//发票历史表状态为0的
+                $invoice = HistoryInvoiceModel::where('order_id',$orders->id)->where('difference',0)->first();//发票历史表状态为0的
+                $order_start_time =$orders->order_start_time;
+                $order_timer = strtotime($order_start_time)+ 60*60*24;
+                $orders->over_time = date("Y-m-d H:i:s",$order_timer);//取消时间
             }
 
             if(!empty($orderSku)){
@@ -194,7 +197,9 @@ class OrderController extends BaseController{
                 $orders->address_list = $address;
             }
             if (!empty($invoice)){
-
+                $orders->receiving_id = $invoice->receiving_id;//发票类型
+                $orders->company_name = $invoice->company_name;//发票抬头
+                $orders->invoice_value = $invoice->invoice_value;//发票金额
             }
         }else{
             return $this->response->array(ApiHelper::error('订单id不能为空', 200));

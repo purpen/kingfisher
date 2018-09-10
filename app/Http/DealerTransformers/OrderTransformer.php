@@ -25,6 +25,10 @@ class OrderTransformer extends TransformerAbstract
             'freight' => $orders->freight,
             'user_id_sales' => (int)$orders->user_id_sales,
             'payment_type' => $orders->payment_type,
+            'receiving_id' => $orders->receiving_id,
+            'company_name' => $orders->company_name,
+            'invoice_value' => $orders->invoice_value,
+            'over_time' => $orders->over_time,
             'orderSku' => $orders->order_skus,
             'address_list' => $orders->address_list,
         ];
