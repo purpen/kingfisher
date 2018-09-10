@@ -81,6 +81,10 @@ class CartController extends BaseController
                     }
                 }
 
+                if(!$cover_url){
+                    $cover_url = '';
+                }
+
                 $cart = ProductsModel::where(['id'=>$v->product_id])->first();
                 $mode = ProductsSkuModel::where(['id'=>$v->sku_id])->first();
                 $type = SkuRegionModel::where(['sku_id'=>$v->sku_id,'user_id'=>$user_id])->select('max','min','sell_price')->get();
@@ -88,6 +92,22 @@ class CartController extends BaseController
 
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
+                }
+
+                if(!$type){
+
+                    $type = array([
+                        "max" => "100",
+                        "min" => "1",
+                        "sell_price" => "100.00",
+                    ],
+                        [
+                            "max" => "300",
+                            "min" => "201",
+                            "sell_price" => "50.00",
+                        ],
+
+                    );
                 }
 
                 if($collection){
@@ -129,6 +149,9 @@ class CartController extends BaseController
                         $cover_url = $v->product->assets->file->avatar;
                     }
                 }
+                if(!$cover_url){
+                    $cover_url = '';
+                }
 
                 $cart = ProductsModel::where(['id'=>$v->product_id])->first();
                 $mode = ProductsSkuModel::where(['id'=>$v->sku_id])->first();
@@ -137,6 +160,21 @@ class CartController extends BaseController
 
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
+                }
+                if(!$type){
+
+                    $type = array([
+                        "max" => "100",
+                        "min" => "1",
+                        "sell_price" => "100.00",
+                    ],
+                        [
+                            "max" => "300",
+                            "min" => "201",
+                            "sell_price" => "50.00",
+                        ],
+
+                    );
                 }
 
                 if($collection){
