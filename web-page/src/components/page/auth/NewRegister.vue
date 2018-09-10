@@ -27,7 +27,7 @@
           <img class="wid-16" src="../../../assets/images/icon/icon-gt.png" alt="">
           <span class="margin-l-10 color_ed3a">验证码已发送，60秒内输入有效</span>
         </div>
-        <!--<Checkbox class="margin-t-10" v-model="single">我已阅读并同意<router-link to="login">《铟立方平台协议和隐私条款》</router-link></Checkbox>-->
+        <Checkbox class="margin-t-10" v-model="single">我已阅读并同意<router-link to="login">《铟立方平台协议和隐私条款》</router-link></Checkbox>
         <div class="register-button">
           <Button size="large" class="wid_100 margin-t-20 margin-b-40" @click="isPhone('isPhone')">下一步</Button>
         </div>
@@ -261,7 +261,7 @@
           </Modal>
         </FormItem>
         <p class="padd-85 font-12 color-49 margin-b-15"><span class="color-ed3b">*</span>为必填选项图片仅支持上传一张2MB以内的照片，建议将最清晰的展示照片上传</p>
-        <Checkbox class="padd-85 margin-b-80" v-model="single2">我已阅读并同意</Checkbox><span class="margin-l-10">登录即同意《铟立方平台协议》。</span>
+        <!--<Checkbox class="padd-85 margin-b-80" v-model="single2">我已阅读并同意</Checkbox><span class="margin-l-10">登录即同意《铟立方平台协议》。</span>-->
         <div class="margin-auto text-center wid-500 newreg">
           <Button size="large" @click="submit('company')">注册</Button>
         </div>
@@ -455,11 +455,11 @@
         self.$refs[formName].validate(valid => {
           if (valid) {
             self.current ++
-            // if (self.single) {
-            //   self.current ++
-            // } else {
-            //   self.$Message.error('如已阅读,请勾选平台协议!')
-            // }
+            if (self.single) {
+              self.current ++
+            } else {
+              self.$Message.error('如已阅读,请勾选平台协议!')
+            }
           } else {
             self.$Message.error('请填写信息!')
           }
