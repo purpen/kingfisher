@@ -298,7 +298,7 @@
         }
       },
       created: function () {
-//        this.readay_seach()
+        this.readay_seach()
       },
       mounted () {
         this.Bus.$on('theme_Shoppings_click_attention', (em) => {

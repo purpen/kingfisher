@@ -92,8 +92,8 @@ export default {
           this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
         } else { // 这里请求接口数量的传出去
           this.$http({
-            method: 'post',
-            url: api.LibraryOfGoodsIndexfollow,
+            method: 'get',
+            url: api.myReceiptIndexreduce,
             params: {
               future: this.$store.state.event.The_order_Skuid_shopping
             }

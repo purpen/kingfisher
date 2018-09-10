@@ -81,6 +81,6 @@ export default {
   LibraryOfGoodsIndexbuy: 'DealerApi/cart/buy', // POST 立即购买
   LibraryOfGoodsIndexfetchcount: '/DealerApi/cart/fetch_count', // GET 获取购物车数量
   // 进货单
-  myReceiptIndexList: '/DealerApi/lists', // 进货单详情
+  myReceiptIndexList: '/DealerApi/cart', // 进货单详情
   myReceiptIndexreduce: 'DealerApi/cart/reduce' // 购物车记录增减数量
 }

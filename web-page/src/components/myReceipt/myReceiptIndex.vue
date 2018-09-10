@@ -130,7 +130,7 @@
 </template>
 
 <script>
-//    import api from '@/api/api'
+    import api from '@/api/api'
     export default {
       name: 'myReceiptIndex',
       data () {
@@ -147,7 +147,7 @@
           query: { // 分页初始,每页条数总条数
             page: 1,
             size: 20,
-            count: 100,
+            count: 0,
             sort: 1,
             test: null
           },
@@ -168,7 +168,6 @@
 //            this.$Message.warning('搜索输入不能为空')
             this.quantity_statistics()
             this.myReceiptIndexcenter_list_center_loading = true
-            this.quantity_statistics()
             setTimeout(function () {
               let shopping = [
                 {
@@ -344,7 +343,6 @@
             this.checkAll = !this.checkAll
           }
           this.indeterminate = false
-
           if (this.checkAll) {
             this.fruitIds = this.fruitIdsAll
             for (let i = 0; i < this.commodity_list_my.length; i++) {
@@ -812,15 +810,60 @@
               focus: 1 // 是否关注
             }
           ]
-          this.this_change_goods(shopping)
-          this.quantity_statistics() // 数量统计
+          this.$http({
+            method: 'get',
+            url: api.myReceiptIndexList,
+            params: {
+              status: this.myReceiptIndexId,
+              per_page: this.query.size,
+              token: this.$store.state.event.token,
+              page: this.query.page
+            }
+          })
+          .then((res) => {
+            let metas = res.data.meta
+            let datas = res.data.data
+            if (metas.status_code === 200) {
+              let counts = datas.count.original.data.count
+              console.log(datas)
+              if (counts === 0) {
+                shopping = []
+              } else {
+//                shopping = []
+              }
+              this.this_change_goods(shopping)
+              this.quantity_statistics() // 数量统计
+            } else {
+              this.$Message.error(metas.message)
+            }
+          })
+          .catch((res) => {
+            this.$Message.error(res.message)
+          })
         },
         quantity_statistics () { // 数量做统计
           let Number = this.$store.state.event.The_order_shopping_Number
           if (Number.length <= 0) {
             this.$store.commit('THE_ORDER_SKUID_SHOPPING_CLEAR')
           } else { // Number有值就请求一下没有就不请求了(防止用户刷新页面的操作)
-            this.$store.commit('THE_ORDER_SKUID_SHOPPING_CLEAR')
+            this.$http({
+              method: 'get',
+              url: api.myReceiptIndexreduce,
+              params: {
+                future: this.$store.state.event.The_order_Skuid_shopping
+              }
+            })
+            .then((res) => {
+              let metas = res.data.meta
+              if (metas.status_code === 200) {
+                this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+              } else {
+                this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+              }
+            })
+            .catch((res) => {
+              this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+            })
           }
         },
         this_change_goods (shopping) { // 处理主逻辑
@@ -888,6 +931,7 @@
           prices.price_once = parseFloat(unitPrice)
         },
         close_an_account () {
+          this.quantity_statistics()
           let closeAn = []
           let Skuid = []
           this.relative_pages_loding = true
