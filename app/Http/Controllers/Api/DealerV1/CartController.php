@@ -17,13 +17,13 @@ use Tymon\JWTAuth\Facades\JWTFactory;
 class CartController extends BaseController
 {
     /**
-     * @api {get} /DealerApi/lists 我的进货单列表
+     * @api {get} /DealerApi/cart 我的进货单列表
      * @apiVersion 1.0.0
      * @apiName Cart lists
      * @apiGroup Cart
      * @apiParam {string} status 1:立即购买进入的进货单
      * @apiParam {char} title 大米:搜索时所需参数
-     * @apiParam {string} pageNumber 1:一页多少条数据
+     * @apiParam {string} per_page 1:一页多少条数据
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
