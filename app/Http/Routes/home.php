@@ -774,6 +774,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.order.daifaSupplierOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@daifaSupplierOrderList'
         ]);
 
+        /**
+         * 发票模板
+         */
+
+
+        Route::match(['get', 'post'],'/invoice', [
+            'as' => 'admin.invoice', 'acl' => 'admin.invoice.viewlist', 'uses' => 'InvoiceController@index'
+        ]);
+
 
         /**
          * 订单模版
