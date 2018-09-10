@@ -825,3 +825,55 @@
   background: #ED3A4A;
   color: #fff;
 }
+/*发票管理*/
+.invoiceCenterIndex-menu-list{
+  width: 124px;
+  height: 38px;
+}
+.invoiceCenterIndex-menu-list .ivu-menu-vertical .ivu-menu-submenu-title{
+  width: 124px;
+  font-size: 1.6rem;
+  padding: .85em 1.5rem .85rem 0.1rem !important;
+  height: 38px;
+  line-height: 13px;
+}
+.invoiceCenterIndex-menu-list .ivu-menu-vertical .ivu-menu-submenu-title:hover{
+  color: #222;
+}
+.invoiceCenterIndex-menu-list .ivu-menu-light{
+  width: 124px !important;
+  height: 38px;
+  margin-top: -6px;
+  color: rgba(112,123,135,.92);
+}
+.invoiceCenterIndex-menu-list .ivu-menu-light li{
+  height: 38px;
+}
+.invoiceCenterIndex-menu-list .ivu-menu-vertical.ivu-menu-light:after{
+  width: 0;
+}
+.invoiceCenterIndex-menu-list .ivu-menu-vertical .ivu-menu-submenu-title-icon{
+  margin-right: 21px;
+  margin-top: -6px;
+}
+.invoiceCenterIndex-menu-list .ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item{
+  padding-left: 27px !important;
+  line-height: 0;
+  color: rgba(112,123,135,.92);
+}
+.invoiceCenterIndex-menu-list .ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item:hover{
+  color: #222;
+}
+.invoiceCenterIndex-menu-list .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
+  color: #ED3A4A;
+  background: #fff;
+  line-height: 0px;
+  font-weight: bold;
+}
+.invoiceCenterIndex-menu-list .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after{
+  width: 0;
+}
+.last_invoiceCenterIndex-menu-list .item{
+  font-size: 14px;
+  display: contents;
+}

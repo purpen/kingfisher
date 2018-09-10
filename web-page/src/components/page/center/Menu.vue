@@ -1,6 +1,6 @@
 <template>
 
-  <div class="menu-list">
+  <div class="menu-list invoiceCenterIndex-menu-list">
     <ul>
       <li>
         <router-link :to="{name: 'centerOrder'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
@@ -32,6 +32,18 @@
           收货地址
         </router-link>
       </li>
+      <Menu theme="light" :active-name="currentName === 'invoiceCenter_index' ? '1-1' : '1-2'" :open-names="currentName === 'invoiceCenter_index' ? ['1'] : ['2']" class="last_invoiceCenterIndex-menu-list">
+        <Submenu name="1">
+          <template slot="title">
+            内容管理
+          </template>
+          <MenuItem name="1-1">
+            <router-link :to="{name: 'invoiceCenterIndex'}" :class="{'item': true, 'is-active': currentName === 'invoiceCenter_index' ? true : false}">
+            文章管理
+            </router-link>
+          </MenuItem>
+        </Submenu>
+      </Menu>
     </ul>
 
 

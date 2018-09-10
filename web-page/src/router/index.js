@@ -337,6 +337,16 @@ const routes = [
     },
     component: (resolve) => { require(['@/components/myReceipt/myReceiptIndex'], resolve) }
   },
+  // 发票中心
+  {
+    path: '/invoiceCenter/invoiceCenterIndex/',
+    name: 'invoiceCenterIndex',
+    meta: {
+      title: '发票中心',
+      requireAuth: true
+    },
+    component: (resolve) => { require(['@/components/invoiceCenter/invoiceCenterIndex'], resolve) }
+  },
   // 销售渠道
   {
     path: '/center/survey/source',
