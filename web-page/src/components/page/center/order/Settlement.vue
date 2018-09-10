@@ -8,7 +8,7 @@
         <div class="address">
           <div class="display-start-end">
             <p class="font-16">收货人信息</p>
-            <p class="font-14 cursor add_address" @click="addNewAddress">新增收货地址</p>
+            <p class="font-14 cursor add_address" @click="addNewAddress(1)">新增收货地址</p>
           </div>
           <div class="addressInfo margin-t-15" v-if="showAddressList.length !== 0">
             <ul class="addressInfo-ul">
@@ -54,7 +54,7 @@
               </div>
             </div>
           </div>
-          <div v-else>
+          <div v-else class="noAddress">
             <p>暂无地址</p>
           </div>
         </div>
@@ -145,7 +145,7 @@
           </Modal>
         </div>
         <div class="invoiceInfo">
-          <div class="display-felx-space width_298">
+          <div class="display-felx-space width_298" v-if="noInvoice === '1'">
             <span class="margin-r-15 color_333">增值税发票</span>
             <span class="color_666">北京铟立方科技有限公司</span>
           </div>
@@ -174,10 +174,12 @@
       </div>
       <Modal
         v-model="add_address"
-        title="新增收货地址"
         class="newAddress"
         width="650"
       >
+        <div slot="header" class="text-left font-16">
+          <span>{{modaltitle}}</span>
+        </div>
         <div slot="footer">
           <Button  @click="addConfirm('form')">保存</Button>
           <Button  @click="cancel">取消</Button>
@@ -223,8 +225,8 @@
           </FormItem>
           <Row>
             <Col :span="14">
-              <FormItem label="详细地址" prop="detailedAddress">
-                <Input v-model="form.detailedAddress" placeholder="请输入详细地址"></Input>
+              <FormItem label="详细地址" prop="address">
+                <Input v-model="form.address" placeholder="请输入详细地址"></Input>
               </FormItem>
             </Col>
           </Row>
@@ -258,7 +260,7 @@
         form: {
           name: '',             // 收货人
           phone: '',            // 手机号
-          detailedAddress: '',  // 详细地址
+          address: '',  // 详细地址
           buyer_province: '',   // 省
           buyer_city: '',       // 市
           buyer_county: '',     // 区
@@ -272,50 +274,51 @@
         noInvoice: '1',        // 不开发票
         setAddressDefault: 0,   // 设置默认地址
         add_address: false,      // 新增收货地址
+        add_addressNum: null,      // 复用提示框(新增/编辑)
         address: {
           'data': [
-            {
-              'id': 2,                            // ID
-              'name': '张明',                   // 收货人
-              'phone': '13020663711',           // 电话
-              'zip': '101500',                      // 邮编
-              'province': '北京市',                         // 省份
-              'city': '朝阳区',                         // 城市
-              'county': '三环到四环',                         // 区县
-              'town': '某某村',                         // 城镇／乡
-              'address': '酒仙桥798',                // 详细地址
-              'is_default': 1,                      // 是否默认收货地址
-              'status': 1,                            // 状态: 0.禁用；1.正常；
-              'chooseAddress': 1
-            },
-            {
-              'id': 3,                            // ID
-              'name': '李四',                   // 收货人
-              'phone': '13005399999',           // 电话
-              'zip': '101500',                      // 邮编
-              'province': '北京市',                         // 省份
-              'city': '朝阳区',                         // 城市
-              'county': '三环到四环',                         // 区县
-              'town': '某某村',                         // 城镇／乡
-              'address': '酒仙桥798',                // 详细地址
-              'is_default': 0,                      // 是否默认收货地址
-              'status': 1,                            // 状态: 0.禁用；1.正常；
-              'chooseAddress': 0
-            },
-            {
-              'id': 4,                            // ID
-              'name': '王五',                   // 收货人
-              'phone': '13888888888',           // 电话
-              'zip': '101500',                      // 邮编
-              'province': '北京市',                         // 省份
-              'city': '朝阳区',                         // 城市
-              'county': '三环到四环',                         // 区县
-              'town': '某某村',                         // 城镇／乡
-              'address': '酒仙桥798',                // 详细地址
-              'is_default': 0,                      // 是否默认收货地址
-              'status': 1,                         // 状态: 0.禁用；1.正常；
-              'chooseAddress': 0
-            }
+            // {
+            //   'id': 2,                            // ID
+            //   'name': '张明',                   // 收货人
+            //   'phone': '13020663711',           // 电话
+            //   'zip': '101500',                      // 邮编
+            //   'province': '北京市',                         // 省份
+            //   'city': '朝阳区',                         // 城市
+            //   'county': '三环到四环',                         // 区县
+            //   'town': '某某村',                         // 城镇／乡
+            //   'address': '酒仙桥798',                // 详细地址
+            //   'is_default': 1,                      // 是否默认收货地址
+            //   'status': 1,                            // 状态: 0.禁用；1.正常；
+            //   'chooseAddress': 1
+            // },
+            // {
+            //   'id': 3,                            // ID
+            //   'name': '李四',                   // 收货人
+            //   'phone': '13005399999',           // 电话
+            //   'zip': '101500',                      // 邮编
+            //   'province': '北京市',                         // 省份
+            //   'city': '朝阳区',                         // 城市
+            //   'county': '三环到四环',                         // 区县
+            //   'town': '某某村',                         // 城镇／乡
+            //   'address': '酒仙桥798',                // 详细地址
+            //   'is_default': 0,                      // 是否默认收货地址
+            //   'status': 1,                            // 状态: 0.禁用；1.正常；
+            //   'chooseAddress': 0
+            // },
+            // {
+            //   'id': 4,                            // ID
+            //   'name': '王五',                   // 收货人
+            //   'phone': '13888888888',           // 电话
+            //   'zip': '101500',                      // 邮编
+            //   'province': '北京市',                         // 省份
+            //   'city': '朝阳区',                         // 城市
+            //   'county': '三环到四环',                         // 区县
+            //   'town': '某某村',                         // 城镇／乡
+            //   'address': '酒仙桥798',                // 详细地址
+            //   'is_default': 0,                      // 是否默认收货地址
+            //   'status': 1,                         // 状态: 0.禁用；1.正常；
+            //   'chooseAddress': 0
+            // }
           ],
           'meta': {
             'message': 'Success',
@@ -354,7 +357,7 @@
           phone: [
             { required: true, validator: validatePhone, trigger: 'blur' }
           ],
-          detailedAddress: [
+          address: [
             { required: true, message: '详细地址不能为空', trigger: 'blur' },
             { type: 'string', min: 2, max: 30, message: '范围在2-30字符之间', trigger: 'blur' }
           ]
@@ -363,7 +366,8 @@
     },
     methods: {
       // 新增收货地址
-      addNewAddress () {
+      addNewAddress (num) {
+        this.add_addressNum = num
         if (this.address.data.length !== 5) {
           this.add_address = true
         } else {
@@ -371,7 +375,11 @@
         }
       },
       // 编辑
-      editorAddress () {
+      editorAddress (item) {
+        // 回显
+        this.form.name = item.name    // 回显姓名
+        this.form.phone = item.phone  // 手机号
+        this.form.address = item.address  // 详细地址
         this.add_address = true
       },
       // 删除收货地址
@@ -393,37 +401,42 @@
         this.DeleteAddressNum = index
         this.showDeleteAddress = true
       },
-      // 确认新增
+      // 确认新增/编辑
       addConfirm (formName) {
         let self = this
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            if (!self.form.buyer_province || !self.form.buyer_city || !self.form.buyer_county) {
-              self.$Message.error('请选择所在地区!')
-              return false
+        // 新增1
+        if (this.add_addressNum === 1) {
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              if (!self.form.buyer_province || !self.form.buyer_city || !self.form.buyer_county) {
+                self.$Message.error('请选择所在地区!')
+                return false
+              }
+              let row = {
+                'id': 6,
+                'name': this.form.name,                   // 收货人
+                'phone': this.form.phone,           // 电话
+                'zip': '000000',                      // 邮编
+                'province': this.form.buyer_province,                         // 省份
+                'city': this.form.buyer_city,                         // 城市
+                'county': this.form.buyer_county,                         // 区县
+                'town': '某某村',                         // 城镇／乡
+                'address': this.form.address,                // 详细地址
+                'is_default': 1,                      // 是否默认收货地址
+                'status': 1,
+                'chooseAddress': 1
+              }
+              this.address.data.push(row)
+              this.add_address = false
+              this.form = {}                  // 清空回显
+              this.form.buyer_province = ''   // 清空回显
+              this.add_addressNum = null      // 清空新增编辑判断
+            } else {
+              // this.$Message.error('请填写信息')
             }
-            let row = {
-              'id': 6,
-              'name': this.form.name,                   // 收货人
-              'phone': this.form.phone,           // 电话
-              'zip': '000000',                      // 邮编
-              'province': this.form.buyer_province,                         // 省份
-              'city': this.form.buyer_city,                         // 城市
-              'county': this.form.buyer_county,                         // 区县
-              'town': '某某村',                         // 城镇／乡
-              'address': this.form.detailedAddress,                // 详细地址
-              'is_default': 1,                      // 是否默认收货地址
-              'status': 1,
-              'chooseAddress': 1
-            }
-            this.address.data.push(row)
-            this.add_address = false
-            this.form = {}
-            this.form.buyer_province = ''
-          } else {
-            // this.$Message.error('请填写信息')
-          }
-        })
+          })
+        } else {
+        }
       },
       // 取消
       cancel () {
@@ -599,6 +612,7 @@
     },
     components: {},
     computed: {
+      // 地址列表
       showAddressList () {
         if (!this.isshowAddress) {
           let showAddress = []
@@ -612,6 +626,14 @@
           return showAddress
         } else {
           return this.address.data
+        }
+      },
+      // 弹框
+      modaltitle () {
+        if (this.add_addressNum === 1) {
+          return '新增收货地址'
+        } else {
+          return '编辑收货地址'
         }
       }
     }
@@ -976,12 +998,20 @@
   }
 
   .addressInfo-ul li .border_test:first-child:hover {
-    border: 1px solid red;
+    border: 2px solid red;
   }
   .address_operation p:hover {
     color: #ED3A4A;
   }
   .address_operation span:hover {
     color: #ED3A4A;
+  }
+
+  .noAddress {
+    width: 100%;
+    height: 200px;
+    background: rgba(200,200,200,.3);
+    line-height: 200px;
+    text-align: center;
   }
 </style>
