@@ -135,12 +135,24 @@
                 <Row :gutter="10" class="content heigin-none">
                   <Col :span="4" class="mar-b-0 btn-i">
                     <FormItem label="法人身份证照片">
-                      <div class="demo-upload-list" v-for="item in uploadIdentityList">
+                      <div class="demo-upload-list" v-for="item in uploadIdentityList1">
                         <template>
                           <img :src="item.url">
                           <div class="demo-upload-list-cover">
                             <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleIdentityRemove(item)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleIdentityRemove1(item)"></Icon>
+                          </div>
+                        </template>
+                        <template>
+                          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                        </template>
+                      </div>
+                      <div class="demo-upload-list" v-for="item in uploadIdentityList2">
+                        <template>
+                          <img :src="item.url">
+                          <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleIdentityRemove2(item)"></Icon>
                           </div>
                         </template>
                         <template>
@@ -148,9 +160,10 @@
                         </template>
                       </div>
                       <Upload
-                        ref="upload"
+                        ref="upload1"
                         :action="uploadParam.url"
                         :show-upload-list="false"
+                        :default-file-list="identitydefaultList1"
                         :on-success="handleIdentitySuccess_f"
                         :format="['jpg','jpeg','png']"
                         :max-size="5120"
@@ -158,14 +171,15 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleIdentityBeforeUpload_f"
                         :data="uploadParam"
-                        v-if="uploadIdentityList.length === 0"
+                        v-show="uploadIdentityList1.length === 0"
                       >
                         <Button icon="md-add" class="border-none"></Button>
                       </Upload>
                       <Upload
-                        ref="upload"
+                        ref="upload2"
                         :action="uploadParam.url"
                         :show-upload-list="false"
+                        :default-file-list="identitydefaultList2"
                         :on-success="handleIdentitySuccess_r"
                         :format="['jpg','jpeg','png']"
                         :max-size="5120"
@@ -173,7 +187,7 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleIdentityBeforeUpload_r"
                         :data="uploadParam"
-                        v-else
+                        v-show="uploadIdentityList1.length !== 0"
                       >
                         <Button icon="md-add" class="border-none"></Button>
                       </Upload>
@@ -330,12 +344,24 @@
                 <Row :gutter="10" class="content heigin-none">
                   <Col :span="4" class="mar-b-0 btn-i">
                     <FormItem label="门店正面外观及内部照片">
-                      <div class="demo-upload-list" v-for="item in uploadshopList">
+                      <div class="demo-upload-list" v-for="item in uploadshopList1">
                         <template>
                           <img :src="item.url">
                           <div class="demo-upload-list-cover">
                             <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleshopRemove(item)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleshopRemove1(item)"></Icon>
+                          </div>
+                        </template>
+                        <template>
+                          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                        </template>
+                      </div>
+                      <div class="demo-upload-list" v-for="item in uploadshopList2">
+                        <template>
+                          <img :src="item.url">
+                          <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleshopRemove2(item)"></Icon>
                           </div>
                         </template>
                         <template>
@@ -344,9 +370,10 @@
                       </div>
                       <!--门店正面-->
                       <Upload
-                        ref="upload"
+                        ref="upload3"
                         :action="uploadParam.url"
                         :show-upload-list="false"
+                        :default-file-list="shopdefaultList1"
                         :on-success="handleshopSuccess_f"
                         :format="['jpg','jpeg','png']"
                         :max-size="5120"
@@ -354,15 +381,16 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleshopBeforeUpload_f"
                         :data="uploadParam"
-                        v-if="uploadshopList.length === 0"
+                        v-show="uploadshopList1.length === 0"
                       >
                         <Button icon="md-add" class="border-none"></Button>
                       </Upload>
                       <!--门店内部-->
                       <Upload
-                        ref="upload"
+                        ref="upload4"
                         :action="uploadParam.url"
                         :show-upload-list="false"
+                        :default-file-list="shopdefaultList2"
                         :on-success="handleshopSuccess_r"
                         :format="['jpg','jpeg','png']"
                         :max-size="5120"
@@ -370,11 +398,11 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleshopBeforeUpload_r"
                         :data="uploadParam"
-                        v-else
+                        v-show="uploadshopList1.length !== 0"
                       >
                         <Button icon="md-add" class="border-none"></Button>
                       </Upload>
-                      <Modal title="查看" v-model="visible">
+                      <Modal title="查看" v-model="visible" class="viseble_none">
                         <img :src="imgName" v-if="visible" style="width: 100%">
                       </Modal>
                     </FormItem>
@@ -471,13 +499,34 @@ export default {
     //   callback()
     // }
     return {
-      showItem: '',              // 填充input
+      shopdefaultList1: [
+        {
+          'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
+        }
+      ],
+      shopdefaultList2: [
+        {
+          'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
+        }
+      ],
+      identitydefaultList1: [
+        {
+          'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
+        }
+      ],
+      identitydefaultList2: [
+        {
+          'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
+        }
+      ],
       btnLoading: false,
       imgName: '',               // 预览图片
       visible: false,            // 模态框
-      uploadshopList: [],        // 门店照片存储
+      uploadshopList1: [],        // 门店照片正面存储
+      uploadshopList2: [],        // 门店照片背面存储
       // uploadBusinessList: [], // 营业执照
-      uploadIdentityList: [],    // 身份证
+      uploadIdentityList1: [],    // 身份证正面
+      uploadIdentityList2: [],    // 身份证背面
       categoryList: [],          // 商品分类
       AuthorizationList: [],     // 授权条件
       id: null,                  // 修改或者第一次填写
@@ -504,7 +553,7 @@ export default {
         category_id: [],         // 商品分类id
         authorization_id: [],    // 授权条件
         // provinceValue: [],       // 门店地址
-        store_address: '',        // 门店详细地址
+        storeAddress: '',        // 门店详细地址
         operation_situation: '', // 经营情况
         business_license_number: '', // 营业执照号
         // license_id: null,            // 营业执照id
@@ -586,7 +635,7 @@ export default {
           { validator: validatePhone, trigger: 'blur' }
         ],
         // 企业详细地址
-        enter_Address: [
+        enterAddress: [
           { required: true, message: '企业详细地址不能为空', trigger: 'blur' },
           { type: 'string', min: 4, max: 30, message: '名称范围在4-30字符之间', trigger: 'blur' }
         ],
@@ -713,17 +762,27 @@ export default {
     //   return check
     // },
     // 门店删除
-    handleshopRemove (file) {
-      const fileList = this.uploadshopList
-      this.uploadshopList.splice(fileList.indexOf(file), 1)
+    handleshopRemove1 (file) {
+      const fileList = this.uploadshopList1
+      this.uploadshopList1.splice(fileList.indexOf(file), 1)
     },
-    // 身份证删除
-    handleIdentityRemove (file) {
-      const fileList = this.uploadIdentityList
-      this.uploadIdentityList.splice(fileList.indexOf(file), 1)
+    handleshopRemove2 (file) {
+      const fileList = this.uploadshopList2
+      this.uploadshopList2.splice(fileList.indexOf(file), 1)
+    },
+    // 身份证正面删除
+    handleIdentityRemove1 (file) {
+      const fileList = this.uploadIdentityList1
+      this.uploadIdentityList1.splice(fileList.indexOf(file), 1)
+    },
+    // 身份证背面删除
+    handleIdentityRemove2 (file) {
+      const fileList = this.uploadIdentityList2
+      this.uploadIdentityList2.splice(fileList.indexOf(file), 1)
     },
     // 上传门店正面成功
     handleshopSuccess_f (res, file, fileList) {
+      this.uploadshopList1 = []
       this.form.front_id = res.asset_id
       var add = fileList[fileList.length - 1]
       var itemt = {
@@ -733,10 +792,11 @@ export default {
           asset_id: add.response.asset_id
         }
       }
-      this.uploadshopList.push(itemt)
+      this.uploadshopList1.push(itemt)
     },
     // 上传门店内部成功
     handleshopSuccess_r (res, file, fileList) {
+      this.uploadshopList2 = []
       this.form.Inside_id = res.asset_id
       var add = fileList[fileList.length - 1]
       var itemt = {
@@ -746,12 +806,12 @@ export default {
           asset_id: add.response.asset_id
         }
       }
-      this.uploadshopList.push(itemt)
+      this.uploadshopList2.push(itemt)
     },
     // 门店正面执行
     handleshopBeforeUpload_f () {
       this.uploadParam['x:type'] = 17
-      const check = this.uploadshopList.length < 2
+      const check = this.uploadshopList1.length < 1
       if (!check) {
         this.$Message.warning('最多上传两张照片')
       }
@@ -760,7 +820,7 @@ export default {
     // 门店内部执行
     handleshopBeforeUpload_r () {
       this.uploadParam['x:type'] = 18
-      const check = this.uploadshopList.length < 2
+      const check = this.uploadshopList2.length < 1
       if (!check) {
         this.$Message.warning('最多上传两张照片')
       }
@@ -768,6 +828,7 @@ export default {
     },
     // 身份证正面上传成功
     handleIdentitySuccess_f (res, file, fileList) {
+      this.uploadIdentityList1 = []
       this.form.portrait_id = res.asset_id
       var add = fileList[fileList.length - 1]
       var itemt = {
@@ -777,10 +838,11 @@ export default {
           asset_id: add.response.asset_id
         }
       }
-      this.uploadIdentityList.push(itemt)
+      this.uploadIdentityList1.push(itemt)
     },
     // 身份证背面上传成功
     handleIdentitySuccess_r (res, file, fileList) {
+      this.uploadIdentityList2 = []
       this.form.national_emblem_id = res.asset_id
       var add = fileList[fileList.length - 1]
       var itemt = {
@@ -790,12 +852,12 @@ export default {
           asset_id: add.response.asset_id
         }
       }
-      this.uploadIdentityList.push(itemt)
+      this.uploadIdentityList2.push(itemt)
     },
     // 身份证人像面上传之前
     handleIdentityBeforeUpload_f () {
       this.uploadParam['x:type'] = 20
-      const check = this.uploadIdentityList.length < 2
+      const check = this.uploadIdentityList1.length < 1
       if (!check) {
         this.$Message.warning('最多上传两张照片')
       }
@@ -804,7 +866,7 @@ export default {
     // 身份证国徽面上传之前
     handleIdentityBeforeUpload_r () {
       this.uploadParam['x:type'] = 21
-      const check = this.uploadIdentityList.length < 2
+      const check = this.uploadIdentityList2.length < 1
       if (!check) {
         this.$Message.warning('最多上传两张照片')
       }
@@ -1022,20 +1084,23 @@ export default {
             //   self.$Message.error('请上传营业执照!')
             //   return false
             // }
-            if (self.uploadshopList.length === 0) {
-              self.$Message.error('请上传门店照片!')
-              return false
-            } else if (self.uploadshopList.length === 1) {
-              self.$Message.error('请补全门店照片!')
+            if (self.uploadshopList2.length === 0) {
+              self.$Message.error('请上传门店内部照!')
               return false
             }
-            if (self.uploadIdentityList.length === 0) {
-              self.$Message.error('请上传身份证照片!')
-              return false
-            } else if (self.uploadIdentityList.length === 1) {
-              self.$Message.error('请补全身份证照片!')
+            if (self.uploadIdentityList1.length === 0) {
+              self.$Message.error('请上传身份证人像面!')
               return false
             }
+            if (self.uploadIdentityList2.length === 0) {
+              self.$Message.error('请上传身份证国徽面!')
+              return false
+            }
+            if (self.uploadshopList1.length === 0) {
+              self.$Message.error('请上传门店正面照!')
+              return false
+            }
+            console.log(3)
             var row = {
               token: self.$store.state.event.token,
               id: self.form.id,                                 // showid
@@ -1088,7 +1153,6 @@ export default {
                   self.$Message.success('操作成功！')
                   self.$http.get(api.user)
                     .then((response) => {
-                      console.log(response.data.data)
                       auth.write_user(response.data.data)
                     })
                   self.$router.push({name: 'centerIdentifyShow'})
@@ -1173,8 +1237,22 @@ export default {
       })
   },
   mounted () {
+    this.uploadIdentityList1 = this.$refs.upload1.fileList  // 身份证正面默认图
+    this.uploadIdentityList2 = this.$refs.upload2.fileList  // 身份证背面图
+    this.uploadshopList1 = this.$refs.upload3.fileList  // 门店正面图
+    this.uploadshopList2 = this.$refs.upload4.fileList  // 门店内部图
     if (localStorage.getItem('storesInfo')) {
       this.form = JSON.parse(localStorage.getItem('storesInfo'))
+      console.log(this.form)
+      this.form.portrait_id = this.form.portrait_id  // 身份证正面id
+      this.form.national_emblem_id = this.form.national_emblem_id  // 身份证背面id
+      this.form.front_id = this.form.front_id  // 门店正面id
+      this.form.Inside_id = this.form.Inside_id  // 门店内部id
+      // shopdefaultList identitydefaultList
+      this.identitydefaultList1[0].url = this.form.portrait      // 身份证人像面默认图
+      this.identitydefaultList2[0].url = this.form.national_emblem       // 身份证国徽面身份证人像面默认图图
+      this.shopdefaultList1[0].url = this.form.front   // 门店正面默认图
+      this.shopdefaultList2[0].url = this.form.Inside  // 门店内部默认图
       this.enterpriseProvince.id = this.form.enter_province    // 获企业取省市id
       this.enterpriseFetchCity(this.form.enter_province, 2)    // 调用企业城市id
       this.enterpriseCity.id = this.form.enter_city        // 获取企业城市id

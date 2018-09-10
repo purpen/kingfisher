@@ -28,9 +28,7 @@
             <Submenu name="" class="">
                 <template slot="title">
                   <div class="header_user_avatar">
-                    <div>
-                      <img :src="isUserImg" alt="">
-                    </div>
+                    <img :src="isUserImg" alt="">
                   </div>
                     {{ eventUser.account }}
                 </template>
@@ -319,21 +317,26 @@ export default {
   }
   .header_user_avatar{
     float: left;
-    margin: 19px 10px 19px 20px;
+    margin: 17px 10px 19px 20px;
     width: 32px;
     height: 32px;
     border-radius: 50%;
     overflow: hidden;
     position: relative;
+    border: 1px solid rgba(0,0,0,.8);
+    display: flex;
+    box-sizing: content-box;
   }
   .header_user_avatar img{
-    width: 100%;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
+    width: 32px;
+    height: 32px;
+    /*width: 100%;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
+    /*left: 0;*/
+    /*margin: auto;*/
   }
 </style>
 

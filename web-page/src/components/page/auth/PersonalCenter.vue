@@ -7,19 +7,19 @@
         <Col :span="21">
           <div class="personalcenter">
             <div class="userImage text-center">
-              <div  v-if="!uploadList.length" class="wid-118 box-sha" style="margin: 0 auto;position: relative">
+              <div  v-if="!uploadList.length" class="wid_128 box-sha" style="margin: 0 auto">
                 <img class="posi-abs" :src="personalform.userImg" alt="">
               </div>
               <div class="margin-b-25">
                 <div class="demo-upload-list" v-for="item in uploadList">
                   <template>
-                    <div class="wid-118">
+                    <div class="wid_128">
                       <img class="posi-abs" :src="item.url">
                     </div>
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                    </div>
+                    <!--<div class="demo-upload-list-cover">-->
+                      <!--<Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>-->
+                      <!--<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>-->
+                    <!--</div>-->
                   </template>
                 </div>
                 <p class="margin-t-15 margin-b-15 color_666" v-text="personalform.account"></p>
@@ -83,7 +83,7 @@
               </Form>
             </div>
             <div class="submit">
-              <Button class="wid_100 margin-t-40 margin-b-40" @click="submit('personal')">确认修改</Button>
+              <Button class="margin-t-40 wid-100 margin-b-40" @click="submit('personal')">确认修改</Button>
             </div>
           </div>
         </Col>
@@ -184,11 +184,13 @@
               }
               self.$http.post(api.updateUser, userInfo)
                 .then(function (res) {
-                  self.$Message.success('修改成功')
                   self.$http.get(api.user)
                     .then((response) => {
-                      console.log(response.data.data)
-                      auth.write_user(response.data.data)
+                      if (response.data.meta.status_code === 200) {
+                        self.$Message.success('修改成功')
+                        console.log(response.data.data)
+                        auth.write_user(response.data.data)
+                      }
                     })
                   // self.$router.push('/center/order')
                 })
@@ -213,6 +215,7 @@
         this.uploadList.splice(fileList.indexOf(file), 1)
       },
       handleSuccess (res, file, fileList) {
+        this.uploadList = []
         this.img_id = res.asset_id
         var add = fileList[fileList.length - 1]
         var itemt = {
@@ -226,11 +229,12 @@
       },
       handleBeforeUpload () {
         this.uploadParam['x:type'] = 1
-        const check = this.uploadList.length < 1
-        if (!check) {
-          this.$Message.warning('您已上传!')
-        }
-        return check
+        // this.uploadList = []
+        // const check = this.uploadList.length < 1
+        // if (!check) {
+        //   this.$Message.warning('您已上传!')
+        // }
+        // return check
       },
       handleFormatError (file) {
         this.$Message.warning('图片格式不正确')
@@ -296,28 +300,15 @@
     border-radius: 50%;
   }
 
-  .posi-abs {
-    width: 100%;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-  }
-
   .demo-upload-list{
     display: inline-block;
-    width: 118px;
-    height: 118px;
+    width: 128px;
+    height: 128px;
     text-align: center;
     line-height: 60px;
-    border: 1px solid transparent;
-    border-radius: 4px;
     overflow: hidden;
     background: #fff;
     position: relative;
-    box-shadow: 0 1px 1px rgba(0,0,0,.2);
     margin-right: 4px;
     border-radius: 50%;
   }
@@ -349,5 +340,22 @@
     box-shadow: 0 1px 1px rgba(0,0,0,.2);
     border-radius: 50%;
     overflow: hidden;
+  }
+
+  .wid_128 {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    box-shadow: 0 1px 1px rgba(0,0,0,.8);
+  }
+
+  .wid-100 {
+    width: 140px;
+  }
+
+  .posi-abs {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
   }
 </style>
