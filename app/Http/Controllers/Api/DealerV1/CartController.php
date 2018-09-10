@@ -185,7 +185,7 @@ class CartController extends BaseController
 
                 $v->status = false;
 
-                $data[$k] = array(
+                $data['data'][$k] = array(
                     'id' => $v->id,
                     'product_name'=>$cart->title,//商品名称
                     'inventory' =>$mode->quantity,//商品库存数量
