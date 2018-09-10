@@ -800,11 +800,11 @@
   height: 30px;
   width: 54px;
   border: 1px solid rgba(200,200,200,1);
-  color: rgba(200,200,200,1);
+  color: #666;
   background:rgba(240,240,240,1);
   padding: 0;
   font-size: 12px;
-  line-height: 30px;
+  line-height: 29px;
   text-align: center;
   border-radius: 0;
 }

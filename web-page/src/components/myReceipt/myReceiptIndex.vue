@@ -130,6 +130,7 @@
 </template>
 
 <script>
+//    import api from '@/api/api'
     export default {
       name: 'myReceiptIndex',
       data () {
@@ -817,9 +818,9 @@
         quantity_statistics () { // 数量做统计
           let Number = this.$store.state.event.The_order_shopping_Number
           if (Number.length <= 0) {
-            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+            this.$store.commit('THE_ORDER_SKUID_SHOPPING_CLEAR')
           } else { // Number有值就请求一下没有就不请求了(防止用户刷新页面的操作)
-            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+            this.$store.commit('THE_ORDER_SKUID_SHOPPING_CLEAR')
           }
         },
         this_change_goods (shopping) { // 处理主逻辑

@@ -105,7 +105,7 @@ export default {
   .shipping_address_wrapper_div{
     width: 747px;
     height: 209px;
-    border: 1px solid rgba(240,240,240,1);
+    border: 1px solid #c8c8c8;
     margin-bottom: 18px;
   }
   .shipping_address_wrapper_div_p{
