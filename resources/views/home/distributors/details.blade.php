@@ -144,13 +144,13 @@
                             <h5>商品分类</h5>
                             <hr>
                             <div class="form-group">
-                                <label for="category_id" class="col-sm-2 control-label">选择商品分类<em>*</em></label>
+                                <label for="category_id" class="col-sm-2 control-label {{ $errors->has('category_id') ? ' has-error' : '' }}">选择商品分类<em>*</em></label>
                                 <div class="col-sm-3">
                                     <div class="input-group  col-md-12">
                                         <div class="col-sm-8" style="padding-top:5px">
                                             @foreach($categorys as $list)
                                                 @if($list['type'] == 1)
-                                        <input type="checkbox" name="category_id" id="category_id" class="checkcla" required value="{{ $list->id }}">{{ $list->title }}
+                                        <input type="checkbox" name="category_id" id="category_id" class="checkcla" required value="{{ $list->id }}"  @if(in_array($list->id,$categorie)) checked="checked" @endif>{{ $list->title }}
                                         @endif
                                             @endforeach
 
@@ -161,13 +161,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="authorization_id" class="col-sm-2 control-label">选择授权类型<em>*</em></label>
+                                <label for="authorization_id" class="col-sm-2 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型<em>*</em></label>
                                 <div class="col-sm-3">
                                     <div class="input-group  col-md-12">
                                         <div class="col-sm-8" style="padding-top:5px">
                                             @foreach($authorization as $list)
                                                 @if($list['type'] == 2)
-                                                    <input type="checkbox" name="authorization_id" id="authorization_id" class="checkcla" required value="{{ $list->id }}">{{ $list->title }}
+                                                    <input type="checkbox" name="authorization_id" id="authorization_id" class="checkcla" required value="{{ $list->id }}"  @if(in_array($list->id,$authoriza)) checked="checked" @endif>{{ $list->title }}
                                                 @endif
                                             @endforeach
 
@@ -233,8 +233,8 @@
     if(data.status == 0){
     layer.msg('操作成功！');
     {{--window.location.go(-1);--}}
-    window.history.go(-1);
-{{--    location.href = '{{url('/distributors')}}';--}}
+    {{--window.history.go(-1);--}}
+    location.href = '{{url('/distributors')}}';
     }else if(data.status == 1){
     alert(data.message);
     }else{

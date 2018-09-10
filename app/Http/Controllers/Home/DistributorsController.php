@@ -65,11 +65,15 @@ class DistributorsController extends Controller
     {
         $id = $request->input('id');
         $distributors = DistributorModel::where('id' , $id)->first();
+
         $categorys = CategoriesModel::where('type','=',1)->where('status',1)->get();//所有商品分类列表
         $authorization = CategoriesModel::where('type','=',2)->where('status',1)->get();//获取授权条件
+
+        if ($distributors->category_id && $distributors->authorization_id){
+            $categorie = explode(',',$distributors->category_id);
+            $authoriza = explode(',', $distributors->authorization_id);
+        }
         if (count($distributors)>0) {
-//            $categories = explode(',',$distributors->category_id);
-//            $authorizations = explode(',', $distributors['authorization_id']);
             $province = ChinaCityModel::where('oid', $distributors->province_id)->select('name')->first();
             $city = ChinaCityModel::where('oid', $distributors->city_id)->select('name')->first();
             $enter_province = ChinaCityModel::where('oid', $distributors->enter_province)->select('name')->first();
@@ -106,7 +110,9 @@ class DistributorsController extends Controller
         return view('home/distributors.details', [
             'distributors' => $distributors,
             'categorys' => $categorys,
+            'categorie' => $categorie,
             'authorization' => $authorization,
+            'authoriza' => $authoriza,
             'user' => $user,
             'assets_front' => $assets_front,
             'assets_Inside' => $assets_Inside,
@@ -169,8 +175,8 @@ class DistributorsController extends Controller
     {
 
         $id = $request->input('id');
-        $category_id = $request->input('Jszzdm')?$request->input('Jszzdm'):'';
-        $authorization_id = $request->input('diyu')?$request->input('diyu'):'';
+        $category_id = $request->input('diyu')?$request->input('diyu'):'';
+        $authorization_id = $request->input('Jszzdm')?$request->input('Jszzdm'):'';
         $distributorsModel = DistributorModel::find($id);
         if($distributorsModel !='') {
 
