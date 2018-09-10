@@ -124,9 +124,9 @@ class OrderController extends BaseController{
      *  "express_no": 536728987,     //快递单号
      *  "order_start_time": "0000-00-00 00:00:00", //发货时间
      *  "status": 8,
-     *  "status_val": "待发货",
-     *  "receiving_id": "111",          //发票类型
-     *  "company_name": "1",          //发票抬头
+     *  "status_val": "待发货",                //状态
+     *  "receiving_id": "1",          //发票类型(0.不开 1.普通 2.专票)
+     *  "company_name": "北京太火红鸟科技有限公司",          //发票抬头
      *  "invoice_value": "1453",        //发票金额
      *  "over_time": "0000-00-00 00:00:00",  //过期时间
      *
@@ -197,7 +197,7 @@ class OrderController extends BaseController{
                 $orders->address_list = $address;
             }
             if (!empty($invoice)){
-                $orders->receiving_id = $invoice->receiving_id;//发票类型
+                $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
                 $orders->company_name = $invoice->company_name;//发票抬头
                 $orders->invoice_value = $invoice->invoice_value;//发票金额
             }

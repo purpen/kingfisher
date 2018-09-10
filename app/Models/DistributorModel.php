@@ -75,7 +75,7 @@ class DistributorModel extends BaseModel
 //            ->first();
 
         if($asset){
-            return $asset->file->srcfile;
+            return $asset->file->p500;
         }else{
             return '';
         }
@@ -92,7 +92,7 @@ class DistributorModel extends BaseModel
 //            ->orderBy('id','desc')
 //            ->first();
         if($asset){
-            return $asset->file->srcfile;
+            return $asset->file->p500;
         }else{
             return '';
         }
@@ -109,7 +109,7 @@ class DistributorModel extends BaseModel
 //            ->orderBy('id','desc')
 //            ->first();
         if($asset){
-            return $asset->file->srcfile;
+            return $asset->file->p500;
         }else{
             return '';
         }
@@ -126,7 +126,7 @@ class DistributorModel extends BaseModel
 //            ->orderBy('id','desc')
 //            ->first();
         if($asset){
-            return $asset->file->srcfile;
+            return $asset->file->p500;
         }else{
             return '';
         }
