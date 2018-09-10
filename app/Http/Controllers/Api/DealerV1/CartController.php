@@ -135,7 +135,7 @@ class CartController extends BaseController
                     'cover_url' => $cover_url,//图片url
                     'mode' => $mode->mode,
                     'status' => $v->status,
-                    'sku_region ' => $type,
+                    'sku_region' => $type,
                     'focus ' => $focus,//是否关注
                 );
             }

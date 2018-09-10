@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\InvoiceModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -16,7 +17,16 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        dd(1);
+
+        $per_page = $request->input('per_page',50);
+        $category = new InvoiceModel();
+        $where['receiving_type'] = 2;
+        $lists = $category->where($where)->paginate($per_page);
+
+        return view("home/invoice.index", [
+            'lists' => $lists,
+
+        ]);
     }
 
     /**
