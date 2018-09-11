@@ -54,7 +54,7 @@
                                         @if(!$assets->isEmpty())
                                             @foreach($assets as $asset)
                                                 <div class="form-group col-sm-6">
-                                                    <img src="{{$asset->file->p500}}" class="img-thumbnail">
+                                                    <img src="{{$asset->file->small}}" class="img-thumbnail">
                                                 </div>
                                             @endforeach
                                         @else
@@ -63,6 +63,68 @@
                                             </div>
                                         @endif
                                     </div>
+                                </div>
+                                    <hr>
+                                    @if(isset($product->productsSku))
+                                        <h5>sku列表</h5>
+                                        <hr>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                    <tr class="gblack">
+                                                        <th>序号</th>
+                                                        <th>图片</th>
+                                                        <th>SKU编码</th>
+                                                        <th>标准进价</th>
+                                                        <th>成本价</th>
+                                                        <th>售价</th>
+                                                        <th>颜色/型号</th>
+                                                        <th>重量（kg）</th>
+                                                        <th>自定义库存</th>
+                                                        <th>备注</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach($product->productsSku as $sku)
+                                                        <tr class=".tr">
+                                                            <td>{{ $sku->id }}</td>
+                                                            <td>
+                                                                <img src="{{$sku->first_img}}" class="img-thumbnail" style="width: 80px;">
+                                                            </td>
+                                                            <td>
+                                                                {{ $sku->number }}
+                                                            </td>
+                                                            <td>
+                                                                {{$sku->bid_price}}
+                                                            </td>
+                                                            <td>
+                                                                {{$sku->cost_price}}
+                                                            </td>
+                                                            <td>
+                                                                {{ $sku->price }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $sku->mode }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $sku->weight }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $sku->zc_quantity }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $sku->summary }}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    @endif
+                                 <div class="asset col-md-12">
                                     <ul class="form-group" style="list-style-type:none">
                                         <li for="number" class="mb-0r control-label"><b>编号:</b>{{ $product->number }}</li></br>
                                         <li for="title" class="mb-0r control-label"><b>商品名称:</b>{{ $product->title }}</li></br>
@@ -85,80 +147,34 @@
                                         <li for="summary" class="mb-0r control-label"><b>备注说明:</b>{{ $product->summary }}</li>
                                     </ul>
             					</div>
-                            <div class="form-group">
-                                <label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>
-                                <br>
-                                <div class="col-sm-12">
-                                    <textarea id="container" style="height:300px;width:100%;" name="content">{{$product->product_details}}</textarea>
-                                    <script id="container" name="content" type="text/plain" readonly>
+                                {{--<label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>--}}
+                                {{--<br>--}}
+                                {{--<div class="col-sm-12">--}}
+                                    {{--<textarea id="container" style="height:300px;width:100%;" name="content">{{$product->product_details}}</textarea>--}}
+                                    {{--<script id="container" name="content" type="text/plain" readonly>--}}
 
 
-                                  </script>
+                                  {{--</script>--}}
+                                {{--</div>--}}
+
+                                <div class="form-group">
+                                    <h5>商品详情介绍图片</h5>
+                                    @if(!$assetsProductDetails->isEmpty())
+                                        @foreach($assetsProductDetails as $v)
+                                            <div class="form-group col-sm-6">
+                                                <img src="{{$v->file->p800}}" class="img-bignail" style="text-align: center">
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="form-group col-sm-6">
+                                            <img src="{{url('/images/default/erp_product1.png')}}" class="img-thumbnail">
+                                        </div>
+                                    @endif
                                 </div>
-                            </div>
 
                         </div>
                     
-                        <hr>
-                        @if(isset($product->productsSku))
-                            <h5>sku列表</h5>
-                            <hr>
 
-                            <div class="form-group">
-                            <div class="col-md-12">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                    <tr class="gblack">
-                                        <th>序号</th>
-                                        <th>图片</th>
-                                        <th>SKU编码</th>
-                                        <th>标准进价</th>
-                                        <th>成本价</th>
-                                        <th>售价</th>
-                                        <th>颜色/型号</th>
-                                        <th>重量（kg）</th>
-                                        <th>自定义库存</th>
-                                        <th>备注</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($product->productsSku as $sku)
-                                    <tr class=".tr">
-                                        <td>{{ $sku->id }}</td>
-                                        <td>
-                                            <img src="{{$sku->first_img}}" class="img-thumbnail" style="width: 80px;">
-                                        </td>
-                                        <td>
-                                           {{ $sku->number }}
-                                        </td>
-                                        <td>
-                                            {{$sku->bid_price}}
-                                        </td>
-                                        <td>
-                                            {{$sku->cost_price}}
-                                        </td>
-                                        <td>
-                                            {{ $sku->price }}
-                                        </td>
-                                        <td>
-                                            {{ $sku->mode }}
-                                        </td>
-                                        <td>
-                                            {{ $sku->weight }}
-                                        </td>
-                                        <td>
-                                            {{ $sku->zc_quantity }}
-                                        </td>
-                                        <td>
-                                            {{ $sku->summary }}
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        @endif
 
                 </div>
             </div>

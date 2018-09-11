@@ -67,6 +67,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('DealerApi/auth/login', [
         'as' => 'auth.login', 'uses' => 'AuthenticateController@login'
     ]);
+    //刷新token
+    $api->post('/DealerApi/auth/upToken', [
+        'as' => 'Dealer.upToken', 'uses' => 'AuthenticateController@upToken'
+    ]);
     $api->post('DealerApi/auth/authenticate', [
         'as' => 'auth.authenticate', 'uses' => 'AuthenticateController@authenticate'
     ]);
@@ -74,13 +78,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'auth.getRegisterCode', 'uses' => 'AuthenticateController@getRegisterCode'
     ]);
 
-    // 获取图片上传token----------------------------------------------------------------------------------------------
-    $api->get('/DealerApi/tools/getToken', [
-        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
-    ]);
+
     // 删除上传附件
     $api->post('/DealerApi/tools/deleteAsset', [
         'as' => 'Dealer.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
+    ]);
+    // 获取图片上传token----------------------------------------------------------------------------------------------
+    $api->get('/DealerApi/tools/getToken', [
+        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
     ]);
 
     //验证手机号是否存在
@@ -131,6 +136,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
     ]);
 
+
 //个人中心---------------------------------------------------------------------------------------------------------------
 
     // 验证API
@@ -142,44 +148,44 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/auth/user', [
             'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
         ]);
+        //更新用户信息
+        $api->post('/DealerApi/auth/updateUser', [
+            'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
+        ]);
         //退出登录
         $api->post('/DealerApi/auth/logout', [
             'as' => 'Dealer.logout', 'uses' => 'AuthenticateController@logout'
         ]);
-        //刷新token
-        $api->post('/DealerApi/auth/upToken', [
-            'as' => 'Dealer.upToken', 'uses' => 'AuthenticateController@upToken'
-        ]);
+
 
 
         //收藏/关注商品---------------------------------------------------------------------------------------------------
         $api->post('/DealerApi/product/follow', [
             'as' => 'Dealer.product.follow', 'uses' => 'ProductsController@follow'
         ]);
-        //取消收藏/关注商品
+//        取消收藏/关注商品
         $api->post('/DealerApi/product/notFollow', [
             'as' => 'Dealer.product.notFollow', 'uses' => 'ProductsController@notFollow'
         ]);
-        //收藏/关注商品列表
+//        收藏/关注商品列表
         $api->get('/DealerApi/product/followList', [
             'as' => 'Dealer.product.followList', 'uses' => 'ProductsController@followList'
         ]);
-        // 商品详情
+////         商品详情
         $api->get('/DealerApi/product/info', [
             'as' => 'Dealer.product.info', 'uses' => 'ProductsController@info'
         ]);
-        // 商品搜索
+//         商品搜索
         $api->get('/DealerApi/product/search', [
             'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
         ]);
-
 
         //获取经销商的商品分类
         $api->get('/DealerApi/product/categories', [
             'as' => 'Dealer.product.categories', 'uses' => 'ProductsController@categories'
         ]);
 
-        // 推荐的商品列表
+//        // 推荐的商品列表
         $api->get('/DealerApi/product/recommendList', [
             'as' => 'Dealer.product.recommendList', 'uses' => 'ProductsController@recommendList'
         ]);
@@ -201,6 +207,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->post('/DealerApi/order/destroy',[
             'as' => 'Dealer.Order.destroy' , 'uses' => 'OrderController@destroy'
         ]);
+        //取消订单
+        $api->post('/DealerApi/order/cancel',[
+            'as' => 'Dealer.Order.cancel' , 'uses' => 'OrderController@cancel'
+        ]);
+        //确认收货
+        $api->post('/DealerApi/order/confirm',[
+            'as' => 'Dealer.Order.confirm' , 'uses' => 'OrderController@confirm'
+        ]);
 
         // 经销商修改信息-------------------------------------------------------------------------------------------------
         $api->post('/DealerApi/message/updateMessage', [
@@ -217,7 +231,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
             'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
         ]);
 
-
         //获取授权条件
         $api->get('/DealerApi/message/authorization', [
             'as' => 'Dealer.message.authorization', 'uses' => 'MessageController@authorization'
@@ -227,13 +240,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/address/list', [
             'as' => 'Dealer.address.list', 'uses' => 'AddressController@lists'
         ]);
-        // 收货地址详情
-        $api->get('/DealerApi/address/show', [
-            'as' => 'Dealer.address/show', 'uses' => 'AddressController@show'
-        ]);
+
         // 添加／编辑收货地址
         $api->post('/DealerApi/address/submit', [
             'as' => 'Dealer.address.submit', 'uses' => 'AddressController@submit'
+        ]);
+        // 收货地址详情
+        $api->get('/DealerApi/address/show', [
+            'as' => 'Dealer.address/show', 'uses' => 'AddressController@show'
         ]);
         // 删除收货地址
         $api->post('/DealerApi/address/deleted', [
@@ -244,6 +258,5 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
             'as' => 'Dealer.address.defaulted', 'uses' => 'AddressController@defaulted'
         ]);
     });
-
 
 });

@@ -25,11 +25,12 @@ class AddressController extends BaseController
      *      "id": 2,                            // ID
      *      "name": 张明,                   // 收货人
      *      "phone": "15000000000",           // 电话
+     *      "fixed_telephone": "021-3288129",           // 固定电话
      *      "zip": "101500",                      // 邮编
-     *      "province_id": 1,                         // 省份ID
-     *      "city_id": 1,                         // 城市ID
-     *      "county_id": 1,                         // 区县ID
-     *      "town_id": 1,                         // 城镇／乡ID
+     *      "province":北京市,                         // 省份
+     *      "city": 朝阳区,                         // 城市
+     *      "county": 三环到四环,                         // 区县
+     *      "town": 某某村,                         // 城镇／乡
      *      "address": "酒仙桥798"                // 详细地址
      *      "is_default": 1,                      // 是否默认收货地址
      *      "status": 1,                            // 状态: 0.禁用；1.正常；
@@ -65,7 +66,7 @@ class AddressController extends BaseController
 
 
     /**
-     * @api {get} /DealerApi/address/show 收货地址详情
+     * @api {get} /DealerApi/address/show 收货地址详情(暂未使用)
      * @apiVersion 1.0.0
      * @apiName Address show
      * @apiGroup Address
@@ -79,10 +80,10 @@ class AddressController extends BaseController
      *      "name": 张明,                   // 收货人
      *      "phone": "15000000000",           // 电话
      *      "zip": "101500",                      // 邮编
-     *      "province_id": 1,                         // 省份ID
-     *      "city_id": 1,                         // 城市ID
-     *      "county_id": 1,                         // 区县ID
-     *      "town_id": 1,                         // 城镇／乡ID
+     *      "province_id": 1,                         // 省份oid
+     *      "city_id": 1,                         // 城市oid
+     *      "county_id": 1,                         // 区县oid
+     *      "town_id": 1,                         // 城镇／乡oid
      *      "address": "酒仙桥798"                // 详细地址
      *      "is_default": 1,                      // 是否默认收货地址
      *      "status": 1,                            // 状态: 0.禁用；1.正常；
@@ -131,12 +132,12 @@ class AddressController extends BaseController
      * @apiParam {string}   id 编辑时必传
      * @apiParam {string}   name 姓名
      * @apiParam {string}   phone 电话
-     * @apiParam {integer} province_id 省份ID
-     * @apiParam {integer} city_id 城市ID
-     * @apiParam {integer} county_id 城镇ID
-     * @apiParam {integer} town_id 乡ID
+     * @apiParam {string}   fixed_telephone 固定电话
+     * @apiParam {integer} province_id 省份oiD
+     * @apiParam {integer} city_id 城市oiD
+     * @apiParam {integer} county_id 城镇oiD
+     * @apiParam {integer} town_id 乡oiD
      * @apiParam {integer} is_default 是否默认：0.否；1.是；
-     * @apiParam {string}   zip 邮编
      * @apiParam {string}   address 详细地址
      * @apiParam {string} token token
      */
@@ -144,9 +145,14 @@ class AddressController extends BaseController
     public function submit(Request $request)
     {
         $user_id = $this->auth_user_id;
+        $address = AddressModel::where('user_id',$this->auth_user_id)->get();
+        if (count($address) > 5){
+            return $this->response->array(ApiHelper::error('最多只能添加5个收货地址！', 402));
+        }
         $id = $request->input('id') ? (int)$request->input('id') : 0;
         $name = $request->input('name') ? $request->input('name') : '';
         $phone = $request->input('phone') ? $request->input('phone') : '';
+        $fixed_telephone = $request->input('fixed_telephone') ? $request->input('fixed_telephone') : '';
         $is_default = $request->input('is_default') ? (int)$request->input('is_default') : 0;
         $province_id = $request->input('province_id') ? (int)$request->input('province_id') : 0;
         $city_id = $request->input('city_id') ? (int)$request->input('city_id') : 0;
@@ -157,6 +163,7 @@ class AddressController extends BaseController
         $data = array(
             'name' => $name,
             'phone' => $phone,
+            'fixed_telephone' => $fixed_telephone,
             'is_default' => $is_default,
             'province_id' => $province_id,
             'city_id' => $city_id,

@@ -64,7 +64,7 @@ class OrderModel extends BaseModel
      * @var array
      */
 
-    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'buyer_summary', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money', 'number', 'count', 'storage_id', 'buyer_province', 'buyer_city', 'buyer_county', 'buyer_township', 'order_start_time', 'order_verified_time', 'order_send_time', 'order_user_id', 'user_id_sales', 'express_no', 'payment_type', 'random_id', 'invoice_info', 'excel_type', 'invoice_type', 'invoice_header', 'invoice_added_value_tax', 'invoice_ordinary_number', 'from_type' , 'distributor_id'];
+    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'buyer_summary', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money', 'number', 'count', 'storage_id', 'buyer_province', 'buyer_city', 'buyer_county', 'buyer_township', 'order_start_time', 'order_verified_time', 'order_send_time', 'order_user_id', 'user_id_sales', 'express_no', 'payment_type', 'random_id', 'invoice_info', 'excel_type', 'invoice_type', 'invoice_header', 'invoice_added_value_tax', 'invoice_ordinary_number', 'from_type' , 'distributor_id','address_id'];
 
     /**
      * 相对关联到商铺表
@@ -138,6 +138,50 @@ class OrderModel extends BaseModel
         return $this->hasOne('App\Models\SupplierModel', 'supplier_id');
     }
 
+    /**
+     * 一对多关联assets表单
+     */
+    public function assets()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','prove_id');
+    }
+
+    /**
+     * 相对关联到address表
+     */
+    public function address()
+    {
+        return $this->belongsTo('App\Models\AddressModel', 'address_id');
+    }
+
+
+    /**
+     *  获取一般纳税人证明图片
+     */
+    public function getProveAttribute()
+    {
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->small;
+        }
+        return $result;
+    }
+    /**
+     * 获取商品图片信息对象
+     *
+     */
+    public function imageFile()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 23])
+            ->orderBy('id', 'desc')
+            ->first();
+        if (empty($asset)) {
+            return url('images/default/erp_product1.png');
+        }
+
+        return $asset->file;
+    }
     /**
      * 订单状态Status访问修改器
      * 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成

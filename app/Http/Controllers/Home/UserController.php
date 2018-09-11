@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\DistributorModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -308,6 +309,10 @@ class UserController extends Controller
     {
         $id = $request->input('id');
         $id = intval($id);
+        $distridutor = DistributorModel::where('user_id','=',$id)->first();
+        if ($distridutor){
+            $distridutor->destroy($distridutor->id);
+        }
         if(UserModel::destroy($id)){
             return ajax_json(0,'删除失败 ');
         }else{

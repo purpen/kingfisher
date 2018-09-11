@@ -50,6 +50,13 @@ class ProductsModel extends BaseModel
     {
         return $this->belongsTo('App\Models\AssetsModel','cover_id');
     }
+    /**
+     * 一对多关联assets表商品详情介绍图
+     */
+    public function assetsProductDetails()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','product_details');
+    }
 
     /**
      * 一对多关联StorageSkuCount表
@@ -176,6 +183,17 @@ class ProductsModel extends BaseModel
     }
 
     /**
+     * 商品详情介绍大图
+     */
+    public function getDetialImgAttribute()
+    {
+        $result = $this->getProductDetailAttribute();
+        if(is_object($result)){
+            return $result->small;
+        }
+        return $result;
+    }
+    /**
      * 商品中图
      */
     public function getMiddleImgAttribute()
@@ -223,6 +241,23 @@ class ProductsModel extends BaseModel
         if(empty($asset)){
             return url('images/default/erp_product.png');
         }
+        return $asset->file;
+    }
+
+
+    /**
+     * 获取商品详情图片
+     */
+    public function getProductDetailAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 22])
+            ->orderBy('id', 'desc')
+            ->first();
+        if (empty($asset)) {
+            return url('images/default/erp_product1.png');
+        }
+
         return $asset->file;
     }
 
