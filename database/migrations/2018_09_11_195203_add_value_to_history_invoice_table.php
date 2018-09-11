@@ -13,7 +13,7 @@ class AddValueToHistoryInvoiceTable extends Migration
     public function up()
     {
         Schema::table('history_invoice', function (Blueprint $table) {
-            $table->increments('user_id');  //用户id
+            $table->integer('user_id');  //用户id
         });
     }
 
