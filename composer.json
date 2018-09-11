@@ -20,7 +20,8 @@
         "chumper/zipper": "1.0.x",
         "intervention/image": "^2.4",
         "stevenyangecho/laravel-u-editor": "~1.4",
-        "gregwar/captcha": "1.*"
+        "gregwar/captcha": "1.*",
+        "latrell/alipay": "dev-master"
     },
     "minimum-stability": "dev",
     "require-dev": {

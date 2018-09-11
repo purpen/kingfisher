@@ -6,6 +6,7 @@ use App\Http\DealerTransformers\CategoryTransformer;
 use App\Http\DealerTransformers\CityTransformer;
 use App\Http\DealerTransformers\OrderListTransformer;
 use App\Http\DealerTransformers\OrderTransformer;
+use App\Models\AddressModel;
 use App\Models\AssetsModel;
 use App\Models\AuditingModel;
 use App\Models\ChinaCityModel;
@@ -23,6 +24,7 @@ use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends BaseController{
@@ -216,7 +218,7 @@ class OrderController extends BaseController{
      * @apiGroup Order
      *
      * @apiParam {integer} address_id 收获地址ID
-     * @apiParam {string} payment_type 付款方式：4：月结；5：现结；
+     * @apiParam {string} payment_type 付款方式：1.在线 4：月结；
      * @apiParam {string} invoice_id 发票id
      * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
@@ -282,12 +284,16 @@ class OrderController extends BaseController{
             }
         }
 
-        $all['address_id'] = $request->input('address_id');
         $all['order_start_time'] = date("Y-m-d H:i:s");
         $all['user_id'] = $user_id;
         $all['distributor_id'] = $this->auth_user_id;
-//        $all['status'] = 5;
-        $all['status'] = 1;//待付款
+        $all['payment_type'] = $request->input('payment_type');
+
+        if ($all['payment_type'] == 4){
+           $all['status'] = 5;//已付款
+        }else{
+           $all['status'] = 1;//待付款
+        }
         $all['total_money'] = $total_money;
         $all['pay_money'] = $total_money;
         $all['count'] = $count;
@@ -299,6 +305,16 @@ class OrderController extends BaseController{
         $all['storage_id'] = config('constant.D3IN_storage_id');
         $number = CountersModel::get_number('DD');
         $all['number'] = $number;
+        $all['address_id'] = $request->input('address_id');
+
+        $address = AddressModel::where('id','=',$all['address_id'])->first();
+        $all['buyer_name'] = $address->name;
+        $all['buyer_phone'] = $address->phone;
+        $all['buyer_address'] = $address->address;
+        $all['buyer_province'] = $address->province_id;
+        $all['buyer_city'] = $address->city_id;
+        $all['buyer_county'] = $address->county_id;
+        $all['buyer_township'] = $address->town_id;
 
         $rules = [
             'address_id' => 'required|integer',
@@ -336,13 +352,14 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('创建订单失败！', 500));
         }
         $order_id = $order->id;
+        $invoice_id = $order->invoice_id;
         //保存订单详情
         if(count($sku_id_quantity) == count($sku_id_quantity , 1) ) {
             $sku_id = $sku_id_quantity['sku_id'];
 
             $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
             $product = ProductsModel::where('id',$productSku->product_id)->first();
-
+            $h_invoice = InvoiceModel::where('id','=',$all['invoice_id'])->first();
 
             $order_sku_model = new OrderSkuRelationModel();
             $order_sku_model->order_id = $order_id;
@@ -356,9 +373,31 @@ class OrderController extends BaseController{
             if(!$order_sku_model->save()){
                 return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
             }
-            //订单未付款占货(假定为未付款然后占货)
-            if(!$productSku->increaseReserveCount($order_sku_model->sku_id,$order_sku_model->quantity)){
-                return ajax_json(0,'付款占货关联操作失败');
+
+            $history_invoice = new HistoryInvoiceModel();
+            $history_invoice->user_id = $this->auth_user_id;
+            $history_invoice->order_id = $order_id;
+            $history_invoice->invoice_id = $invoice_id;
+            $history_invoice->receiving_id = $h_invoice->receiving_id;
+            $history_invoice->company_name = $h_invoice->company_name;
+            $history_invoice->invoice_value = $h_invoice->invoice_value;
+            $history_invoice->application_time = $order->order_start_time;
+            $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
+            $history_invoice->unit_address = $h_invoice->unit_address;
+
+            if(!$history_invoice->save()){
+                return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
+            }
+
+            if ($order->payment_type == 4) {
+                //月结就直接默认成已付款占货
+                if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
+                    return ajax_json(0, '未付款占货关联操作失败');
+                }
+            }else{//订单未付款占货(假定为未付款然后占货)
+                if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
+                    return ajax_json(0, '付款占货关联操作失败');
+                }
             }
 
         }else {
@@ -366,6 +405,7 @@ class OrderController extends BaseController{
                 $sku_id = $v['sku_id'];
                 $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
                 $product = ProductsModel::where('id' , $productSku->product_id)->first();
+                $h_invoice = InvoiceModel::where('id','=',$all['invoice_id'])->first();
 
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
@@ -379,12 +419,33 @@ class OrderController extends BaseController{
                 if(!$order_sku_model->save()){
                     return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
                 }
-                //订单未付款占货(假定为未付款然后占货)
-                if(!$productSku->increaseReserveCount($sku_id,$v['quantity'])){
-                    return ajax_json(0,'付款占货关联操作失败');
+
+                $history_invoice = new HistoryInvoiceModel();
+                $history_invoice->user_id = $this->auth_user_id;
+                $history_invoice->order_id = $order_id;
+                $history_invoice->invoice_id = $invoice_id;
+                $history_invoice->receiving_id = $h_invoice->receiving_id;
+                $history_invoice->company_name = $h_invoice->company_name;
+                $history_invoice->invoice_value = $h_invoice->invoice_value;
+                $history_invoice->application_time = $order->order_start_time;
+                $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
+                $history_invoice->unit_address = $h_invoice->unit_address;
+
+                if(!$history_invoice->save()){
+                    return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
+                }
+
+                if ($order->payment_type == 4) {
+                    //月结就直接默认成已付款占货
+                    if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
+                        return ajax_json(0, '未付款占货关联操作失败');
+                    }
+                }else{//订单未付款占货(假定为未付款然后占货)
+                    if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
+                        return ajax_json(0, '付款占货关联操作失败');
+                    }
                 }
             }
-
         }
         // 创建订单收款单
         $model = new ReceiveOrderModel();
@@ -392,8 +453,8 @@ class OrderController extends BaseController{
             return ajax_json(0,"ID:'. $order_id .'订单发货创建订单收款单错误");
         }
         //发送审核短信通知
-        $dataes = new AuditingModel();
-        $dataes->datas(1);
+//        $dataes = new AuditingModel();
+//        $dataes->datas(1);
 
         return $this->response->array(ApiHelper::success());
     }
@@ -431,6 +492,77 @@ class OrderController extends BaseController{
             {
                 $order_sku->destroy($order_sku->id);
             }
+            return $this->response->array(ApiHelper::success());
+        }
+    }
+
+    /**
+     * @api {post} /DealerApi/order/cancel 取消订单
+     * @apiVersion 1.0.0
+     * @apiName Order cancel
+     * @apiGroup Order
+     *
+     * @apiParam {integer} order_id 订单id
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+
+    public function cancel(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        $user_id = $this->auth_user_id;
+        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 1])->first();
+        if(!$order){
+            return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
+        }else {
+            $orders =DB::table('order')
+                ->where('user_id','=',$this->auth_user_id)
+                ->where('id','=',$order_id)
+                ->update(['status'=> 0]);
+
+            return $this->response->array(ApiHelper::success());
+        }
+    }
+
+
+    /**
+     * @api {post} /DealerApi/order/confirm 确认收货
+     * @apiVersion 1.0.0
+     * @apiName Order confirm
+     * @apiGroup Order
+     *
+     * @apiParam {integer} order_id 订单id
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+
+    public function confirm(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        $user_id = $this->auth_user_id;
+        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 10])->first();
+        if(!$order){
+            return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
+        }else {
+            $orders =DB::table('order')
+                ->where('user_id','=',$this->auth_user_id)
+                ->where('id','=',$order_id)
+                ->update(['status'=> 20]);
+
             return $this->response->array(ApiHelper::success());
         }
     }

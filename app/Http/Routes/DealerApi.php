@@ -169,6 +169,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->post('/DealerApi/order/destroy',[
             'as' => 'Dealer.Order.destroy' , 'uses' => 'OrderController@destroy'
         ]);
+        //取消订单
+        $api->post('/DealerApi/order/cancel',[
+            'as' => 'Dealer.Order.cancel' , 'uses' => 'OrderController@cancel'
+        ]);
+        //确认收货
+        $api->post('/DealerApi/order/confirm',[
+            'as' => 'Dealer.Order.confirm' , 'uses' => 'OrderController@confirm'
+        ]);
 
         // 经销商修改信息-------------------------------------------------------------------------------------------------
         $api->post('/DealerApi/message/updateMessage', [
@@ -184,7 +192,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/message/category', [
             'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
         ]);
-
 
         //获取授权条件
         $api->get('/DealerApi/message/authorization', [
