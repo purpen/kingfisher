@@ -132,7 +132,7 @@ class OrderController extends BaseController{
      *  "receiving_id": "1",          //发票类型(0.不开 1.普通 2.专票)
      *  "company_name": "北京太火红鸟科技有限公司",          //发票抬头
      *  "invoice_value": "1453",        //发票金额
-     *  "over_time": "0000-00-00 00:00:00",  //过期时间
+     *  "over_time": "2018-09-11 00:00:00",  //过期时间
      *
      *  "address_list":[
      *  "id":1,
@@ -285,6 +285,7 @@ class OrderController extends BaseController{
                 return $this->response->array(ApiHelper::error('暂无优惠信息', 403));
             }
         }
+        $invoice_id = $request->input('invoice_id');
 
         $all['order_start_time'] = date("Y-m-d H:i:s");
         $all['user_id'] = $user_id;
@@ -301,7 +302,6 @@ class OrderController extends BaseController{
         $all['count'] = $count;
         $all['type'] = 8;
         $all['from_type'] = 4;
-        $all['invoice_id'] = $request->input('invoice_id');
         $all['user_id_sales'] = config('constant.D3IN_user_id_sales');
         $all['store_id'] = config('constant.D3IN_store_id');
         $all['storage_id'] = config('constant.D3IN_storage_id');
@@ -354,7 +354,6 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('创建订单失败！', 500));
         }
         $order_id = $order->id;
-        $invoice_id = $order->invoice_id;
         //保存订单详情
         if(count($sku_id_quantity) == count($sku_id_quantity , 1) ) {
             $sku_id = $sku_id_quantity['sku_id'];
