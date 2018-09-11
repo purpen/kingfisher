@@ -137,7 +137,7 @@ class CartController extends BaseController
                     'mode' => $mode->mode,
                     'status' => $v->status,
                     'sku_region' => $type,
-                    'focus ' => $focus,//是否关注
+                    'focus' => $focus,//是否关注
                 );
             }
             $data['count'] = $count;
