@@ -87,21 +87,7 @@ class CartController extends BaseController
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
 
-                if(!$type){
 
-                    $type = array([
-                        "max" => "100",
-                        "min" => "1",
-                        "sell_price" => "100.00",
-                    ],
-                        [
-                            "max" => "300",
-                            "min" => "201",
-                            "sell_price" => "50.00",
-                        ],
-
-                    );
-                }
 
                 if($collection){
                     $focus = 1;
@@ -146,21 +132,7 @@ class CartController extends BaseController
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
-                if(!$type){
-
-                    $type = array([
-                        "max" => "100",
-                        "min" => "1",
-                        "sell_price" => "100.00",
-                    ],
-                        [
-                            "max" => "300",
-                            "min" => "201",
-                            "sell_price" => "50.00",
-                        ],
-
-                    );
-                }
+                
 
                 if($collection){
                     $focus = 1;
