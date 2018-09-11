@@ -72,7 +72,7 @@ class CartController extends BaseController
 
         $count = $this->fetch_count();
         $data = array();
-        $cover_url = '';
+        $cover = '';
 
         if($status == 1){
 
@@ -83,7 +83,7 @@ class CartController extends BaseController
                 $type = SkuRegionModel::where(['sku_id'=>$v->sku_id])->select('max','min','sell_price')->get();
                 $collection  = CollectionModel::where(['user_id'=>$user_id,'product_id'=>$v->product_id])->first();
 
-                $cover_url = $mode->first_img;
+                $cover = $mode->first_img;
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
@@ -112,7 +112,7 @@ class CartController extends BaseController
                     'product_id' => $v->product_id,//商品id
                     'price' => 0,//购买价格
                     'number' => $v->number,//购买数量
-                    'cover_url' => $cover_url,//图片url
+                    'cover_url' => $cover,//图片url
                     'mode' => $mode->mode,
                     'status' => $v->status,
                     'sku_region' => $type,
@@ -129,7 +129,7 @@ class CartController extends BaseController
                 $type = SkuRegionModel::where(['sku_id'=>$v->sku_id])->select('max','min','sell_price')->get();
                 $collection  = CollectionModel::where(['user_id'=>$user_id,'product_id'=>$v->product_id])->first();
 
-                $cover_url = $mode->first_img;//商品封面图
+                $cover = $mode->first_img;//商品封面图
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
@@ -151,7 +151,7 @@ class CartController extends BaseController
                     'product_id' => $v->product_id,//商品id
                     'price' => 0,//购买价格
                     'number' => $v->number,//购买数量
-                    'cover_url' => $cover_url,//图片url
+                    'cover_url' => $cover,//图片url
                     'mode' => $mode->mode,
                     'status' => $v->status,
                     'sku_region' => $type,
