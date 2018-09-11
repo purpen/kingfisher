@@ -24,6 +24,7 @@ class CartController extends BaseController
      * @apiParam {string} status 1:立即购买进入的进货单
      * @apiParam {char} title 大米:搜索时所需参数
      * @apiParam {string} per_page 1:一页多少条数据
+     * @apiParam {string} page 1:页码
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
@@ -42,7 +43,7 @@ class CartController extends BaseController
      *      "status": 3,                  // 状态：3添加，4立即购买
      *      "focus": 1,                  // 状态：1关注，2未关注
      *       "sku_region"[{
-     *               min:1, //下限数量
+     *               min:2, //下限数量
      *              max:2,//上限数量
      *              sell_price:22 //销售价格
      *          }]
