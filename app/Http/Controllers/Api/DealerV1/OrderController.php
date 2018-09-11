@@ -12,6 +12,8 @@ use App\Models\AuditingModel;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
 use App\Models\DistributorModel;
+use App\Models\HistoryInvoiceModel;
+use App\Models\InvoiceModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductSkuRelation;
