@@ -429,7 +429,7 @@ class CartController extends BaseController
     public function reduce(Request $request)
     {
         $all = $request->input('future');
-        if(empty($id)){
+        if(empty($all)){
             return $this->response->array(ApiHelper::error('error', 500));
         }
         foreach($all as $v){

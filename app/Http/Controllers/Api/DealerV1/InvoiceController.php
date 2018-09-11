@@ -25,7 +25,6 @@ class InvoiceController extends Controller
      * @apiVersion 1.0.0
      * @apiName invoice ordinary
      * @apiGroup invoice
-     * @apiParam {string} status 1:立即购买进入的进货单
      * @apiParam {char} title 大米:搜索时所需参数
      * @apiParam {string} per_page 1:一页多少条数据
      * @apiParam {string} token token
@@ -64,9 +63,19 @@ class InvoiceController extends Controller
     public function ordinary(Request $request)
     {
         $all = $request->except('_token');
-        if(!$all){
+        $user_id = $this->auth_user_id;
+         if(!$all){
             return $this->response->array(ApiHelper::error('输入内容为空！', 500));
         }
+
+        $all['user_id'] = $user_id;
+        $all['reviewer'] = '';
+        $all['audit'] = '';
+        $all['invoice_value'] = '';
+        $all['reason'] = '';
+        $all['receiving_type'] = 1;
+        $all['application_time'] = '';
+
         $cart = InvoiceModel::create($all);
 
         if($cart){
