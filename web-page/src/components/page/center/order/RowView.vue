@@ -9,9 +9,8 @@
                   <th style="width: 10%;">产品图</th>
                   <th style="width: 10%;">SKU编码</th>
                   <th style="width: 30%;">产品名称</th>
-                  <th>零售价</th>
-                  <th>数量</th>
-                  <th>优惠</th>
+                  <th style="width: 15%;">零售价</th>
+                  <th style="width: 10%;">数量</th>
                   <th>实付款</th>
                   <th>状态</th>
                 </tr>
@@ -24,22 +23,19 @@
                           <img src="../../../../assets/images/product_500.png" v-else width="80" />
                         </td>
                         <td style="width: 10%;">
-                          <p>{{ d.sku_number }}</p> 
+                          <p>{{ d.sku_number }}</p>
                         </td>
                         <td style="width: 30%;">
-                          <p class="p-title">{{ d.product_title }}({{ d.sku_name }})</p> 
+                          <p class="p-title">{{ d.product_title }}({{ d.sku_name }})</p>
+                        </td>
+                        <td style="width: 15%;">
+                          <p class="p-price">{{ d.price }}</p>
                         </td>
                         <td style="width: 10%;">
-                          <p class="p-price">{{ d.price }}</p> 
-                        </td>
-                        <td style="width: 10%;">
-                          <p>{{ d.quantity }}</p> 
+                          <p>{{ d.quantity }}</p>
                         </td>
                       </tr>
                     </table>
-                  </td>
-                  <td>
-                    <p class="p-price">¥{{ item.discount_money }}</p>
                   </td>
                   <td>
                     <p class="p-price">¥{{ item.pay_money }}</p>
@@ -47,7 +43,7 @@
                   <td>
                     <p>{{ item.status_val }}</p>
                   </td>
-                
+
                 </tr>
               </table>
 
@@ -67,7 +63,7 @@
                     <span class="expand-key">电话：</span>
                     <span class="expand-value">{{ item.buyer_phone }}</span>
                 </Col>
-            </Row>          
+            </Row>
             <Row class="expand-row">
                 <Col span="6">
                     <span class="expand-key">收货地址：</span>
@@ -86,7 +82,7 @@
                     <span class="expand-key">付款方式：</span>
                     <span class="expand-value">{{ item.payment_type }}</span>
                 </Col>
-            </Row>          
+            </Row>
             <Row class="expand-row" :gutter="16">
                 <Col span="6">
                     <span class="expand-key">物流公司：</span>
@@ -100,27 +96,11 @@
                     <span class="expand-key">快递费：</span>
                     <span class="expand-value">{{ item.freight }}</span>
                 </Col>
-            </Row>         
-            <Row class="" style="margin-bottom: 5px;" :gutter="16">
-                <Col span="12">
-                    <span class="expand-key">买家备注：</span>
-                </Col>
-                <Col span="12">
-                    <span class="expand-key">卖家备注：</span>
-                </Col>
-            </Row> 
-            <Row class="expand-row" :gutter="16">
-                <Col span="12" class="summary-box">
-                  <p>{{ item.buyer_summary }}</p>
-                </Col>
-                <Col span="12" class="summary-box">
-                  <p>{{ item.seller_summary }}</p>
-                </Col>
-            </Row> 
+            </Row>
           </Tab-pane>
       </Tabs>
     </div>
-    
+
   </div>
 </template>
 
@@ -129,7 +109,7 @@ import api from '@/api/api'
 export default {
   name: 'center_order_table_show',
   props: {
-    orderId: String
+    orderId: Number
   },
   data () {
     return {
@@ -164,7 +144,8 @@ export default {
 <style scoped>
 
   .expand-row{
-      margin-bottom: 16px;
+    margin-bottom: 16px;
+    text-align: left;
   }
 
   .summary-box {
@@ -190,9 +171,9 @@ export default {
   .product-table tr {
   }
   .product-table tr th, .product-table tr td {
-    background-color: #fff;   
+    background-color: #fff;
     text-align: center;
-    padding: 5px;
+    padding: 5px 0;
   }
   .product-table tr td {
     border: 1px solid #ccc;

@@ -365,7 +365,7 @@ export default {
     handlePreview (file) {
     },
     uploadError (err, file, fileList) {
-      this.$message.error(err + '附件上传失败!')
+      this.$Message.error(err + '附件上传失败!')
     },
     uploadSuccess (response, file, fileList) {
       var add = fileList[fileList.length - 1]
@@ -396,11 +396,11 @@ export default {
 
       console.log(file)
       if (arr.indexOf(file.type) === -1) {
-        this.$message.error('上传文件格式不正确!')
+        this.$Message.error('上传文件格式不正确!')
         return false
       }
       if (!isLt5M) {
-        this.$message.error('上传文件大小不能超过 5MB!')
+        this.$Message.error('上传文件大小不能超过 5MB!')
         return false
       }
     },
@@ -412,11 +412,11 @@ export default {
 
       console.log(file)
       if (arr.indexOf(file.type) === -1) {
-        this.$message.error('上传文件格式不正确!')
+        this.$Message.error('上传文件格式不正确!')
         return false
       }
       if (!isLt5M) {
-        this.$message.error('上传文件大小不能超过 5MB!')
+        this.$Message.error('上传文件大小不能超过 5MB!')
         return false
       }
     }
@@ -456,7 +456,7 @@ export default {
         item.verify_status = parseInt(item.verify_status)
         item.document_type = parseInt(item.document_type) === 0 ? '' : parseInt(item.document_type)
         item.company_type = parseInt(item.company_type) === 0 ? '' : parseInt(item.company_type)
-
+        console.log(item)
         // 法人营业执照
         if (item.license_image) {
           var files = []

@@ -46,8 +46,8 @@ class EnterWarehouseController extends Controller
     {
         $this->tab_menu = 'waiting';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
-        return $this->display_tab_list(5, 1);   
+
+        return $this->display_tab_list(5, 1);
     }
 
     /**

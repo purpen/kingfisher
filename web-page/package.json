@@ -13,8 +13,8 @@
   "dependencies": {
     "axios": "^0.16.0",
     "babel-polyfill": "^6.23.0",
-    "echarts": "^3.6.2",
-    "echarts-gl": "^1.0.0-beta.4",
+    "echarts": "^4.1.0",
+    "echarts-gl": "^1.1.1",
     "iview": "^2.0.0-rc.19",
     "less-loader": "^4.0.5",
     "vue": "^2.3.3",

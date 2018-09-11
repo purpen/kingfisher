@@ -4,89 +4,125 @@
 
     <Row :gutter="20">
       <Col :span="3" class="left-menu">
-        <v-menu currentName="account"></v-menu>
+        <v-menu currentName="identify_show"></v-menu>
       </Col>
-
       <Col :span="21">
-
         <div class="right-content">
           <div class="content-box">
-
             <div class="form-title">
-              <span>企业实名认证</span>
+              <span>个人信息</span>
             </div>
 
             <div class="company-show">
               <div class="item">
-                <p class="p-key">企业名称</p>
-                <p class="p-val">{{ item.company }}</p>
+                <p class="p-key">姓名</p>
+                <p class="p-val">{{ item.name }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">企业证件类型</p>
-                <p class="p-val">{{ item.company_type_value }}</p>
+                <p class="p-key">电话</p>
+                <p class="p-val">{{ item.phone }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">统一社会信用代码</p>
-                <p class="p-val">{{ item.registration_number }}</p>
+                <p class="p-key">银行卡账号</p>
+                <p class="p-val">{{ item.bank_number }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">法人姓名</p>
-                <p class="p-val">{{ item.legal_person }}</p>
+                <p class="p-key">开户行</p>
+                <p class="p-val">{{ item.bank_name }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">法人证件类型</p>
-                <p class="p-val">{{ item.document_type_value }}</p>
+                <p class="p-key">纳税类型</p>
+                <p class="p-val">{{ item.taxpayer }}</p>
+              </div>
+              <div class="item">
+                <p class="p-key">身份证人像面照片</p>
+                <div class="show-img">
+                  <img @click="showImg(portrait_id)" :src="portrait_id" alt="" class="cursor">
+                </div>
+              </div>
+              <div class="item">
+                <p class="p-key">身份证国徽面照片</p>
+                <div class="show-img">
+                  <img @click="showImg(national_emblem_id)" :src="national_emblem_id" alt="" class="cursor">
+                </div>
+              </div>
+              <div class="form-title margin-t-30">
+                <span>门店信息</span>
+              </div>
+              <div class="item">
+                <p class="p-key">门店名称</p>
+                <p class="p-val">{{ item.store_name }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">证件号码</p>
-                <p class="p-val">{{ item.document_number }}</p>
+                <p class="p-key">门店地址</p>
+                <p class="p-val">{{ item.province_id }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">联系人</p>
-                <p class="p-val">{{ item.contact_name }}</p>
+                <p class="p-key">授权条件</p>
+                <p class="p-val">{{ item.authorization_id }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">职位</p>
-                <p class="p-val">{{ item.position }}</p>
+                <p class="p-key">商品分类</p>
+                <p class="p-val">{{ item.category_id }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">手机</p>
-                <p class="p-val">{{ item.contact_phone }}</p>
+                <p class="p-key">经营情况</p>
+                <p class="p-val">{{ item.operation_situation }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">邮箱</p>
-                <p class="p-val">{{ item.email }}</p>
+                <p class="p-key">营业执照号</p>
+                <p class="p-val">{{ item.business_license_number }}</p>
               </div>
 
-
+              <div class="item">
+                <p class="p-key">营业执照图片</p>
+                <div class="show-img">
+                  <img @click="showImg(license_id)" :src="license_id" alt="" class="cursor">
+                </div>
+              </div>
+              <div class="item">
+                <p class="p-key">门店正面照片</p>
+                <div class="show-img">
+                  <img @click="showImg(front_id)" :src="front_id" alt="" class="cursor">
+                </div>
+              </div>
+              <div class="item">
+                <p class="p-key">门店内部照片</p>
+                <div class="show-img">
+                  <img @click="showImg(Inside_id)" :src="Inside_id" alt="" class="cursor">
+                </div>
+              </div>
             </div>
-
-
             <div class="rz-box">
-              <div class="rz-title success" v-if="item.verify_status === 3">
-                <p>认证通过</p>
+              <div class="rz-title success" v-if="item.status === '2'">
+                <p>审核通过</p>
               </div>
-              <div class="rz-title wait" v-else-if="item.verify_status === 0">
+              <div class="rz-title wait" v-else-if="item.status === '0'">
                 <p>等待认证</p>
               </div>
-              <div class="rz-title wait" v-else-if="item.verify_status === 1">
-                <p>审核中</p>
+              <div class="rz-title wait" v-else-if="item.status === '1'">
+                <p>待审核</p>
               </div>
-              <div class="rz-title rejust" v-else-if="item.verify_status === 2">
-                <p>认证未通过</p>
+              <div class="rz-title rejust" v-else-if="item.status === '3' || item.status === '4'">
+                <p>审核未通过</p>
               </div>
-              <div class="rz-stat" v-if="item.verify_status !== 3">
-                <router-link :to="{name: 'centerIdentifySubmit'}" class="item">
+              <div class="rz-stat" v-if="item.length === 0 || item.status === '3' || item.status === '4'">
+                <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
                   <Button class="is-custom" type="primary">提交认证</Button>
+                </router-link>
+              </div>
+              <div class="rz-stat" v-if="item.status === '1'">
+                <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
+                  <Button class="is-custom" type="primary">修改信息</Button>
                 </router-link>
               </div>
             </div>
@@ -97,13 +133,20 @@
 
       </Col>
     </Row>
-    
+    <Modal
+      v-model="modal1"
+      title="图片详情"
+      class="testImg"
+    >
+      <img :src="showImages" alt="">
+    </Modal>
   </div>
 </template>
 
 <script>
 import api from '@/api/api'
 import vMenu from '@/components/page/center/Menu'
+
 export default {
   name: 'center_account_identify_show',
   components: {
@@ -112,27 +155,59 @@ export default {
   data () {
     return {
       item: '',
-      msg: ''
+      msg: '',
+      modal1: false,
+      showImages: '',
+      portrait_id: '',  // 身份证正面
+      national_emblem_id: '', // 身份证背面
+      license_id: '', // 营业执照
+      front_id: '', // 门店正面
+      Inside_id: '', // 门店正面
+      id: null      // id
     }
   },
   methods: {
+    showImg (img) {
+      this.modal1 = true
+      this.showImages = img
+    },
+    testVux () {
+      const self = this
+      self.$http.get(api.showMessage, {token: self.$store.state.event.token})
+        .then(function (response) {
+          if (response.status === 200) {
+            console.log(response.data)
+            if (response.data.meta.status_code) {
+              response.data.data.forEach((item) => {
+                self.item = item
+                console.log(self.item.id)
+                self.front_id = item.front
+                self.Inside_id = item.Inside
+                self.portrait_id = item.portrait
+                self.national_emblem_id = item.national_emblem
+                self.license_id = item.license
+                if (self.item.taxpayer === 1) {
+                  self.item.taxpayer = '一般纳税人'
+                } else {
+                  self.item.taxpayer = '小额纳税人'
+                }
+                self.id = self.item.id ? self.item.id : ''
+              })
+              if (self.item.authorization_id) {
+                self.item.authorization_id = self.item.authorization_id.split(',').join('/').substring(0, self.item.authorization_id.length - 1)
+              }
+            }
+          } else {
+            self.$Message.error(response.data.meta.message)
+          }
+        })
+        .catch(function (error) {
+          self.$Message.error(error.message)
+        })
+    }
   },
   created: function () {
-    const self = this
-    self.$http.get(api.user, {})
-    .then(function (response) {
-      if (response.data.meta.status_code === 200) {
-        var item = response.data.data
-        item.verify_status = parseInt(item.verify_status)
-        self.item = item
-        console.log(response.data.data)
-      } else {
-        self.$Message.error(response.data.meta.message)
-      }
-    })
-    .catch(function (error) {
-      self.$Message.error(error.message)
-    })
+    this.testVux()
   },
   watch: {
   }
@@ -165,13 +240,14 @@ export default {
   }
 
   .company-show {
-  
+
   }
 
   .company-show .item {
     clear: both;
     height: 40px;
     border-bottom: 1px solid #ccc;
+    margin: 10px 0;
   }
 
   .item p {
@@ -190,5 +266,8 @@ export default {
     font-size: 1.5rem;
   }
 
-
+  .show-img img {
+    width: 35px;
+    height: 35px;
+  }
 </style>

@@ -21,6 +21,44 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'auth.captchaUrl', 'uses' => 'AuthenticateController@captchaUrl'
     ]);
 
+    // 购物车列表
+    $api->get('/DealerApi/cart', [
+        'as' => 'cart.cart', 'uses' => 'CartController@lists'
+    ]);
+    // 获取购物车数量
+    $api->get('/DealerApi/cart/fetch_count', [
+        'as' => 'cart.fetch_count', 'uses' => 'CartController@fetch_count'
+    ]);
+    // 清空个人购物车
+    $api->get('/DealerApi/cart/emptyShopping', [
+        'as' => 'cart.emptyShopping', 'uses' => 'CartController@emptyShopping'
+    ]);
+
+    // 点击结算
+    $api->get('/DealerApi/cart/settlement', [
+        'as' => 'cart.settlement', 'uses' => 'CartController@settlement'
+    ]);
+
+    // 购物车增减单个产品数量
+    $api->get('/DealerApi/cart/reduce', [
+        'as' => 'cart.reduce', 'uses' => 'CartController@reduce'
+    ]);
+
+    // 添加购物车
+    $api->post('/DealerApi/cart/add', [
+        'as' => 'cart.add', 'uses' => 'CartController@add'
+    ]);
+    // 添加购物车
+    $api->post('/DealerApi/cart/buy', [
+        'as' => 'cart.buy', 'uses' => 'CartController@buy'
+    ]);
+    // 删除购物车
+    $api->post('/DealerApi/cart/deleted', [
+        'as' => 'cart.deleted', 'uses' => 'CartController@deleted'
+    ]);
+
+
+
     // 用户注册
     $api->post('DealerApi/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'

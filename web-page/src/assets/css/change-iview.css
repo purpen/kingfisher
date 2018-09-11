@@ -1,0 +1,100 @@
+/*单选框 statr*/
+.ivu-radio-checked .ivu-radio-inner {
+  border-color: #2d8cf0;
+}
+
+.ivu-radio-inner:after {
+  background-color: #2d8cf0;
+}
+/*end*/
+
+/*上传去除margin-bottom start*/
+.mar-b-0 .ivu-form-item {
+  margin-bottom: 0;
+}
+/*end*/
+
+.text-center .ivu-table-cell {
+  width: 100%;
+  text-align: center;
+}
+
+/*创建订单产品表格居中*/
+.ivu-table th {
+  text-align: center;
+}
+
+.ivu-table td {
+  text-align: center;
+}
+
+td.ivu-table-expanded-cell {
+  padding: 20px 30px;
+}
+
+/*产品详情表格*/
+.info .ivu-table th {
+  height: 28px;
+}
+
+/*按钮颜色*/
+.color-ff5a5f {
+  color: #ffffff;
+  background-color: #ff5a5f;
+  border-color: #ff5a5f;
+}
+
+.color-ff5a5f:hover {
+  opacity: .9;
+  color: #ffffff;
+  background-color: #ff5a5f;
+  border-color: #ff5a5f;
+}
+/*end*/
+
+/*多选框颜色*/
+.ivu-checkbox-checked .ivu-checkbox-inner {
+  border-color: #2d8cf0;
+  background-color: #2d8cf0;
+}
+/*end*/
+
+/*订单信息下th 靠左居中*/
+.text-left td {
+  text-align: left;
+}
+
+
+/*上传取消阴影*/
+.ivu-btn-ghost:focus {
+  box-shadow: 0 0 0 0
+}
+
+/*sku区间值颜色 / 靠左*/
+.colorff5a5f {
+  color: #FF5A5F;
+}
+
+.textLeft {
+  text-align: left;
+}
+
+/*name:identifyShow*/
+/*个人信息展示 statr*/
+.testImg .ivu-modal-footer {
+  display: none;
+}
+
+.testImg .ivu-modal-body {
+  padding: 30px;
+  text-align: center;
+}
+
+.testImg img {
+  width: 220px;
+}
+/*end*/
+
+.addOrder .ivu-table-row {
+  height: 100px;
+}

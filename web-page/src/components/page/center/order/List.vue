@@ -26,9 +26,9 @@
               <router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已关闭</router-link>
 
             </div>
-            <div class="center-menu-sub-list right">
-              <router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link> 
-            </div>
+            <!--<div class="center-menu-sub-list right">-->
+              <!--<router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link>-->
+            <!--</div>-->
           </div>
           <v-sub-menu></v-sub-menu>
           <div class="order-list">
@@ -37,7 +37,6 @@
             <div class="blank20"></div>
             <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
           </div>
-
         </div>
       </Col>
     </Row>
@@ -66,7 +65,8 @@ export default {
           title: '>',
           key: 'options',
           type: 'expand',
-          width: 50,
+          width: 120,
+          className: 'text-center',
           render: (h, params) => {
             return h(rowView, {
               props: {
@@ -82,7 +82,7 @@ export default {
         {
           title: '订单号/时间',
           key: 'oid',
-          width: 180,
+          width: 160,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -104,18 +104,18 @@ export default {
           title: '买家',
           key: 'buyer_name'
         },
-        {
-          title: '买家备注',
-          key: 'buyer_summary'
-        },
-        {
-          title: '卖家备注',
-          key: 'seller_summary'
-        },
+        // {
+        //   title: '买家备注',
+        //   key: 'buyer_summary'
+        // },
+        // {
+        //   title: '卖家备注',
+        //   key: 'seller_summary'
+        // },
         {
           title: '物流/运单号',
           key: 'express',
-          width: 150,
+          width: 140,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -140,7 +140,7 @@ export default {
         {
           title: '实付款/运费',
           key: 'pay',
-          width: 150,
+          width: 140,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -172,7 +172,7 @@ export default {
                   src: require('@/assets/images/icon/delete.png')
                 },
                 style: {
-                  width: '25%'
+                  width: '15%'
                 }
               })
             ])
@@ -181,12 +181,11 @@ export default {
       ],
       query: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         count: 0,
         sort: 1,
         type: 0,
         status: 0,
-
         test: null
       },
       msg: ''
@@ -198,10 +197,10 @@ export default {
       const self = this
       self.query.page = parseInt(this.$route.query.page || 1)
       self.query.status = parseInt(this.$route.query.status || 0)
-
       self.isLoading = true
       self.$http.get(api.orders, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
       .then(function (response) {
+        console.log(response)
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
           self.query.count = parseInt(response.data.meta.pagination.total)
@@ -211,7 +210,6 @@ export default {
             itemList[i].order_start_time = d.order_start_time.date_format().format('yy-MM-dd hh:mm')
           } // endfor
           self.itemList = itemList
-          // console.log(response.data.data)
         } else {
           self.$Message.error(response.data.meta.message)
         }
@@ -238,8 +236,6 @@ export default {
             if (response.data.meta.status_code === 200) {
               self.$Message.success('删除成功!')
               self.itemList.splice(index, 1)
-            } else {
-              self.$Message.error(response.data.meta.message)
             }
           })
           .catch(function (error) {

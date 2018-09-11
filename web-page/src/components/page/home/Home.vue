@@ -2,18 +2,18 @@
   <div>
     <div class="banner">
       <Carousel autoplay v-model="slider.index" height="auto">
-          <Carousel-item v-for="(d, index) in slider.data" :key="index">
-              <div class="slide" :style="{ 'background-image': 'url(' + d.image + ')'}">
-                <h3>{{ d.title }}</h3>
-                <p>{{ d.desc }}</p>
-              </div>
-          </Carousel-item>
+        <Carousel-item v-for="(d, index) in slider.data" :key="index">
+          <div class="slide" :style="{ 'background-image': 'url(' + d.image + ')'}">
+            <h3>{{ d.title }}</h3>
+            <p>{{ d.desc }}</p>
+          </div>
+        </Carousel-item>
       </Carousel>
     </div>
 
     <div class="container item">
       <h3>智能分发系统的三驾马车</h3>
-      <p class="item-desc"></p> 
+      <p class="item-desc"></p>
       <div class="item-light">
         <div class="item_list">
           <Row :gutter="24">
@@ -53,7 +53,7 @@
 
     <div class="item black" style="padding-bottom: 520px;">
       <h3>Fiu·品牌细分需求定制System</h3>
-      <p class="item-desc">依托大数据分析决策，围绕“消费场景”以“设计+技术＋商业“三轮驱动，发掘有“创新价值”又不失“感性设计”满足或者引领消费者需求的创新产品和品牌。</p> 
+      <p class="item-desc">依托大数据分析决策，围绕“消费场景”以“设计+技术＋商业“三轮驱动，发掘有“创新价值”又不失“感性设计”满足或者引领消费者需求的创新产品和品牌。</p>
 
       <div class="item-bg-black">
         <div class="item_list">
@@ -128,7 +128,7 @@
 
     <div class="container item">
       <h3>Fiu·原创内容制造Made</h3>
-      <p class="item-desc"></p> 
+      <p class="item-desc"></p>
       <div class="item-light">
         <div class="item_list">
           <Row :gutter="24">
@@ -166,7 +166,7 @@
 
     <div class="item black gc" style="padding-bottom: 60px;">
       <h3>Fiu·渠道分发中控 Controller </h3>
-      <p class="item-desc">随着零售渠道日趋分化，以新渠道智能分发为基础、消费升级产品和优质内容为核心,助力智能硬件与创新产品市场变现。</p> 
+      <p class="item-desc">随着零售渠道日趋分化，以新渠道智能分发为基础、消费升级产品和优质内容为核心,助力智能硬件与创新产品市场变现。</p>
 
       <div class="item-bg-black">
         <div class="item_list">
@@ -230,16 +230,16 @@
       <div class="logo_quant">
         <img src="../../../assets/images/logo/mijia.png" />
         <img src="../../../assets/images/logo/mjyp.png" />
-        <img src="../../../assets/images/logo/jdjr.png" />  
+        <img src="../../../assets/images/logo/jdjr.png" />
         <img src="../../../assets/images/logo/wyyx.png" />
         <img src="../../../assets/images/logo/wyzz.png" />
-        <img src="../../../assets/images/logo/meitu.png" /> 
+        <img src="../../../assets/images/logo/meitu.png" />
       </div>
     </div>
 
     <div class="item black ac" style="padding-bottom: 60px;">
       <h3>爆款运营案例 </h3>
-      <p class="item-desc">运营服务精细化与智能化，渠道分发与内容产出同步操作。依据产品定位智能分发至各级自媒体及平台主流大号提升曝光率，小众垂直账号跟进转化因“品”制宜，创造视频、图片、文案等传播素材优化配给京东众筹、米家有品、一条、小红书等电商平台资源无上限降低运营成本和内容生产成本实现收益转化与产品口碑指数级增长</p> 
+      <p class="item-desc">运营服务精细化与智能化，渠道分发与内容产出同步操作。依据产品定位智能分发至各级自媒体及平台主流大号提升曝光率，小众垂直账号跟进转化因“品”制宜，创造视频、图片、文案等传播素材优化配给京东众筹、米家有品、一条、小红书等电商平台资源无上限降低运营成本和内容生产成本实现收益转化与产品口碑指数级增长</p>
 
       <div class="container card_list">
         <Row :gutter="10">
@@ -600,21 +600,21 @@ export default {
     margin-top: 30px;
     background-image: url(../../../assets/images/home/item_40.png);
     background-repeat: no-repeat;
-    background-size: contain; 
+    background-size: contain;
   }
   .logo_list_new {
     height: 320px;
     margin-top: 20px;
     background-image: url(../../../assets/images/home/logo_list1.png);
     background-repeat: no-repeat;
-    background-size: contain; 
+    background-size: contain;
   }
   .logo_list_zy {
     height: 210px;
     margin-top: 10px;
     background-image: url(../../../assets/images/home/logo_zy.png);
     background-repeat: no-repeat;
-    background-size: contain; 
+    background-size: contain;
   }
   .e-item.e1 {
     background-image: url(../../../assets/images/home/bg_1.jpg);
@@ -641,7 +641,7 @@ export default {
   }
 
   .logo_server {
-  
+
   }
   .logo_server img {
     margin: 10px 65px;
@@ -649,7 +649,7 @@ export default {
   }
 
   .logo_quant {
-  
+
   }
   .logo_quant img {
     margin: 10px 25px;
