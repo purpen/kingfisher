@@ -137,10 +137,12 @@ class PurchaseController extends Controller
                     $purchase = new PurchaseModel();
                     $status = $purchase->changeStatus($id, 1);
                     if ($status) {
-
-                        //发送审核短信通知
-                        $dataes = new AuditingModel();
-                        $dataes->datas(4);
+                        $ids = AuditingModel::where('type',4)->select('user_id')->first();
+                        if ($ids){
+                            //发送审核短信通知
+                            $dataes = new AuditingModel();
+                            $dataes->datas(4);
+                        }
                     }else{
                         DB::rollBack();
                         return ajax_json(0, '审核失败');
@@ -166,10 +168,12 @@ class PurchaseController extends Controller
                     $purchase = new PurchaseModel();
                     $status = $purchase->changeStatus($id_arr, 1);
                     if ($status) {
-
-                        //发送审核短信通知
-                        $dataes = new AuditingModel();
-                        $dataes->datas(4);
+                        $ids = AuditingModel::where('type',4)->select('user_id')->first();
+                        if ($ids){
+                            //发送审核短信通知
+                            $dataes = new AuditingModel();
+                            $dataes->datas(4);
+                        }
                     }else{
                         DB::rollBack();
                         return ajax_json(0, '审核失败');
@@ -319,10 +323,13 @@ class PurchaseController extends Controller
                     $purchaseSku->freight = $freights[$i];
                     $purchaseSku->save();
                 }
+                $ids = AuditingModel::where('type',3)->select('user_id')->first();
+                if ($ids){
+                    //发送审核短信通知
+                    $dataes = new AuditingModel();
+                    $dataes->datas(3);
+                }
 
-                //发送审核短信通知
-                $dataes = new AuditingModel();
-                $dataes->datas(3);
 
                 DB::commit();
                 return redirect('/purchase');
@@ -476,9 +483,12 @@ class PurchaseController extends Controller
                     $purchaseSku->save();
                 }
 
-                //发送审核短信通知
-                $dataes = new AuditingModel();
-                $dataes->datas(3);
+                $ids = AuditingModel::where('type',3)->select('user_id')->first();
+                if ($ids){
+                    //发送审核短信通知
+                    $dataes = new AuditingModel();
+                    $dataes->datas(3);
+                }
 
                 DB::commit();//完成
                 $url = Cookie::get('purchase_back_url');

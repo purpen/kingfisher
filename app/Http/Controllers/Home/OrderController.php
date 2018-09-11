@@ -664,9 +664,13 @@ class OrderController extends Controller
             if ($order_model->type == 8){
                 $order_model->changeStatus($order_id,6);//财务审核
 
-                //发送审核短信通知
-                $dataes = new AuditingModel();
-                $dataes->datas(2);
+                $ids = AuditingModel::where('type',2)->select('user_id')->first();
+                if ($ids){
+                    //发送审核短信通知
+                    $dataes = new AuditingModel();
+                    $dataes->datas(2);
+                }
+
             }else{
                 if (!$order_model->changeStatus($order_id, 8)) {
                     DB::rollBack();
@@ -1203,10 +1207,12 @@ class OrderController extends Controller
             $KdnOrderTracesSub = new KdnOrderTracesSub();
             $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
 
-//            发送审核短信通知
-            $dataes = new AuditingModel();
-            $dataes->datas(5);
-
+            $ids = AuditingModel::where('type',5)->select('user_id')->first();
+            if ($ids){
+                //发送审核短信通知
+                $dataes = new AuditingModel();
+                $dataes->datas(5);
+            }
             DB::commit();
 
             return ajax_json(1,'ok',[
