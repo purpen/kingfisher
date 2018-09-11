@@ -481,15 +481,21 @@ class CartController extends BaseController
             return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
         }
 
-        $id_arr = explode(',', $ids);
-        for ($i=0;$i<count($id_arr);$i++) {
-            $id = (int)$id_arr[$i];
-            $cart = ReceiptModel::find($id);
-            if (!$cart) continue;
-            if ($cart->user_id != $user_id) continue;
-            $cart->delete();
+        foreach ($ids as $v){
+            $cart = ReceiptModel::find($v);
+            if (!$cart) {
+                return $this->response->array(ApiHelper::error('进货单不存在！', 500));
+            };
+            if ($cart->user_id != $user_id) {
+                return $this->response->array(ApiHelper::error('用户不存在！', 500));
+            }
+            if(!$cart->delete()){
+                return $this->response->array(ApiHelper::error('删除失败！', 500));
+            }
+
         }
-        return $this->response->array(ApiHelper::success('Success.', 200, array('id' => $ids)));
+
+        return $this->response->array(ApiHelper::success('Success.', 200));
     }
 
     /**
