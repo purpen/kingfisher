@@ -406,7 +406,7 @@ class CartController extends BaseController
     public function emptyShopping(Request $request)
     {
         $user_id = $this->auth_user_id;
-        $cart = ReceiptModel::where('user_id',$user_id)->delete;
+        $cart = ReceiptModel::where('user_id',$user_id)->delete();
         if($cart){
             return $this->response->array(ApiHelper::success('Success.', 200));
         } else {
