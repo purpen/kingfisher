@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class HistoryInvoiceModel extends BaseModel
 {
-    
+
 
     /**
      * 关联模型到数据表

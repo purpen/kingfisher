@@ -35,12 +35,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     ]);
 
     // 点击结算
-    $api->get('/DealerApi/cart/settlement', [
+    $api->post('/DealerApi/cart/settlement', [
         'as' => 'cart.settlement', 'uses' => 'CartController@settlement'
     ]);
 
     // 购物车增减单个产品数量
-    $api->get('/DealerApi/cart/reduce', [
+    $api->post('/DealerApi/cart/reduce', [
         'as' => 'cart.reduce', 'uses' => 'CartController@reduce'
     ]);
 

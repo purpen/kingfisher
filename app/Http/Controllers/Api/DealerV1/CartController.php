@@ -168,7 +168,7 @@ class CartController extends BaseController
 
 
     /**
-     * @api {get} /DealerApi/settlement 点击结算
+     * @api {post} /DealerApi/settlement 点击结算
      * @apiVersion 1.0.0
      * @apiName Cart settlement
      * @apiGroup Cart
@@ -415,7 +415,7 @@ class CartController extends BaseController
     }
 
     /**
-     * @api {get} /DealerApi/cart/reduce 购物车增减数量
+     * @api {post} /DealerApi/cart/reduce 购物车增减数量
      * @apiVersion 1.0.0
      * @apiName Cart reduce
      * @apiGroup Cart
