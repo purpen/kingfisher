@@ -446,7 +446,7 @@ class CartController extends BaseController
         foreach($all as $v){
             $data =  ReceiptModel::findOrFail($v['id']);
             $sku_price = SkuRegionModel::where(['sku_id'=>$data['sku_id']])->get();//商品价格区间
-            $cart = ProductsModel::where(['id'=>$data['product_id']])->first();
+
             $price = '';
 
             foreach ($sku_price as $vue){
@@ -454,7 +454,7 @@ class CartController extends BaseController
                     $price = $vue['sell_price'] * $v['number'];
 
                 } else {
-                    $price = $cart['sale_price'] * $v['number'];
+                    $price = $data->product->sale_price * $v['number'];
                 }
             }
 
