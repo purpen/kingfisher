@@ -207,6 +207,9 @@ class CartController extends BaseController
     public function settlement(Request $request)
     {
         $id = $request->input('id') ? $request->input('id') : '';
+        if(!$id){
+            return $this->response->array(ApiHelper::error('参数不规范', 500));
+        }
 
         $data = array();
 
