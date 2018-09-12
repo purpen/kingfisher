@@ -23,8 +23,13 @@ class InvoiceController extends BaseController
     public function lists(Request $request)
     {
         $user_id = $this->auth_user_id;
+        $per_page = $request->input('per_page');
         $where['user_id'] = $user_id;
-        $invoice = InvoiceModel::where()->paginate();
+        $where['receiving_type'] = 1;
+
+        $invoice = InvoiceModel::where($where)->select('duty_paragraph','company_name','receiving_id')->paginate($per_page);
+
+        return $this->response->array(ApiHelper::success('Success.', 200, $invoice));
     }
 
     /**
