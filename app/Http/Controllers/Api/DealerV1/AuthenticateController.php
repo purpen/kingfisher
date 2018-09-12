@@ -189,7 +189,7 @@ class AuthenticateController extends BaseController
      * @apiParam {string} bank_name 开户行
      * @apiParam {string} store_address  企业详细地址
      * @apiParam {string} enter_Address 门店详细地址
-     * @apiParam {string} business_license_number 营业执照号
+     * @apiParam {string} business_license_number 统一社会信用代码
      * @apiSuccessExample 成功响应:
      *  {
      *     "meta": {

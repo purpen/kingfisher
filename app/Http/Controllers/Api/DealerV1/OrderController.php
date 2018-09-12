@@ -39,6 +39,7 @@ class OrderController extends BaseController{
      *
      * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
+     * @apiParam {integer} types 0.全部 1.当月
      * @apiSuccessExample 成功响应:
      *  {
      * "data": [
@@ -83,6 +84,9 @@ class OrderController extends BaseController{
      */
     public function orders(Request $request)
     {
+        $types = (int)$request->input('types', 0);
+        $BeginDates=date('Y-m-01 00:00:00', strtotime(date("Y-m-d")));
+        $now = date("Y-m-d 23:59:59",time());
         $status = (int)$request->input('status', 0);
         $per_page = (int)$request->input('per_page', 10);
         $user_id = $this->auth_user_id;
@@ -99,7 +103,11 @@ class OrderController extends BaseController{
             $query['status'] = $status;
             $orders = OrderModel::where($query)->where('type',8)->orderBy('id', 'desc')->paginate($per_page);
         }else{
-            $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
+            if ($types ==1){//当月订单
+                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+            }else{
+                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
+            }
         }
         return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
 
