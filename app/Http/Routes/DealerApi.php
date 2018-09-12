@@ -20,6 +20,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/auth/captchaUrl', [
         'as' => 'auth.captchaUrl', 'uses' => 'AuthenticateController@captchaUrl'
     ]);
+    // 发票删除
+    $api->post('/DealerApi/invoice/deleted', [
+        'as' => 'invoice.deleted', 'uses' => 'InvoiceController@deleted'
+    ]);
+    //普通发票编辑展示与详情
+    $api->post('/DealerApi/invoice/ordinaryList',[
+        'as' => 'invoice.ordinaryList','uses' => 'InvoiceController@ordinaryList'
+    ]);
+     //普通发票编辑
+    $api->post('/DealerApi/invoice/ordinaryEdit',[
+        'as' => 'invoice.ordinaryEdit','uses' => 'InvoiceController@ordinaryEdit'
+    ]);
 
     // 购物车列表
     $api->get('/DealerApi/cart', [

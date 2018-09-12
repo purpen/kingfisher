@@ -210,10 +210,11 @@ class CartController extends BaseController
 
         $data = array();
         foreach($id as $k=>$v){
+            $v->cover_url = '';
             $carts = ReceiptModel::find($v);
 
             if ($carts->product->assets) {
-                $cover_url = $carts->product->assets->file->avatar;
+                $v->cover_url = $carts->product->assets->file->avatar;
             }
 
             $data[$k]=array(
@@ -223,7 +224,7 @@ class CartController extends BaseController
                 'price'         => $carts->price,
                 'product_name'  => $carts->product->title,
                 'mode'          => $carts->sku->mode,
-                'cover_url'     =>$cover_url,
+                'cover_url'     =>$v->cover_url,
 
             );
 
@@ -449,7 +450,7 @@ class CartController extends BaseController
         foreach($all as $v){
             $data =  ReceiptModel::findOrFail($v['id']);
             $sku_price = SkuRegionModel::where(['sku_id'=>$data['sku_id']])->get();//商品价格区间
-            $cart = ProductsModel::where(['id'=>$v['product_id']])->first();
+            $cart = ProductsModel::where(['id'=>$data['product_id']])->first();
             $price = '';
 
             foreach ($sku_price as $vue){

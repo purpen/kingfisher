@@ -89,6 +89,73 @@ class InvoiceController extends BaseController
     }
 
     /**
+     * @param Request $request
+     * @return mixed 普通发票编辑和详情
+     */
+
+    public function ordinaryList(Request $request)
+    {
+        $id = $request->input('id');
+        if (empty($id)) {
+            return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
+        }
+        $ids = InvoiceModel::find($id);
+        if (empty($ids)) {
+            return $this->response->array(ApiHelper::error('error！', 412));
+        }
+
+        return $this->response->array(ApiHelper::success('Success.', 200, $ids));
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed 普通发票修改
+     */
+    public function ordinaryEdit(Request $request)
+    {
+        $data = $request->except('_token');
+        $receipt =  ReceiptModel::find($data['id']);
+        if (empty($receipt)) {
+            return $this->response->array(ApiHelper::error('error！', 412));
+        }
+        if (!$receipt->save()){
+            return $this->response->array(ApiHelper::error('更新失败！', 501));
+        }
+        return $this->response->array(ApiHelper::success('Success.', 200));
+
+    }
+
+    /**
+     * @api {post} /DealerApi/invoice/deleted 删除发票
+     * @apiVersion 1.0.0
+     * @apiName Cart deleted
+     * @apiGroup Cart
+     *
+     * @apiParam {integer} id invoice id :1
+     * @apiParam {string} token token
+     */
+
+    public function deleted(Request $request)
+    {
+        $id = $request->input('id');
+        if (empty($id)) {
+            return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
+        }
+        $ids = InvoiceModel::find($id);
+        if (empty($ids)) {
+            return $this->response->array(ApiHelper::error('error！', 412));
+        }
+        if(!$ids->delete()){
+            return $this->response->array(ApiHelper::error('删除失败！', 500));
+        }
+        return $this->response->array(ApiHelper::success('success！', 200));
+
+
+    }
+
+
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
