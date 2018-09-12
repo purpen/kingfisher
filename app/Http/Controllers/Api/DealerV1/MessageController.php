@@ -495,6 +495,8 @@ class MessageController extends BaseController
             if($distributors->status == 3) {
                 $distributors->status = "4";//重新审核
             }
+            $distributors->store_address = $request->input('store_address');
+            $distributors->enter_Address = $request->input('enter_Address');
             $distributor = $distributors->update($all);
             if ($distributor){
                 $users = new UserModel();
