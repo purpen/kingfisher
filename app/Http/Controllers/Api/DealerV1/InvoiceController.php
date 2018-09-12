@@ -20,45 +20,35 @@ class InvoiceController extends BaseController
         //
     }
 
+    public function lists(Request $request)
+    {
+
+    }
+
     /**
-     * @api {get} /DealerApi/invoice 普通发票和专用发票添加
+     * @api {post} /DealerApi/invoice/ordinaryAdd 普通发票添加
      * @apiVersion 1.0.0
-     * @apiName invoice ordinary
-     * @apiGroup invoice
-     * @apiParam {char} title 大米:搜索时所需参数
-     * @apiParam {string} per_page 1:一页多少条数据
+     * @apiName Invoice ordinaryAdd
+     * @apiGroup Invoice
+     * @apiParam {char} province_id 3:省份id
+     * @apiParam {char} city_id 3:市id
+     * @apiParam {char} area_id 3:县\区id
+     * @apiParam {string} company_name 太火鸟科技:公司全称
+     * @apiParam {string} company_phone 15112341234:公司电话
+     * @apiParam {string} opening_bank 小关支行:开户行
+     * @apiParam {string} bank_account 5361*********:银行账户
+     * @apiParam {string} unit_address 时尚广场:单位地址
+     * @apiParam {string} duty_paragraph 998766331:税号
+     * @apiParam {string} receiving_address 时尚广场xx楼:发票收件地址
+     * @apiParam {string} receiving_name 李白:收件人姓名
+     * @apiParam {string} receiving_phone 15311112222:收件人电话
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
-     * {
-     * "data": [
-     *      {
-     *      "id": 2,                      // 购物车ID
-     *      product_name :"大米",                   商品名称
-     *      inventory  :40,                 商品库存数量
-     *      market_price    "111",            商品销售价格
-     *      cover_url   ：1.img ,              图片url
-     *      "product_id": 4456,           // 商品ID
-     *      "price": "200.00",            // 商品价格
-     *      "mode":颜色：白色 ,                   类型
-     *      "number": 1,                       // 购买数量
-     *      "status": 3,                  // 状态：3添加，4立即购买
-     *      "focus": 1,                  // 状态：1关注，2未关注
-     *       "sku_region"[{
-     *               min:1, //下限数量
-     *              max:2,//上限数量
-     *              sell_price:22 //销售价格
-     *          }]
-     *      }
-     *   ],
      *      "meta": {
-     *          "message": "Success.",
+     *          "message": "添加成功.",
      *          "status_code": 200,
-     *           "data" : $data,
-     *          "count":22,
      *       }
-     *   }
-     * }
      */
     public function ordinary(Request $request)
     {
@@ -71,10 +61,10 @@ class InvoiceController extends BaseController
         $all['user_id'] = $user_id;
         $all['reviewer'] = '';
         $all['audit'] = '';
-        $all['invoice_value'] = '';
         $all['reason'] = '';
         $all['receiving_type'] = 1;
         $all['application_time'] = '';
+        $all['receiving_id'] = 2;
 
         $cart = InvoiceModel::create($all);
 

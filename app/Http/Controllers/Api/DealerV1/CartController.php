@@ -210,8 +210,9 @@ class CartController extends BaseController
 
         $data = array();
         foreach($id as $k=>$v){
-            $v->cover_url = '';
+
             $carts = ReceiptModel::find($v);
+
 
             $data[$k]=array(
                 'product_id' => $carts->product_id,
