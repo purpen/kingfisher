@@ -213,10 +213,6 @@ class CartController extends BaseController
             $v->cover_url = '';
             $carts = ReceiptModel::find($v);
 
-            if ($carts->product->assets) {
-                $v->cover_url = $carts->product->assets->file->avatar;
-            }
-
             $data[$k]=array(
                 'product_id' => $carts->product_id,
                 'sku_id'       => $carts->sku_id,
@@ -224,7 +220,7 @@ class CartController extends BaseController
                 'price'         => $carts->price,
                 'product_name'  => $carts->product->title,
                 'mode'          => $carts->sku->mode,
-                'cover_url'     =>$v->cover_url,
+                'cover_url'     =>$carts->sku->first_img,
 
             );
 
@@ -463,6 +459,7 @@ class CartController extends BaseController
             }
 
             $data['price'] = $price;
+            $data['number'] = $v['number'];
 
 
             if (!$data->save()){
