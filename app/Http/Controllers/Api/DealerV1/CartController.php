@@ -121,6 +121,13 @@ class CartController extends BaseController
             }
             $data['count'] = $count;
         } else {
+            $article = new ReceiptModel();
+            $save['status'] = 3;
+            $res['user_id'] = $user_id;
+            $res['status'] = 4;
+
+            $str = $article->where($res)->update($save);
+
 
             foreach($carts as $k=>$v) {
 
@@ -133,6 +140,7 @@ class CartController extends BaseController
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
+
 
 
                 if($collection){
@@ -334,6 +342,12 @@ class CartController extends BaseController
         $user_id = $this->auth_user_id;
 
         $all = $request->all();
+        $article = new ReceiptModel();
+        $save['status'] = 3;
+        $res['user_id'] = $user_id;
+        $res['status'] = 4;
+
+        $str = $article->where($res)->update($save);
 
         foreach($all['all'] as $vue){
             $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格
