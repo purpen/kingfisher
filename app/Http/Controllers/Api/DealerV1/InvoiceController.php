@@ -22,7 +22,9 @@ class InvoiceController extends BaseController
 
     public function lists(Request $request)
     {
-
+        $user_id = $this->auth_user_id;
+        $where['user_id'] = $user_id;
+        $invoice = InvoiceModel::where()->paginate();
     }
 
     /**

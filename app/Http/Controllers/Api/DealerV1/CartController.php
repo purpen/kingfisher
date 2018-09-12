@@ -209,15 +209,20 @@ class CartController extends BaseController
         $id = $request->input('id') ? $request->input('id') : '';
 
         $data = array();
+
         foreach($id as $k=>$v){
-
-            $carts = ReceiptModel::find($v);
-
+            $number = '';
+            $carts = ReceiptModel::find($v['id']);
+            if(!$number){
+                $number = $v['number'];
+            }else {
+                $number = '';
+            }
 
             $data[$k]=array(
                 'product_id' => $carts->product_id,
                 'sku_id'       => $carts->sku_id,
-                'number'        => $carts->number,
+                'number'        => $number,
                 'price'         => $carts->price,
                 'product_name'  => $carts->product->title,
                 'mode'          => $carts->sku->mode,
@@ -280,6 +285,7 @@ class CartController extends BaseController
                 $receipt =  ReceiptModel::findOrFail($cart['id']);
                 $receipt['number'] = $number;
                 $receipt['price'] = $price_gauge;
+                $receipt['status'] = 3;
                 if (!$receipt->save()){
                     return $this->response->array(ApiHelper::error('更新失败！', 501));
                 }
@@ -366,6 +372,7 @@ class CartController extends BaseController
                 $receipt =  ReceiptModel::findOrFail($cart['id']);
                 $receipt['number'] = $number;
                 $receipt['price'] = $price_gauge;
+                $receipt['status'] = 4;
                 if (!$receipt->save()){
                     return $this->response->array(ApiHelper::error('更新失败！', 501));
                 }
