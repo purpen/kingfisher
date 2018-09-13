@@ -15,6 +15,8 @@ class ReceiveOrderModel extends BaseModel
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+
+    protected $fillable = ['status'];
     /**
      * 关联到模型的数据表
      *
