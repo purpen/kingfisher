@@ -128,6 +128,9 @@ class InvoiceController extends BaseController
         $data['user_id'] = $user_id;
         $data['reviewer'] = '';
         $data['audit'] = '';
+        $data['city_id'] = '';
+        $data['province_id'] = '';
+        $data['area_id'] = '';
         if($prover){
             $data['prover_id'] = $prover['id'];
         }else {
