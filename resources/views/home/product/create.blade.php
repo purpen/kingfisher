@@ -108,7 +108,7 @@
                             <label for="supplier_id" class="col-sm-2 control-label">选择供应商<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-11">
-                                    <select class="chosen-select" name="supplier_id" style="display: none;">
+                                    <select class="chosen-select" name="supplier_id">
                                         <option value="">请选择供应商</option>
                                         @foreach($suppliers as $supplier)
                                             <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
