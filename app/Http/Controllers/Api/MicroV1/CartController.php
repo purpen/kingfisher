@@ -100,7 +100,7 @@ class CartController extends BaseController
      * @apiName Cart add
      * @apiGroup Cart
      *
-     * @apiParam {integer} sku_id SKU ID 
+     * @apiParam {integer} sku_id SKU ID
      * @apiParam {integer} n 购买数量 默认值：1
      * @apiParam {integer} channel_id  渠道方ID
      * @apiParam {string}   code 推广码（备用）
@@ -122,33 +122,33 @@ class CartController extends BaseController
         // 如果产品存在，则更新数量
         $cart = CartModel::where(['user_id' => $user_id, 'sku_id' => $sku_id, 'type' => $type])->first();
         if ($cart) {
-          $ok = $cart->increment('n', $n);
-          if (!$ok) {
-              return $this->response->array(ApiHelper::error('更新失败！', 500));
-          }
+            $ok = $cart->increment('n', $n);
+            if (!$ok) {
+                return $this->response->array(ApiHelper::error('更新失败！', 500));
+            }
         } else {
-          $sku = ProductsSkuModel::find($sku_id);
-          if (empty($sku)) {
-              return $this->response->array(ApiHelper::error('产品不存在！', 501));
-          }
+            $sku = ProductsSkuModel::find($sku_id);
+            if (empty($sku)) {
+                return $this->response->array(ApiHelper::error('产品不存在！', 501));
+            }
 
-          $data = array(
-              'user_id' => $user_id,
-              'sku_id' => $sku->id,
-              'sku_number' => $sku->number,
-              'product_id' => $sku->product_id,
-              'product_number' => $sku->product_number,
-              'price' => $sku->price,
-              'n' => $n,
-              'channel_id' => $channel_id,
-              'code' => $code,
-              'type' => $type,
-          );
+            $data = array(
+                'user_id' => $user_id,
+                'sku_id' => $sku->id,
+                'sku_number' => $sku->number,
+                'product_id' => $sku->product_id,
+                'product_number' => $sku->product_number,
+                'price' => $sku->price,
+                'n' => $n,
+                'channel_id' => $channel_id,
+                'code' => $code,
+                'type' => $type,
+            );
 
-          $cart = CartModel::create($data);
-          if(!$cart) {
-              return $this->response->array(ApiHelper::error('创建失败！', 500));       
-          }       
+            $cart = CartModel::create($data);
+            if(!$cart) {
+                return $this->response->array(ApiHelper::error('创建失败！', 500));
+            }
         }
 
         return $this->response->array(ApiHelper::success('Success.', 200, array('id' => $cart->id)));
@@ -185,7 +185,7 @@ class CartController extends BaseController
     /**
      * @api {get} /MicroApi/cart/fetch_count 获取购物车数量
      * @apiVersion 1.0.0
-     * @apiName Cart fetch_count 
+     * @apiName Cart fetch_count
      * @apiGroup Cart
      *
      * @apiParam {integer} type 默认值 1

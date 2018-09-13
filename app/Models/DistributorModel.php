@@ -3,10 +3,11 @@
 namespace App\Models;
 //经销商表
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DistributorModel extends BaseModel
 {
-//    use SoftDeletes;
+    use SoftDeletes;
 
     protected $dates = ['deleted_at'];
 
@@ -22,7 +23,7 @@ class DistributorModel extends BaseModel
      * @var array
      */
 
-    protected $fillable = ['front_id','Inside_id','portrait_id','national_emblem_id','license_id','number','phone', 'store_name', 'name','store_address', 'operation_situation', 'bank_number', 'cover_id', 'bank_name','business_license_number','taxpayer','area_id','province_id','authorization_id','city_id','status','category_id','user_id'];
+    protected $fillable = ['front_id','Inside_id','portrait_id','national_emblem_id','number','phone', 'store_name', 'name', 'operation_situation', 'bank_number', 'cover_id', 'bank_name','business_license_number','taxpayer','area_id','province_id','authorization_id','city_id','county_id','status','category_id','user_id','position','full_name','legal_person','legal_phone','legal_number','ein','enter_phone','enter_province','enter_city','enter_county'];
 
 
     //一对一关联附件表门店正面照片
@@ -44,11 +45,6 @@ class DistributorModel extends BaseModel
     public function assetsNationalEmblem()
     {
         return $this->belongsTo('App\Models\AssetsModel','national_emblem_id');
-    }
-    //一对一关联附件表营业执照照片
-    public function assets()
-    {
-        return $this->belongsTo('App\Models\AssetsModel','license_id');
     }
 
     //相对关联user表
@@ -73,12 +69,13 @@ class DistributorModel extends BaseModel
     public function getFirstFrontAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 17])
-            ->orderBy('id','desc')
-            ->first();
+            ::find($this->front_id);
+//            ::where(['target_id' => $this->id, 'type' => 17])
+//            ->orderBy('id','desc')
+//            ->first();
 
         if($asset){
-            return $asset->file->srcfile;
+            return $asset->file->p500;
         }else{
             return '';
         }
@@ -90,11 +87,12 @@ class DistributorModel extends BaseModel
     public function getFirstInsideAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 18])
-            ->orderBy('id','desc')
-            ->first();
+            ::find($this->Inside_id);
+//            ::where(['target_id' => $this->id, 'type' => 18])
+//            ->orderBy('id','desc')
+//            ->first();
         if($asset){
-            return $asset->file->srcfile;
+            return $asset->file->p500;
         }else{
             return '';
         }
@@ -106,11 +104,12 @@ class DistributorModel extends BaseModel
     public function getFirstPortraitAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 20])
-            ->orderBy('id','desc')
-            ->first();
+            ::find($this->portrait_id);
+//            ::where(['target_id' => $this->id, 'type' => 20])
+//            ->orderBy('id','desc')
+//            ->first();
         if($asset){
-            return $asset->file->srcfile;
+            return $asset->file->p500;
         }else{
             return '';
         }
@@ -122,28 +121,12 @@ class DistributorModel extends BaseModel
     public function getFirstNationalEmblemAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 21])
-            ->orderBy('id','desc')
-            ->first();
+            ::find($this->national_emblem_id);
+//            ::where(['target_id' => $this->id, 'type' => 21])
+//            ->orderBy('id','desc')
+//            ->first();
         if($asset){
-            return $asset->file->srcfile;
-        }else{
-            return '';
-        }
-    }
-
-    /**
-     * 获取营业执照照片
-     */
-    public function getFirstLicenseAttribute()
-    {
-
-        $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 19])
-            ->orderBy('id','desc')
-            ->first();
-        if($asset){
-            return $asset->file->srcfile;
+            return $asset->file->p500;
         }else{
             return '';
         }

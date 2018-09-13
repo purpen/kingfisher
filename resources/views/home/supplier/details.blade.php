@@ -82,7 +82,7 @@
                             <h5>图片信息</h5>
                             <hr>
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
-                                <li for="cover_id" class="mb-0r control-label col-md-6"><b>pdf附件:</b>
+                                <li for="cover_id" class="mb-0r control-label col-md-6"><b>pdf附件(电子版合同):</b>
                                     @if($supplier->first_asset)
                                         <a href="{{ $supplier->first_asset}}" target="_blank">{{$supplier->assets->file->name}}</a>
                                     @endif
@@ -104,6 +104,12 @@
                                         <a href="{{$supplier->first_quality_inspection_report}}" target="_blank">{{$supplier->assetsQualityInspectionReport->file->name}}</a>
                                     @endif
                                 </li>
+
+                                {{--<li for="electronic_contract_report_id" class="mb-0r control-label col-md-6"><b>电子版合同:</b>--}}
+                                    {{--@if($supplier->first_electronic_contract_report)--}}
+                                        {{--<a href="{{$supplier->first_electronic_contract_report}}" target="_blank">{{$supplier->assetsElectronicContractReport->file->name}}</a>--}}
+                                    {{--@endif--}}
+                                {{--</li>--}}
 
                             </ul>
 

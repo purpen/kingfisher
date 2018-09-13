@@ -53,6 +53,7 @@
 
 					<li @if($supplier_distributor_type == 1) class="active"@endif><a href="{{url('/user?supplier_distributor_type=1')}}">分销商</a></li>
 					<li @if($supplier_distributor_type == 2) class="active"@endif><a href="{{url('/user?supplier_distributor_type=2')}}">供应商</a></li>
+					<li @if($supplier_distributor_type == 3) class="active"@endif><a href="{{url('/user?supplier_distributor_type=3')}}">经销商</a></li>
 				</ul>
     			<ul class="nav navbar-nav navbar-right">
     				<li>
@@ -166,6 +167,8 @@
 											<span>分销商</span>
 										@elseif($val->supplier_distributor_type == 2)
 											<span>供应商</span>
+										@elseif($val->supplier_distributor_type == 3)
+											<span>经销商</span>
 										@endif
 									</td>
 									<td>
@@ -236,7 +239,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销</label>
+									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销经销</label>
 									<div class="col-sm-10">
 										<div class="radio-inline">
 											<label class="ml-3r">
@@ -244,6 +247,9 @@
 											</label>
 											<label class="ml-3r">
 												<input name="supplier_distributor_type" value="2" type="radio">供应商
+											</label>
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="3" type="radio">经销商
 											</label>
 
 										</div>
@@ -369,7 +375,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销</label>
+									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销经销</label>
 									<div class="col-sm-10">
 										<div class="radio-inline">
 											<label class="ml-3r">
@@ -377,6 +383,9 @@
 											</label>
 											<label class="ml-3r">
 												<input name="supplier_distributor_type" value="2" type="radio" id="supplier_distributor_type2">供应商
+											</label>
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="3" type="radio" id="supplier_distributor_type3">经销商
 											</label>
 
 										</div>
@@ -573,6 +582,8 @@
 				$("#supplier_distributor_type1").prop('checked','true');
 			}else if(e.data.supplier_distributor_type==2){
 				$("#supplier_distributor_type2").prop('checked','true');
+			}else if(e.data.supplier_distributor_type==3){
+				$("#supplier_distributor_type3").prop('checked','true');
 			}
 
 			$('#updateuser2').modal('show');

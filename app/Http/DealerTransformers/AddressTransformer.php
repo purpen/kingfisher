@@ -19,6 +19,7 @@ class AddressTransformer extends TransformerAbstract
                 'user_id' => $address->user_id,
                 'name' => $address->name,
                 'phone' => $address->phone,
+                'fixed_telephone' => $address->fixed_telephone?$address->fixed_telephone:'',
                 'province_id' => $address->province_id,
                 'province' => $province,
                 'city_id' => $address->city_id,

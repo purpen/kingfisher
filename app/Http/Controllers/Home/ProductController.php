@@ -154,7 +154,7 @@ class ProductController extends Controller
         $product->title = $request->input('title');
         $product->tit = $request->input('tit');
         $product->category_id = $request->input('category_id');
-        $product->region_id = $request->input('region_id');//地域分类
+        $product->region_id = $request->input('diyu');//地域分类
 
         $product->authorization_id = $request->input('Jszzdm');//授权条件
         $product->supplier_id = $request->input('supplier_id','');
@@ -168,11 +168,12 @@ class ProductController extends Controller
         $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
+        $product->product_details = $request->input('product_details','');
         if($product->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
                 $asset->target_id = $product->id;
-                $asset->type = 1;
+//                $asset->type = 1;
                 $asset->save();
             }
             return redirect('/product/edit?id='.$product->id);
@@ -212,6 +213,8 @@ class ProductController extends Controller
         $product = ProductsModel::find($id);
 
         $authorization_id = explode(",",$product->authorization_id);
+
+        $region = explode(",",$product->region_id);
         //获取七牛上传token
         $token = QiniuApi::upToken();
 
@@ -219,6 +222,8 @@ class ProductController extends Controller
 
         //获取商品的图片
         $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
+        //获取商品详情的图片
+        $assetsProductDetails = AssetsModel::where(['target_id' => $id,'type' => 22])->get();
 
         $random = [];
         for ($i = 0; $i<2; $i++) {
@@ -240,10 +245,12 @@ class ProductController extends Controller
             'lists' => $lists,
             'suppliers' => $suppliers,
             'authorization' =>$authorization_id,
+            'region' =>$region,
             'provinces' => $provinces,
             'token' => $token,
             'user_id' => $user_id,
             'assets' => $assets,
+            'assetsProductDetails' => $assetsProductDetails,
             'url' => $url,
             'random' => $random,
             'tab_menu' => $this->tab_menu,
@@ -289,7 +296,8 @@ class ProductController extends Controller
         $product->category_id = $request->input('category_id');
         $authorization = $request->input('authorization_id');
         $product->authorization_id = implode(',',$authorization);
-        $product->region_id = $request->input('region_id');
+        $region = $request->input('region_id');
+        $product->region_id = implode(',',$region);
         $product->supplier_id = $request->input('supplier_id','');
         $product->supplier_name = SupplierModel::find($product->supplier_id)->nam;
         $product->market_price = $request->input('market_price','');
@@ -301,6 +309,7 @@ class ProductController extends Controller
         $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
+        $product->product_details = $request->input('product_details','');
         $result = $product->update();
 
         if($result){
@@ -463,6 +472,8 @@ class ProductController extends Controller
 
         //获取商品的图片
         $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
+        //获取商品详情的图片
+        $assetsProductDetails = AssetsModel::where(['target_id' => $id,'type' => 22])->get();
 
         $random = [];
         for ($i = 0; $i<2; $i++) {
@@ -480,6 +491,7 @@ class ProductController extends Controller
             'token' => $token,
             'user_id' => $user_id,
             'assets' => $assets,
+            'assetsProductDetails' => $assetsProductDetails,
             'url' => $url,
             'random' => $random,
             'name' => ''

@@ -27,7 +27,7 @@ class LogisticsController extends Controller
     public function index()
     {
         $logistics = LogisticsModel::orderBy('id','desc')->get();
-
+dd($logistics);
         $logistics_id = config('logistics.logistics');
         return view('home/storage.logistics',['logistics' => $logistics,'logistics_id' => $logistics_id]);
     }
