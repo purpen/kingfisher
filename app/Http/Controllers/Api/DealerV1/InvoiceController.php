@@ -31,7 +31,7 @@ class InvoiceController extends BaseController
      * {
      * "invoice": [
      *      {
-     *      "company_name": 太火鸟,              // 公司全称
+     *      "company_name": 太火鸟1,              // 公司全称
      *      "company_phone": 15112341234,          // 公司电话
      *      "opening_bank": 小关支行,           // 开户行
      *      "bank_account": 879799***989,           // 银行账户
@@ -81,7 +81,6 @@ class InvoiceController extends BaseController
      * @apiVersion 1.0.0
      * @apiName Invoice ordinaryAdd
      * @apiGroup Invoice
-     *  data{
      * @apiParam {char} province_id 3:省份id
      * @apiParam {char} city_id 3:市id
      * @apiParam {char} area_id 3:县\区id
@@ -95,18 +94,6 @@ class InvoiceController extends BaseController
      * @apiParam {string} receiving_address 时尚广场xx楼:发票收件地址
      * @apiParam {string} receiving_name 李白:收件人姓名
      * @apiParam {string} receiving_phone 15311112222:收件人电话
-     * }
-     * prover{
-     * @apiParam {string} "id": 4,      // 一般纳税人证明id
-     * @apiParam {string} "name": mobile.jpg,      // 图片名字
-     * @apiParam {string} "path": erp/20180418/5ad6a9995fdb6,      // 图片路径
-     * @apiParam {string} "size": 24336,      // 图片大小
-     * @apiParam {string} "width": 500,      // 图片宽度
-     * @apiParam {string} "height": 722,      // 图片高度
-     * @apiParam {string} "mime": image/jpeg,      // 后缀
-     * @apiParam {string} "random	": 5ad6a94921068,      // 随机字符串(回调查询)
-     * @apiParam {string} "domain": erp,      // 存储域
-     * }
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
@@ -180,10 +167,7 @@ class InvoiceController extends BaseController
      * @apiSuccessExample 成功响应:
      *  {"ids": [
      *      {
-     *      "province_id": 北京市,         // 省\直辖市
-     *      "city_id": 北京市,              // 市
-     *      "area_id": 朝阳区,                 // 区\县
-     *      "company_name": 太火鸟,              // 公司全称
+     *      "company_name": 太火鸟2,              // 公司全称
      *      "company_phone": 15112341234,          // 公司电话
      *      "opening_bank": 小关支行,           // 开户行
      *      "bank_account": 879799***989,           // 银行账户
@@ -225,33 +209,8 @@ class InvoiceController extends BaseController
      * @apiVersion 1.0.0
      * @apiName Invoice ordinaryEdit
      * @apiGroup Invoice
-     *  {data:
      * @apiParam {int} id 3:发票id
      * @apiParam {string} token token
-     * @apiParam {string} "province_id": 北京市,         // 省\直辖市
-     * @apiParam {string}"city_id": 北京市,              // 市
-     *@apiParam {string}  "area_id": 朝阳区,                 // 区\县
-     * @apiParam {string} "company_name": 太火鸟,              // 公司全称
-     *@apiParam {string}  "company_phone": 15112341234,          // 公司电话
-     * @apiParam {string} "opening_bank": 小关支行,           // 开户行
-     * @apiParam {string} "bank_account": 879799***989,           // 银行账户
-     * @apiParam {string}  "unit_address": 朝阳区时尚广场b区,           // 单位地址
-     * @apiParam {string} "duty_paragraph": 7879***8032,           // 税号
-     * @apiParam {string} "receiving_address": 朝阳时尚广场C区A東,      // 发票收件地址
-     * @apiParam {string}  "receiving_name": 李白,      // 发票收件姓名
-     *@apiParam {string}  "receiving_phone": 15112341234,      // 发票收件电话
-     *@apiParam {string}  "receiving_id" :"1",            //  	发票类型0.不开票 1.普通发票 2.专票
-     * (专票时有id,普通时无此字段)
-     *  assets{
-     * @apiParam {string} "id": 4,      // 一般纳税人证明id
-     * @apiParam {string} "name": mobile.jpg,      // 图片名字
-     * @apiParam {string} "path": erp/20180418/5ad6a9995fdb6,      // 图片路径
-     * @apiParam {string} "size": 24336,      // 图片大小
-     * @apiParam {string} "width": 500,      // 图片宽度
-     * @apiParam {string} "height": 722,      // 图片高度
-     * @apiParam {string} "mime": image/jpeg,      // 后缀
-     * @apiParam {string} "random	": 5ad6a94921068,      // 随机字符串(回调查询)
-     * @apiParam {string} "domain": erp,      // 存储域
      * @apiSuccessExample 成功响应:
      *      "meta": {
      *          "message": "Success.",
