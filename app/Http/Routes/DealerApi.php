@@ -24,19 +24,19 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/invoice', [
         'as' => 'invoice.invoice', 'uses' => 'InvoiceController@lists'
     ]);
-    //普通发票添加
+    //普通发票和专票添加
     $api->post('/DealerApi/invoice/ordinaryAdd', [
-        'as' => 'cart.ordinary', 'uses' => 'InvoiceController@ordinaryAdd'
+        'as' => 'invoice.ordinaryAdd', 'uses' => 'InvoiceController@ordinaryAdd'
     ]);
     // 普通和专票发票删除
     $api->post('/DealerApi/invoice/deleted', [
         'as' => 'invoice.deleted', 'uses' => 'InvoiceController@deleted'
     ]);
-    //普通发票编辑展示与详情
+    //普通发票和专票编辑展示与详情
     $api->post('/DealerApi/invoice/ordinaryList',[
         'as' => 'invoice.ordinaryList','uses' => 'InvoiceController@ordinaryList'
     ]);
-     //普通发票编辑
+     //普通发票和专票编辑
     $api->post('/DealerApi/invoice/ordinaryEdit',[
         'as' => 'invoice.ordinaryEdit','uses' => 'InvoiceController@ordinaryEdit'
     ]);

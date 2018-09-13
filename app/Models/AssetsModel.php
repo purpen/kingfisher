@@ -137,6 +137,13 @@ class AssetsModel extends BaseModel
     }
 
 
+    //一对一关联发票表一般纳税人证明照片
+    public function invoice()
+    {
+        return $this->hasOne('App\Models\InvoiceModel', 'prove_id');
+    }
+
+
 
     /**
      * 获取原文件及缩略图/头像
