@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Requests\AddReceiveRequest;
+use App\Models\AuditingModel;
 use App\Models\CountersModel;
 use App\Models\Distribution;
 use App\Models\DistributorPaymentModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
+use App\Models\OutWarehousesModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentReceiptOrderDetailModel;
 use App\Models\ReceiveOrderModel;
@@ -27,10 +29,10 @@ class ReceiveOrderController extends Controller
     public function index(Request $request)
     {
 
-        $order_list = OrderModel::where(['type' =>8,'status' => 6, 'suspend' => 0])->orderBy('id','desc')
+        $order_list = OrderModel::where(['type' => 8, 'status' => 6, 'suspend' => 0])->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
-        return view('home/receiveOrder.index',[
+        return view('home/receiveOrder.index', [
             'type' => '',
             'where' => '',
             'subnav' => 'auditingReceive',
@@ -45,34 +47,60 @@ class ReceiveOrderController extends Controller
     public function ajaxCharge(Request $request)
     {
         $ids = $request->input('id');
-        if (empty($ids)){
-            return ajax_json(0,'参数有误！');
+        if (empty($ids)) {
+            return ajax_json(0, '参数有误！');
         }
-        $order = OrderModel::whereIn('id',$ids)->get();
+        $order = OrderModel::whereIn('id', $ids)->get();
+
+        $order_model = new OrderModel();
         DB::beginTransaction();
-        foreach ($order as $v){
-            $order = new OrderModel();
-            if ($v->payment_type == "现结"){
-                $id = $v['id'];
-                $statu = DB::update("update receive_order set status=1 where target_id=$id ");
-                $status = $order->changeStatus($v->id,8);
-                if(!($statu && $status))
-                {
+        foreach ($order as $v) {
+            // 创建订单收款单
+            $model = new ReceiveOrderModel();
+            if (!$model->orderCreateReceiveOrder($v->id)) {
+                return ajax_json(0, "ID:'. $v->id .'财务审核订单创建收款单错误");
+            }
+
+            // 订单待发货状态
+            if (!$order_model->changeStatus($v->id, 8)) {
+                DB::rollBack();
+                Log::error('Send Order ID:' . $v->id . '订单发货修改状态错误');
+                return ajax_json(0, 'error', '订单发货修改状态错误');
+            }
+
+            // 创建出库单
+            $out_warehouse = new OutWarehousesModel();
+            if (!$out_warehouse->orderCreateOutWarehouse($v->id)) {
+                DB::rollBack();
+                Log::error('ID:' . $v->id . '订单发货,创建出库单错误');
+                return ajax_json(0, 'error', '订单发货,创建出库单错误');
+            }
+
+            if ($v->payment_type == "现结") {
+                $id = $v->id;
+                $statu = ReceiveOrderModel::query()->where(['target_id' => $id, 'type' => 3])->update(['status' => 1]);
+                $status = $order_model->changeStatus($v->id, 8);
+                if (!($statu && $status)) {
                     DB::rollBack();
-                    return ajax_json(0,'审核失败');
+                    return ajax_json(0, '审核失败');
+                }
+            } else if ($v->payment_type == "月结") {
+                $status = $order_model->changeStatus($v->id, 8);
+                if (!$status) {
+                    DB::rollBack();
+                    return ajax_json(0, '审核失败');
                 }
             }
-            if ($v->payment_type == "月结"){
-                $status = $order->changeStatus($v->id,8);
-                if(!$status)
-                {
-                    DB::rollBack();
-                    return ajax_json(0,'审核失败');
-                }
-            }
+
+        }
+        $ids = AuditingModel::where('type', 5)->select('user_id')->first();
+        if ($ids) {
+            //发送审核短信通知
+            $dataes = new AuditingModel();
+            $dataes->datas(5);
         }
         DB::commit();
-        return  ajax_json(1,'审核成功');
+        return ajax_json(1, '审核成功');
     }
 
     /**
@@ -82,13 +110,13 @@ class ReceiveOrderController extends Controller
      */
     public function receive(Request $request)
     {
-        $receive = ReceiveOrderModel::where('status',0)->paginate($this->per_page);
+        $receive = ReceiveOrderModel::where('status', 0)->paginate($this->per_page);
         $money = ReceiveOrderModel
-            ::where('status',0)
+            ::where('status', 0)
             ->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))
             ->first();
 
-        return view('home/receiveOrder.receive',[
+        return view('home/receiveOrder.receive', [
             'receive' => $receive,
             'where' => '',
             'subnav' => 'waitReceive',
@@ -105,12 +133,11 @@ class ReceiveOrderController extends Controller
      */
     public function complete(Request $request)
     {
-        $receive = ReceiveOrderModel::where('status',1)->paginate($this->per_page);
-        $money = ReceiveOrderModel::where('status',1)->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
+        $receive = ReceiveOrderModel::where('status', 1)->paginate($this->per_page);
+        $money = ReceiveOrderModel::where('status', 1)->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
 
 
-
-        return view('home/receiveOrder.receive',[
+        return view('home/receiveOrder.receive', [
             'receive' => $receive,
             'where' => '',
             'subnav' => 'finishReceive',
@@ -127,32 +154,33 @@ class ReceiveOrderController extends Controller
      * @param Request $request
      * @return string json数据
      */
-    public function ajaxConfirmReceive(Request $request){
+    public function ajaxConfirmReceive(Request $request)
+    {
         $arr_id = $request->input('arr_id');
         DB::beginTransaction();
-        foreach ($arr_id as $id){
-            if(empty($id)){
+        foreach ($arr_id as $id) {
+            if (empty($id)) {
                 DB::rollBack();
-                return ajax_json(0,'参数错误');
+                return ajax_json(0, '参数错误');
             }
             $receive_order = ReceiveOrderModel::find($id);
-            if(!$receive_order){
+            if (!$receive_order) {
                 DB::rollBack();
-                return ajax_json(0,'参数错误');
+                return ajax_json(0, '参数错误');
             }
 
-            if($receive_order->amount != $receive_order->received_money){
+            if ($receive_order->amount != $receive_order->received_money) {
                 DB::rollBack();
-                return ajax_json(0,'收款尚未完成');
+                return ajax_json(0, '收款尚未完成');
             }
 
-            if(!$receive_order->changeStatus(1)){
+            if (!$receive_order->changeStatus(1)) {
                 DB::rollBack();
-                return ajax_json(0,'确认付款失败');
+                return ajax_json(0, '确认付款失败');
             }
         }
         DB::commit();
-        return ajax_json(1,'确认成功');
+        return ajax_json(1, '确认成功');
     }
 
     /**
@@ -163,19 +191,19 @@ class ReceiveOrderController extends Controller
     public function editReceive(Request $request)
     {
         $id = (int)$request->input('id');
-        if(empty($id)){
+        if (empty($id)) {
             return '参数错误';
         }
         $receive = ReceiveOrderModel::find($id);
-        $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/receiveOrder.editReceive',[
+        $payment_account = PaymentAccountModel::select(['account', 'id', 'bank'])->get();
+        return view('home/receiveOrder.editReceive', [
             'receive' => $receive,
             'payment_account' => $payment_account,
             'subnav' => '',
             'type' => '',
         ]);
     }
-    
+
     /**
      * 修改收款单信息
      * @param Request $request
@@ -189,13 +217,13 @@ class ReceiveOrderController extends Controller
 
         DB::beginTransaction();
         $receive_order = ReceiveOrderModel::find($id);
-        if ($receive_order->status == 1){
+        if ($receive_order->status == 1) {
             return '已经收款不能再修改';
 //            return back()->withErrors(['已经收款不能再修改！']);
         }
         //判断已付金额是否大于应付金额
         $received_money = $request->input('received_money');
-        if($receive_order->amount < $received_money){
+        if ($receive_order->amount < $received_money) {
             DB::rollBack();
             return '参数错误';
         }
@@ -204,12 +232,12 @@ class ReceiveOrderController extends Controller
         $receive_order->payment_account_id = $payment_account_id;
         $receive_order->summary = $summary;
         $receive_order->receive_time = $request->input('receive_time');
-        if(!$receive_order->save()){
+        if (!$receive_order->save()) {
             DB::rollBack();
             return "修改失败1";
         }
-        if($order = $receive_order->order){
-            if(!$order->changeReceivedMoney($received_money)){
+        if ($order = $receive_order->order) {
+            if (!$order->changeReceivedMoney($received_money)) {
                 DB::rollBack();
                 return "修改失败3";
             }
@@ -227,12 +255,12 @@ class ReceiveOrderController extends Controller
     public function detailedReceive(Request $request)
     {
         $id = (int)$request->input('id');
-        if(empty($id)){
+        if (empty($id)) {
             return '参数错误';
         }
         $receive = ReceiveOrderModel::find($id);
-        $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/receiveOrder.detailedReceive',['receive' => $receive,'payment_account' => $payment_account]);
+        $payment_account = PaymentAccountModel::select(['account', 'id', 'bank'])->get();
+        return view('home/receiveOrder.detailedReceive', ['receive' => $receive, 'payment_account' => $payment_account]);
     }
 
     /*
@@ -247,17 +275,17 @@ class ReceiveOrderController extends Controller
         $subnav = $request->input('subnav');
         $type = $request->input('type');
 
-        if($request->isMethod('get') && $request->input('time')){
+        if ($request->isMethod('get') && $request->input('time')) {
             $time = $request->input('time');
-            $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+            $start_date = date("Y-m-d H:i:s", strtotime("-" . $time . " day"));
             $end_date = date("Y-m-d H:i:s");
         }
 
-        if($request->isMethod('get') && $request->input('receive_number')){
+        if ($request->isMethod('get') && $request->input('receive_number')) {
             $where = $request->input('receive_number');
         }
 
-        switch ($subnav){
+        switch ($subnav) {
             case 'waitReceive':
                 $status = 0;
                 break;
@@ -270,41 +298,41 @@ class ReceiveOrderController extends Controller
 
         //搜索列表
         $receive = ReceiveOrderModel::query();
-        if($where){
-            $receive->where('number','like','%'.$where.'%')->orWhere('payment_user','like','%'.$where.'%');
+        if ($where) {
+            $receive->where('number', 'like', '%' . $where . '%')->orWhere('payment_user', 'like', '%' . $where . '%');
         }
-        if($status !== null){
-            $receive->where('status','=',$status);
+        if ($status !== null) {
+            $receive->where('status', '=', $status);
         }
-        if($start_date && $end_date){
-            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
-            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+        if ($start_date && $end_date) {
+            $start_date = date("Y-m-d H:i:s", strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s", strtotime($end_date));
             $receive->whereBetween('created_at', [$start_date, $end_date]);
         }
-        if($type){
-            $receive->where('type','=',$type);
+        if ($type) {
+            $receive->where('type', '=', $type);
         }
         $receive = $receive->paginate($this->per_page);
 
         //收款统计
         $money = ReceiveOrderModel::query();
-        if($where){
-            $money->where('number','like','%'.$where.'%')->orWhere('payment_user','like','%'.$where.'%');
+        if ($where) {
+            $money->where('number', 'like', '%' . $where . '%')->orWhere('payment_user', 'like', '%' . $where . '%');
         }
-        if($status !== null){
-            $money->where('status','=',$status);
+        if ($status !== null) {
+            $money->where('status', '=', $status);
         }
-        if($start_date && $end_date){
-            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
-            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+        if ($start_date && $end_date) {
+            $start_date = date("Y-m-d H:i:s", strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s", strtotime($end_date));
             $money->whereBetween('created_at', [$start_date, $end_date]);
         }
-        if($type){
-            $money->where('type','=',$type);
+        if ($type) {
+            $money->where('type', '=', $type);
         }
         $money = $money->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
-        if($receive){
-            return view('home/receiveOrder.index',[
+        if ($receive) {
+            return view('home/receiveOrder.index', [
                 'receive' => $receive,
                 'subnav' => $subnav,
                 'count' => '',
@@ -323,8 +351,8 @@ class ReceiveOrderController extends Controller
     public function createReceive()
     {
         //银行账户
-        $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/receiveOrder.create',[
+        $payment_account = PaymentAccountModel::select(['account', 'id', 'bank'])->get();
+        return view('home/receiveOrder.create', [
             'payment_account' => $payment_account,
             'subnav' => '',
             'type' => '',
@@ -337,7 +365,7 @@ class ReceiveOrderController extends Controller
     public function storeReceive(AddReceiveRequest $request)
     {
         $number = CountersModel::get_number('SK');
-        if($number == false){
+        if ($number == false) {
             return view('errors.503');
         }
         $receiveOrder = new ReceiveOrderModel();
@@ -351,9 +379,9 @@ class ReceiveOrderController extends Controller
         $receiveOrder->number = $number;
         $receiveOrder->summary = $request->input('summary');
         $receiveOrder->receive_time = $request->input('receive_time');
-        if(!$receiveOrder->save()){
+        if (!$receiveOrder->save()) {
             return view('errors.503');
-        }else{
+        } else {
             return redirect('/receive');
         }
     }
@@ -365,16 +393,16 @@ class ReceiveOrderController extends Controller
     {
         $id = $request->input('id');
         $model = ReceiveOrderModel::find($id);
-        if(!$model){
-            return ajax_json(0,'error');
+        if (!$model) {
+            return ajax_json(0, 'error');
         }
-        if($model->type > 4 && $model->status == 0){
-            if(!$model->delete()){
-                return ajax_json(0,'error');
+        if ($model->type > 4 && $model->status == 0) {
+            if (!$model->delete()) {
+                return ajax_json(0, 'error');
             }
-            return ajax_json(1,'ok');
-        }else{
-            return ajax_json(0,'error');
+            return ajax_json(1, 'ok');
+        } else {
+            return ajax_json(0, 'error');
         }
     }
 
@@ -408,6 +436,7 @@ class ReceiveOrderController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->channellist(1);
     }
+
     /**
      * 待分销商确认列表
      */
@@ -419,7 +448,6 @@ class ReceiveOrderController extends Controller
     }
 
 
-
     /**
      * 待确认付款列表
      */
@@ -429,6 +457,7 @@ class ReceiveOrderController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->channellist(3);
     }
+
     /**
      * 完成列表
      */
@@ -440,40 +469,40 @@ class ReceiveOrderController extends Controller
     }
 
 //    渠道收款单列表
-    public function channellist($status=null)
+    public function channellist($status = null)
     {
-        if ($status === null){//变量值与类型完全相等
-            $channel = DistributorPaymentModel::orderBy('id','desc')->paginate($this->per_page);
-        }else{
-            $channel = DistributorPaymentModel::where('status',$status)->orderBy('id','desc')->paginate($this->per_page);
+        if ($status === null) {//变量值与类型完全相等
+            $channel = DistributorPaymentModel::orderBy('id', 'desc')->paginate($this->per_page);
+        } else {
+            $channel = DistributorPaymentModel::where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
         }
-          $user=new UserModel();
-        if (count($channel)>0){
-            foreach ($channel as $k=>$v){
-                $userId=UserModel::where('id',$v->distributor_user_id)->first();
+        $user = new UserModel();
+        if (count($channel) > 0) {
+            foreach ($channel as $k => $v) {
+                $userId = UserModel::where('id', $v->distributor_user_id)->first();
                 $channel[$k]['name'] = $userId->realname;
             }
         }
-        return view('home/receiveOrder.channellist',['channel'=>$channel,'tab_menu'=>$this->tab_menu]);
+        return view('home/receiveOrder.channellist', ['channel' => $channel, 'tab_menu' => $this->tab_menu]);
     }
 
 //    渠道收款单
     public function channel()
     {
-        $distributor=UserModel::where('supplier_distributor_type',1)->get();
-        return view('home/receiveOrder.channel',['distributor'=>$distributor]);
+        $distributor = UserModel::where('supplier_distributor_type', 1)->get();
+        return view('home/receiveOrder.channel', ['distributor' => $distributor]);
     }
 
 
     //添加或追加获取促销数量
     public function ajaxNum(Request $request)
     {
-        $distributor_user_id=$request->input('distributor_user_id');
+        $distributor_user_id = $request->input('distributor_user_id');
 
-        $id=$request->input('oid');
-        $sku_id=$request->input('sku_id');
-        $start_time=$request->input('start_time');
-        $end_time=$request->input('end_time');
+        $id = $request->input('oid');
+        $sku_id = $request->input('sku_id');
+        $start_time = $request->input('start_time');
+        $end_time = $request->input('end_time');
 //        $sku=OrderSkuRelationModel::where('sku_id',$sku_id)->get();
 //        foreach ($sku as $value){
 //            $sku->order_id[]=$value->order_id;
@@ -481,23 +510,23 @@ class ReceiveOrderController extends Controller
 //        $seles=OrderModel::whereIn('id',$sku->order_id)->whereBetween('order.order_send_time', [$start_time, $end_time])->get();
 
 
-        $sku=DB::table('order')
+        $sku = DB::table('order')
             ->join('order_sku_relation', 'order_sku_relation.order_id', '=', 'order.id')
-            ->where(['order.distributor_id'=>$distributor_user_id])
-            ->where('order_sku_relation.sku_id',$sku_id)
-            ->where('order_sku_relation.distributor_payment_id','=',0)
-            ->whereBetween('order.order_send_time',[$start_time,$end_time])
+            ->where(['order.distributor_id' => $distributor_user_id])
+            ->where('order_sku_relation.sku_id', $sku_id)
+            ->where('order_sku_relation.distributor_payment_id', '=', 0)
+            ->whereBetween('order.order_send_time', [$start_time, $end_time])
             ->get();
-        $seles=objectToArray($sku);
+        $seles = objectToArray($sku);
 
 
-        if (count($seles)>0) {
-            $num=0;
-            foreach ($seles as $v){
-            $num += $v['quantity'];
+        if (count($seles) > 0) {
+            $num = 0;
+            foreach ($seles as $v) {
+                $num += $v['quantity'];
             }
 
-        }else{
+        } else {
             return ajax_json(0, 'error', '暂无数据！');
         }
         return ajax_json(1, 'ok', $num);
@@ -506,31 +535,31 @@ class ReceiveOrderController extends Controller
     //编辑获取促销数量
     public function editNum(Request $request)
     {
-        $distributor_user_id=$request->input('distributor_user_id');
-        $id=$request->input('id');
-        $sku_id=$request->input('sku_id');
-        $start_time=$request->input('start_time');
-        $end_time=$request->input('end_time');
+        $distributor_user_id = $request->input('distributor_user_id');
+        $id = $request->input('id');
+        $sku_id = $request->input('sku_id');
+        $start_time = $request->input('start_time');
+        $end_time = $request->input('end_time');
 
-        $ids = substr($id,0,-1);
+        $ids = substr($id, 0, -1);
 //        $id_arr = explode(',',$ids);
 //        $skuids=implode(",",$sku_id);
 //        $skuids = substr($sku_id,0,-1);
-        $sku=DB::table('order')
+        $sku = DB::table('order')
             ->join('order_sku_relation', 'order_sku_relation.order_id', '=', 'order.id')
-            ->where(['order.distributor_id'=>$distributor_user_id])
-            ->where('order_sku_relation.sku_id',$sku_id)
-            ->where('order_sku_relation.distributor_payment_id','=',0)
-            ->whereBetween('order.order_send_time',[$start_time,$end_time])
+            ->where(['order.distributor_id' => $distributor_user_id])
+            ->where('order_sku_relation.sku_id', $sku_id)
+            ->where('order_sku_relation.distributor_payment_id', '=', 0)
+            ->whereBetween('order.order_send_time', [$start_time, $end_time])
             ->get();
-        $seles=objectToArray($sku);
+        $seles = objectToArray($sku);
 
-        if (count($seles)>0) {
-            $num=0;
-            foreach ($seles as $v){
+        if (count($seles) > 0) {
+            $num = 0;
+            foreach ($seles as $v) {
                 $num += $v['quantity'];
             }
-        }else{
+        } else {
             return ajax_json(0, 'error', 0);
         }
         return ajax_json(1, 'ok', $num);
@@ -540,14 +569,14 @@ class ReceiveOrderController extends Controller
 
     public function ajaxChannel(Request $request)
     {
-        $distributor_user_id=$request->input('distributor_user_id');
-        $start_time=$request->input('start_times');
-        $end_time=$request->input('end_times');
+        $distributor_user_id = $request->input('distributor_user_id');
+        $start_time = $request->input('start_times');
+        $end_time = $request->input('end_times');
 //        $sku_ids = $request->input('oid');
         $sku_ids = $request->input('sku_id');
         $length = $request->input('length');
-        $sku_id = substr($sku_ids,0,-1);
-        $sku_id_arr = explode(',',$sku_id);
+        $sku_id = substr($sku_ids, 0, -1);
+        $sku_id_arr = explode(',', $sku_id);
 
 //        $order = OrderModel::where(['distributor_id'=>$distributor_user_id])->whereBetween('created_at',[$start_time,$end_time])->get();
 //        $order = $order->toarray();
@@ -560,34 +589,34 @@ class ReceiveOrderController extends Controller
 //        }else{
 //            $sku = [];
 //        }
-        $sku=DB::table('order')
+        $sku = DB::table('order')
             ->join('order_sku_relation', 'order_sku_relation.order_id', '=', 'order.id')
-            ->where(['order.distributor_id'=>$distributor_user_id])
-            ->whereBetween('order.created_at',[$start_time,$end_time])
-            ->where('order_sku_relation.distributor_payment_id','=',0)
+            ->where(['order.distributor_id' => $distributor_user_id])
+            ->whereBetween('order.created_at', [$start_time, $end_time])
+            ->where('order_sku_relation.distributor_payment_id', '=', 0)
             ->get();
-        $sku=objectToArray($sku);
-        if (count($sku)>0) {
-            $new=[];
-            foreach ($sku as $k=>$v){
-                if(isset($new[$v['sku_id']])){
+        $sku = objectToArray($sku);
+        if (count($sku) > 0) {
+            $new = [];
+            foreach ($sku as $k => $v) {
+                if (isset($new[$v['sku_id']])) {
                     $new[$v['sku_id']]['quantity'] += $v['quantity'];
-                }else{
+                } else {
                     $new[$v['sku_id']] = $v;
                 }
             }
-            $skus=array_merge($new);
+            $skus = array_merge($new);
 
-            foreach($skus as $k=>$list){
-                if (count($sku_id_arr) > 0 && is_array($sku_id_arr)){
-                    if(in_array($list['sku_id'],$sku_id_arr)){
+            foreach ($skus as $k => $list) {
+                if (count($sku_id_arr) > 0 && is_array($sku_id_arr)) {
+                    if (in_array($list['sku_id'], $sku_id_arr)) {
                         unset($skus[$k]);
-                    }else {
+                    } else {
                         $skus[$k]['ids'] = $list['order_id'];
                         $skus[$k]['before_sort'] = $k + $length;
                         $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
                     }
-                }else{
+                } else {
                     $skus[$k]['ids'] = $list['order_id'];
                     $skus[$k]['before_sort'] = $k + $length;
                     $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
@@ -595,14 +624,14 @@ class ReceiveOrderController extends Controller
 
             }
 
-            $skus=array_merge($skus);
-            if(count($skus) == 0){
+            $skus = array_merge($skus);
+            if (count($skus) == 0) {
                 return ajax_json(0, 'error', '暂无匹配数据！');
 
-            }else{
+            } else {
                 return ajax_json(1, 'ok', $skus);
             }
-        }else{
+        } else {
             return ajax_json(0, 'error', '暂无数据！');
         }
     }
@@ -611,64 +640,64 @@ class ReceiveOrderController extends Controller
 
     public function ajaxAdd(Request $request)
     {
-        $distributor_user_id=$request->input('distributor_user_id');
-        $start_time=$request->input('start_times');
-        $end_time=$request->input('end_times');
+        $distributor_user_id = $request->input('distributor_user_id');
+        $start_time = $request->input('start_times');
+        $end_time = $request->input('end_times');
 //        $sku_ids = $request->input('oid');
         $sku_ids = $request->input('sku_id');
-        if (!empty($sku_ids)){
-            $sku_id = substr($sku_ids,0,-1);
-            $sku_id_arr = explode(',',$sku_id);
+        if (!empty($sku_ids)) {
+            $sku_id = substr($sku_ids, 0, -1);
+            $sku_id_arr = explode(',', $sku_id);
 
-        }else{
+        } else {
             $sku_ids = 0;
             $sku_id_arr = [];
         }
 
-        $sku=DB::table('order')
+        $sku = DB::table('order')
             ->join('order_sku_relation', 'order_sku_relation.order_id', '=', 'order.id')
-            ->where(['order.distributor_id'=>$distributor_user_id])
-            ->whereBetween('order.created_at',[$start_time,$end_time])
-            ->where('order_sku_relation.distributor_payment_id','=',0)
+            ->where(['order.distributor_id' => $distributor_user_id])
+            ->whereBetween('order.created_at', [$start_time, $end_time])
+            ->where('order_sku_relation.distributor_payment_id', '=', 0)
 //            ->select('order_sku_relation.id as skuid','order_sku_relation.order_id','order_sku_relation.order_id as id','order_sku_relation.sku_id','order_sku_relation.quantity','order_sku_relation.price','order_sku_relation.sku_number','order_sku_relation.sku_name','order.distributor_id','')
             ->get();
-        $sku=objectToArray($sku);
-        if (count($sku)>0) {
-            $new=[];
-            foreach ($sku as $k=>$v) {
+        $sku = objectToArray($sku);
+        if (count($sku) > 0) {
+            $new = [];
+            foreach ($sku as $k => $v) {
                 if (isset($new[$v['sku_id']])) {
                     $new[$v['sku_id']]['quantity'] += $v['quantity'];
                 } else {
                     $new[$v['sku_id']] = $v;
                 }
             }
-            $skus=array_merge($new);
+            $skus = array_merge($new);
 
-            foreach($skus as $k=>$list){
-                if (count($sku_id_arr) > 0 && is_array($sku_id_arr)){
+            foreach ($skus as $k => $list) {
+                if (count($sku_id_arr) > 0 && is_array($sku_id_arr)) {
 
-                    if(in_array($list['sku_id'],$sku_id_arr)){
+                    if (in_array($list['sku_id'], $sku_id_arr)) {
                         unset($skus[$k]);
-                    }else {
+                    } else {
                         $skus[$k]['ids'] = $list['order_id'];
                         $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
                         $skus[$k]['sku_ids'] = $sku_ids;
                     }
 
-                }else {
+                } else {
                     $skus[$k]['ids'] = $list['order_id'];
                     $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
 
                 }
             }
-            $skus=array_merge($skus);
-            if(count($skus) == 0){
+            $skus = array_merge($skus);
+            if (count($skus) == 0) {
                 return ajax_json(0, 'error', '暂无匹配数据！');
 
-            }else{
+            } else {
                 return ajax_json(1, 'ok', $skus);
             }
-        }else{
+        } else {
             return ajax_json(0, 'error', '暂无数据！');
         }
     }
@@ -677,40 +706,40 @@ class ReceiveOrderController extends Controller
 
     public function storeChannel(Request $request)
     {
-            $distributorPayment=new DistributorPaymentModel();
-            $distributorPayment->distributor_user_id=$request->input('distributor_user_id');
-            $distributorPayment->start_time = $request->input('start_times');
-            $distributorPayment->end_time = $request->input('end_times');
-            $distributorPayment->price = $request->input('skuTotalFee');
-            $distributorPayment->user_id = Auth::user()->id;
-            $numbers = CountersModel::get_number('QD');//渠道
-                if ($numbers == false) {
-                    return false;
-                }
-            $distributorPayment->number = $numbers;
-            $distributorPayment->status=1;
-            $result = $distributorPayment->save();
+        $distributorPayment = new DistributorPaymentModel();
+        $distributorPayment->distributor_user_id = $request->input('distributor_user_id');
+        $distributorPayment->start_time = $request->input('start_times');
+        $distributorPayment->end_time = $request->input('end_times');
+        $distributorPayment->price = $request->input('skuTotalFee');
+        $distributorPayment->user_id = Auth::user()->id;
+        $numbers = CountersModel::get_number('QD');//渠道
+        if ($numbers == false) {
+            return false;
+        }
+        $distributorPayment->number = $numbers;
+        $distributorPayment->status = 1;
+        $result = $distributorPayment->save();
 
-             $skuid = array_values($request->input('oid'));
+        $skuid = array_values($request->input('oid'));
 //            $oid = $request->input('all_skuid');
 //            $sku_id = substr($oid,0,-1);
 //            $sku_id_arr = explode(',',$sku_id);
-            $sku_id = array_values($request->input('sku_id'));
-            $sku_name=array_values($request->input('sku_name'));
-            $sku_number=array_values($request->input('sku_number'));
-            $quantity=array_values($request->input('quantity'));
-            $price=array_values($request->input('price'));
-            $number= array_values($request->input('number'));
-            $prices=array_values($request->input('prices'));
-            $start_time=array_values($request->input('start_time'));
-            $end_time=array_values($request->input('end_time'));
+        $sku_id = array_values($request->input('sku_id'));
+        $sku_name = array_values($request->input('sku_name'));
+        $sku_number = array_values($request->input('sku_number'));
+        $quantity = array_values($request->input('quantity'));
+        $price = array_values($request->input('price'));
+        $number = array_values($request->input('number'));
+        $prices = array_values($request->input('prices'));
+        $start_time = array_values($request->input('start_time'));
+        $end_time = array_values($request->input('end_time'));
 
 
-             if ($result) {
-                $target_id= $distributorPayment->id;
-                $num = count($sku_id);
+        if ($result) {
+            $target_id = $distributorPayment->id;
+            $num = count($sku_id);
 
-                for ($i = 0; $i < $num; $i++) {
+            for ($i = 0; $i < $num; $i++) {
                 $paymentReceiptOrderDetail = new PaymentReceiptOrderDetailModel();
                 $paymentReceiptOrderDetail->sku_id = $sku_id[$i];
                 $paymentReceiptOrderDetail->sku_name = $sku_name[$i];
@@ -718,10 +747,10 @@ class ReceiveOrderController extends Controller
                 $paymentReceiptOrderDetail->quantity = $quantity[$i];
                 $paymentReceiptOrderDetail->price = $price[$i];
                 $paymentReceiptOrderDetail->type = 1;
-                $paymentReceiptOrderDetail->target_id =$target_id;
+                $paymentReceiptOrderDetail->target_id = $target_id;
 
                 $favorables = [
-                    'number' =>$number[$i],
+                    'number' => $number[$i],
                     'price' => $prices[$i],
                     'start_time' => $start_time[$i],
                     'end_time' => $end_time[$i]
@@ -729,17 +758,17 @@ class ReceiveOrderController extends Controller
                 $paymentReceiptOrderDetail->favorable = json_encode($favorables);
                 $paymentReceiptOrderDetail->save();
 
-                 $OrderSkuRelation=new OrderSkuRelationModel();
-                 $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
-                 $a->distributor_payment_id=$distributorPayment->id;
+                $OrderSkuRelation = new OrderSkuRelationModel();
+                $a = OrderSkuRelationModel::where('sku_id', $paymentReceiptOrderDetail->sku_id)->get();
+                $a->distributor_payment_id = $distributorPayment->id;
 
-                    $res = DB::table('order_sku_relation')
-                        ->where('order_sku_relation.id', $skuid[$i])
-                        ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$prices[$i]]);
-                }
+                $res = DB::table('order_sku_relation')
+                    ->where('order_sku_relation.id', $skuid[$i])
+                    ->update(['distributor_payment_id' => $a->distributor_payment_id, 'distributor_price' => $prices[$i]]);
+            }
 
-                 return redirect('/receive/channellist');
-            } else {
+            return redirect('/receive/channellist');
+        } else {
             return view('errors.503');
         }
     }
@@ -747,39 +776,39 @@ class ReceiveOrderController extends Controller
 //    渠道收款单展示
     public function show(Request $request)
     {
-            $id=$request->id;
-            $distributorPayment=DistributorPaymentModel::where('id',$id)->first();
+        $id = $request->id;
+        $distributorPayment = DistributorPaymentModel::where('id', $id)->first();
 
-            $user=new UserModel();
-            $userId=UserModel::where('id',$distributorPayment->distributor_user_id)->first();
+        $user = new UserModel();
+        $userId = UserModel::where('id', $distributorPayment->distributor_user_id)->first();
 
-            $payment= new OrderSkuRelationModel();
-            $order = $payment
-                ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
-                ->join('order','order.id','=','order_sku_relation.order_id')
-                ->where(['order_sku_relation.distributor_payment_id'=>$distributorPayment->id])
-                ->select([
-                    'order.number',
-                    'order.outside_target_id',
-                    'distributor_payment.price',
-                    'order_sku_relation.sku_name',
-                    'order_sku_relation.quantity',
-                    'order_sku_relation.price',
-                    'order_sku_relation.sku_number',
-                    'order_sku_relation.distributor_price',
-                ])
-                ->get();
-                $orders=$order->toArray();
+        $payment = new OrderSkuRelationModel();
+        $order = $payment
+            ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->where(['order_sku_relation.distributor_payment_id' => $distributorPayment->id])
+            ->select([
+                'order.number',
+                'order.outside_target_id',
+                'distributor_payment.price',
+                'order_sku_relation.sku_name',
+                'order_sku_relation.quantity',
+                'order_sku_relation.price',
+                'order_sku_relation.sku_number',
+                'order_sku_relation.distributor_price',
+            ])
+            ->get();
+        $orders = $order->toArray();
 
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->orderBy("id","asc")->get();
-        foreach ($paymentReceiptOrderDetail as $k=>$v){
-            $favorable = json_decode($v['favorable'],true);
-            $paymentReceiptOrderDetail[$k]['prices']=$favorable['price'];
-            $paymentReceiptOrderDetail[$k]['start_time']=$favorable['start_time'];
-            $paymentReceiptOrderDetail[$k]['end_time']=$favorable['end_time'];
-            $paymentReceiptOrderDetail[$k]['numbers']=$favorable['number'];
+        $paymentReceiptOrderDetail = PaymentReceiptOrderDetailModel::where('target_id', $distributorPayment->id)->where('type', 1)->orderBy("id", "asc")->get();
+        foreach ($paymentReceiptOrderDetail as $k => $v) {
+            $favorable = json_decode($v['favorable'], true);
+            $paymentReceiptOrderDetail[$k]['prices'] = $favorable['price'];
+            $paymentReceiptOrderDetail[$k]['start_time'] = $favorable['start_time'];
+            $paymentReceiptOrderDetail[$k]['end_time'] = $favorable['end_time'];
+            $paymentReceiptOrderDetail[$k]['numbers'] = $favorable['number'];
         }
-        return view('home/receiveOrder.show', ['distributorPayment' => $distributorPayment,'userId'=>$userId,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'orders'=>$orders]);
+        return view('home/receiveOrder.show', ['distributorPayment' => $distributorPayment, 'userId' => $userId, 'paymentReceiptOrderDetail' => $paymentReceiptOrderDetail, 'orders' => $orders]);
 
     }
 
@@ -787,68 +816,68 @@ class ReceiveOrderController extends Controller
     //    渠道收款单审核
     public function ajaxVerify(Request $request)
     {
-        $id = $request->input('id')?$request->input('id'):'';
+        $id = $request->input('id') ? $request->input('id') : '';
 
-        $status = $request->input('status')?$request->input('status'):'';
-            if (empty($id)){
-                return ajax_json(1,'审核失败！');
-            }
+        $status = $request->input('status') ? $request->input('status') : '';
+        if (empty($id)) {
+            return ajax_json(1, '审核失败！');
+        }
         $distributorPayment = DistributorPaymentModel::find($id);
         $this->distributor = new DistributorPaymentModel();
 
-        $distributorPayment=$this->distributor->changeStatus($id,$status);
+        $distributorPayment = $this->distributor->changeStatus($id, $status);
 
-        if ($status == 4){//订单完成时填收款时间
-            $OrderSkuRelation=new OrderSkuRelationModel();
-            $OrderSkuRelation->supplier_receipt_time=$distributorPayment->created_at;
+        if ($status == 4) {//订单完成时填收款时间
+            $OrderSkuRelation = new OrderSkuRelationModel();
+            $OrderSkuRelation->supplier_receipt_time = $distributorPayment->created_at;
             $OrderSkuRelation->save();
         }
 
-            if($distributorPayment){
-                return ajax_json(1,'操作成功！');
+        if ($distributorPayment) {
+            return ajax_json(1, '操作成功！');
 
-            }else{
-                return ajax_json(0,'操作失败！');
+        } else {
+            return ajax_json(0, '操作失败！');
 
-            }
+        }
     }
 
 
     public function edit(Request $request)
     {
-        $user=new UserModel();
-        $userlist=UserModel::where('supplier_distributor_type',1)->get();//拿到分销商
+        $user = new UserModel();
+        $userlist = UserModel::where('supplier_distributor_type', 1)->get();//拿到分销商
 
-        $id=$request->input('id');
-        $distributorPayment=DistributorPaymentModel::find($id);
-        $uid=UserModel::where('id',$distributorPayment->distributor_user_id)->get();
+        $id = $request->input('id');
+        $distributorPayment = DistributorPaymentModel::find($id);
+        $uid = UserModel::where('id', $distributorPayment->distributor_user_id)->get();
 
 
-        $payment= new OrderSkuRelationModel();
+        $payment = new OrderSkuRelationModel();
         $order = $payment
             ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
-            ->join('order','order.id','=','order_sku_relation.order_id')
-            ->where(['order_sku_relation.distributor_payment_id'=>$distributorPayment->id])
-            ->select('order_sku_relation.id as oid','order_sku_relation.sku_id','order.id as order_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->where(['order_sku_relation.distributor_payment_id' => $distributorPayment->id])
+            ->select('order_sku_relation.id as oid', 'order_sku_relation.sku_id', 'order.id as order_id')
             ->get();
 
         $skuid_str = "";
         $sku_id_str = "";
         $order_id = "";
 
-        foreach ($order as $k=>$v){
-            $skuid_str .= $v['oid'].",";
-            $sku_id_str .= $v['sku_id'].",";
-            $order_id .= $v['order_id'].",";
+        foreach ($order as $k => $v) {
+            $skuid_str .= $v['oid'] . ",";
+            $sku_id_str .= $v['sku_id'] . ",";
+            $order_id .= $v['order_id'] . ",";
         }
-        foreach($order as $key=>$val){
+        foreach ($order as $key => $val) {
             $skuid_arr[] = $val['oid'];
             $sku_id_arr[] = $val['sku_id'];
             $order_arr[] = $val['order_id'];
         }
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->orderBy("id","asc")->get();
-        if ($paymentReceiptOrderDetail){
-            foreach ($paymentReceiptOrderDetail as $k=>$v){
+        $paymentReceiptOrderDetail = PaymentReceiptOrderDetailModel::where('target_id', $distributorPayment->id)->where('type', 1)->orderBy("id", "asc")->get();
+        if ($paymentReceiptOrderDetail) {
+            foreach ($paymentReceiptOrderDetail as $k => $v) {
                 $favorable = json_decode($v->favorable, true);
                 $paymentReceiptOrderDetail[$k]['jia'] = intval($v['price']);
                 $paymentReceiptOrderDetail[$k]['number'] = $favorable['number'];
@@ -861,14 +890,14 @@ class ReceiveOrderController extends Controller
                 $paymentReceiptOrderDetail[$k]['order_id'] = $order_arr[$k];
             }
             $sku_id = [];
-            foreach ($paymentReceiptOrderDetail as $k=>$v) {
+            foreach ($paymentReceiptOrderDetail as $k => $v) {
                 $paymentReceiptOrderDetail[$k]['sort'] = $k;
                 $sku_id[] = $v->sku_id;
             }
             $count = count($paymentReceiptOrderDetail);
             $sku_id = implode(',', $sku_id);
         }
-        return view('home/receiveOrder.editChannel',['userlist'=>$userlist,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'distributorPayment'=>$distributorPayment,'sku_id'=>$sku_id,'count'=>$count,'uid'=>$uid,"skuid_str" => $skuid_str,'sku_id_str'=>$sku_id_str,'order_id'=>$order_id]);
+        return view('home/receiveOrder.editChannel', ['userlist' => $userlist, 'paymentReceiptOrderDetail' => $paymentReceiptOrderDetail, 'distributorPayment' => $distributorPayment, 'sku_id' => $sku_id, 'count' => $count, 'uid' => $uid, "skuid_str" => $skuid_str, 'sku_id_str' => $sku_id_str, 'order_id' => $order_id]);
 
     }
 
@@ -882,18 +911,18 @@ class ReceiveOrderController extends Controller
         $user_id = Auth::user()->id;
 
         $oid = $request->input('all_skuid');
-        $sku_id = substr($oid,0,-1);
-        $sku_id_arr = explode(',',$sku_id);
+        $sku_id = substr($oid, 0, -1);
+        $sku_id_arr = explode(',', $sku_id);
         $sku_id = array_values($request->input('sku_id'));
         $sku_name = array_values($request->input('sku_name'));
         $sku_number = array_values($request->input('sku_number'));
         $quantity = array_values($request->input('quantity'));
         $price = array_values($request->input('price'));
 
-        $number= array_values($request->input('number'));
-        $prices=array_values($request->input('prices'));
-        $start_time=array_values($request->input('start_time'));
-        $end_time=array_values($request->input('end_time'));
+        $number = array_values($request->input('number'));
+        $prices = array_values($request->input('prices'));
+        $start_time = array_values($request->input('start_time'));
+        $end_time = array_values($request->input('end_time'));
 
         $distributorPayment = DistributorPaymentModel::find($id);
         $distributorPayment->distributor_user_id = $distributor_user_id;
@@ -901,11 +930,11 @@ class ReceiveOrderController extends Controller
         $distributorPayment->end_time = $end_times;
         $distributorPayment->price = $total_price;
         $distributorPayment->user_id = $user_id;
-        $result=$distributorPayment->save();
+        $result = $distributorPayment->save();
         if ($result) {
-            DB::table('payment_receipt_order_detail')->where('target_id', $id)->where('type',1)->delete();
+            DB::table('payment_receipt_order_detail')->where('target_id', $id)->where('type', 1)->delete();
 
-            $target_id= $distributorPayment->id;
+            $target_id = $distributorPayment->id;
             $num = count($sku_id);
             for ($i = 0; $i < $num; $i++) {
                 $paymentReceiptOrderDetail = new PaymentReceiptOrderDetailModel();
@@ -917,7 +946,7 @@ class ReceiveOrderController extends Controller
                 $paymentReceiptOrderDetail->type = 1;
                 $paymentReceiptOrderDetail->target_id = $target_id;
                 $favorables = [
-                    'number' =>$number[$i],
+                    'number' => $number[$i],
                     'price' => $prices[$i],
                     'start_time' => $start_time[$i],
                     'end_time' => $end_time[$i]
@@ -925,18 +954,18 @@ class ReceiveOrderController extends Controller
                 $paymentReceiptOrderDetail->favorable = json_encode($favorables);
                 $paymentReceiptOrderDetail->save();
 
-                $OrderSkuRelation=new OrderSkuRelationModel();
-                $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
-                $a->distributor_payment_id=$distributorPayment->id;
+                $OrderSkuRelation = new OrderSkuRelationModel();
+                $a = OrderSkuRelationModel::where('sku_id', $paymentReceiptOrderDetail->sku_id)->get();
+                $a->distributor_payment_id = $distributorPayment->id;
 
                 $res = DB::table('order_sku_relation')
-                    ->where('order_sku_relation.id',$sku_id_arr[$i])
-                    ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$prices[$i]]);
+                    ->where('order_sku_relation.id', $sku_id_arr[$i])
+                    ->update(['distributor_payment_id' => $a->distributor_payment_id, 'distributor_price' => $prices[$i]]);
             }
 
             return redirect('/receive/channellist');
         } else {
-            return ajax_json(0,'error');
+            return ajax_json(0, 'error');
         }
 
 
@@ -949,47 +978,47 @@ class ReceiveOrderController extends Controller
             return ajax_json(0, 'error');
         }
         $distributorPayment = DistributorPaymentModel::find($id);
-        if(!$distributorPayment){
-            return ajax_json(0,'error');
+        if (!$distributorPayment) {
+            return ajax_json(0, 'error');
         }
 
-        $order_sku = OrderSkuRelationModel::where('distributor_payment_id',$distributorPayment->id)->get();
+        $order_sku = OrderSkuRelationModel::where('distributor_payment_id', $distributorPayment->id)->get();
 
 
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
-        if(Auth::user()->hasRole(['admin']) && $distributorPayment->status < 4){//已完成的不能删除
+        $paymentReceiptOrderDetail = PaymentReceiptOrderDetailModel::where('target_id', $distributorPayment->id)->where('type', 1)->get();
+        if (Auth::user()->hasRole(['admin']) && $distributorPayment->status < 4) {//已完成的不能删除
             $distributorPayment->forceDelete();
-            if (count($paymentReceiptOrderDetail)>0) {
+            if (count($paymentReceiptOrderDetail) > 0) {
                 foreach ($paymentReceiptOrderDetail as $v) {
                     $v->forceDelete();
                 }
             }
-            if (count($order_sku)>0) {
+            if (count($order_sku) > 0) {
                 foreach ($order_sku as $v) {
                     $res = DB::table('order_sku_relation')
-                        ->where('order_sku_relation.distributor_payment_id',$distributorPayment->id)
-                        ->update(['distributor_payment_id' => '0','distributor_price'=>'0.00']);
-                }
-            }
-            return ajax_json(1,'ok');
-        }else if ($paymentReceiptOrderDetail->type = 1 && $distributorPayment->status < 4) {
-            $distributorPayment->forceDelete();
-            if (count($paymentReceiptOrderDetail)>0) {
-                foreach ($paymentReceiptOrderDetail as $v) {
-                    $v->forceDelete();
-                }
-            }
-            if (count($order_sku)>0) {
-                foreach ($order_sku as $v) {
-                    $res = DB::table('order_sku_relation')
-                        ->where('order_sku_relation.distributor_payment_id',$distributorPayment->id)
-                        ->update(['distributor_payment_id' => '0','distributor_price'=>'0.00']);
+                        ->where('order_sku_relation.distributor_payment_id', $distributorPayment->id)
+                        ->update(['distributor_payment_id' => '0', 'distributor_price' => '0.00']);
                 }
             }
             return ajax_json(1, 'ok');
-        } else{
-                return ajax_json(0,'error');
+        } else if ($paymentReceiptOrderDetail->type = 1 && $distributorPayment->status < 4) {
+            $distributorPayment->forceDelete();
+            if (count($paymentReceiptOrderDetail) > 0) {
+                foreach ($paymentReceiptOrderDetail as $v) {
+                    $v->forceDelete();
+                }
             }
+            if (count($order_sku) > 0) {
+                foreach ($order_sku as $v) {
+                    $res = DB::table('order_sku_relation')
+                        ->where('order_sku_relation.distributor_payment_id', $distributorPayment->id)
+                        ->update(['distributor_payment_id' => '0', 'distributor_price' => '0.00']);
+                }
+            }
+            return ajax_json(1, 'ok');
+        } else {
+            return ajax_json(0, 'error');
         }
+    }
 
 }
