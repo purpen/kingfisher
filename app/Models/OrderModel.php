@@ -154,6 +154,14 @@ class OrderModel extends BaseModel
         return $this->belongsTo('App\Models\AddressModel', 'address_id');
     }
 
+    /**
+     * 相对关联到发票历史表表
+     */
+    public function historyInvoice()
+    {
+        return $this->belongsTo('App\Models\HistoryInvoiceModel', 'id');
+    }
+
 
     /**
      *  获取一般纳税人证明图片
