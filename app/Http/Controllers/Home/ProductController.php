@@ -166,6 +166,7 @@ class ProductController extends Controller
         $product->unit = $request->input('unit','');
         $product->weight = $request->input('weight');
         $product->summary = $request->input('summary','');
+        $product->content = $request->input('content','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
         $product->product_details = $request->input('product_details','');
@@ -310,6 +311,7 @@ class ProductController extends Controller
         $product->type = 1;
         $product->user_id = Auth::user()->id;
         $product->product_details = $request->input('product_details','');
+        $product->content = $request->input('content','');
         $result = $product->update();
 
         if($result){
