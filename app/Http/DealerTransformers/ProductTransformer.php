@@ -93,6 +93,7 @@ class ProductTransformer extends TransformerAbstract
             'image' => $product->imag,
 //            'product_details' =>$product->detial_img,
             'product_details' =>$product->detail,
+            'mode' =>$product->mode?$product->mode:'',
             'follows' =>$product->follows,
             'follow' =>$product->follow,
             'skus' => $all,

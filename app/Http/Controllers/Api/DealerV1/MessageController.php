@@ -497,15 +497,15 @@ class MessageController extends BaseController
             $distributors->store_address = $request->input('store_address');
             $distributors->enter_Address = $request->input('enter_Address');
             $distributor = $distributors->update($all);
-            if ($distributor){
-                $users = new UserModel();
-//                $users->realname = $request['name'];
-//                $users->phone = $request['phone'];
-//                $user = $users->update();
-                $user =DB::table('users')
-                    ->where('id','=',$this->auth_user_id)
-                    ->update(['realname'=>$request['name'],'phone'=>$request['phone']]);
-            }
+//            if ($distributor){
+//                $users = new UserModel();
+////                $users->realname = $request['name'];
+////                $users->phone = $request['phone'];
+////                $user = $users->update();
+//                $user =DB::table('users')
+//                    ->where('id','=',$this->auth_user_id)
+//                    ->update(['realname'=>$request['name'],'phone'=>$request['phone']]);
+//            }
         }else{
             return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
         }

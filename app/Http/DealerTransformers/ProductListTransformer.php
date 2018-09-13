@@ -20,7 +20,8 @@ class ProductListTransformer extends TransformerAbstract
             'image' => $products->big_img,
             'product_details' =>$products->detial_img,
             'categories' => $products->categories?$products->categories:'',
-            'follow' => $products->follow
+            'follow' => $products->follow,
+            'mode' => $products->mode?$products->mode:''
         ];
     }
 

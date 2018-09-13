@@ -101,6 +101,7 @@ class ProductsController extends BaseController
      * "sales_number": 23                           // 销售数量
      * "follows":109                                //此商品被关注数量
      * "follow":0                                //有未被关注 0.无 1.有
+     * "mode":1                                //是否为月结 1.月结 2.非月结
      * "skus": [
      * {
      * "sku_id": 42,
@@ -295,6 +296,7 @@ class ProductsController extends BaseController
      * "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
      * "price": "200.00",                      // 商品价格
      * "inventory": 1,                         // 库存
+     * "mode": 1,                         // 是否为月结 1.月结 2.非月结
      * "image": "http://www.work.com/images/default/erp_product.png",  //商品图
      * "product_details":  "http://www.work.com/images/default/erp_product1.png", //商品详情介绍图
      * "categories"：  //分类名称

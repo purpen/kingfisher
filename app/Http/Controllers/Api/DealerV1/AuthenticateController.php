@@ -786,7 +786,7 @@ class AuthenticateController extends BaseController
          * @apiParam {string} random random
          * @apiParam {integer} id id
          * @apiParam {string} phone 门店联系人手机号
-         * @apiParam {string} realname 姓名
+         * @apiParam {string} name 门店联系人姓名
          * @apiParam {integer} cover_id 头像id
          * @apiParam {string} email email
          * @apiParam {integer} sex 性别
@@ -807,7 +807,7 @@ class AuthenticateController extends BaseController
             $all['id'] = $request->input('id');
             $rules = [
                 'phone' => 'required',
-                'realname' => 'required',
+                'name' => 'required',
                 'cover_id' => 'required',
                 ];
 
@@ -817,14 +817,12 @@ class AuthenticateController extends BaseController
             }
             $users = UserModel::where('id', $this->auth_user_id)->first();
             if ($users){
-                $users->verify_status = 1;
-                $users->supplier_distributor_type = 3;
-                $user = $users->update($all);
+                $user = $users->update(['cover_id'=>$request['cover_id'],'verify_status'=>1,'supplier_distributor_type'=>3]);
                 if ($user){
                     $distributors = new DistributorModel();
                     $distributor =DB::table('distributor')
                         ->where('user_id','=',$this->auth_user_id)
-                        ->update(['name'=>$request['realname'],'phone'=>$request['phone']]);
+                        ->update(['name'=>$request['name'],'phone'=>$request['phone']]);
                 }
             }else{
                 return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
