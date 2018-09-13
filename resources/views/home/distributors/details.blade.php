@@ -42,6 +42,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
+                    {{--<form id="add-product" role="form" class="form-horizontal" method="post">--}}
+                        {{--{{ csrf_field() }}--}}
                     <div class="row mb-2r" id="update-product-img">
 
                         <div class="col-md-2 mb-3r" style="display: none">
@@ -144,10 +146,11 @@
                             <h5>商品分类</h5>
                             <hr>
                             <div class="form-group">
-                                <label for="category_id" class="col-sm-2 control-label {{ $errors->has('category_id') ? ' has-error' : '' }}">选择商品分类<em>*</em></label>
                                 <div class="col-sm-3">
+                                    <label for="category_id" class="col-sm-6 control-label {{ $errors->has('category_id') ? ' has-error' : '' }}">选择商品分类<em>*</em></label>
+
                                     <div class="input-group  col-md-12">
-                                        <div class="col-sm-8" style="padding-top:5px">
+                                        <div class="col-sm-6" style="padding-top:5px">
                                             @foreach($categorys as $list)
                                                 @if($list['type'] == 1)
                                         <input type="checkbox" name="category_id" id="category_id" class="checkcla" required value="{{ $list->id }}"  @if(in_array($list->id,$categorie)) checked="checked" @endif>{{ $list->title }}
@@ -158,13 +161,12 @@
                                         <input type="hidden" name="diyu" id="diyu" value="@Model.diyu" />
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label for="authorization_id" class="col-sm-2 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型<em>*</em></label>
                                 <div class="col-sm-3">
+                                    <label for="authorization_id" class="col-sm-6 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型<em>*</em></label>
+
                                     <div class="input-group  col-md-12">
-                                        <div class="col-sm-8" style="padding-top:5px">
+                                        <div class="col-sm-6" style="padding-top:5px">
                                             @foreach($authorization as $list)
                                                 @if($list['type'] == 2)
                                                     <input type="checkbox" name="authorization_id" id="authorization_id" class="checkcla" required value="{{ $list->id }}"  @if(in_array($list->id,$authoriza)) checked="checked" @endif>{{ $list->title }}
@@ -175,8 +177,62 @@
                                         <input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />
                                     </div>
                                 </div>
-                            </div>
 
+
+                                <div class="col-sm-3">
+                                    <label for="mode" class="col-sm-6 control-label">选择是否月结<em>*</em></label>
+                                    <div class="input-group col-md-6">
+                                        <select class="chosen-select" name="mode">
+                                            <option value="" >请选择是否月结</option>
+                                                <option value="1"{{ $distributors->mode == 1?'selected':'' }}>月结</option>
+                                                <option value="2"{{ $distributors->mode == 2?'selected':'' }}>非月结</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br>
+                                <div class="form-group" style="padding-top: 100px">
+                                <h5>电子版合同<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
+                                <hr>
+                                <div class="row mb-2r sku-pic">
+                                    <div class="row mb-2r" id="update-product-img">
+                                        <div class="col-md-2">
+                                            <div id="picForm" enctype="multipart/form-data">
+                                                <div class="img-add">
+                                                    <span class="glyphicon glyphicon-plus f46"></span>
+                                                    <p class="uptitle">添加图片</p>
+                                                    <div id="fine-uploader"></div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="contract_id" name="contract_id" value="{{$distributors->contract_id}}">
+                                            <script type="text/template" id="qq-template">
+                                                <div id="add-img" class="qq-uploader-selector qq-uploader">
+                                                    <div class="qq-upload-button-selector qq-upload-button">
+                                                        <div>上传图片</div>
+                                                    </div>
+                                                    <ul class="qq-upload-list-selector qq-upload-list">
+                                                        <li hidden></li>
+                                                    </ul>
+                                                </div>
+                                            </script>
+                                        </div>
+                                        <div class="col-md-2 mb-3r" style="display: none">
+                                            <div style="width: 70px;height: 5px;background: lightblue;">
+                                                <div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+                                            </div>
+                                        </div>
+                                            <div class="col-md-2">
+                                                <div class="asset">
+                                                    @if($assets_contract)
+                                                        <img src="{{ $assets_contract->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                                    @endif
+{{--                                                    <a class="removeimg" value="{{ $asset->id }}"><i class="glyphicon glyphicon-remove"></i></a>--}}
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <input type="hidden" name="random" value="{{ $random }}">
+                                    <input type="hidden" id="id" name="id" value="{{ $distributors->id }}">
+                                    <input type="hidden" id="user_id" name="user_id" value="{{ $user_id }}">
                             <div class="col-sm-12" style="text-align: center">
 
                                 <button type="button" id="batch-verify" class="btn btn-success mr-2r">
@@ -192,6 +248,7 @@
                     </div>
                 </div>
             </div>
+                    {{--</form>--}}
         </div>
 	</div>
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
@@ -212,7 +269,7 @@
     $('#Jszzdm').val($("input[name='authorization_id']:checked").map(function(){
     return this.value
     }).get().join(','))
-    })
+    });
 
     {{--商品分类--}}
     $("input[name='category_id']").change(function(){
@@ -222,14 +279,14 @@
     })
 
 
-
     $(document).on("click","#batch-verify",function(obj){
     layer.confirm('确认要通过审核吗？',function(index){
     var id =  $("input[name='id']").val();
     var Jszzdm =  $("input[name='Jszzdm']").val();
     var diyu =  $("input[name='diyu']").val();
-
-    $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu}, function (data) {
+    var mode =  $("select[name='mode']").val();
+    var contract_id =  $("input[name='contract_id']").val();
+    $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu,'mode':mode,'contract_id':contract_id}, function (data) {
     if(data.status == 0){
     layer.msg('操作成功！');
     {{--window.location.go(-1);--}}
@@ -266,4 +323,57 @@
     },'json');
     });
     });
+
+    new qq.FineUploader({
+    element: document.getElementById('fine-uploader'),
+    autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+    // 远程请求地址（相对或者绝对地址）
+    request: {
+    endpoint: 'https://up.qbox.me',
+    params:  {
+                "token": '{{ $token }}',
+                "x:random": '{{ $random }}',
+                "x:user_id":'{{ $user_id }}',
+                "x:target_id":'{{ $distributors->id }}',
+                "x:type": 19,
+    },
+    inputName:'file',
+    },
+    validation: {
+    allowedExtensions: ['jpeg', 'jpg', 'png'],
+    sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+    },
+    messages: {
+    typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+    sizeError: "上传文件最大不超过3M"
+    },
+    //回调函数
+    callbacks: {
+    //上传完成后
+    onComplete: function(id, fileName, responseJSON) {
+    if (responseJSON.success) {
+    console.log(responseJSON.success);
+    $("#contract_id").val(responseJSON.asset_id);
+
+    $('.sku-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+
+    $('.removeimg').click(function(){
+    var id = $(this).attr("value");
+    var img = $(this);
+    $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+    if(e.status){
+    img.parent().remove();
+    }else{
+    console.log(e.message);
+    }
+    },'json');
+
+    });
+    } else {
+    alert('上传图片失败');
+    }
+    }
+    }
+    });
+
 @endsection

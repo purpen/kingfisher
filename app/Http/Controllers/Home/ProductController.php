@@ -128,15 +128,15 @@ class ProductController extends Controller
         //获取七牛上传token
         $token = QiniuApi::upToken();
 
-        /*获取商品编码  暂时让自己手添*/
-//        $number = $this->uniqueNumber();'number' => $number,
+        /*获取商品编码*/
+        $number = $this->uniqueNumber();
 
         $this->tab_menu = 'default';
 
         $province = new ChinaCityModel();
         $provinces = $province->fetchCity();//所有省
 
-        return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token, 'tab_menu' => $this->tab_menu,'name' => '', 'supplier_id' => 0,
+        return view('home/product.create',['number' => $number,'lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token, 'tab_menu' => $this->tab_menu,'name' => '', 'supplier_id' => 0,
         'provinces'=>$provinces]);
     }
 
@@ -170,6 +170,7 @@ class ProductController extends Controller
         $product->type = 1;
         $product->user_id = Auth::user()->id;
         $product->product_details = $request->input('product_details','');
+        $product->mode = $request->input('mode','');
         if($product->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
@@ -311,7 +312,9 @@ class ProductController extends Controller
         $product->type = 1;
         $product->user_id = Auth::user()->id;
         $product->product_details = $request->input('product_details','');
+
         $product->content = $request->input('content','');
+        $product->mode = $request->input('mode','');
         $result = $product->update();
 
         if($result){

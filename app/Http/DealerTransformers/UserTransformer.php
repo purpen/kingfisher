@@ -12,13 +12,13 @@ class UserTransformer extends TransformerAbstract
         return [
             'id' => (int)$users->id,
             'phone' => $users->phone,
-            'account' => $users->account,
             'realname' => $users->realname,
             'status' => (int)$users->status,
             'type' => (int)$users->type,
             'file' => $users->file,
             'verify_status' => (int)$users->verify_status,
             'distributor_status'=>$users->distributor_status,
+            'distributor_mode'=>$users->distributor_mode,
         ];
     }
 }

@@ -288,7 +288,7 @@ class AuthenticateController extends BaseController
             $distributors->legal_number = $request->input('legal_number','');
             $distributors->store_address = $request->input('store_address','');
             $distributors->enter_Address = $request->input('enter_Address','');
-            $distributors->contract_id = $request->input('contract_id','');
+            $distributors->contract_id = $request->input('enter_Address','');
             $distributors->mode = $request->input('mode','');
             $distributors->status = 1;
             $result = $distributors->save();
@@ -736,13 +736,13 @@ class AuthenticateController extends BaseController
         * {
         * "data": {
         * "id": 1,
-        * "account": "张三",               // 用户名称
         * "realname": "张三疯",               // 真实姓名
         * "phone": "15810295774",                 // 手机号
         * "status": 1                             // 状态 0.未激活 1.激活
         * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
         * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
         * "distributor_status": 0                       //审核状态：1.待审核；2.已审核；3.关闭；4.重新审核
+        * "mode": "月结",               // 是否可以月结 1.月结 2.非月结
         * },
         *
         * "meta": {
@@ -757,11 +757,13 @@ class AuthenticateController extends BaseController
            $user_id = $this->auth_user_id;
            $users = UserModel::where('id', $user_id)->first();
 //           获取经销商审核状态
-           $distributor_status = DistributorModel::where('user_id',$users->id)->select('status')->first();
+           $distributor_status = DistributorModel::where('user_id',$users->id)->select('status','mode')->first();
            if ($distributor_status){
                $users['distributor_status'] = $distributor_status['status'];
+               $users['distributor_mode'] = $distributor_status['mode'];
            }else{
                $users['distributor_status'] = 0;
+               $users['distributor_mode'] = 0;
            }
            $assets = AssetsModel
                ::find($users->cover_id);
@@ -784,7 +786,7 @@ class AuthenticateController extends BaseController
          * @apiParam {string} random random
          * @apiParam {integer} id id
          * @apiParam {string} phone 门店联系人手机号
-         * @apiParam {string} realname 姓名
+         * @apiParam {string} name 门店联系人姓名
          * @apiParam {integer} cover_id 头像id
          * @apiParam {string} email email
          * @apiParam {integer} sex 性别
@@ -804,9 +806,8 @@ class AuthenticateController extends BaseController
             $all = $request->all();
             $all['id'] = $request->input('id');
             $rules = [
-                'account' => 'required',
                 'phone' => 'required',
-                'realname' => 'required',
+                'name' => 'required',
                 'cover_id' => 'required',
                 ];
 
@@ -816,14 +817,12 @@ class AuthenticateController extends BaseController
             }
             $users = UserModel::where('id', $this->auth_user_id)->first();
             if ($users){
-                $users->verify_status = 1;
-                $users->supplier_distributor_type = 3;
-                $user = $users->update($all);
+                $user = $users->update(['cover_id'=>$request['cover_id'],'verify_status'=>1,'supplier_distributor_type'=>3]);
                 if ($user){
                     $distributors = new DistributorModel();
                     $distributor =DB::table('distributor')
                         ->where('user_id','=',$this->auth_user_id)
-                        ->update(['name'=>$request['realname'],'phone'=>$request['phone']]);
+                        ->update(['name'=>$request['name'],'phone'=>$request['phone']]);
                 }
             }else{
                 return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));

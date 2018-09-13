@@ -8,6 +8,7 @@
 .idea/
 bootstrap/cache
 /storage/
+/storage/framework/
 composer.lock
 composer.phar
 /vendor/

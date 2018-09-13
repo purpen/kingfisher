@@ -145,7 +145,7 @@
                         <div class="form-group">
                             <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号<em>*</em></label>
                             <div class="col-sm-3">
-                                <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}">
+                                <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}" readonly>
                                 @if ($errors->has('number'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('number') }}</strong>
@@ -199,7 +199,7 @@
                                 @endif
                             </div>
                 
-                            <label for="sale_price" class="col-sm-1 control-label {{ $errors->has('sale_price') ? ' has-error' : '' }}">建议售价<small>(元)</small><em>*</em></label>
+                            <label for="sale_price" class="col-sm-1 control-label {{ $errors->has('sale_price') ? ' has-error' : '' }}">供货价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" id="sale_price" name="sale_price" ordertype="b2cCode" class="form-control" value="{{ $product->sale_price }}">
                                 @if ($errors->has('sale_price'))
@@ -209,6 +209,20 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="mode" class="col-sm-2 control-label {{ $errors->has('mode') ? ' has-error' : '' }}">选择是否能月结<em>*</em></label>
+                            <div class="col-sm-3">
+                                <div class="input-group col-md-8">
+                                    <select class="chosen-select" name="mode">
+                                        <option value="" >请选择是否月结</option>
+                                        <option value="1"{{ $product->mode == 1?'selected':'' }}>月结</option>
+                                        <option value="2"{{ $product->mode == 2?'selected':'' }}>非月结</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="weight" class="col-sm-2 control-label {{ $errors->has('weight') ? ' has-error' : '' }}">重量<small>(kg)</small></label>
                             <div class="col-sm-3">
@@ -339,9 +353,10 @@
                                         <th>序号</th>
                                         <th>图片</th>
                                         <th>69码</th>
+                                        <th>sku编码</th>
                                         <th>成本价</th>
                                         <th>市场售价</th>
-                                        <th>建议售价</th>
+                                        <th>供货价</th>
                                         <th>颜色/型号</th>
                                         <th>重量（kg）</th>
                                         <th>自定义库存</th>
@@ -358,6 +373,9 @@
                                         </td>
                                         <td>
                                            {{ $sku->number }}
+                                        </td>
+                                        <td>
+                                           {{ $sku->unique_number }}
                                         </td>
                                         <td>
                                             {{$sku->cost_price}}
@@ -425,9 +443,9 @@
 							<input type="hidden" name="product_number" value="{{ $product->number }}">
                             
                             <div class="form-group">
-                                <label for="number" class="col-sm-2 control-label">69码</label>
+                                <label for="number" class="col-sm-2 control-label">sku编码</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="number" ordertype="b2cCode" class="form-control" id="add_number">
+                                    <input type="text" name="number" ordertype="b2cCode" class="form-control" id="add_number" value="" readonly>
                                 </div>
                                 <label for="cost_price" class="col-sm-2 control-label">成本价</label>
                                 <div class="col-sm-4">
@@ -435,7 +453,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="price" class="col-sm-2 control-label">建议售价</label>
+                                <label for="price" class="col-sm-2 control-label">供货价</label>
                                 <div class="col-sm-4">
                                     <input type="text" id="price" name="price" class="form-control">
                                 </div>
@@ -444,6 +462,20 @@
                                     <input type="text" id="bid_price" name="bid_price" class="form-control">
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label for="mode" class="col-sm-2 control-label">选择是否能月结<em>*</em></label>
+                                <div class="col-sm-3">
+                                    <div class="input-group col-md-8">
+                                        <select class="chosen-select" name="mode">
+                                            <option value="" >请选择是否月结</option>
+                                            <option value="1"{{ $product->mode == 1?'selected':'' }}>月结</option>
+                                            <option value="2"{{ $product->mode == 2?'selected':'' }}>非月结</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="mode" class="col-sm-2 control-label">颜色/型号</label>
                                 <div class="col-sm-4">
@@ -455,7 +487,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">品牌sku编号</label>
+                                <label for="unique_number" class="col-sm-2 control-label">69码</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="unique_number" class="form-control">
                                 </div>
@@ -475,8 +507,8 @@
                             <div class="form-group">
 
                                 <div class="col-md-12">
-                                    <h5> <a id="appendnum" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
-                                    <hr>
+                                    <h5> <a id="appendnum" data-toggle="modal" style="float: left"><i class="glyphicon glyphicon-plus"></i>添加价格区间(<em>*</em><em>*</em><em>*</em>必填项,填完请点击保存 )</a></h5>
+
                                     <strong style="float: left;color: red">注:价格区间第一行下限数量必须是1;从第二行开始每一行的下限数量需是上一行上限数量+1</strong>
                                     <table class="table table-bordered table-striped">
                                         <thead>
@@ -574,9 +606,9 @@
                             <input type="hidden" name="id" id="sku-id">
                             
                             <div class="form-group">
-                                <label for="number" class="col-sm-2 control-label">69码</label>
+                                <label for="number" class="col-sm-2 control-label">sku编码</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="number" ordertype="b2cCode" id="up-number" class="form-control">
+                                    <input type="text" name="number" ordertype="b2cCode" id="up-number" class="form-control" disabled>
                                 </div>
                                 <label for="cost_price" class="col-sm-2 control-label">成本价</label>
                                 <div class="col-sm-4">
@@ -584,7 +616,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="price" class="col-sm-2 control-label">建议售价</label>
+                                <label for="price" class="col-sm-2 control-label">供货价</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="price" ordertype="b2cCode" id="up-price" class="form-control">
                                 </div>
@@ -604,7 +636,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">品牌sku编号</label>
+                                <label for="unique_number" class="col-sm-2 control-label">69码</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="up-unique_number" class="form-control">
                                 </div>
@@ -624,8 +656,8 @@
                             <div class="form-group">
 
                                 <div class="col-md-12">
-                                    <h5> <a id="appendnums" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
-                                    <hr>
+                                    <h5> <a id="appendnums" data-toggle="modal" style="float: left"><i class="glyphicon glyphicon-plus"></i>添加价格区间(<em>*</em><em>*</em><em>*</em>必填项,填完请点击保存 )</a></h5>
+
                                     <strong style="float: left;color: red">注:价格区间第一行下限数量必须是1;从第二行开始每一行的下限数量需是上一行上限数量+1</strong>
                                     <table class="table table-bordered table-striped">
                                         <thead>
@@ -1139,35 +1171,35 @@
                 }
             },
             unique_number: {
-                {{--validators: {--}}
-                    {{--notEmpty: {--}}
-                        {{--message: '站外编号不能为空！'--}}
-                    {{--}--}}
-                {{--},--}}
-                onError: function(e, data) {
-                    remove_message();
+                validators: {
+                    notEmpty: {
+                        message: '69码不能为空！'
+                    }
                 },
-                onSuccess: function(e, data) {
-                    if (!data.fv.isValidField('unique_number')) {
-                        data.fv.revalidateField('unique_number');
-                        return false;
-                    }
+                {{--onError: function(e, data) {--}}
+                    {{--remove_message();--}}
+                {{--},--}}
+                {{--onSuccess: function(e, data) {--}}
+                    {{--if (!data.fv.isValidField('unique_number')) {--}}
+                        {{--data.fv.revalidateField('unique_number');--}}
+                        {{--return false;--}}
+                    {{--}--}}
 
-                    if(!is_form){
-                        var insert_message = data.element;
+                    {{--if(!is_form){--}}
+                        {{--var insert_message = data.element;--}}
                         {{--// 请求站外编号是否已存在--}}
-                        var unique_number = $('#unique_number').val();
-                        $.post('/productsSku/uniqueNumberCaptcha',{unique_number:unique_number,  _token: _token},function(data){
-                            var obj = eval("("+data+")");
-                            if(obj.status){
+                        {{--var unique_number = $('#unique_number').val();--}}
+                        {{--$.post('/productsSku/uniqueNumberCaptcha',{unique_number:unique_number,  _token: _token},function(data){--}}
+                            {{--var obj = eval("("+data+")");--}}
+                            {{--if(obj.status){--}}
                                 {{--remove_message();--}}
-                                alert("品牌sku编号已存在,请重新输入！");
+                                {{--alert("品牌sku编号已存在,请重新输入！");--}}
                                 {{--location.reload();--}}
-                                return false;
-                            }
-                        });
-                    }
-                }
+                                {{--return false;--}}
+                            {{--}--}}
+                        {{--});--}}
+                    {{--}--}}
+                {{--}--}}
             }
 
         }
@@ -1199,8 +1231,8 @@
     $("#appendsku").click(function(){
         $.get('/productsSku/uniqueNumber',{},function (e) {
             if(e.status){
-                {{--$("#add_number").val(e.data);--}}
-                $("#add_number").val('');
+                $("#add_number").val(e.data);
+                {{--$("#add_number").val('');--}}
                 $("#cost_price1").val($("#cost_price").val());
                 $("#price").val($("#sale_price").val());
                 $("#bid_price").val($("#market_price").val());
