@@ -334,7 +334,7 @@ class ArticleController extends Controller
         if($file == null){
             $filePath = $_FILES['undefined']['tmp_name'];
         }else{
-            $filePath = $file->getRealPath();;
+            $filePath = $file->getRealPath();
         }
         //获取文件路径
         // 上传到七牛后保存的文件名
