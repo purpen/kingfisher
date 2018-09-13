@@ -40,7 +40,7 @@ class UserModel extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $fillable = [
-        'account', 'phone', 'email', 'realname', 'position', 'status', 'sex' ,'cover_id' , 'mould_id'
+        'account', 'phone', 'realname', 'position', 'status', 'sex' ,'cover_id' , 'mould_id'
     ];
 
     /**

@@ -63,7 +63,7 @@
                         <h5>商品分类</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择商品分类</label>
+                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择商品分类<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-12">
                 					<select class="selectpicker" name="category_id">
@@ -80,7 +80,7 @@
 
 
                         <div class="form-group">
-                            <label for="authorization_id" class="col-sm-2 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型</label>
+                            <label for="authorization_id" class="col-sm-2 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-12">
                                     <div class="col-sm-8" style="padding-top:5px">
@@ -97,24 +97,27 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="region_id" class="col-sm-2 control-label {{ $errors->has('region_id') ? ' has-error' : '' }}">选择地域分类</label>
+                            <label for="region_id" class="col-sm-2 control-label {{ $errors->has('region_id') ? ' has-error' : '' }}">选择地域分类<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-12">
+                                    <input type="checkbox" name="check_all" id="check_all">全选/取消全选
                                     <div class="col-sm-8" style="width: 100%;margin-left: -15px">
-                                        <select class="chosen-select" name="region_id">
-                                            <option value="">请选择省份</option>
+                                        {{--<select class="chosen-select" name="region_id">--}}
+                                            {{--<option value="">请选择省份</option>--}}
                                             @foreach($provinces as $v)
-                                                <option value="{{ $v->id }}" {{ $v->id == $product->region_id?'selected':'' }}>{{ $v->name }}</option>
+                                            <input type="checkbox" name="region_id[]" class="checkcla" value="{{ $v->id }}"  @if(in_array($v->id,$region)) checked="checked" @endif>{{ $v->name }}
+                                                {{--<option value="{{ $v->id }}" {{ $v->id == $product->region_id?'selected':'' }}>{{ $v->name }}</option>--}}
                                             @endforeach
-                                        </select>
+                                        {{--</select>--}}
 
                                     </div>
+                                    <input type="hidden" name="diyu" id="diyu" value="@Model.diyu" />
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="supplier_id" class="col-sm-2 control-label {{ $errors->has('supplier_id') ? ' has-error' : '' }}">选择供应商</label>
+                            <label for="supplier_id" class="col-sm-2 control-label {{ $errors->has('supplier_id') ? ' has-error' : '' }}">选择供应商<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-11">
                 					<select class="chosen-select" name="supplier_id">
@@ -140,7 +143,7 @@
             			<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号</label>
+                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号<em>*</em></label>
                             <div class="col-sm-3">
                                 <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}">
                                 @if ($errors->has('number'))
@@ -152,7 +155,7 @@
                         </div>
             
                         <div class="form-group">
-                            <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称</label>
+                            <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称<em>*</em></label>
                             <div class="col-sm-4">
                                 <input type="text" name="title" ordertype="b2cCode" class="form-control" value="{{ $product->title }}">
                                 @if ($errors->has('title'))
@@ -164,7 +167,7 @@
                         </div>
             
                         <div class="form-group">
-                            <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称</label>
+                            <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称<em>*</em></label>
                             <div class="col-sm-4">
                                 <input type="text" name="tit" ordertype="b2cCode" class="form-control" value="{{ $product->tit }}">
                                 @if ($errors->has('tit'))
@@ -176,7 +179,7 @@
                         </div>
             
                         <div class="form-group">
-                            <label for="cost_price" class="col-sm-2 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small></label>
+                            <label for="cost_price" class="col-sm-2 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" id="cost_price" name="cost_price" ordertype="b2cCode" class="form-control" value="{{ $product->cost_price }}">
                                 @if ($errors->has('cost_price'))
@@ -186,7 +189,7 @@
                                 @endif
                             </div>
                         
-                            <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">市场售价<small>(元)</small></label>
+                            <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">市场售价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" id="market_price" name="market_price" ordertype="b2cCode" class="form-control" value="{{ $product->market_price }}">
                                 @if ($errors->has('market_price'))
@@ -196,7 +199,7 @@
                                 @endif
                             </div>
                 
-                            <label for="sale_price" class="col-sm-1 control-label {{ $errors->has('sale_price') ? ' has-error' : '' }}">建议售价<small>(元)</small></label>
+                            <label for="sale_price" class="col-sm-1 control-label {{ $errors->has('sale_price') ? ' has-error' : '' }}">建议售价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" id="sale_price" name="sale_price" ordertype="b2cCode" class="form-control" value="{{ $product->sale_price }}">
                                 @if ($errors->has('sale_price'))
@@ -267,6 +270,59 @@
                             </div>
             				@endforeach
                         </div>
+
+
+                        <h5>商品详情介绍图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，规格800*800，大小3MB以内］</small></h5>
+                        <hr>
+
+                        <div class="row mb-2r" id="update-products-img">
+                            <div class="col-md-2">
+                                <div id="picForm" enctype="multipart/form-data">
+                                    <div class="image-add">
+                                        {{--<span class="glyphicon glyphicon-plus f46"></span>--}}
+                                        {{--<p class="uptitle">添加图片</p>--}}
+                                        <div id="fine-uploaders"></div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="product_details" name="product_details" value="{{$product->product_details}}">
+                                <script type="text/template" id="qq-template">
+                                    <div id="add-imgs" class="qq-uploader-selector qq-uploader">
+                                        <div class="qq-upload-button-selector qq-upload-button">
+                                            <div>上传图片</div>
+                                        </div>
+                                        <ul class="qq-upload-list-selector qq-upload-list">
+                                            <li hidden></li>
+                                        </ul>
+                                    </div>
+                                </script>
+                            </div>
+                            <div class="col-md-2 mb-3r" style="display: none">
+                                <div style="width: 70px;height: 5px;background: lightblue;">
+                                    <div id="progress_bars" style="width: 0px;height: 5px;background: blue;"></div>
+                                </div>
+                            </div>
+            				@foreach($assetsProductDetails as $v)
+                            <div class="col-md-2">
+            					<div class="asset">
+            						<img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
+            						<a class="removeimg" value="{{ $v->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+            					</div>
+                            </div>
+            				@endforeach
+                        </div>
+                        <br>
+
+                        {{--<div class="form-group">--}}
+                            {{--<label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>--}}
+                            {{--<br>--}}
+                            {{--<div class="col-sm-12">--}}
+                                {{--<textarea id="container" style="height:300px;width:100%;" name="content">{{$product->product_details}}</textarea>--}}
+                                {{--<script id="container" name="content" type="text/plain">--}}
+
+
+                                {{--</script>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
                     
             			<h5>SKU信息 <a id="appendsku" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加SKU</a></h5>
                         <hr>
@@ -645,6 +701,7 @@
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 
+@include('UEditor::head');
 @section('customize_js')
     @parent
     var is_form = 0; // 判断是否允许提交表单
@@ -742,6 +799,7 @@
     }
     })
 
+    {{--商品图片--}}
     new qq.FineUploader({
 		element: document.getElementById('fine-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
@@ -800,7 +858,68 @@
             }
 		}
 	});
-    
+
+    {{--商品详情介绍图片--}}
+    new qq.FineUploader({
+		element: document.getElementById('fine-uploaders'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址)
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:user_id":'{{ $user_id }}',
+				"x:target_id":'{{ $product->id }}',
+                "x:type": 22,
+			},
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['jpeg', 'jpg', 'png'],
+			sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+		},
+        messages: {
+            typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+            sizeError: "上传文件最大不超过3M"
+        },
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					console.log(responseJSON.success);
+					$('#update-products-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                    $("#product_details").val(responseJSON.asset_id);
+					$('.removeimg').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
+
+					});
+				} else {
+					alert('上传图片失败');
+				}
+			},
+            onProgress:  function(id,  fileName,  loaded,  total)  {
+                var number = loaded/total*70;
+                console.log(number);
+                $("#progress_bars").parent().parent().show();
+                $("#progress_bars").css({'width':number+'px'});
+                if(loaded == total){
+                    $("#progress_bars").parent().parent().hide();
+                }
+
+            }
+		}
+	});
+
+    {{--sku图片--}}
     new qq.FineUploader({
         element: document.getElementById('add-sku-uploader'),
         autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
@@ -1037,7 +1156,7 @@
                             var obj = eval("("+data+")");
                             if(obj.status){
                                 {{--remove_message();--}}
-                                alert("站外编号已存在,请重新输入！");
+                                alert("品牌sku编号已存在,请重新输入！");
                                 {{--location.reload();--}}
                                 return false;
                             }
@@ -1120,9 +1239,39 @@
 
 
 
-    $('input[type=checkbox]').change(function(){
-    $('#Jszzdm').val($('input[type=checkbox]:checked').map(function(){
+    {{--授权条件--}}
+    $("input[name='authorization_id']").change(function(){
+    $('#Jszzdm').val($("input[name='authorization_id']:checked").map(function(){
     return this.value
     }).get().join(','))
     })
+
+    {{--地域分类--}}
+    $("input[name='region_id']").change(function(){
+    $('#diyu').val($("input[name='region_id']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    })
+
+    {{--全选/全不选--}}
+    $("#check_all").click(function(){
+    if(this.checked){
+    $("input[name='region_id[]']").prop("checked","true");
+    $('#diyu').val($("input[name='region_id[]']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    }else{
+    $("input[name='region_id[]']").removeAttr("checked","true");
+    $('#diyu').val($("input[name='region_id[]']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    }
+    })
+
+    var ue = UE.getEditor('container');
+    ue.ready(function() {
+    {{--//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.--}}
+    ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+
+    });
 @endsection

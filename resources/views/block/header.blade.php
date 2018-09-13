@@ -27,11 +27,11 @@
 
             @role(['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin'])
             <li class="dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">订单
+                <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">销售
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <li><a href="{{ url('/order/verifyOrderList') }}">审单</a></li>
+                    <li><a href="{{ url('/order/verifyOrderList') }}">制单</a></li>
                     <li><a href="{{ url('/order/reversedOrderList') }}">返审</a></li>
                     <li><a href="{{ url('/order/sendOrderList') }}">打单发货</a></li>
                     {{--<li><a href="{{ url('/article') }}">验货</a></li>--}}
@@ -39,6 +39,7 @@
                     <li role="presentation" class="divider"></li>
                     <li><a href="{{ url('/orderMould') }}">订单模版管理</a></li>
                     <li><a href="{{ url('/fileRecords') }}">导入订单记录</a></li>
+                    <li><a href="{{ url('/invoice') }}">发票管理</a></li>
                     <li><a href="{{ url('/product') }}">商品管理</a></li>
                 </ul>
             </li>
@@ -126,6 +127,7 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu7">
+                    <li><a href="{{url('/count')}}">统计报表</a></li>
                     <li><a href="{{url('/userSaleStatistics/index')}}">销售报表</a></li>
                     <li><a href="{{url('/statistics/skuSale')}}">商品报表</a></li>
                     <li><a href="{{url('storageSkuCount/storageCost')}}">库存报表</a></li>
@@ -150,6 +152,7 @@
                     <li><a href="{{url('/role')}}">角色管理</a></li>
                     <li><a href="{{url('/permission')}}">权限管理</a></li>
                     <li><a href="{{url('/rolePermission')}}">分配权限</a></li>
+                    <li><a href="{{url('/auditing')}}">审核管理</a></li>
                     <li role="presentation" class="divider"></li>
                     <li><a href="{{url('/category')}}">分类管理</a></li>
                     <li><a href="{{url('/chinaCity')}}">城市管理</a></li>
