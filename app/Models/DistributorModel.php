@@ -46,6 +46,11 @@ class DistributorModel extends BaseModel
     {
         return $this->belongsTo('App\Models\AssetsModel','national_emblem_id');
     }
+    //一对一关联附件表电子版合同照片
+    public function assetsContract()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','contract_id');
+    }
 
     //相对关联user表
     public function user()
@@ -93,6 +98,22 @@ class DistributorModel extends BaseModel
 //            ->first();
         if($asset){
             return $asset->file->p500;
+        }else{
+            return '';
+        }
+    }
+    /**
+     * 获取电子版合同照片
+     */
+    public function getFirstContractAttribute()
+    {
+        $asset = AssetsModel
+            ::find($this->contract_id);
+//            ::where(['target_id' => $this->id, 'type' => 19])
+//            ->orderBy('id','desc')
+//            ->first();
+        if($asset){
+            return $asset->file->small;
         }else{
             return '';
         }
