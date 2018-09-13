@@ -12,6 +12,8 @@ use App\Models\AuditingModel;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
 use App\Models\DistributorModel;
+use App\Models\HistoryInvoiceModel;
+use App\Models\InvoiceModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductSkuRelation;
@@ -37,6 +39,7 @@ class OrderController extends BaseController{
      *
      * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
+     * @apiParam {integer} types 0.全部 1.当月
      * @apiSuccessExample 成功响应:
      *  {
      * "data": [
@@ -81,6 +84,9 @@ class OrderController extends BaseController{
      */
     public function orders(Request $request)
     {
+        $types = (int)$request->input('types', 0);
+        $BeginDates=date('Y-m-01 00:00:00', strtotime(date("Y-m-d")));
+        $now = date("Y-m-d 23:59:59",time());
         $status = (int)$request->input('status', 0);
         $per_page = (int)$request->input('per_page', 10);
         $user_id = $this->auth_user_id;
@@ -97,7 +103,11 @@ class OrderController extends BaseController{
             $query['status'] = $status;
             $orders = OrderModel::where($query)->where('type',8)->orderBy('id', 'desc')->paginate($per_page);
         }else{
-            $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
+            if ($types ==1){//当月订单
+                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+            }else{
+                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
+            }
         }
         return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
 
@@ -130,7 +140,7 @@ class OrderController extends BaseController{
      *  "receiving_id": "1",          //发票类型(0.不开 1.普通 2.专票)
      *  "company_name": "北京太火红鸟科技有限公司",          //发票抬头
      *  "invoice_value": "1453",        //发票金额
-     *  "over_time": "0000-00-00 00:00:00",  //过期时间
+     *  "over_time": "2018-09-11 00:00:00",  //过期时间
      *
      *  "address_list":[
      *  "id":1,
@@ -201,7 +211,7 @@ class OrderController extends BaseController{
             if (!empty($invoice)){
                 $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
                 $orders->company_name = $invoice->company_name;//发票抬头
-                $orders->invoice_value = $invoice->invoice_value;//发票金额
+                $orders->invoice_value = $orders->pay_money;//发票金额就是支付金额
             }
         }else{
             return $this->response->array(ApiHelper::error('订单id不能为空', 200));
@@ -218,8 +228,8 @@ class OrderController extends BaseController{
      * @apiGroup Order
      *
      * @apiParam {integer} address_id 收获地址ID
-     * @apiParam {string} payment_type 付款方式：1.在线 4：月结；
-     * @apiParam {string} invoice_id 发票id
+     * @apiParam {string} payment_type 付款方式：1.在线 4.月结；6.公司转账
+     * @apiParam {string} invoice_id 发票id  0.不开发票
      * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
      *
@@ -283,6 +293,7 @@ class OrderController extends BaseController{
                 return $this->response->array(ApiHelper::error('暂无优惠信息', 403));
             }
         }
+        $invoice_id = $request->input('invoice_id');
 
         $all['order_start_time'] = date("Y-m-d H:i:s");
         $all['user_id'] = $user_id;
@@ -299,7 +310,6 @@ class OrderController extends BaseController{
         $all['count'] = $count;
         $all['type'] = 8;
         $all['from_type'] = 4;
-        $all['invoice_id'] = $request->input('invoice_id');
         $all['user_id_sales'] = config('constant.D3IN_user_id_sales');
         $all['store_id'] = config('constant.D3IN_store_id');
         $all['storage_id'] = config('constant.D3IN_storage_id');
@@ -352,7 +362,6 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('创建订单失败！', 500));
         }
         $order_id = $order->id;
-        $invoice_id = $order->invoice_id;
         //保存订单详情
         if(count($sku_id_quantity) == count($sku_id_quantity , 1) ) {
             $sku_id = $sku_id_quantity['sku_id'];
@@ -374,19 +383,21 @@ class OrderController extends BaseController{
                 return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
             }
 
-            $history_invoice = new HistoryInvoiceModel();
-            $history_invoice->user_id = $this->auth_user_id;
-            $history_invoice->order_id = $order_id;
-            $history_invoice->invoice_id = $invoice_id;
-            $history_invoice->receiving_id = $h_invoice->receiving_id;
-            $history_invoice->company_name = $h_invoice->company_name;
-            $history_invoice->invoice_value = $h_invoice->invoice_value;
-            $history_invoice->application_time = $order->order_start_time;
-            $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
-            $history_invoice->unit_address = $h_invoice->unit_address;
+            if ($h_invoice) {
+                $history_invoice = new HistoryInvoiceModel();
+                $history_invoice->user_id = $this->auth_user_id;
+                $history_invoice->order_id = $order_id;
+                $history_invoice->invoice_id = $invoice_id;
+                $history_invoice->receiving_id = $h_invoice->receiving_id;
+                $history_invoice->company_name = $h_invoice->company_name;
+                $history_invoice->invoice_value = $order->pay_money;//发票金额就是支付金额
+                $history_invoice->application_time = $order->order_start_time;
+                $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
+                $history_invoice->unit_address = $h_invoice->unit_address;
 
-            if(!$history_invoice->save()){
-                return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
+                if (!$history_invoice->save()) {
+                    return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
+                }
             }
 
             if ($order->payment_type == 4) {
@@ -420,19 +431,21 @@ class OrderController extends BaseController{
                     return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
                 }
 
-                $history_invoice = new HistoryInvoiceModel();
-                $history_invoice->user_id = $this->auth_user_id;
-                $history_invoice->order_id = $order_id;
-                $history_invoice->invoice_id = $invoice_id;
-                $history_invoice->receiving_id = $h_invoice->receiving_id;
-                $history_invoice->company_name = $h_invoice->company_name;
-                $history_invoice->invoice_value = $h_invoice->invoice_value;
-                $history_invoice->application_time = $order->order_start_time;
-                $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
-                $history_invoice->unit_address = $h_invoice->unit_address;
+                if ($h_invoice) {
+                    $history_invoice = new HistoryInvoiceModel();
+                    $history_invoice->user_id = $this->auth_user_id;
+                    $history_invoice->order_id = $order_id;
+                    $history_invoice->invoice_id = $invoice_id;
+                    $history_invoice->receiving_id = $h_invoice->receiving_id;
+                    $history_invoice->company_name = $h_invoice->company_name;
+                    $history_invoice->invoice_value = $order->pay_money;//发票金额就是支付金额
+                    $history_invoice->application_time = $order->order_start_time;
+                    $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
+                    $history_invoice->unit_address = $h_invoice->unit_address;
 
-                if(!$history_invoice->save()){
-                    return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
+                    if (!$history_invoice->save()) {
+                        return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
+                    }
                 }
 
                 if ($order->payment_type == 4) {
@@ -452,9 +465,13 @@ class OrderController extends BaseController{
         if (!$model->orderCreateReceiveOrder($order_id)) {
             return ajax_json(0,"ID:'. $order_id .'订单发货创建订单收款单错误");
         }
-        //发送审核短信通知
-//        $dataes = new AuditingModel();
-//        $dataes->datas(1);
+        $ids = AuditingModel::where('type',1)->select('user_id')->first();
+        if ($ids){
+            //发送审核短信通知
+            $dataes = new AuditingModel();
+            $dataes->datas(1);
+        }
+
 
         return $this->response->array(ApiHelper::success());
     }

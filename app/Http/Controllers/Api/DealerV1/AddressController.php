@@ -242,9 +242,9 @@ class AddressController extends BaseController
     public function deleted(Request $request)
     {
         $user_id = $this->auth_user_id;
-        $id = $request->input('id') ? (int)$request->input('id') : 0;
+        $id = $request->input('id');
         if (empty($id)) {
-            return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
+            return $this->response->array(ApiHelper::error('没有找到该地址！', 403));
         }
 
         $address = AddressModel::find($id);

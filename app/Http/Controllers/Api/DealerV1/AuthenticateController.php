@@ -189,7 +189,9 @@ class AuthenticateController extends BaseController
      * @apiParam {string} bank_name 开户行
      * @apiParam {string} store_address  企业详细地址
      * @apiParam {string} enter_Address 门店详细地址
-     * @apiParam {string} business_license_number 营业执照号
+     * @apiParam {string} business_license_number 统一社会信用代码
+     * @apiParam {integer} mode 是否月结
+     * @apiParam {integer} contract_id 电子版合同照片id
      * @apiSuccessExample 成功响应:
      *  {
      *     "meta": {
@@ -206,7 +208,6 @@ class AuthenticateController extends BaseController
     {
         // 验证规则
         $rules = [
-            'account' => 'required',
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
 //            'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
             'password' => 'required',
@@ -215,7 +216,6 @@ class AuthenticateController extends BaseController
             'county_id' => 'integer',
         ];
         $message = [
-            'account.required' => '用户名必填',
             'phone.required' => '手机号必填',
             'phone.phone' => '手机号格式不对',
             'province_id.province_id' => '省份id格式不对',
@@ -224,7 +224,7 @@ class AuthenticateController extends BaseController
             'password.required' => '密码必填',
         ];
 
-        $payload = app('request')->only('account', 'password','phone','province_id','city_id','county_id');
+        $payload = app('request')->only('password','phone','province_id','city_id','county_id');
         $validator = app('validator')->make($payload, $rules,$message);
         // 验证格式
         if ($validator->fails()) {
@@ -236,14 +236,14 @@ class AuthenticateController extends BaseController
 //            return $this->response->array(ApiHelper::error('验证码错误', 412));
 //        }
 
-        $account = UserModel::where('account', $request['account'])->first();
-        if ($account) {
-            return $this->response->array(ApiHelper::error('账号已存在', 412));
-
-        }
+//        $account = UserModel::where('account', $request['account'])->first();
+//        if ($account) {
+//            return $this->response->array(ApiHelper::error('账号已存在', 412));
+//
+//        }
         // 创建用户
         $user = new UserModel();
-        $user->account = $request['account'];
+        $user->account = $request['phone'];
         $user->phone = $request['phone'];
         $user->realname = $request['name'];
         $user->password = bcrypt($request['password']);
@@ -288,6 +288,8 @@ class AuthenticateController extends BaseController
             $distributors->legal_number = $request->input('legal_number','');
             $distributors->store_address = $request->input('store_address','');
             $distributors->enter_Address = $request->input('enter_Address','');
+            $distributors->contract_id = $request->input('contract_id','');
+            $distributors->mode = $request->input('mode','');
             $distributors->status = 1;
             $result = $distributors->save();
             if ($result) {
@@ -319,7 +321,7 @@ class AuthenticateController extends BaseController
      * @apiName DealerUser login
      * @apiGroup DealerUser
      *
-     * @apiParam {string} account 用户账号/手机号
+     * @apiParam {string} account 手机号
      * @apiParam {string} password 设置密码
      *
      * @apiSuccessExample 成功响应:
@@ -781,8 +783,7 @@ class AuthenticateController extends BaseController
          * @apiParam {string} token
          * @apiParam {string} random random
          * @apiParam {integer} id id
-         * @apiParam {string} account 账号
-         * @apiParam {string} phone 手机号
+         * @apiParam {string} phone 门店联系人手机号
          * @apiParam {string} realname 姓名
          * @apiParam {integer} cover_id 头像id
          * @apiParam {string} email email

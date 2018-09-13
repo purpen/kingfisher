@@ -247,10 +247,12 @@ class SupplierController extends Controller
                 $asset->target_id = $supplier->id;
                 $asset->save();
             }
-
-            //发送审核短信通知
-            $dataes = new AuditingModel();
-            $dataes->datas(6);
+            $ids = AuditingModel::where('type',6)->select('user_id')->first();
+            if ($ids){
+                //发送审核短信通知
+                $dataes = new AuditingModel();
+                $dataes->datas(6);
+            }
 
             return redirect('/supplier');
         } else {
@@ -368,10 +370,12 @@ class SupplierController extends Controller
         $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
 //        if($all['supplier_user_id'] == 0){
         if ($supplier->update($all)) {
-
-            //发送审核短信通知
-            $dataes = new AuditingModel();
-            $dataes->datas(6);
+            $ids = AuditingModel::where('type',6)->select('user_id')->first();
+            if ($ids){
+                //发送审核短信通知
+                $dataes = new AuditingModel();
+                $dataes->datas(6);
+            }
 
             if($redirect_url !== null){
                 return redirect($redirect_url);

@@ -410,7 +410,7 @@ class MessageController extends BaseController
      * @apiParam {string} bank_name 开户行
      * @apiParam {string} store_address 门店详细地址
      * @apiParam {string} enter_Address 企业详细地址
-     * @apiParam {string} business_license_number 营业执照号
+     * @apiParam {string} business_license_number 统一社会信用代码
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -435,7 +435,7 @@ class MessageController extends BaseController
     *      "national_emblem_id": "4",          // 身份证国徽面照片
     *      "bank_number": "1234567890",        // 银行卡账号
     *      "bank_name": 中国银行,               // 开户行
-    *      "business_license_number":  "",      //营业执照号
+    *      "business_license_number":  "",      //统一社会信用代码
      *      "position"                          //职位
      *      "enter_phone"                       //企业电话
      *      "full_name"                         //企业全称
@@ -463,7 +463,6 @@ class MessageController extends BaseController
         $rules = [
             'name' => 'max:30',
             'phone' => 'max:11',
-            'enter_phone' => 'max:11',
             'store_name' => 'max:50',
             'operation_situation' => 'max:500',
             'bank_number' => 'max:19',
@@ -495,6 +494,8 @@ class MessageController extends BaseController
             if($distributors->status == 3) {
                 $distributors->status = "4";//重新审核
             }
+            $distributors->store_address = $request->input('store_address');
+            $distributors->enter_Address = $request->input('enter_Address');
             $distributor = $distributors->update($all);
             if ($distributor){
                 $users = new UserModel();
