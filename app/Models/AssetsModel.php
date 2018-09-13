@@ -135,6 +135,11 @@ class AssetsModel extends BaseModel
     {
         return $this->hasOne('App\Models\OrderModel','prove_id');
     }
+    //一对一关联订单表经销商电子版合同照片
+    public function distributorContract()
+    {
+        return $this->hasOne('App\Models\DistributorModel','contract_id');
+    }
 
 
 

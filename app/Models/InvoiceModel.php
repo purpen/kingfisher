@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InvoiceModel extends BaseModel
 {
-    use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
 
     /**
      * 关联模型到数据表

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPhoneToDistributorTable extends Migration
+class AddModeToDistributorTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,8 @@ class AddPhoneToDistributorTable extends Migration
     public function up()
     {
         Schema::table('distributor', function (Blueprint $table) {
-            $table->dropUnique('distributor_phone_unique');//去除索引
+            $table->integer('mode');  //结算方式：1.月结 2.非月结
+            $table->integer('contract_id');  //电子版合同id
         });
     }
 

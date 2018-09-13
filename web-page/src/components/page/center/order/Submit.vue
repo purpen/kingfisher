@@ -58,7 +58,7 @@
                 </Col>
                 <Col :span="8">
                   <FormItem label="电话号码">
-                    <Input v-model="form.buyer_tel" placeholder=""></Input>
+                    <Input v-model.number="form.buyer_tel" placeholder=""></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">

@@ -93,9 +93,9 @@
                 <div class="col-md-8">
                     <div class="form-inline">
                         <div class="form-group">
-                            <a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
+                            {{--<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
                                 <i class="glyphicon glyphicon-edit"></i> 创建订单
-                            </a>
+                            </a>--}}
                             @if ($status == 5)
                                 <button type="button" id="batch-verify" class="btn btn-success mr-2r">
                                     <i class="glyphicon glyphicon-ok"></i> 审批
@@ -106,12 +106,12 @@
                             @endif
 
                             @if ($status == 8)
-                                <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
+                                {{--<button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
                                     <i class="glyphicon glyphicon-backward"></i> 反审
                                 </button>
                                 <button type="button" class="btn btn-success mr-2r" id="send-order">
                                     <i class="glyphicon glyphicon-print"></i> 打印发货
-                                </button>
+                                </button>--}}
                             @endif
 
                         </div>
@@ -402,9 +402,9 @@
                                     @endrole
 
                                     @if ($status == 8)
-                                        <button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
+                                        {{--<button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
                                             <i class="glyphicon glyphicon-hand-right"></i> 手动发货
-                                        </button>
+                                        </button>--}}
                                     @endif
                                 </td>
                             </tr>

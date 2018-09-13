@@ -330,9 +330,9 @@ class ArticleController extends Controller
 
         $token = $auth->uploadToken($bucket);
         //获取文件
-        $file = $request->file('image');
+//        $file = $request->file('image');
         //获取文件路径
-        $filePath = $file->getRealPath();
+        $filePath = $_FILES['undefined']['tmp_name'];
         // 上传到七牛后保存的文件名
         $date = time();
         $key = 'article/'.$date.'/'.uniqid();
@@ -340,10 +340,14 @@ class ArticleController extends Controller
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 putFile 方法进行文件的上传。
         list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+//        $data = array(
+//            'status'=> 0,
+//            'message'=> 'ok',
+//            'url'=> config('qiniu.material_url').$key
+//        );
+//        return $data;
         $data = array(
-            'status'=> 0,
-            'message'=> 'ok',
-            'url'=> config('qiniu.material_url').$key
+            'filename'=> config('qiniu.material_url').$key
         );
         return $data;
     }

@@ -121,6 +121,13 @@ class CartController extends BaseController
             }
             $data['count'] = $count;
         } else {
+            $article = new ReceiptModel();
+            $save['status'] = 3;
+            $res['user_id'] = $user_id;
+            $res['status'] = 4;
+
+            $str = $article->where($res)->update($save);
+
 
             foreach($carts as $k=>$v) {
 
@@ -133,6 +140,7 @@ class CartController extends BaseController
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
+
 
 
                 if($collection){
@@ -168,7 +176,7 @@ class CartController extends BaseController
 
 
     /**
-     * @api {get} /DealerApi/settlement 点击结算
+     * @api {post} /DealerApi/settlement 点击结算
      * @apiVersion 1.0.0
      * @apiName Cart settlement
      * @apiGroup Cart
@@ -199,23 +207,29 @@ class CartController extends BaseController
     public function settlement(Request $request)
     {
         $id = $request->input('id') ? $request->input('id') : '';
+        if(!$id){
+            return $this->response->array(ApiHelper::error('参数不规范', 500));
+        }
 
         $data = array();
-        foreach($id as $k=>$v){
-            $carts = ReceiptModel::find($v);
 
-            if ($carts->product->assets) {
-                $cover_url = $carts->product->assets->file->avatar;
+        foreach($id as $k=>$v){
+            $number = '';
+            $carts = ReceiptModel::find($v['id']);
+            if(!$number){
+                $number = $v['number'];
+            }else {
+                $number = '';
             }
 
             $data[$k]=array(
                 'product_id' => $carts->product_id,
                 'sku_id'       => $carts->sku_id,
-                'number'        => $carts->number,
+                'number'        => $number,
                 'price'         => $carts->price,
                 'product_name'  => $carts->product->title,
                 'mode'          => $carts->sku->mode,
-                'cover_url'     =>$cover_url,
+                'cover_url'     =>$carts->sku->first_img,
 
             );
 
@@ -274,6 +288,7 @@ class CartController extends BaseController
                 $receipt =  ReceiptModel::findOrFail($cart['id']);
                 $receipt['number'] = $number;
                 $receipt['price'] = $price_gauge;
+                $receipt['status'] = 3;
                 if (!$receipt->save()){
                     return $this->response->array(ApiHelper::error('更新失败！', 501));
                 }
@@ -334,6 +349,12 @@ class CartController extends BaseController
         $user_id = $this->auth_user_id;
 
         $all = $request->all();
+        $article = new ReceiptModel();
+        $save['status'] = 3;
+        $res['user_id'] = $user_id;
+        $res['status'] = 4;
+
+        $str = $article->where($res)->update($save);
 
         foreach($all['all'] as $vue){
             $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格
@@ -354,6 +375,7 @@ class CartController extends BaseController
                 $receipt =  ReceiptModel::findOrFail($cart['id']);
                 $receipt['number'] = $number;
                 $receipt['price'] = $price_gauge;
+                $receipt['status'] = 4;
                 if (!$receipt->save()){
                     return $this->response->array(ApiHelper::error('更新失败！', 501));
                 }
@@ -406,7 +428,7 @@ class CartController extends BaseController
     public function emptyShopping(Request $request)
     {
         $user_id = $this->auth_user_id;
-        $cart = ReceiptModel::where('user_id',$user_id)->delete;
+        $cart = ReceiptModel::where('user_id',$user_id)->delete();
         if($cart){
             return $this->response->array(ApiHelper::success('Success.', 200));
         } else {
@@ -415,7 +437,7 @@ class CartController extends BaseController
     }
 
     /**
-     * @api {get} /DealerApi/cart/reduce 购物车增减数量
+     * @api {post} /DealerApi/cart/reduce 购物车增减数量
      * @apiVersion 1.0.0
      * @apiName Cart reduce
      * @apiGroup Cart
@@ -429,13 +451,13 @@ class CartController extends BaseController
     public function reduce(Request $request)
     {
         $all = $request->input('future');
-        if(empty($id)){
+        if(empty($all)){
             return $this->response->array(ApiHelper::error('error', 500));
         }
         foreach($all as $v){
             $data =  ReceiptModel::findOrFail($v['id']);
             $sku_price = SkuRegionModel::where(['sku_id'=>$data['sku_id']])->get();//商品价格区间
-            $cart = ProductsModel::where(['id'=>$v['product_id']])->first();
+
             $price = '';
 
             foreach ($sku_price as $vue){
@@ -443,11 +465,12 @@ class CartController extends BaseController
                     $price = $vue['sell_price'] * $v['number'];
 
                 } else {
-                    $price = $cart['sale_price'] * $v['number'];
+                    $price = $data->product->sale_price * $v['number'];
                 }
             }
 
             $data['price'] = $price;
+            $data['number'] = $v['number'];
 
 
             if (!$data->save()){
@@ -481,15 +504,21 @@ class CartController extends BaseController
             return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
         }
 
-        $id_arr = explode(',', $ids);
-        for ($i=0;$i<count($id_arr);$i++) {
-            $id = (int)$id_arr[$i];
-            $cart = ReceiptModel::find($id);
-            if (!$cart) continue;
-            if ($cart->user_id != $user_id) continue;
-            $cart->delete();
+        foreach ($ids as $v){
+            $cart = ReceiptModel::find($v);
+            if (!$cart) {
+                return $this->response->array(ApiHelper::error('进货单不存在！', 500));
+            };
+            if ($cart->user_id != $user_id) {
+                return $this->response->array(ApiHelper::error('用户不存在！', 500));
+            }
+            if(!$cart->delete()){
+                return $this->response->array(ApiHelper::error('删除失败！', 500));
+            }
+
         }
-        return $this->response->array(ApiHelper::success('Success.', 200, array('id' => $ids)));
+
+        return $this->response->array(ApiHelper::success('Success.', 200));
     }
 
     /**
