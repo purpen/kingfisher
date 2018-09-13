@@ -26,15 +26,11 @@ class InvoiceController extends BaseController
      * @apiName Invoice
      * @apiGroup Invoice
      * @apiParam {string} token token
-     * @apiParam {string} listsper_page 20 一页多少条数据
      *
      * @apiSuccessExample 成功响应:
      * {
      * "invoice": [
      *      {
-     *      "province_id": 北京市,         // 省\直辖市
-     *      "city_id": 北京市,              // 市
-     *      "area_id": 朝阳区,                 // 区\县
      *      "company_name": 太火鸟,              // 公司全称
      *      "company_phone": 15112341234,          // 公司电话
      *      "opening_bank": 小关支行,           // 开户行
@@ -59,24 +55,23 @@ class InvoiceController extends BaseController
     public function lists(Request $request)
     {
         $user_id = $this->auth_user_id;
-        $per_page = $request->input('per_page',20);
+//        $per_page = $request->input('per_page',20);
         $where['user_id'] = $user_id; 
 
-        $invoice = InvoiceModel::where($where)->select('duty_paragraph','company_name','receiving_id')->paginate($per_page);
+        $invoice = InvoiceModel::where($where)
+            ->select('duty_paragraph','company_name','receiving_id','id')
+            ->get();
        if(!$invoice){
            return $this->response->array(ApiHelper::error('error！', 500));
        }
-        foreach($invoice as $k=>$v){
-//            $invoice[$k]['province'] =  $v->province->name;
-//            $invoice[$k]['city'] =  $v->city->name;
-//            $invoice[$k]['county'] =  $v->county->name;
-            $invoice[$k]['province'] = '';
-            $invoice[$k]['city'] = '';
-            $invoice[$k]['county'] =  '';
-            if($v['receiving_id'] == 2){
-                $invoice[$k]['cover_url'] = $v->getFirstImgInvoice();
-            }
-        }
+//        foreach($invoice as $k=>$v){
+////            $invoice[$k]['province'] =  $v->province->name;
+////            $invoice[$k]['city'] =  $v->city->name;
+////            $invoice[$k]['county'] =  $v->county->name;
+//            if($v['receiving_id'] == 2){
+//                $invoice[$k]['cover_url'] = $v->getFirstImgInvoice();
+//            }
+//        }
 
         return $this->response->array(ApiHelper::success('Success.', 200, $invoice));
     }

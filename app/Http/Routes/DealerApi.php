@@ -41,6 +41,16 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'invoice.ordinaryEdit','uses' => 'InvoiceController@ordinaryEdit'
     ]);
 
+    //订单历史发票列表
+    $api->get('/DealerApi/history/lists', [
+        'as' => 'history.lists', 'uses' => 'HistoryInvoiceController@lists'
+    ]);
+
+    //查看普通增值税发票详情-弹框页面
+    $api->get('/DealerApi/history/historyTo', [
+        'as' => 'history.historyTo', 'uses' => 'HistoryInvoiceController@historyTo'
+    ]);
+
     // 购物车列表
     $api->get('/DealerApi/cart', [
         'as' => 'cart.cart', 'uses' => 'CartController@lists'

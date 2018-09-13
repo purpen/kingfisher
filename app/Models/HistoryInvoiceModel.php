@@ -31,4 +31,20 @@ class HistoryInvoiceModel extends BaseModel
         return $this->belongsTo('App\Models\AssetsModel','prove_id');
     }
 
+    /**
+     * 一对多关联order表单
+     */
+    public function order()
+    {
+        return $this->belongsTo('App\Models\OrderModel', 'id');
+    }
+
+    /**
+     * 相对关联到发票历史表表
+     */
+    public function historyInvoice()
+    {
+        return $this->belongsTo('App\Models\InvoiceModel', 'invoice_id');
+    }
+
 }
