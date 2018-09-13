@@ -474,11 +474,7 @@ class OrderController extends BaseController{
                 }
             }
         }
-        // 创建订单收款单
-        $model = new ReceiveOrderModel();
-        if (!$model->orderCreateReceiveOrder($order_id)) {
-            return ajax_json(0,"ID:'. $order_id .'订单发货创建订单收款单错误");
-        }
+
         $ids = AuditingModel::where('type',1)->select('user_id')->first();
         if ($ids){
             //发送审核短信通知

@@ -1,6 +1,6 @@
 <ul class="nav navbar-nav nav-list">
     <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/outWarehouse/orderOut')}}">订单出库</a></li>
-    <li @if($tab_menu == 'waiting')class="active"@endif><a href="{{url('/outWarehouse')}}">采购退货出库</a></li>
+    {{--<li @if($tab_menu == 'waiting')class="active"@endif><a href="{{url('/outWarehouse')}}">采购退货出库</a></li>--}}
     <li @if($tab_menu == 'exchanged')class="active"@endif><a href="{{url('/outWarehouse/changeOut')}}">调拨出库</a></li>
     <li @if($tab_menu == 'finished')class="active"@endif><a href="{{url('/outWarehouse/complete')}}">已完成出库</a></li>
 </ul>
