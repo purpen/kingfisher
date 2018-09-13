@@ -83,7 +83,7 @@ class ProductTransformer extends TransformerAbstract
             'product_id' => $product->id,
             'number' => $product->number,
             'category' => $product->category,
-            'market_price' => $product->market_price,
+            'sale_price' => $product->sale_price,
             'weight' => $product->weight,
             'sales_number' => $product->sales_number,
             'name' => $product->title,

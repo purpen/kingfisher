@@ -15,7 +15,7 @@ class OpenProductListTransformer extends TransformerAbstract
             'product_id' => $product->id,
             'number' => $product->number,
             'name' => $product->title,
-            'price' => $product->cost_price,
+            'price' => $product->sale_price,
             'inventory' => intval($product->inventory),
             'image' => $product->saas_img,
         ];
