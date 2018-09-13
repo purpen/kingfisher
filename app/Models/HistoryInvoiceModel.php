@@ -20,7 +20,7 @@ class HistoryInvoiceModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['order_id','invoice_id','reviewer','audit','apply','company_name','company_phone','opening_bank','bank_account','unit_address','duty_paragraph','receiving_address','receiving_name','receiving_phone','invoice_value','prove_id','receiving_id' , 'reason','receiving_type','difference','application_time'];
+    protected $fillable = ['user_id','order_id','invoice_id','reviewer','audit','company_name','company_phone','opening_bank','bank_account','unit_address','duty_paragraph','receiving_address','receiving_name','receiving_phone','invoice_value','prove_id','receiving_id' , 'reason','receiving_type','difference','application_time'];
 
 
     /**

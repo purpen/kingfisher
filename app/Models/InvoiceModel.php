@@ -20,7 +20,7 @@ class InvoiceModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['user_id','company_name','company_phone','reviewer','audit','apply','opening_bank','bank_account','unit_address','duty_paragraph','receiving_address','receiving_name','invoice_value','receiving_phone','prove_id','receiving_id' , 'reason','receiving_type','application_time'];
+    protected $fillable = ['user_id','province_id','city_id','area_id','company_name','company_phone','reviewer','audit','opening_bank','bank_account','unit_address','duty_paragraph','receiving_address','receiving_name','receiving_phone','receiving_phone','prove_id','receiving_id' , 'reason','receiving_type','application_time'];
 
 
     
