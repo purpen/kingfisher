@@ -333,7 +333,6 @@ class ArticleController extends Controller
         $file = $request->file('image');
         if($file == null){
             $filePath = $_FILES['undefined']['tmp_name'];
-            dd($filePath);
         }else{
             $filePath = $file->getRealPath();
         }
@@ -345,15 +344,14 @@ class ArticleController extends Controller
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 putFile 方法进行文件的上传。
         list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+//        $data = array(
+//            'status'=> 0,
+//            'message'=> 'ok',
+//            'url'=> config('qiniu.material_url').$key.'-p1080'."\n"
+//        );
         $data = array(
-            'status'=> 0,
-            'message'=> 'ok',
             'url'=> config('qiniu.material_url').$key.'-p1080'."\n"
         );
-//        return $data;
-//        $data = array(
-//            'filename'=> config('qiniu.material_url').$key
-//        );
         return $data;
     }
 
