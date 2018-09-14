@@ -130,10 +130,10 @@ class AssetsModel extends BaseModel
     {
         return $this->hasOne('App\Models\DistributorModel','national_emblem_id');
     }
-    //一对一关联订单表一般纳税人证明照片
+    //一对一关联订单表经销商银行转账凭证图片
     public function order()
     {
-        return $this->hasOne('App\Models\OrderModel','prove_id');
+        return $this->hasOne('App\Models\OrderModel','voucher_id');
     }
     //一对一关联订单表经销商电子版合同照片
     public function distributorContract()
