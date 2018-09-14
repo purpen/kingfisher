@@ -465,9 +465,8 @@ class CartController extends BaseController
                 if($v['number'] >= $vue['min'] && $v['number'] <= $vue['max']){
                     $price = $vue['sell_price'] * $v['number'];
 
-                } else {
-                    $price = $data->product->sale_price * $v['number'];
                 }
+                
             }
 
             $data['price'] = $price;
