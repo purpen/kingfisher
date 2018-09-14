@@ -20,6 +20,7 @@ use App\Models\SkuRegionModel;
 use App\Models\UserProductModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use YuanChao\Editor\EndaEditor;
 
 class ProductsController extends BaseController
 {
@@ -140,6 +141,8 @@ class ProductsController extends BaseController
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
+        $content = EndaEditor::MarkDecode($product->content);
+        dd($content);
         $category = CategoriesModel::where('id',$product->category_id)->where('type',1)->select('title')->first();
         $product->category = $category->title;
 
