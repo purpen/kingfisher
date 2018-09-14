@@ -574,11 +574,4 @@
     }
     })
 
-    {{--百度编辑器--}}
-        {{--var ue = UE.getEditor('container');--}}
-        {{--ue.ready(function() {--}}
-            {{--//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.--}}
-            {{--ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');--}}
-
-        {{--});--}}
 @endsection
