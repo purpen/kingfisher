@@ -73,6 +73,9 @@ class DistributorsController extends Controller
         if ($distributors->category_id && $distributors->authorization_id){
             $categorie = explode(',',$distributors->category_id);
             $authoriza = explode(',', $distributors->authorization_id);
+        }else{
+            $categorie =[];
+            $authoriza =[];
         }
         if (count($distributors)>0) {
             $province = ChinaCityModel::where('oid', $distributors->province_id)->select('name')->first();

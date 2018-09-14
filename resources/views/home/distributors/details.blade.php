@@ -62,7 +62,7 @@
                                 <li for="bank_name" class="mb-0r control-label col-md-6"><b>企业开户行:</b>{{ $distributors->bank_name }}</li>
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>法人姓名:</b>{{ $distributors->legal_person }}</li>
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>法人手机号:</b>{{ $distributors->legal_phone }}</li>
-                                <li for="phone" class="mb-0r control-label col-md-6"><b>法人身份证号:</b>{{ $distributors->legal_number }}</li>
+                                {{--<li for="phone" class="mb-0r control-label col-md-6"><b>法人身份证号:</b>{{ $distributors->legal_number }}</li>--}}
                                 <li for="bank_number" class="mb-0r control-label col-md-6"><b>银行账号:</b>{{ $distributors->bank_number }}</li>
                                 <li for="business_license_number" class="mb-0r control-label col-md-6"><b>营业执照号:</b>{{ $distributors->business_license_number }}</li>
                                 <li for="taxpayer" class="mb-0r control-label col-md-6"><b>纳税人类型:</b>    @if($distributors->taxpayer == 1)
@@ -77,8 +77,8 @@
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="store_name" class="mb-0r control-label col-md-6"><b>门店名称:</b>{{ $distributors->store_name }}</li>
                                 <li for="province_id" class="mb-0r control-label col-md-6"><b>门店所在地址:</b>{{ $distributors->address }}</li>
-                                <li for="name" class="mb-0r control-label col-md-6"><b>门店联系人姓名:</b>{{ $user->name }}</li>
-                                <li for="phone" class="mb-0r control-label col-md-6"><b>门店联系人手机号:</b>{{ $user->phone }}</li>
+                                <li for="name" class="mb-0r control-label col-md-6"><b>门店联系人姓名:</b>{{ $distributors->name }}</li>
+                                <li for="phone" class="mb-0r control-label col-md-6"><b>门店联系人手机号:</b>{{ $distributors->phone }}</li>
                                 {{--<li for="phone" class="mb-0r control-label col-md-6"><b>用户名:</b>{{ $user->account }}</li>--}}
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>门店联系人职位:</b>{{ $distributors->position }}</li>
                             </ul>
