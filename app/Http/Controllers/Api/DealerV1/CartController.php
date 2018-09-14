@@ -68,6 +68,7 @@ class CartController extends BaseController
         $carts = ReceiptModel::select('receipt.*','p.title')
             ->leftJoin('products as p', 'p.id', '=', 'receipt.product_id')
             ->where('p.title','like','%'.$title.'%')->where('receipt.user_id',$user_id)
+            ->orderBy('id', 'desc')
             ->paginate($per_page);
 
         $count = $this->fetch_count();
@@ -464,9 +465,8 @@ class CartController extends BaseController
                 if($v['number'] >= $vue['min'] && $v['number'] <= $vue['max']){
                     $price = $vue['sell_price'] * $v['number'];
 
-                } else {
-                    $price = $data->product->sale_price * $v['number'];
                 }
+                
             }
 
             $data['price'] = $price;
