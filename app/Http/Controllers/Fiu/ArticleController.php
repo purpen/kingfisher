@@ -253,6 +253,8 @@ class ArticleController extends Controller
     {
         $products = ProductsModel::where('saas_type' , 1)->get();
         $article = ArticleModel::where('id' , $id)->first();
+        $date = EndaEditor::MarkDecode($article->content);
+        dd($date);
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
         $random = uniqid();
