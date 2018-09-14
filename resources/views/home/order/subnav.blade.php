@@ -8,7 +8,7 @@
     <li @if($tab_menu == 'servicing')class="active"@endif><a href="{{url('/order/servicingOrderList')}}">售后中</a></li>
     <li @if($tab_menu == 'finished')class="active"@endif><a href="{{url('/order/finishedOrderList')}}">已完成</a></li>
     <li @if($tab_menu == 'closed')class="active"@endif><a href="{{url('/order/closedOrderList')}}">已关闭</a></li>
-    <li @if($tab_menu == 'invoice')class="active"@endif><a href="{{url('/order')}}">发票记录</a></li>
+    <li @if($tab_menu == 'invoice')class="active"@endif><a href="{{url('/invoice/lists')}}">发票记录</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
     <li>

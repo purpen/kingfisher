@@ -466,7 +466,7 @@ class CartController extends BaseController
                     $price = $vue['sell_price'] * $v['number'];
 
                 }
-                
+
             }
 
             $data['price'] = $price;

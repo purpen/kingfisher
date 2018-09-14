@@ -36,7 +36,7 @@ class HistoryInvoiceModel extends BaseModel
      */
     public function order()
     {
-        return $this->belongsTo('App\Models\OrderModel', 'id');
+        return $this->belongsTo('App\Models\OrderModel','order_id');
     }
 
     /**

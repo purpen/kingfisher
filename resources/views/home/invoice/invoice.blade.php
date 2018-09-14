@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
-                @include('home.order.subnav')
+                @include('home.invoice.subnav')
             </div>
         </div>
         <div id="down-print" class="container row" style="background-color: wheat;" hidden>
@@ -91,99 +91,11 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-md-8">
-                    <div class="form-inline">
-                        <div class="form-group">
-                            {{--<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
-                                <i class="glyphicon glyphicon-edit"></i> 创建订单
-                            </a>--}}
-                            @if ($status == 5)
-                                <button type="button" id="batch-verify" class="btn btn-success mr-2r">
-                                    <i class="glyphicon glyphicon-ok"></i> 审批
-                                </button>
-                                <button type="button" id="split_order" class="btn btn-warning mr-2r">
-                                    <i class="glyphicon glyphicon-wrench"></i> 拆单
-                                </button>
-                            @endif
-
-                            @if ($status == 8)
-                                <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
-                                    <i class="glyphicon glyphicon-backward"></i> 反审
-                                </button>
-                               {{-- <button type="button" class="btn btn-success mr-2r" id="send-order">
-                                    <i class="glyphicon glyphicon-print"></i> 打印发货
-                                </button>--}}
-                            @endif
-
-                        </div>
-
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                导出 <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#" id="order-excel">导出</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel">代发品牌订单导出</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel">分销渠道订单导出</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                导入 <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#" id="in_order">导入</a>
-                                </li>
-                                {{--<li>--}}
-                                {{--<a href="#" id="zc_order">众筹订单导入</a>--}}
-                                {{--</li>--}}
-                                <li>
-                                    <a href="#" id="logistics_order">物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel-input">分销渠道订单信息导入</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        {{--<div class="form-group">--}}
-                        {{--<button type="button" id="order-excel" class="btn btn-white mr-2r">--}}
-                        {{--<i class="glyphicon glyphicon-arrow-up"></i> 导出--}}
-                        {{--</button>--}}
-                        {{--<button type="button" class="btn btn-white mr-2r" id="in_order">--}}
-                        {{--<i class="glyphicon glyphicon-arrow-down"></i> 导入--}}
-                        {{--</button>--}}
-                        {{--<button type="button" class="btn btn-white mr-2r" id="zc_order">--}}
-                        {{--<i class="glyphicon glyphicon-arrow-down"></i> 众筹订单导入--}}
-                        {{--</button>--}}
-                        {{--<button type="button" class="btn btn-white mr-2r" id="logistics_order">--}}
-                        {{--<i class="glyphicon glyphicon-arrow-down"></i> 物流信息导入--}}
-                        {{--</button>--}}
-                        {{--</div>--}}
-                    </div>
 
                 </div>
 
                 <div class="col-md-4 text-right">
-                    @if($tab_menu == 'all')<form id="per_page_from" action="{{ url('/order') }}" method="POST">@endif
-                        @if($tab_menu == 'waitpay')<form id="per_page_from" action="{{ url('/order/nonOrderList') }}" method="POST">@endif
-                            @if($tab_menu == 'waitcheck')<form id="per_page_from" action="{{ url('/order/verifyOrderList') }}" method="POST">@endif
-                                @if($tab_menu == 'waitsend')<form id="per_page_from" action="{{ url('/order/sendOrderList') }}" method="POST">@endif
-                                    @if($tab_menu == 'sended')<form id="per_page_from" action="{{ url('/order/completeOrderList') }}" method="POST">@endif
-                                        @if($tab_menu == 'servicing')<form id="per_page_from" action="{{ url('/order/servicingOrderList') }}" method="POST">@endif
-                                            @if($tab_menu == 'finished')<form id="per_page_from" action="{{ url('/order/finishedOrderList') }}" method="POST">@endif
-                                                @if($tab_menu == 'closed')<form id="per_page_from" action="{{ url('/order/closedOrderList') }}" method="POST">@endif
-                                                @if($tab_menu == 'invoice')<form id="per_page_from" action="{{ url('/invoice/lists') }}" method="POST">@endif
+                       <form id="per_page_from" action="{{ url('/invoice/lists') }}" method="POST">
                                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                                                     <div class="datatable-length">
                                                         <select class="form-control selectpicker input-sm per_page" name="per_page">
@@ -472,6 +384,7 @@
 
 @section('customize_js')
     @parent
+    $('.active').removeClass('active');
     var _token = $('#_token').val();
 
     var PrintTemplate;
@@ -600,7 +513,7 @@
     }
     });
 
-    $.get("{{url('/order/ajaxEdit')}}",{'id': id},function (e) {
+    $.get("{{url('/invoice/ajaxEdit')}}",{'id': id},function (e) {
     if(e.status == -1){
     alert(e.msg);
     }else if(e.status == 0){
@@ -720,7 +633,8 @@
     var obj = $(this);
     if ($(this).attr("active") == 1) {
     var id = $(this).attr("value");
-    $.get('{{url('/order/ajaxEdit')}}',{'id':id},function (e) {
+    $.get('{{url('/invoice/ajaxEdit')}}',{'id':id},function (e) {
+    console.log(1);
     if(e.status){
     var template = $('#order-info-form').html();
     var views = Mustache.render(template, e.data);
