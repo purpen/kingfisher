@@ -201,11 +201,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/product/followList', [
             'as' => 'Dealer.product.followList', 'uses' => 'ProductsController@followList'
         ]);
-////         商品详情
+////      商品详情
         $api->get('/DealerApi/product/info', [
             'as' => 'Dealer.product.info', 'uses' => 'ProductsController@info'
         ]);
-//         商品搜索
+//        商品搜索
         $api->get('/DealerApi/product/search', [
             'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
         ]);
@@ -244,6 +244,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         //确认收货
         $api->post('/DealerApi/order/confirm',[
             'as' => 'Dealer.Order.confirm' , 'uses' => 'OrderController@confirm'
+        ]);
+        //收银台
+        $api->post('/DealerApi/order/pay_money',[
+            'as' => 'Dealer.Order.pay_money' , 'uses' => 'OrderController@pay_money'
         ]);
 
         // 经销商修改信息-------------------------------------------------------------------------------------------------

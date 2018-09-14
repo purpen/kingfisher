@@ -417,11 +417,11 @@ class OrderController extends BaseController{
             if ($order->payment_type == 4) {
                 //月结就直接默认成已付款占货
                 if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '未付款占货关联操作失败');
+                    return ajax_json(0, '付款占货关联操作失败');
                 }
             }else{//订单未付款占货(假定为未付款然后占货)
                 if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '付款占货关联操作失败');
+                    return ajax_json(0, '未付款占货关联操作失败');
                 }
             }
 
@@ -465,11 +465,11 @@ class OrderController extends BaseController{
                 if ($order->payment_type == 4) {
                     //月结就直接默认成已付款占货
                     if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '未付款占货关联操作失败');
+                        return ajax_json(0, '付款占货关联操作失败');
                     }
                 }else{//订单未付款占货(假定为未付款然后占货)
                     if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '付款占货关联操作失败');
+                        return ajax_json(0, '未付款占货关联操作失败');
                     }
                 }
             }
@@ -543,7 +543,7 @@ class OrderController extends BaseController{
     {
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
-        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 1])->first();
+        $order = OrderModel::where(['id' => $order_id ,'user_id' => $user_id , 'status' => 1])->first();
         if(!$order){
             return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
         }else {
@@ -551,6 +551,16 @@ class OrderController extends BaseController{
                 ->where('user_id','=',$this->auth_user_id)
                 ->where('id','=',$order_id)
                 ->update(['status'=> 0]);
+
+            $orderSku = $order->orderSkuRelation;//订单详情表
+            $order_sku = $orderSku->toArray();
+            foreach ($order_sku as $k=>$v) {
+                $sku_id = $v['sku_id'];
+                $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
+                if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
+                    return ajax_json(0, '未付款减货关联操作失败');
+                }
+            }
 
             return $this->response->array(ApiHelper::success());
         }
@@ -589,6 +599,36 @@ class OrderController extends BaseController{
                 ->update(['status'=> 20]);
 
             return $this->response->array(ApiHelper::success());
+        }
+    }
+
+    /**
+     * @api {post} /DealerApi/order/pay_money 收银台
+     * @apiVersion 1.0.0
+     * @apiName Order pay_money
+     * @apiGroup Order
+     *
+     * @apiParam {integer} order_id 订单id
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+
+    public function pay_money(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        $user_id = $this->auth_user_id;
+        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id])->select('id','number','pay_money')->first();
+        if(!$order){
+            return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
+        }else {
+            return $this->response->array(ApiHelper::success('Success', 200, $order));
         }
     }
 }
