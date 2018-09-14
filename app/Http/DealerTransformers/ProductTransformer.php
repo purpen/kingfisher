@@ -96,6 +96,8 @@ class ProductTransformer extends TransformerAbstract
             'mode' =>$product->mode?$product->mode:'',
             'follows' =>$product->follows,
             'follow' =>$product->follow,
+            'content' =>$product->content,
+            'new_content' =>$product->new_content,
             'skus' => $all,
 
         ];

@@ -20,6 +20,7 @@ use App\Models\SkuRegionModel;
 use App\Models\UserProductModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use YuanChao\Editor\EndaEditor;
 
 class ProductsController extends BaseController
 {
@@ -142,7 +143,11 @@ class ProductsController extends BaseController
         $product = ProductsModel::where('id' , $product_id)->first();
         $category = CategoriesModel::where('id',$product->category_id)->where('type',1)->select('title')->first();
         $product->category = $category->title;
-
+        if(!empty($product->content)){
+            $product->new_content = EndaEditor::MarkDecode($product->content);
+        }else{
+            $product->new_content = '';
+        }
         $follow = CollectionModel::where('product_id',$product_id)->get();
         if ($follow){
             $product->follows = count($follow);//已关注数量
