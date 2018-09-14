@@ -105,7 +105,7 @@
                                         {{--<select class="chosen-select" name="region_id">--}}
                                             {{--<option value="">请选择省份</option>--}}
                                             @foreach($provinces as $v)
-                                            <input type="checkbox" name="region_id[]" class="checkcla" value="{{ $v->id }}"  @if(in_array($v->id,$region)) checked="checked" @endif>{{ $v->name }}
+                                            <input type="checkbox" name="region_id[]" class="checkcla" value="{{ $v->id }}"  @if(in_array($v->id,$region)) checked="checked" @endif><span style="margin-right: 10px">{{ $v->name }}</span>
                                                 {{--<option value="{{ $v->id }}" {{ $v->id == $product->region_id?'selected':'' }}>{{ $v->name }}</option>--}}
                                             @endforeach
                                         {{--</select>--}}

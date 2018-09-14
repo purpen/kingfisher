@@ -176,7 +176,7 @@ class CartController extends BaseController
 
 
     /**
-     * @api {post} /DealerApi/settlement 点击结算
+     * @api {post} /DealerApi/cart/settlement 点击结算
      * @apiVersion 1.0.0
      * @apiName Cart settlement
      * @apiGroup Cart
