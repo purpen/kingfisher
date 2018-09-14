@@ -64,7 +64,7 @@ class MessageController extends BaseController
      *      "position":               // 职位
      *      "store_address":               // 门店详细地址
      *      "enter_Address":               // 企业详细地址
-     *      "business_license_number":  "638272611291",     //营业执照号
+     *      "business_license_number":  "638272611291",     //统一社会信用代码
      *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
      *     "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }

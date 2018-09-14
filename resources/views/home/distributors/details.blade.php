@@ -225,8 +225,9 @@
                                                 <div class="asset">
                                                     @if($assets_contract)
                                                         <img src="{{ $assets_contract->file->small }}" style="width: 150px;" class="img-thumbnail">
-                                                    @endif
-{{--                                                    <a class="removeimg" value="{{ $asset->id }}"><i class="glyphicon glyphicon-remove"></i></a>--}}
+
+                                                    <a class="removeimg" value="{{ $assets_contract->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+                                                        @endif
                                                 </div>
                                             </div>
                                     </div>
