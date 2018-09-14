@@ -347,7 +347,7 @@ class ArticleController extends Controller
         $data = array(
             'status'=> 0,
             'message'=> 'ok',
-            'url'=> config('qiniu.material_url').$key
+            'url'=> config('qiniu.material_url').$key.'-p1080'
         );
 //        return $data;
 //        $data = array(

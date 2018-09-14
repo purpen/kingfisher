@@ -157,6 +157,7 @@ class AssetsModel extends BaseModel
             'avatar' => config('qiniu.url') . $this->path . '-ava',
             'p500' => config('qiniu.url') . $this->path . '-p500',
             'p800' => config('qiniu.url') . $this->path . '-p800',
+            'p1080' => config('qiniu.url') . $this->path . '-p1080',
         ];
     }
 
