@@ -190,7 +190,7 @@ class OrderController extends BaseController{
 
             if(!empty($orderSku)){
                 $order_sku = $orderSku->toArray();
-                foreach ($order_sku as $v){
+                foreach ($order_sku as $k=>$v){
                     $sku_id = $v['sku_id'];
                     $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
 
@@ -199,9 +199,8 @@ class OrderController extends BaseController{
                     }else{
                         $sku->path = url('images/default/erp_product.png');
                     }
-                    $order_sku[0]['path'] = $sku->path;
-                    $order_sku[0]['product_title'] = $sku->product ? $sku->product->title : '';
-
+                    $order_sku[$k]['path'] = $sku->path;
+                    $order_sku[$k]['product_title'] = $sku->product ? $sku->product->title : '';
                     $orders->order_skus = $order_sku;
                 }
             }
@@ -232,7 +231,7 @@ class OrderController extends BaseController{
      * @apiParam {string} invoice_id 发票id  0.不开发票
      * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
-     *
+     * @apiParam {string} product_id [2,1,4,2,9]
      *
      */
     public function store(Request $request)
@@ -241,6 +240,22 @@ class OrderController extends BaseController{
         if ($status['status'] != 2) {
             return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
         }
+
+        $product_id = $request->input('product_id');
+        $payment_type = $request->input('payment_type');
+//        $payment_type = 4;
+//        $product_id = [4,3,2,16];
+        if ($product_id){
+            $products = ProductsModel::whereIn('id',$product_id)->get();
+            foreach ($products as $v){
+                if ($v->mode == 2){//非月结
+                    if ($payment_type == 4){//月结支付
+                        return $this->response->array(ApiHelper::error($v->title.'不支持月结支付方式，请选择其他支付方式！', 403));
+                    }
+                }
+            }
+        }
+
         $all = $request->all();
         $sku_quantity = $all['sku_id_quantity'];
 
@@ -257,7 +272,6 @@ class OrderController extends BaseController{
             $sku_region = SkuRegionModel::where('sku_id', $sku_id)->get();
 
             if (count($sku_region)>0) {
-
 //            求最大值
             $max = 0;
             $prices = 0;
@@ -460,19 +474,13 @@ class OrderController extends BaseController{
                 }
             }
         }
-        // 创建订单收款单
-        $model = new ReceiveOrderModel();
-        if (!$model->orderCreateReceiveOrder($order_id)) {
-            return ajax_json(0,"ID:'. $order_id .'订单发货创建订单收款单错误");
-        }
+
         $ids = AuditingModel::where('type',1)->select('user_id')->first();
         if ($ids){
             //发送审核短信通知
             $dataes = new AuditingModel();
             $dataes->datas(1);
         }
-
-
         return $this->response->array(ApiHelper::success());
     }
 

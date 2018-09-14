@@ -106,10 +106,10 @@
                             @endif
 
                             @if ($status == 8)
-                                {{--<button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
+                                <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
                                     <i class="glyphicon glyphicon-backward"></i> 反审
                                 </button>
-                                <button type="button" class="btn btn-success mr-2r" id="send-order">
+                               {{-- <button type="button" class="btn btn-success mr-2r" id="send-order">
                                     <i class="glyphicon glyphicon-print"></i> 打印发货
                                 </button>--}}
                             @endif

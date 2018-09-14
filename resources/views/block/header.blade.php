@@ -52,7 +52,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
                     <li><a href="{{url('/enterWarehouse')}}">入库单</a></li>
-                    <li><a href="{{url('/outWarehouse')}}">出库单</a></li>
+                    <li><a href="{{url('/outWarehouse/orderOut')}}">出库单</a></li>
                     <li><a href="{{url('/changeWarehouse')}}">调拨单</a></li>
                     {{--<li><a href="">盘点单</a></li>--}}
                     <li><a href="{{url('/storageSkuCount/list')}}">库存监控</a></li>
@@ -93,8 +93,8 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
                     <li><a href="{{ url('/product') }}">商品管理</a></li>
-                    <li><a href="{{url('/synchronousStock')}}">库存同步</a></li>
-                    <li><a href="">赠品策略</a></li>
+                    {{--<li><a href="{{url('/synchronousStock')}}">库存同步</a></li>--}}
+                    {{--<li><a href="">赠品策略</a></li>--}}
                     <li><a href="{{url('/order')}}">订单查询</a></li>
                     <li role="presentation" class="divider"></li>
                     <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
@@ -111,8 +111,8 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                     <li><a href="{{url('/receive')}}">收款</a></li>
                     <li><a href="{{url('/payment')}}">付款</a></li>
-                    <li><a href="{{url('/payment/brandlist')}}">品牌付款单</a></li>
-                    <li><a href="{{url('/receive/channellist')}}">渠道收款单</a></li>
+                    {{--<li><a href="{{url('/payment/brandlist')}}">品牌付款单</a></li>--}}
+                    {{--<li><a href="{{url('/receive/channellist')}}">渠道收款单</a></li>--}}
                     <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                     {{--<li><a href="{{url('/order')}}">订单查询</a></li>--}}
                     <li role="presentation" class="divider"></li>
@@ -127,17 +127,17 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu7">
-                    <li><a href="{{url('/count')}}">统计报表</a></li>
-                    <li><a href="{{url('/userSaleStatistics/index')}}">销售报表</a></li>
+                    {{--<li><a href="{{url('/count')}}">统计报表</a></li>--}}
+                    {{--<li><a href="{{url('/userSaleStatistics/index')}}">销售报表</a></li>--}}
                     <li><a href="{{url('/statistics/skuSale')}}">商品报表</a></li>
                     <li><a href="{{url('storageSkuCount/storageCost')}}">库存报表</a></li>
                     <li role="presentation" class="divider"></li>
-                    <li><a href="{{url('/orderUser')}}">客户报表</a></li>
+                    {{--<li><a href="{{url('/orderUser')}}">客户报表</a></li>--}}
                     <li><a href="{{url('/purchases')}}">监控报表</a></li>
                     <li><a href="{{url('/receiveExcel')}}">收入报表</a></li>
                     <li><a href="{{url('/dateGetPurchasesExcel')}}">采购报表</a></li>
                     <li><a href="{{url('/supplierMonth')}}">供应商报表</a></li>
-                    <li><a href="{{url('/dateGetPurchasesExcel')}}">分销商报表</a></li>
+                    {{--<li><a href="{{url('/dateGetPurchasesExcel')}}">分销商报表</a></li>--}}
                 </ul>
             </li>
             @endrole
