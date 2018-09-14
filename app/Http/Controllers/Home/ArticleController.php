@@ -333,6 +333,7 @@ class ArticleController extends Controller
         $file = $request->file('image');
         if($file == null){
             $filePath = $_FILES['undefined']['tmp_name'];
+            dd($filePath);
         }else{
             $filePath = $file->getRealPath();
         }
@@ -347,7 +348,7 @@ class ArticleController extends Controller
         $data = array(
             'status'=> 0,
             'message'=> 'ok',
-            'url'=> config('qiniu.material_url').$key.'-p1080'
+            'url'=> config('qiniu.material_url').$key.'-p1080'."\n"
         );
 //        return $data;
 //        $data = array(
