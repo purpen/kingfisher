@@ -316,7 +316,6 @@
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 
-{{--@include('UEditor::head');--}}
 @section('customize_js')
     @parent
 

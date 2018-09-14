@@ -460,19 +460,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="mode" class="col-sm-2 control-label">选择是否能月结<em>*</em></label>
-                                <div class="col-sm-3">
-                                    <div class="input-group col-md-8">
-                                        <select class="chosen-select" name="mode">
-                                            <option value="" >请选择是否月结</option>
-                                            <option value="1"{{ $product->mode == 1?'selected':'' }}>月结</option>
-                                            <option value="2"{{ $product->mode == 2?'selected':'' }}>非月结</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
                                 <label for="mode" class="col-sm-2 control-label">颜色/型号</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="mode" class="form-control">
@@ -536,12 +523,10 @@
                                     </table>
                                     <input type="hidden" name="length" value="" id="length">
                                 </div>
-                                <div id="okay" style="margin-left: 47%"><a href="javascript:void(0)" style="color: black;font-size: 18px;">保存</a></div>
+                                <div id="okay" style="margin-left: 44%"><a href="javascript:void(0)" style="color: red;font-size: 18px;">点击保存</a></div>
                             </div>
 
-
-
-
+                            
                             <h5>sku图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
                             <hr>
                             <div class="row mb-2r" id="create-sku-img">
@@ -574,7 +559,7 @@
 
     		                <div class="modal-footer">
     							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>
-    							<button type="submit" class="btn btn-magenta">确定</button>
+    							<button type="submit" class="btn btn-magenta okay">确定</button>
     						</div>
 					    </form>
 		            </div>
@@ -682,7 +667,7 @@
                                     </table>
                                     <input type="hidden" name="lengths" value="" id="lengths">
                                 </div>
-                                <div id="okays" style="margin-left: 47%"><a href="javascript:void(0)" style="color: black;font-size: 18px">保存</a></div>
+                                <div id="okays" style="margin-left: 44%"><a href="javascript:void(0)" style="color: red;font-size: 18px">点击保存</a></div>
                             </div>
 
 
@@ -718,7 +703,7 @@
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                <button type="submit" class="btn btn-magenta">确定</button>
+                                <button type="submit" class="btn btn-magenta" id="sures">确定</button>
                             </div>
                         </form>
                     </div>
@@ -733,7 +718,6 @@
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 
-@include('UEditor::head');
 @section('customize_js')
     @parent
     var is_form = 0; // 判断是否允许提交表单
@@ -830,6 +814,7 @@
     return false;
     }
     })
+
 
     {{--商品图片--}}
     new qq.FineUploader({
@@ -1170,7 +1155,7 @@
                     notEmpty: {
                         message: '69码不能为空！'
                     }
-                },
+                }
                 {{--onError: function(e, data) {--}}
                     {{--remove_message();--}}
                 {{--},--}}
@@ -1195,7 +1180,78 @@
                         {{--});--}}
                     {{--}--}}
                 {{--}--}}
-            }
+            },
+
+        }
+    });
+
+    $("#upsku").formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            mode: {
+                validators: {
+                    notEmpty: {
+                        message: '颜色或型号不能为空！'
+                    }
+                }
+            },
+            price: {
+                validators: {
+                    notEmpty: {
+                        message: '价格不能为空！'
+                    }
+                }
+            },
+            bid_price: {
+                validators: {
+                    notEmpty: {
+                        message: '标准进价不能为空！'
+                    }
+                }
+            },
+            cost_price: {
+                validators: {
+                    notEmpty: {
+                        message: '成本价不能为空！'
+                    }
+                }
+            },
+            unique_number: {
+                validators: {
+                    notEmpty: {
+                        message: '69码不能为空！'
+                    }
+                }
+                {{--onError: function(e, data) {--}}
+                    {{--remove_message();--}}
+                {{--},--}}
+                {{--onSuccess: function(e, data) {--}}
+                    {{--if (!data.fv.isValidField('unique_number')) {--}}
+                        {{--data.fv.revalidateField('unique_number');--}}
+                        {{--return false;--}}
+                    {{--}--}}
+
+                    {{--if(!is_form){--}}
+                        {{--var insert_message = data.element;--}}
+                        {{--// 请求站外编号是否已存在--}}
+                        {{--var unique_number = $('#unique_number').val();--}}
+                        {{--$.post('/productsSku/uniqueNumberCaptcha',{unique_number:unique_number,  _token: _token},function(data){--}}
+                            {{--var obj = eval("("+data+")");--}}
+                            {{--if(obj.status){--}}
+                                {{--remove_message();--}}
+                                {{--alert("品牌sku编号已存在,请重新输入！");--}}
+                                {{--location.reload();--}}
+                                {{--return false;--}}
+                            {{--}--}}
+                        {{--});--}}
+                    {{--}--}}
+                {{--}--}}
+            },
 
         }
     });
@@ -1300,10 +1356,10 @@
     }
     })
 
-    var ue = UE.getEditor('container');
-    ue.ready(function() {
+    {{--var ue = UE.getEditor('container');--}}
+    {{--ue.ready(function() {--}}
     {{--//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.--}}
-    ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+    {{--ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');--}}
 
-    });
+    {{--});--}}
 @endsection

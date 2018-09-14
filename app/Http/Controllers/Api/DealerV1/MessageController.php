@@ -37,7 +37,7 @@ class MessageController extends BaseController
      *      {
      *      "id": 2,                            // ID
      *      "user_id": 1,                            // 用户ID
-     *      "name": 小明,           // 姓名
+     *      "name": 小明,           // 门店联系人姓名
      *      "ein": 12345,           // 税号
      *      "phone": 13265363728,           // 电话
      *      "enter_phone": 13435363728,           // 企业电话
