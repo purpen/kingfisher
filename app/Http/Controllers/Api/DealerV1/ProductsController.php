@@ -91,7 +91,7 @@ class ProductsController extends BaseController
      * "name": "Artiart可爱便携小鸟刀水果刀",            //商品名称
      * "short_name": "Artiart可爱便携小鸟刀水果刀",      //短名称
      * "price": "200.00",                              // 价格
-     * "market_price": "123",                           // 市场价格
+     * "sale_price": "123",                           // 供货价
      * "weight": "0.00",                               // 重量
      * "summary": "",                                  // 备注
      * "inventory": 1,                                 // 库存
@@ -101,13 +101,14 @@ class ProductsController extends BaseController
      * "sales_number": 23                           // 销售数量
      * "follows":109                                //此商品被关注数量
      * "follow":0                                //有未被关注 0.无 1.有
+     * "mode":1                                //是否为月结 1.月结 2.非月结
      * "skus": [
      * {
      * "sku_id": 42,
      * "number": "116110436487",
      * "mode": "黑色",                     // 型号
      * "price": "123.00"                   // 价格
-     * "market_price": "123",               // 市场价格
+     * "sale_price": "123",               // 供货价
      * "image": "http://erp.me/images/default/erp_product1.png",
      *  "product_details":  "<img src="/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg",
      * "inventory": 0                               // 库存
@@ -211,7 +212,7 @@ class ProductsController extends BaseController
      *      "product_id": 60,                   // 商品ID
      *      "number": "116110418454",           // 商品编号
      *      "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
-     *      "price": "200.00",                      // 商品价格
+     *      "price": "200.00",                      // 商品供货价
      *      "inventory": 1,                         // 库存
      *      "follow":1                              //已关注
      *      "image": "http://erp.me/images/default/erp_product.png",
@@ -295,6 +296,7 @@ class ProductsController extends BaseController
      * "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
      * "price": "200.00",                      // 商品价格
      * "inventory": 1,                         // 库存
+     * "mode": 1,                         // 是否为月结 1.月结 2.非月结
      * "image": "http://www.work.com/images/default/erp_product.png",  //商品图
      * "product_details":  "http://www.work.com/images/default/erp_product1.png", //商品详情介绍图
      * "categories"：  //分类名称

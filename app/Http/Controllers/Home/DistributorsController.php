@@ -2,6 +2,7 @@
 //经销商控制器
 namespace App\Http\Controllers\Home;
 
+use App\Helper\QiniuApi;
 use App\Http\Controllers\Controller;
 use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
@@ -72,6 +73,9 @@ class DistributorsController extends Controller
         if ($distributors->category_id && $distributors->authorization_id){
             $categorie = explode(',',$distributors->category_id);
             $authoriza = explode(',', $distributors->authorization_id);
+        }else{
+            $categorie =[];
+            $authoriza =[];
         }
         if (count($distributors)>0) {
             $province = ChinaCityModel::where('oid', $distributors->province_id)->select('name')->first();
@@ -104,9 +108,14 @@ class DistributorsController extends Controller
 
         $assets_front = AssetsModel::where(['target_id' => $id, 'type' =>17])->orderBy('id','desc')->first();
         $assets_Inside = AssetsModel::where(['target_id' => $id, 'type' => 18])->orderBy('id','desc')->first();
+        $assets_contract = AssetsModel::where(['target_id' => $id, 'type' => 19])->orderBy('id','desc')->first();
         $assets_portrait = AssetsModel::where(['target_id' => $id, 'type' => 20])->orderBy('id','desc')->first();
         $assets_national_emblem = AssetsModel::where(['target_id' => $id, 'type' => 21])->orderBy('id','desc')->first();
         $user = UserModel::where('id',$distributors->user_id)->select('phone','realname','account')->first();
+        $random = uniqid();  //获取唯一字符串
+        //获取七牛上传token
+        $token = QiniuApi::upToken();
+        $user_id = Auth::user()->id;
         return view('home/distributors.details', [
             'distributors' => $distributors,
             'categorys' => $categorys,
@@ -114,8 +123,12 @@ class DistributorsController extends Controller
             'authorization' => $authorization,
             'authoriza' => $authoriza,
             'user' => $user,
+            'token' => $token,
+            'user_id' => $user_id,
+            'random' => $random,
             'assets_front' => $assets_front,
             'assets_Inside' => $assets_Inside,
+            'assets_contract' => $assets_contract,
             'assets_portrait' => $assets_portrait,
             'assets_national_emblem' => $assets_national_emblem,
         ]);
@@ -173,10 +186,11 @@ class DistributorsController extends Controller
      */
     public function ajaxVerify(Request $request)
     {
-
         $id = $request->input('id');
         $category_id = $request->input('diyu')?$request->input('diyu'):'';
         $authorization_id = $request->input('Jszzdm')?$request->input('Jszzdm'):'';
+        $mode = $request->input('mode')?$request->input('mode'):'';
+        $contract_id = $request->input('contract_id')?$request->input('contract_id'):0;
         $distributorsModel = DistributorModel::find($id);
         if($distributorsModel !='') {
 
@@ -188,7 +202,7 @@ class DistributorsController extends Controller
                 }
             }
             if ($category_id != '' && $authorization_id != '') {
-                $distributors = DB::update("update distributor set category_id='$category_id',authorization_id='$authorization_id' where id=$id");
+                $distributors = DB::update("update distributor set category_id='$category_id',authorization_id='$authorization_id',mode='$mode',contract_id='$contract_id' where id=$id");
                 if (!$distributors) {
                     return ajax_json(1, '警告：分类信息保存失败');
                 }

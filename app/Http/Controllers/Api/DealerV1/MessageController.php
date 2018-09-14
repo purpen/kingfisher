@@ -37,7 +37,7 @@ class MessageController extends BaseController
      *      {
      *      "id": 2,                            // ID
      *      "user_id": 1,                            // 用户ID
-     *      "name": 小明,           // 姓名
+     *      "name": 小明,           // 门店联系人姓名
      *      "ein": 12345,           // 税号
      *      "phone": 13265363728,           // 电话
      *      "enter_phone": 13435363728,           // 企业电话
@@ -64,7 +64,7 @@ class MessageController extends BaseController
      *      "position":               // 职位
      *      "store_address":               // 门店详细地址
      *      "enter_Address":               // 企业详细地址
-     *      "business_license_number":  "638272611291",     //营业执照号
+     *      "business_license_number":  "638272611291",     //统一社会信用代码
      *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
      *     "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
@@ -497,15 +497,15 @@ class MessageController extends BaseController
             $distributors->store_address = $request->input('store_address');
             $distributors->enter_Address = $request->input('enter_Address');
             $distributor = $distributors->update($all);
-            if ($distributor){
-                $users = new UserModel();
-//                $users->realname = $request['name'];
-//                $users->phone = $request['phone'];
-//                $user = $users->update();
-                $user =DB::table('users')
-                    ->where('id','=',$this->auth_user_id)
-                    ->update(['realname'=>$request['name'],'phone'=>$request['phone']]);
-            }
+//            if ($distributor){
+//                $users = new UserModel();
+////                $users->realname = $request['name'];
+////                $users->phone = $request['phone'];
+////                $user = $users->update();
+//                $user =DB::table('users')
+//                    ->where('id','=',$this->auth_user_id)
+//                    ->update(['realname'=>$request['name'],'phone'=>$request['phone']]);
+//            }
         }else{
             return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
         }

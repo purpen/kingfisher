@@ -142,20 +142,24 @@ class OrderController extends BaseController{
      *  "invoice_value": "1453",        //发票金额
      *  "over_time": "2018-09-11 00:00:00",  //过期时间
      *
-     *  "address_list":[
-     *  "id":1,
-     *  "name": "shusyh"                 //收件人
-     *  "province_id":1         省份oid
-     *  "city_id":2             城市oid
-     *  "county_id":3           区/县oid
-     *  "town_id":4             城镇/乡oid
-     *  "province":1         省份
-     *  "city":2             城市
-     *  "county":3           区/县
-     *  "town":4             城镇/乡
-     *  "address":798艺术广场     详细地址
-     * "phone"：13432522222     电话
-     * ]
+     *  "address_list": {
+     *  "id": 1,
+     *  "user_id": 1,
+     *   "address": "三亚市天涯海角",
+     *   "province_id": 23,
+     *   "city_id": 3690,
+     *   "county_id": 3696,
+     *   "town_id": 0,
+     *   "name": "小蜜蜂",
+     *   "phone": "17802998888",
+     *   "zip": null,
+     *   "is_default": 0,
+     *   "status": 1,
+     *   "created_at": "2018-09-03 19:22:48",
+     *   "updated_at": "2018-09-04 15:53:10",
+     *   "deleted_at": null,
+     *   "fixed_telephone": null
+     *   }
      * "orderSkus": [
      * {
      * "sku_id": 42,
@@ -190,7 +194,7 @@ class OrderController extends BaseController{
 
             if(!empty($orderSku)){
                 $order_sku = $orderSku->toArray();
-                foreach ($order_sku as $v){
+                foreach ($order_sku as $k=>$v){
                     $sku_id = $v['sku_id'];
                     $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
 
@@ -199,9 +203,8 @@ class OrderController extends BaseController{
                     }else{
                         $sku->path = url('images/default/erp_product.png');
                     }
-                    $order_sku[0]['path'] = $sku->path;
-                    $order_sku[0]['product_title'] = $sku->product ? $sku->product->title : '';
-
+                    $order_sku[$k]['path'] = $sku->path;
+                    $order_sku[$k]['product_title'] = $sku->product ? $sku->product->title : '';
                     $orders->order_skus = $order_sku;
                 }
             }
@@ -232,7 +235,7 @@ class OrderController extends BaseController{
      * @apiParam {string} invoice_id 发票id  0.不开发票
      * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
-     *
+     * @apiParam {string} product_id [2,1,4,2,9]
      *
      */
     public function store(Request $request)
@@ -241,6 +244,22 @@ class OrderController extends BaseController{
         if ($status['status'] != 2) {
             return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
         }
+
+        $product_id = $request->input('product_id');
+        $payment_type = $request->input('payment_type');
+//        $payment_type = 4;
+//        $product_id = [4,3,2,16];
+        if ($product_id){
+            $products = ProductsModel::whereIn('id',$product_id)->get();
+            foreach ($products as $v){
+                if ($v->mode == 2){//非月结
+                    if ($payment_type == 4){//月结支付
+                        return $this->response->array(ApiHelper::error($v->title.'不支持月结支付方式，请选择其他支付方式！', 403));
+                    }
+                }
+            }
+        }
+
         $all = $request->all();
         $sku_quantity = $all['sku_id_quantity'];
 
@@ -257,7 +276,6 @@ class OrderController extends BaseController{
             $sku_region = SkuRegionModel::where('sku_id', $sku_id)->get();
 
             if (count($sku_region)>0) {
-
 //            求最大值
             $max = 0;
             $prices = 0;
@@ -403,11 +421,11 @@ class OrderController extends BaseController{
             if ($order->payment_type == 4) {
                 //月结就直接默认成已付款占货
                 if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '未付款占货关联操作失败');
+                    return ajax_json(0, '付款占货关联操作失败');
                 }
             }else{//订单未付款占货(假定为未付款然后占货)
                 if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '付款占货关联操作失败');
+                    return ajax_json(0, '未付款占货关联操作失败');
                 }
             }
 
@@ -451,11 +469,11 @@ class OrderController extends BaseController{
                 if ($order->payment_type == 4) {
                     //月结就直接默认成已付款占货
                     if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '未付款占货关联操作失败');
+                        return ajax_json(0, '付款占货关联操作失败');
                     }
                 }else{//订单未付款占货(假定为未付款然后占货)
                     if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '付款占货关联操作失败');
+                        return ajax_json(0, '未付款占货关联操作失败');
                     }
                 }
             }
@@ -467,8 +485,6 @@ class OrderController extends BaseController{
             $dataes = new AuditingModel();
             $dataes->datas(1);
         }
-
-
         return $this->response->array(ApiHelper::success());
     }
 
@@ -531,7 +547,7 @@ class OrderController extends BaseController{
     {
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
-        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 1])->first();
+        $order = OrderModel::where(['id' => $order_id ,'user_id' => $user_id , 'status' => 1])->first();
         if(!$order){
             return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
         }else {
@@ -539,6 +555,16 @@ class OrderController extends BaseController{
                 ->where('user_id','=',$this->auth_user_id)
                 ->where('id','=',$order_id)
                 ->update(['status'=> 0]);
+
+            $orderSku = $order->orderSkuRelation;//订单详情表
+            $order_sku = $orderSku->toArray();
+            foreach ($order_sku as $k=>$v) {
+                $sku_id = $v['sku_id'];
+                $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
+                if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
+                    return ajax_json(0, '未付款减货关联操作失败');
+                }
+            }
 
             return $this->response->array(ApiHelper::success());
         }
@@ -577,6 +603,36 @@ class OrderController extends BaseController{
                 ->update(['status'=> 20]);
 
             return $this->response->array(ApiHelper::success());
+        }
+    }
+
+    /**
+     * @api {post} /DealerApi/order/pay_money 收银台
+     * @apiVersion 1.0.0
+     * @apiName Order pay_money
+     * @apiGroup Order
+     *
+     * @apiParam {integer} order_id 订单id
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+
+    public function pay_money(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        $user_id = $this->auth_user_id;
+        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id])->select('id','number','pay_money')->first();
+        if(!$order){
+            return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
+        }else {
+            return $this->response->array(ApiHelper::success('Success', 200, $order));
         }
     }
 }

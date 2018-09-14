@@ -133,7 +133,7 @@
                         <div class="form-group">
                             <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号<em>*</em></label>
                             <div class="col-sm-3">
-                                <input type="text" name="number" class="form-control" id="b2cCode" value="">
+                                <input type="text" name="number" class="form-control" id="b2cCode" value="{{$number}}" readonly>
                                 @if ($errors->has('number'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('number') }}</strong>
@@ -184,7 +184,7 @@
                               @endif
                             </div>
 
-                            <label for="sale_proce" class="col-sm-1 control-label {{ $errors->has('sale_proce') ? ' has-error' : '' }}">建议售价<small>(元)</small><em>*</em></label>
+                            <label for="sale_proce" class="col-sm-1 control-label {{ $errors->has('sale_proce') ? ' has-error' : '' }}">供货价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
         						<input type="text" name="sale_price" class="form-control">
                                 @if ($errors->has('sale_price'))
@@ -194,6 +194,20 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="mode" class="col-sm-2 control-label">选择是否能月结<em>*</em></label>
+                            <div class="col-sm-3">
+                                <div class="input-group col-md-8">
+                                    <select class="chosen-select" name="mode">
+                                        <option value="" >请选择是否月结</option>
+                                        <option value="1">月结</option>
+                                        <option value="2">非月结</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                     
                         <div class="form-group">
                             <label for="weight" class="col-sm-2 control-label {{ $errors->has('weight') ? ' has-error' : '' }}">重量(kg)</label>
@@ -302,7 +316,6 @@
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 
-{{--@include('UEditor::head');--}}
 @section('customize_js')
     @parent
 
