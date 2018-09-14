@@ -86,7 +86,7 @@
                                     <div class="col-sm-8" style="padding-top:5px">
                                         @foreach($lists as $list)
                                             @if($list['type'] == 2)
-                                                <input type="checkbox" name="authorization_id[]" class="checkcla" value="{{ $list->id }}"  @if(in_array($list->id,$authorization)) checked="checked" @endif>{{ $list->title }}
+                                                <input type="checkbox" name="authorization_id[]" class="checkcla" value="{{ $list->id }}"  @if(in_array($list->id,$authorization)) checked="checked" @endif >{{ $list->title }}
                                             @endif
                                         @endforeach
 
