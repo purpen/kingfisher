@@ -142,20 +142,24 @@ class OrderController extends BaseController{
      *  "invoice_value": "1453",        //发票金额
      *  "over_time": "2018-09-11 00:00:00",  //过期时间
      *
-     *  "address_list":[
-     *  "id":1,
-     *  "name": "shusyh"                 //收件人
-     *  "province_id":1         省份oid
-     *  "city_id":2             城市oid
-     *  "county_id":3           区/县oid
-     *  "town_id":4             城镇/乡oid
-     *  "province":1         省份
-     *  "city":2             城市
-     *  "county":3           区/县
-     *  "town":4             城镇/乡
-     *  "address":798艺术广场     详细地址
-     * "phone"：13432522222     电话
-     * ]
+     *  "address_list": {
+     *  "id": 1,
+     *  "user_id": 1,
+     *   "address": "三亚市天涯海角",
+     *   "province_id": 23,
+     *   "city_id": 3690,
+     *   "county_id": 3696,
+     *   "town_id": 0,
+     *   "name": "小蜜蜂",
+     *   "phone": "17802998888",
+     *   "zip": null,
+     *   "is_default": 0,
+     *   "status": 1,
+     *   "created_at": "2018-09-03 19:22:48",
+     *   "updated_at": "2018-09-04 15:53:10",
+     *   "deleted_at": null,
+     *   "fixed_telephone": null
+     *   }
      * "orderSkus": [
      * {
      * "sku_id": 42,
