@@ -249,6 +249,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->post('/DealerApi/order/pay_money',[
             'as' => 'Dealer.Order.pay_money' , 'uses' => 'OrderController@pay_money'
         ]);
+        //上传凭证
+        $api->post('/DealerApi/order/upload_img',[
+            'as' => 'Dealer.Order.upload_img' , 'uses' => 'OrderController@upload_img'
+        ]);
 
         // 经销商修改信息-------------------------------------------------------------------------------------------------
         $api->post('/DealerApi/message/updateMessage', [

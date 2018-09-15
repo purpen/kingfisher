@@ -93,12 +93,12 @@ class DistributorsController extends Controller
 //                $tit .= $val['title'] . ',';
 //            }
             if ($province && $city) {
-                $distributors['address'] = $province->toArray()['name'].','.$city->toArray()['name'];
+                $distributors['address'] = $province->toArray()['name'].','.$city->toArray()['name'].$distributors->store_address;
             }else{
                 $distributors['address'] = '';
             }
             if ($enter_province && $enter_city) {
-                $distributors['enter_address'] = $enter_province->toArray()['name'].','.$enter_city->toArray()['name'];
+                $distributors['enter_address'] = $enter_province->toArray()['name'].','.$enter_city->toArray()['name'].$distributors->enter_Address;
             }else{
                 $distributors['enter_address'] = '';
             }
