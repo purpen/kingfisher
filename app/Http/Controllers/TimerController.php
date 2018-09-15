@@ -27,13 +27,13 @@ class TimerController extends Controller
 //        $users = User::find(1);
 //        $this->dispatch((new SendReminderEmail($users))->delay(5));#延迟5秒
 
-//        $orderModel = OrderModel::find($order_id);
-//        if (!$orderModel) {
-//            return false;
-//        }
-//        if ($orderModel->status == 1){
-//           $job = (new SendReminderEmail($order_id,$orderModel))->delay(60);
-//           $this->dispatch($job);
-//        }
+        $orderModel = OrderModel::find($order_id);
+        if (!$orderModel) {
+            return false;
+        }
+        if ($orderModel->status == 1){
+           $job = (new SendReminderEmail($order_id,$orderModel))->delay(10);
+           $this->dispatch($job);
+        }
     }
 }
