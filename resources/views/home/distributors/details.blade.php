@@ -222,18 +222,19 @@
                                                 <div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
                                             </div>
                                         </div>
-                                            <div class="col-md-2">
-                                                <div class="asset">
-                                                    @if($assets_contract)
-                                                        <a href="{{$assets_contract->file->p800}}" target="_blank">
-                                                            <img src="{{$assets_contract->file->small}}" style="width: 150px;" class="img-thumbnail">
-                                                        </a>
+                                            {{--<div class="col-md-2">--}}
+                                            {{--</div>--}}
+                                        <div class="asset">
+                                            @if($assets_contract)
+                                                <a href="{{$assets_contract->file->p800}}" target="_blank">
+                                                    <img src="{{$assets_contract->file->small}}" style="width: 150px;" class="img-thumbnail">
+                                                </a>
 
-                                                    <a class="removeimg" value="{{ $assets_contract->id }}"><i class="glyphicon glyphicon-remove"></i></a>
-                                                        @endif
-                                                </div>
-                                            </div>
-                                    </div></div>
+                                                <a class="removeimg" value="{{ $assets_contract->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                                     <input type="hidden" name="random" value="{{ $random }}">
                                     <input type="hidden" id="id" name="id" value="{{ $distributors->id }}">
                                     <input type="hidden" id="user_id" name="user_id" value="{{ $user_id }}">
