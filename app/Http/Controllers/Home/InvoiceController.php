@@ -176,10 +176,46 @@ $status= 'all';
         $order = OrderModel::find($order_id); //订单
         $where['order_id'] = $order->id;
         $where['difference'] = 0;
-        $history =  HistoryInvoiceModel::where()->first();
-        $order->company_name = $history->company_name;
-        $order->receiving_name = $history->receiving_name;
-        $order->receiving_phone = $history->receiving_phone;
+        $history =  HistoryInvoiceModel::where($where)->first();
+        if($history){
+            if($history->receiving_id == 1){
+                $history->receiving_id = '增值税普通发票';
+                $history->prove_id = '';
+                $prove = 0;
+            } elseif($history->receiving_id == 2){
+                $history->receiving_id = '增值税专用发票';
+                $history->prove_id = $history->getFirstImgInvoice();
+                $prove = 1;
+            } elseif($history->receiving_id == 0){
+                $history->receiving_id = '未开票';
+                $history->prove_id = '';
+                $prove = 0;
+            } else {
+                $history->receiving_id = '';
+                $history->prove_id = '';
+                $prove = 0;
+            }
+            if($history->receiving_type == 1){
+                $history->receiving_type = '未开票';
+            } elseif($history->receiving_type == 2){
+                $history->receiving_type = '审核中';
+            }elseif($history->receiving_type == 3){
+                $history->receiving_type = '已开票';
+            }elseif($history->receiving_type == 4){
+                $history->receiving_type = '拒绝';
+            }else{
+                $history->receiving_type = '';
+            }
+
+
+        }else{
+            $history['company_name'] = '';
+            $history['receiving_id'] = '';
+            $prove = 0;
+        }
+        $order->company_name = isset($history['company_name']) ? $history['company_name'] : '';
+        $order->receiving_name = isset($history['receiving_name']) ? $history['receiving_name'] : '';
+        $order->receiving_phone = isset($history['receiving_phone']) ? $history['receiving_phone'] : '';
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
         /*$order->storage_name = $order->storage->name;*/
 
@@ -227,6 +263,8 @@ $status= 'all';
 
         return ajax_json(1, 'ok', [
             'order' => $order,
+            'prove' => $prove,
+            'history'=>$history,
             'order_sku' => $order_sku,
             'storage_list' => $storage_list,
             'logistic_list' => $logistic_list,

@@ -24,15 +24,15 @@
              <div class="form-group">                
                 <label class="col-sm-1 control-label">门店名称</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="门店名称" type="text" class="form-control order" id="company_name" name="company_name" value="@{{company_name}}">
+                    <input validate="" showname="门店名称" disabled type="text" class="form-control order" id="company_name" name="company_name" value="@{{company_name}}">
                 </div>
                 <label class="col-sm-1 control-label">联系人姓名</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="联系人姓名" type="text" class="form-control order" id="receiving_name" name="receiving_name" value="@{{receiving_name}}">
+                    <input validate="" showname="联系人姓名" disabled type="text" class="form-control order" id="receiving_name" name="receiving_name" value="@{{receiving_name}}">
                 </div>
                 <label class="col-sm-1 control-label">联系人手机号</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="联系人手机号" type="text" class="form-control order" id="receiving_phone" name="receiving_phone" value="@{{ receiving_phone }}">
+                    <input validate="" showname="联系人手机号" disabled type="text" class="form-control order" id="receiving_phone" name="receiving_phone" value="@{{ receiving_phone }}">
                 </div>
             </div>
             <div class="form-group">
@@ -257,7 +257,112 @@
                 </div>
             </div>
         </form>
-        
+          <form id="form-beiz" role="form" class="form-horizontal mt-2r" style="display:none;">
+		  @{{ #history }}
+               <div class="form-group">
+                <label class="col-sm-1 control-label">发票类型</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_id }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">申请时间</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ application_time }}</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-1 control-label">发票状态</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_type }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">驳回原因</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ reason }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">审核人</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ reviewer }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">审核时间</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ audit }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">单位地址</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ unit_address }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">电话号码</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ company_phone }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">企业名称</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ company_name }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">税号</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ duty_paragraph }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">开户行名称</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ opening_bank }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">银行账户</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ bank_account }}</span>
+                </div>
+				
+            </div>	 
+			<div class="form-group">
+                <label class="col-sm-1 control-label">收件人姓名</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_name }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">收件人电话</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_phone }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">收件地址</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_address }}</span>
+                </div> 
+				@{{ #prove }} 
+				 <label class="col-sm-1 control-label" style="margin-left: 450px;margin-top: -360px;">一般纳税人证明</label>
+                <div class="col-sm-3">
+                     <img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" style="height: 100px; width: 100px;margin-left: 600px;margin-top: -550px;">
+                
+                </div> 
+		@{{ /prove }} 
+                <div class="col-sm-3">
+                    <a class="form-text text-danger" style="background:rgb(22, 155, 213);color:rgb(255, 255, 255); border-radius:15px;width:150px;height:53px;text-align:center;line-height:53px;">发票审核记录</a>
+                </div> 
+            </div>			
+			              
+		@{{ /history }}
+		
+        </form>
         <div class="ptb-2r plr-2r bg-black">
             @{{#change_status}}<button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>@{{ /change_status }}
             <button type="submit" class="btn btn-magenta btn-sm" id="fold">

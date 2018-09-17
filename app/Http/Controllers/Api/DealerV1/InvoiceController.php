@@ -120,9 +120,9 @@ class InvoiceController extends BaseController
         $data['province_id'] = '';
         $data['area_id'] = '';
         if($prover){
-            $data['prover_id'] = $prover['id'];
+            $data['prove_id'] = $prover['id'];
         }else {
-            $data['prover_id'] = '';
+            $data['prove_id'] = '';
         }
         $data['reason'] = '';
         $data['receiving_type'] = 1;
