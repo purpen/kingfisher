@@ -226,7 +226,7 @@
                                                 <div class="asset">
                                                     @if($assets_contract)
                                                         <a href="{{$assets_contract->file->p800}}" target="_blank">
-                                                            <img src="{{$assets_contract->file->small}}" class="img-thumbnail">
+                                                            <img src="{{$assets_contract->file->small}}" style="width: 150px;" class="img-thumbnail">
                                                         </a>
 
                                                     <a class="removeimg" value="{{ $assets_contract->id }}"><i class="glyphicon glyphicon-remove"></i></a>
