@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
-                @include('home.order.subnav')
+                @include('home.invoice.audit')
             </div>
         </div>
         <div id="down-print" class="container row" style="background-color: wheat;" hidden>
@@ -91,99 +91,11 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-md-8">
-                    <div class="form-inline">
-                        <div class="form-group">
-                            {{--<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
-                                <i class="glyphicon glyphicon-edit"></i> 创建订单
-                            </a>--}}
-                            @if ($status == 5)
-                                <button type="button" id="batch-verify" class="btn btn-success mr-2r">
-                                    <i class="glyphicon glyphicon-ok"></i> 审批
-                                </button>
-                                <button type="button" id="split_order" class="btn btn-warning mr-2r">
-                                    <i class="glyphicon glyphicon-wrench"></i> 拆单
-                                </button>
-                            @endif
-
-                            @if ($status == 8)
-                                <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
-                                    <i class="glyphicon glyphicon-backward"></i> 反审
-                                </button>
-                               {{-- <button type="button" class="btn btn-success mr-2r" id="send-order">
-                                    <i class="glyphicon glyphicon-print"></i> 打印发货
-                                </button>--}}
-                            @endif
-
-                        </div>
-
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                导出 <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#" id="order-excel">导出</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel">代发品牌订单导出</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel">分销渠道订单导出</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                导入 <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#" id="in_order">导入</a>
-                                </li>
-                                {{--<li>--}}
-                                {{--<a href="#" id="zc_order">众筹订单导入</a>--}}
-                                {{--</li>--}}
-                                <li>
-                                    <a href="#" id="logistics_order">物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel-input">分销渠道订单信息导入</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        {{--<div class="form-group">--}}
-                        {{--<button type="button" id="order-excel" class="btn btn-white mr-2r">--}}
-                        {{--<i class="glyphicon glyphicon-arrow-up"></i> 导出--}}
-                        {{--</button>--}}
-                        {{--<button type="button" class="btn btn-white mr-2r" id="in_order">--}}
-                        {{--<i class="glyphicon glyphicon-arrow-down"></i> 导入--}}
-                        {{--</button>--}}
-                        {{--<button type="button" class="btn btn-white mr-2r" id="zc_order">--}}
-                        {{--<i class="glyphicon glyphicon-arrow-down"></i> 众筹订单导入--}}
-                        {{--</button>--}}
-                        {{--<button type="button" class="btn btn-white mr-2r" id="logistics_order">--}}
-                        {{--<i class="glyphicon glyphicon-arrow-down"></i> 物流信息导入--}}
-                        {{--</button>--}}
-                        {{--</div>--}}
-                    </div>
 
                 </div>
 
                 <div class="col-md-4 text-right">
-                    @if($tab_menu == 'all')<form id="per_page_from" action="{{ url('/order') }}" method="POST">@endif
-                        @if($tab_menu == 'waitpay')<form id="per_page_from" action="{{ url('/order/nonOrderList') }}" method="POST">@endif
-                            @if($tab_menu == 'waitcheck')<form id="per_page_from" action="{{ url('/order/verifyOrderList') }}" method="POST">@endif
-                                @if($tab_menu == 'waitsend')<form id="per_page_from" action="{{ url('/order/sendOrderList') }}" method="POST">@endif
-                                    @if($tab_menu == 'sended')<form id="per_page_from" action="{{ url('/order/completeOrderList') }}" method="POST">@endif
-                                        @if($tab_menu == 'servicing')<form id="per_page_from" action="{{ url('/order/servicingOrderList') }}" method="POST">@endif
-                                            @if($tab_menu == 'finished')<form id="per_page_from" action="{{ url('/order/finishedOrderList') }}" method="POST">@endif
-                                                @if($tab_menu == 'closed')<form id="per_page_from" action="{{ url('/order/closedOrderList') }}" method="POST">@endif
-                                                @if($tab_menu == 'invoice')<form id="per_page_from" action="{{ url('/invoice/lists') }}" method="POST">@endif
+                       <form id="per_page_from" action="{{ url('/invoice/lists') }}" method="POST">
                                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                                                     <div class="datatable-length">
                                                         <select class="form-control selectpicker input-sm per_page" name="per_page">
@@ -198,77 +110,7 @@
                                                     </div>
                                                 </form>
                 </div>
-                <div id="showSeniorSearch" @if($sSearch == true) style="display: block;" @endif style="display: none;">
-                    </br><hr>
-
-                    <h5 class="col-sm-2" >高级搜索</h5>
-                    </br><hr>
-                    <form  enctype="multipart/form-data" role="form" method="post" action="{{ url('/order/seniorSearch') }}">
-                        {!! csrf_field() !!}
-                        <div class="form-group col-md-12">
-                            <label for="order_status" class="col-sm-1 control-label">订单状态</label>
-                            <div class="col-sm-2">
-                                <select class="selectpicker" id="order_status_search" name="order_status" style="display: none;">
-                                    <option @if($order_status == '') selected @endif  value="no">默认分类</option>
-                                    <option @if($order_status === 0) selected @endif value="0">已关闭</option>
-                                    <option @if($order_status == 1) selected @endif  value="1">待付款</option>
-                                    <option @if($order_status == 5) selected @endif  value="5">待审核</option>
-                                    <option @if($order_status == 8) selected @endif  value="8">待发货</option>
-                                    <option @if($order_status == 10) selected @endif  value="10">已发货</option>
-                                    <option @if($order_status == 20) selected @endif  value="20">已完成</option>
-                                </select>
-                            </div>
-
-                            <label for="from_type" class="col-sm-1 control-label">订单来源</label>
-                            <div class="col-sm-2">
-                                <select class="selectpicker" id="from_type_search" name="from_type" style="display: none;">
-                                    <option @if($from_type == 0) selected @endif   value="0">选择订单来源</option>
-                                    <option @if($from_type == 1) selected @endif  value="1">内部订单</option>
-                                    <option @if($from_type == 2) selected @endif  value="2">分销订单</option>
-                                    <option @if($from_type == 3) selected @endif  value="3">微商城订单</option>
-                                </select>
-                            </div>
-
-                            <label for="from_type" class="col-sm-1 control-label">供应商</label>
-                            <div class="col-sm-2">
-                                <select class="selectpicker" name="supplier_id" style="display: none;">
-                                    <option value="">选择供应商</option>
-                                    @foreach($supplier_list as $supplier)
-                                        <option @if($supplier_id == $supplier->id) selected @endif value="{{$supplier->id}}">{{$supplier->nam}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-md-12">
-
-                                <label for="order_number_search" class="col-sm-1 control-label">订单编号</label>
-                                <div class="col-sm-2">
-                                    <input type="text" id="order_number_search" name="order_number" value="{{ $order_number }}"  class="form-control">
-                                </div>
-                                <label for="product_name_search" class="col-sm-1 control-label">商品名称</label>
-                                <div class="col-sm-2">
-                                    <input type="text" id="product_name_search" name="product_name" value="{{ $product_name }}" class="form-control">
-                                </div>
-
-                                <label for="buyer_name_search" class="col-sm-1 control-label">收货人</label>
-                                <div class="col-sm-2">
-                                    <input type="text" id="buyer_name_search" name="buyer_name" value="{{ $buyer_name }}"  class="form-control">
-                                </div>
-                                <label for="buyer_phone" class="col-sm-1 control-label">手机号</label>
-                                <div class="col-sm-2">
-                                    <input type="text" id="buyer_phone_search" name="buyer_phone" value="{{ $buyer_phone }}" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="form-group mb-2  text-right">
-                                <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
-                            </div>
-                        </div>
-
-                    </form>
-
-
-                </div>
-            </div>
+                 </div>
             <div id="loading" class="loading" style="display: none;">Loading...</div>
 
             <div class="row scroll">
@@ -278,81 +120,28 @@
                         <tr class="gblack">
                             <th class="text-center"><input type="checkbox" id="checkAll"></th>
                             <th>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">提醒</span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">提醒</a>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">退款</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">锁单</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无法送达</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">货到付款</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">预售</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </th>
-                            <th>
                                 状态
                             </th>
                             <th>
-                                店铺名
+                                门店名称
                             </th>
-                            <th>订单号/下单时间</th>
-                            <th>买家</th>
+                            <th>订单号</th>
+                            <th>下单时间</th>
                             <th>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">买家备注</span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                 发票申请时间
                             </th>
                             <th>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">卖家备注</span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">有卖家备注</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无卖家备注</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                               发票状态
                             </th>
                             <th>
-                                物流/运单号
+                               发票类型
                             </th>
                             <th>
-                                数量
+                                收货人
                             </th>
-                            <th>实付/运费</th>
+                            <th>物流/运单号</th>
+                            <th>商品数量</th>
+                            <th>总金额</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -362,7 +151,6 @@
                                 <td class="text-center">
                                     <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $order->id }}">
                                 </td>
-                                <td></td>
                                 <td>
                                     @if (in_array($order->status, array(0)))
                                         <span class="label label-default">{{$order->status_val}}</span>
@@ -376,14 +164,41 @@
                                         <span class="label label-success">{{$order->status_val}}</span>
                                     @endif
                                 </td>
-                                <td>{{$order->store ? $order->store->name : ''}}</td>
-                                <td class="magenta-color">
-                                    <span>{{$order->number}}</span><br>
-                                    <small class="text-muted">{{$order->order_start_time}}</small>
+                                <td>{{$order->company_name ? $order->company_name : ''}}</td>
+                                <td>{{$order->number ? $order->number: ''}}</td>
+                                <td >
+                                    {{$order->order_start_time}}
                                 </td>
-                                <td>{{$order->buyer_name}}</td>
-                                <td>{{$order->buyer_summary}}</td>
-                                <td>{{$order->seller_summary}}</td>
+                                <td>{{$order->application_time}}</td>
+                                <td>
+                                    @if ($order->receiving_type == 1)
+                                        <span class="label label-danger">未开票</span>
+                                    @endif
+                                        @if ($order->receiving_type == 2)
+                                            <span class="label label-success">审核中</span>
+                                        @endif
+                                        @if ($order->receiving_type == 3)
+                                            <span class="label label-success">已开票</span>
+                                        @endif
+                                        @if ($order->receiving_type == 4)
+                                            <span class="label label-danger">拒绝</span>
+                                        @endif
+                                        @if ($order->receiving_type == 5)
+                                            <span class="label label-danger">已过期</span>
+                                        @endif
+                                </td>
+                                <td>
+                                    @if ($order->receiving_id == 0)
+                                        <span class="label label-danger">未开票</span>
+                                    @endif
+                                    @if ($order->receiving_id == 1)
+                                        <span class="label label-success">增值税普通发票</span>
+                                    @endif
+                                        @if ($order->receiving_id == 2)
+                                            <span class="label label-success">增值税专用发票</span>
+                                        @endif
+                                </td>
+                                <td>{{$order->receiving_name}}</td>
                                 <td>
                                     <span>{{$order->logistics ? $order->logistics->name : ''}}</span><br>
                                     <small class="text-muted">{{$order->express_no}}</small>
@@ -391,14 +206,12 @@
                                 <td>{{$order->count}}</td>
                                 <td>{{$order->total_money}} / {{$order->freight}}</td>
                                 <td tdr="nochect">
-                                    <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}}" active="1">
+                                    <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}} ? {{$order->invoice_id}}" active="1">
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
                                     </button>
                                     @role(['admin','director','shopkeeper'])
                                     @if ($order->type != 3)
-                                        <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order mb-2r">
-                                            <i class="glyphicon glyphicon-trash"></i>
-                                        </button>
+
                                     @endif
                                     @endrole
 
@@ -432,7 +245,7 @@
     {{--手动发货弹出框--}}
     @include('modal.add_manual_send_modal')
 
-    @include('mustache.order_info')
+    @include('mustache.audit_info')
 
     {{--拆单弹出框--}}
     @include('modal.add_split_order')
@@ -472,6 +285,7 @@
 
 @section('customize_js')
     @parent
+    $('.active').removeClass('active');
     var _token = $('#_token').val();
 
     var PrintTemplate;
@@ -600,7 +414,7 @@
     }
     });
 
-    $.get("{{url('/order/ajaxEdit')}}",{'id': id},function (e) {
+    $.get("{{url('/invoice/ajaxEdit')}}",{'id': id},function (e) {
     if(e.status == -1){
     alert(e.msg);
     }else if(e.status == 0){
@@ -720,7 +534,13 @@
     var obj = $(this);
     if ($(this).attr("active") == 1) {
     var id = $(this).attr("value");
-    $.get('{{url('/order/ajaxEdit')}}',{'id':id},function (e) {
+    var ids = id.split("?");
+    var order_id = ids[0];
+    var invoice_id = ids[1];
+    console.log(order_id)
+    console.log(invoice_id)
+    $.get('{{url('/invoice/ajaxEdit')}}',{'id':order_id,'invoice_id':invoice_id},function (e) {
+    console.log(1);
     if(e.status){
     var template = $('#order-info-form').html();
     var views = Mustache.render(template, e.data);

@@ -36,7 +36,7 @@ class HistoryInvoiceModel extends BaseModel
      */
     public function order()
     {
-        return $this->belongsTo('App\Models\OrderModel', 'id');
+        return $this->belongsTo('App\Models\OrderModel','order_id');
     }
 
     /**
@@ -45,6 +45,34 @@ class HistoryInvoiceModel extends BaseModel
     public function historyInvoice()
     {
         return $this->belongsTo('App\Models\InvoiceModel', 'invoice_id');
+    }
+
+
+    /**
+     * 获取发票封面图
+     */
+    public function getFirstImgInvoice()
+    {
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->small;
+        }
+        return $result;
+    }
+
+    /**
+     * 获取发票图片信息对象
+     */
+    public function imageFile()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 24])
+            ->orderBy('id','desc')
+            ->first();
+        if(empty($asset)){
+            return url('images/default/erp_product.png');
+        }
+        return $asset->file;
     }
 
 }

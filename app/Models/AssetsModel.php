@@ -148,6 +148,12 @@ class AssetsModel extends BaseModel
         return $this->hasOne('App\Models\InvoiceModel', 'prove_id');
     }
 
+    //一对一关联历史发票表一般纳税人证明照片
+    public function historyInvoice()
+    {
+        return $this->hasOne('App\Models\HistoryInvoiceModel', 'prove_id');
+    }
+
 
 
     /**

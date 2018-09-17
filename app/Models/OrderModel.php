@@ -159,7 +159,7 @@ class OrderModel extends BaseModel
      */
     public function historyInvoice()
     {
-        return $this->belongsTo('App\Models\HistoryInvoiceModel', 'id');
+        return $this->belongsTo('App\Models\HistoryInvoiceModel','order_id');
     }
     /**
      * 相对关联到发票历史表表
