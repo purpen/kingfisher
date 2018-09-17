@@ -215,9 +215,10 @@
                             <div class="col-sm-3">
                                 <div class="input-group col-md-8">
                                     <select class="chosen-select" name="mode">
-                                        <option value="" >请选择是否月结</option>
-                                        <option value="1"{{ $product->mode == 1?'selected':'' }}>月结</option>
+                                        {{--<option value="" >请选择是否月结</option>--}}
                                         <option value="2"{{ $product->mode == 2?'selected':'' }}>非月结</option>
+                                        <option value="1"{{ $product->mode == 1?'selected':'' }}>月结</option>
+
                                     </select>
                                 </div>
                             </div>
@@ -559,7 +560,7 @@
 
     		                <div class="modal-footer">
     							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>
-    							<button type="submit" class="btn btn-magenta okay">确定</button>
+    							<button type="submit" class="btn btn-magenta">确定</button>
     						</div>
 					    </form>
 		            </div>
@@ -1293,24 +1294,22 @@
     });
 
     $("#appendnum").click(function(){
-
-
         $("#abc").append('<tr class="trs"><td><input type="text" class="min" name="min[]" required></td><td><input type="text" class="max" name="max[]" required></td><td><input type="text" name="sell_price[]" required></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
     })
 
     $("#okay").click(function(){
         $('#length').val($('#abc tr').length);
+            layer.msg("保存成功!");
     })
+
     $("#appendnums").click(function(){
         $("#def").append('<tr class="ts"><td><input type="text" class="mins" name="mins[]" required></td><td><input type="text" class="maxs" name="maxs[]" required></td><td><input type="text" name="sell_prices[]" required></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
     })
 
     $("#okays").click(function(){
         $('#lengths').val($('#def tr').length);
+            layer.msg("保存成功!");
     })
-
-
-
 
 
     $('.removeimg').click(function(){

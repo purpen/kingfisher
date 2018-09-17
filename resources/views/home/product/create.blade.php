@@ -200,9 +200,9 @@
                             <div class="col-sm-3">
                                 <div class="input-group col-md-8">
                                     <select class="chosen-select" name="mode">
-                                        <option value="" >请选择是否月结</option>
-                                        <option value="1">月结</option>
+                                        {{--<option value="" >请选择是否月结</option>--}}
                                         <option value="2">非月结</option>
+                                        <option value="1">月结</option>
                                     </select>
                                 </div>
                             </div>
