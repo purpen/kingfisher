@@ -243,17 +243,15 @@
          
         <form id="form-express" role="form" class="form-horizontal mt-2r" style="display:none;">
             <div class="form-group">
-                <label class="col-sm-1 control-label">物流状态</label>
+                <label class="col-sm-1 control-label">物流公司</label>
                 <div class="col-sm-3">
-                    <span class="form-text text-danger">@{{ express_state_value }}</span>
+                    <span class="form-text text-danger">@{{ logistic_name }}</span>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-1 control-label">物流信息</label>
+                <label class="col-sm-1 control-label">物流单号</label>
                 <div class="col-sm-10">
-                    @{{ #express_content_value }}
-                    <span class="form-text text-danger">@{{ key }}</span>
-                    @{{ /express_content_value }}
+                    <span class="form-text text-danger">@{{ express_no }}</span>
                 </div>
             </div>
         </form>
@@ -270,31 +268,7 @@
                     <span class="form-text text-danger">@{{ application_time }}</span>
                 </div>
             </div>
-            
-            <div class="form-group">
-                <label class="col-sm-1 control-label">发票状态</label>
-                <div class="col-sm-3">
-                    <span class="form-text text-danger">@{{ receiving_type }}</span>
-                </div>
-                
-                <label class="col-sm-1 control-label">驳回原因</label>
-                <div class="col-sm-3">
-                    <span class="form-text text-danger">@{{ reason }}</span>
-                </div>
-				
-            </div>
-			<div class="form-group">
-                <label class="col-sm-1 control-label">审核人</label>
-                <div class="col-sm-3">
-                    <span class="form-text text-danger">@{{ reviewer }}</span>
-                </div>
-                
-                <label class="col-sm-1 control-label">审核时间</label>
-                <div class="col-sm-3">
-                    <span class="form-text text-danger">@{{ audit }}</span>
-                </div>
-				
-            </div>
+
 			<div class="form-group">
                 <label class="col-sm-1 control-label">单位地址</label>
                 <div class="col-sm-3">
@@ -364,13 +338,18 @@
 		
         </form>
         <div class="ptb-2r plr-2r bg-black">
-            @{{#change_status}}<button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>@{{ /change_status }}
+
             <button type="submit" class="btn btn-magenta btn-sm" id="fold">
             <i class="glyphicon glyphicon-open"></i> 收起
             </button>
+         <div style="margin-left:20%;display: inline-block">
+         <a   href="/invoice/through?id=@{{ id }}&invoice_id=@{{ invoices_id }}" target="_blank"  style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核通过</a>
+         <a   href="/invoice/rejected?id=@{{ id }}&invoice_id=@{{ invoices_id }}"  target="_blank" style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核驳回</a>
         </div>
-        
+        </div>
+
     </td>
+
 </tr>
 @{{ /order }}
 </script>

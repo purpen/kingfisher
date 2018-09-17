@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
-                @include('home.invoice.subnav')
+                    @include('home.invoice.historyinvoice')
             </div>
         </div>
         <div id="down-print" class="container row" style="background-color: wheat;" hidden>
@@ -91,12 +91,44 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-md-8">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            {{--<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
+                                <i class="glyphicon glyphicon-edit"></i> 创建订单
+                            </a>--}}
+                            @if ($status == 5)
+                                <button type="button" id="batch-verify" class="btn btn-success mr-2r">
+                                    <i class="glyphicon glyphicon-ok"></i> 审批
+                                </button>
+                                <button type="button" id="split_order" class="btn btn-warning mr-2r">
+                                    <i class="glyphicon glyphicon-wrench"></i> 拆单
+                                </button>
+                            @endif
+
+                            @if ($status == 8)
+                                <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
+                                    <i class="glyphicon glyphicon-backward"></i> 反审
+                                </button>
+                               {{-- <button type="button" class="btn btn-success mr-2r" id="send-order">
+                                    <i class="glyphicon glyphicon-print"></i> 打印发货
+                                </button>--}}
+                            @endif
+
+                        </div>
+
+
+
+                    </div>
 
                 </div>
 
                 <div class="col-md-4 text-right">
-                       <form id="per_page_from" action="{{ url('/invoice/lists') }}" method="POST">
-                                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                    @if($tab_menu == 'all')<form id="per_page_from" action="{{ url('/invoice') }}" method="POST">@endif
+                        @if($tab_menu == 'waitpay')<form id="per_page_from" action="{{ url('/invoice/nonOrderList') }}" method="POST">@endif
+                            @if($tab_menu == 'waitcheck')<form id="per_page_from" action="{{ url('/invoice/verifyOrderList') }}" method="POST">@endif
+                                @if($tab_menu == 'waitsend')<form id="per_page_from" action="{{ url('/invoice/sendOrderList') }}" method="POST">@endif
+                                    @if($tab_menu == 'sended')<form id="per_page_from" action="{{ url('/invoice/completeOrderList') }}" method="POST">@endif
+                                         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                                                     <div class="datatable-length">
                                                         <select class="form-control selectpicker input-sm per_page" name="per_page">
                                                             <option @if($per_page == 10) selected @endif value="10">10</option>
@@ -110,7 +142,11 @@
                                                     </div>
                                                 </form>
                 </div>
-                 </div>
+                <div id="showSeniorSearch" @if($sSearch == true) style="display: block;" @endif style="display: none;">
+                    </br><hr>
+
+                </div>
+            </div>
             <div id="loading" class="loading" style="display: none;">Loading...</div>
 
             <div class="row scroll">
@@ -118,29 +154,33 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                         <tr class="gblack">
-                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                            {{--<th class="text-center"><input type="checkbox" id="checkAll"></th>--}}
                             <th>
                                 状态
                             </th>
                             <th>
                                 门店名称
                             </th>
-                            <th>订单号</th>
+                            <th>订单号 </th>
                             <th>下单时间</th>
                             <th>
-                                 发票申请时间
+                                发票申请时间
                             </th>
                             <th>
-                               发票状态
+                                发票状态
                             </th>
                             <th>
-                               发票类型
+                                发票类型
                             </th>
                             <th>
                                 收货人
                             </th>
-                            <th>物流/运单号</th>
-                            <th>商品数量</th>
+                            <th>
+                                物流/运单号
+                            </th>
+                            <th>
+                                商品数量
+                            </th>
                             <th>总金额</th>
                             <th>操作</th>
                         </tr>
@@ -148,9 +188,7 @@
                         <tbody>
                         @foreach($order_list as $order)
                             <tr>
-                                <td class="text-center">
-                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $order->id }}">
-                                </td>
+
                                 <td>
                                     @if (in_array($order->status, array(0)))
                                         <span class="label label-default">{{$order->status_val}}</span>
@@ -165,38 +203,42 @@
                                     @endif
                                 </td>
                                 <td>{{$order->company_name ? $order->company_name : ''}}</td>
-                                <td>{{$order->number ? $order->number: ''}}</td>
-                                <td >
-                                    {{$order->order_start_time}}
+                                <td class="magenta-color">
+                                    <span>{{$order->number}}</span><br>
+
                                 </td>
+                                <td>{{$order->order_start_time}}</td>
                                 <td>{{$order->application_time}}</td>
                                 <td>
                                     @if ($order->receiving_type == 1)
+                                        <span class="label label-success">未开票</span>
+                                    @endif
+                                    @if ($order->receiving_type == 2)
+                                        <span class="label label-success">审核中</span>
+                                    @endif
+                                    @if ($order->receiving_type == 3)
+                                        <span class="label label-success">已开票</span>
+                                    @endif
+                                    @if ($order->receiving_type == 4)
+                                        <span class="label label-danger">拒绝</span>
+                                    @endif
+                                    @if ($order->receiving_type == 5)
+                                        <span class="label label-danger">已过期</span>
+                                    @endif
+                                    @if ($order->receiving_type ==  '')
                                         <span class="label label-danger">未开票</span>
                                     @endif
-                                        @if ($order->receiving_type == 2)
-                                            <span class="label label-success">审核中</span>
-                                        @endif
-                                        @if ($order->receiving_type == 3)
-                                            <span class="label label-success">已开票</span>
-                                        @endif
-                                        @if ($order->receiving_type == 4)
-                                            <span class="label label-danger">拒绝</span>
-                                        @endif
-                                        @if ($order->receiving_type == 5)
-                                            <span class="label label-danger">已过期</span>
-                                        @endif
                                 </td>
                                 <td>
-                                    @if ($order->receiving_id == 0)
-                                        <span class="label label-danger">未开票</span>
+                                    @if ($order->receiving_id ==  0)
+                                        <span class="label label-danger">不开票</span>
                                     @endif
-                                    @if ($order->receiving_id == 1)
+                                    @if ($order->receiving_id ==  1)
                                         <span class="label label-success">增值税普通发票</span>
                                     @endif
-                                        @if ($order->receiving_id == 2)
-                                            <span class="label label-success">增值税专用发票</span>
-                                        @endif
+                                    @if ($order->receiving_id ==  2)
+                                        <span class="label label-success">增值税专用发票</span>
+                                    @endif
                                 </td>
                                 <td>{{$order->receiving_name}}</td>
                                 <td>
@@ -204,15 +246,13 @@
                                     <small class="text-muted">{{$order->express_no}}</small>
                                 </td>
                                 <td>{{$order->count}}</td>
-                                <td>{{$order->total_money}} / {{$order->freight}}</td>
+                                <td>{{$order->total_money}}</td>
                                 <td tdr="nochect">
                                     <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}} ? {{$order->invoice_id}}" active="1">
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
                                     </button>
                                     @role(['admin','director','shopkeeper'])
-                                    @if ($order->type != 3)
 
-                                    @endif
                                     @endrole
 
                                     @if ($status == 8)
@@ -245,7 +285,7 @@
     {{--手动发货弹出框--}}
     @include('modal.add_manual_send_modal')
 
-    @include('mustache.invoice_info')
+    @include('mustache.historyinvoice_info')
 
     {{--拆单弹出框--}}
     @include('modal.add_split_order')
@@ -285,7 +325,6 @@
 
 @section('customize_js')
     @parent
-    $('.active').removeClass('active');
     var _token = $('#_token').val();
 
     var PrintTemplate;
@@ -537,10 +576,8 @@
     var ids = id.split("?");
     var order_id = ids[0];
     var invoice_id = ids[1];
-    console.log(order_id)
-    console.log(invoice_id)
-    $.get('{{url('/invoice/ajaxEdit')}}',{'id':order_id,'invoice_id':invoice_id},function (e) {
 
+    $.get('{{url('/invoice/ajaxEdit')}}',{'id':order_id,'invoice_id':invoice_id},function (e) {
     if(e.status){
     var template = $('#order-info-form').html();
     var views = Mustache.render(template, e.data);
