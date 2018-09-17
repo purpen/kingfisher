@@ -37,6 +37,7 @@ class OrderTransformer extends TransformerAbstract
             'orderSku' => $orders->order_skus,
 
             'phone' => $address->phone,
+            'name' => $address->name,
             'fixed_telephone' => $address->fixed_telephone?$address->fixed_telephone:'',
             'province_id' => $address->province_id,
             'province' => $province,

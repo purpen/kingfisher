@@ -6,6 +6,7 @@ use App\Http\DealerTransformers\CategoryTransformer;
 use App\Http\DealerTransformers\CityTransformer;
 use App\Http\DealerTransformers\OrderListTransformer;
 use App\Http\DealerTransformers\OrderTransformer;
+use App\Jobs\SendReminderEmail;
 use App\Models\AddressModel;
 use App\Models\AssetsModel;
 use App\Models\AuditingModel;
@@ -152,9 +153,6 @@ class OrderController extends BaseController{
      *  "invoice_value": "1453",        //发票金额
      *  "over_time": "2018-09-11 00:00:00",  //过期时间
      *
-     *  "address_list": {
-     *  "id": 1,
-     *  "user_id": 1,
      *   "address": "三亚市天涯海角",
      *   "province_id": 23,
      *   "city_id": 3690,
@@ -169,8 +167,7 @@ class OrderController extends BaseController{
      *   "updated_at": "2018-09-04 15:53:10",
      *   "deleted_at": null,
      *   "fixed_telephone": null
-     *   }
-     * "orderSkus": [
+     *   "orderSkus": [
      * {
      * "sku_id": 42,
      * "price":   单价
@@ -255,7 +252,7 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
         }
 
-        $product_id = $request->input('product_id');
+        $product_id = explode(',',$request->input('product_id'));
         $payment_type = $request->input('payment_type');
 //        $payment_type = 4;
 //        $product_id = [4,3,2,16];
@@ -267,7 +264,6 @@ class OrderController extends BaseController{
                 }
             }
         }
-
         $all = $request->all();
         $sku_quantity = $all['sku_id_quantity'];
 
@@ -494,6 +490,13 @@ class OrderController extends BaseController{
             $dataes = new AuditingModel();
             $dataes->datas(1);
         }
+
+        $orderModel = OrderModel::find($order_id);
+        if ($orderModel->status == 1){
+            $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);
+            $this->dispatch($job);
+        }
+
         return $this->response->array(ApiHelper::success());
     }
 

@@ -35,7 +35,7 @@ class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
     }
 
     /**
-     * Execute the job.User用于获取用户信息/Mailer用于发送邮件
+     * Execute the job.
      *
      * @return void
      */
@@ -43,21 +43,8 @@ class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
     public function handle()
     {
         $order_id = $this->order_id;
-        Log::info('我是来自队列666,发送了一个邮件'.$order_id);
         $orderModel = $this->orderModel;
-//        $mailer->send('timer.timer',['users'=>$users],function($message) use ($users){
-//            $message->to($users->email)->subject('新功能发布');
-////            $this->job->delete();
-//        });
 
-//        Mail::raw('你现在还好吗？',function ($message){
-//            // 发件人（你自己的邮箱和名称）
-//            $message->from('282235309@qq.com', '沁雅児');
-//            // 收件人的邮箱地址
-//            $message->to('2834144959@qq.com',$this->users);
-//            // 邮件主题
-//            $message->subject('队列发送邮件');
-//        });
         $orders =DB::table('order')
 //            ->where('user_id','=',$this->auth_user_id)
             ->where('id','=',$order_id)
@@ -66,10 +53,5 @@ class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
         if (!$orders){
             return false;
         }
-
-        Log::info('我是来自队列999,发送了一个邮件'.$orderModel);
-        Log::info('我是来自队列000,发送了一个邮件'.$orders);
-
-
     }
 }
