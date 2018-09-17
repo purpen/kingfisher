@@ -196,7 +196,8 @@
                                 <h5>电子版合同<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
                                 <hr>
                                 <div class="row mb-2r sku-pic">
-                                    <div class="row mb-2r" id="update-product-img" style="float: left">
+                                    {{--<div class="row mb-2r" id="update-product-img" style="float: left">--}}
+                                    <div class="row mb-2r" id="update-product-img">
                                         <div class="col-md-2">
                                             <div id="picForm" enctype="multipart/form-data">
                                                 <div class="img-add">
