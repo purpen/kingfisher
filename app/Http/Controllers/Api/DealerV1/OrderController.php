@@ -6,6 +6,7 @@ use App\Http\DealerTransformers\CategoryTransformer;
 use App\Http\DealerTransformers\CityTransformer;
 use App\Http\DealerTransformers\OrderListTransformer;
 use App\Http\DealerTransformers\OrderTransformer;
+use App\Jobs\SendReminderEmail;
 use App\Models\AddressModel;
 use App\Models\AssetsModel;
 use App\Models\AuditingModel;
@@ -96,15 +97,25 @@ class OrderController extends BaseController{
         }else{
             $query['user_id'] = $user_id;
         }
-        if(!empty($status)){
-            if ($status === -1) {
-                $status = 0;
-            }
-            $query['status'] = $status;
-            $orders = OrderModel::where($query)->where('type',8)->orderBy('id', 'desc')->paginate($per_page);
-        }else{
-            if ($types ==1){//当月订单
+
+        if ($types == 1) {//当月订单
+            if($status != 0) {
+                if ($status === -1) {
+                    $status = 0;
+                }
+                $query['status'] = $status;
+                $orders = OrderModel::orderBy('id', 'desc')->where($query)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+            }else{
                 $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+            }
+
+        }else{//全部订单
+            if ($status != 0){
+                if ($status === -1) {
+                    $status = 0;
+                }
+                $query['status'] = $status;
+                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where($query)->paginate($per_page);
             }else{
                 $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
             }
@@ -142,9 +153,6 @@ class OrderController extends BaseController{
      *  "invoice_value": "1453",        //发票金额
      *  "over_time": "2018-09-11 00:00:00",  //过期时间
      *
-     *  "address_list": {
-     *  "id": 1,
-     *  "user_id": 1,
      *   "address": "三亚市天涯海角",
      *   "province_id": 23,
      *   "city_id": 3690,
@@ -159,8 +167,7 @@ class OrderController extends BaseController{
      *   "updated_at": "2018-09-04 15:53:10",
      *   "deleted_at": null,
      *   "fixed_telephone": null
-     *   }
-     * "orderSkus": [
+     *   "orderSkus": [
      * {
      * "sku_id": 42,
      * "price":   单价
@@ -240,26 +247,23 @@ class OrderController extends BaseController{
      */
     public function store(Request $request)
     {
-        $status = DistributorModel::where('user_id',$this->auth_user_id)->select('status')->first();
+        $status = DistributorModel::where('user_id',$this->auth_user_id)->select('status','mode')->first();
         if ($status['status'] != 2) {
             return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
         }
 
-        $product_id = $request->input('product_id');
+        $product_id = explode(',',$request->input('product_id'));
         $payment_type = $request->input('payment_type');
 //        $payment_type = 4;
 //        $product_id = [4,3,2,16];
         if ($product_id){
             $products = ProductsModel::whereIn('id',$product_id)->get();
             foreach ($products as $v){
-                if ($v->mode == 2){//非月结
-                    if ($payment_type == 4){//月结支付
+                if ($status->mode == 1 && $v->mode == 2){//非月结
                         return $this->response->array(ApiHelper::error($v->title.'不支持月结支付方式，请选择其他支付方式！', 403));
-                    }
                 }
             }
         }
-
         $all = $request->all();
         $sku_quantity = $all['sku_id_quantity'];
 
@@ -307,7 +311,7 @@ class OrderController extends BaseController{
             $sku_price[$sku_id]=$sell_price;
 
             $total_money += sprintf("%.2f", $sell_price * $skuData['quantity']);
-        }else{
+            }else{
                 return $this->response->array(ApiHelper::error('暂无优惠信息', 403));
             }
         }
@@ -333,6 +337,7 @@ class OrderController extends BaseController{
         $all['storage_id'] = config('constant.D3IN_storage_id');
         $number = CountersModel::get_number('DD');
         $all['number'] = $number;
+        $all['voucher_id'] = 0;//凭证暂为0
         $all['address_id'] = $request->input('address_id');
 
         $address = AddressModel::where('id','=',$all['address_id'])->first();
@@ -485,6 +490,13 @@ class OrderController extends BaseController{
             $dataes = new AuditingModel();
             $dataes->datas(1);
         }
+
+        $orderModel = OrderModel::find($order_id);
+        if ($orderModel->status == 1){
+            $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);
+            $this->dispatch($job);
+        }
+
         return $this->response->array(ApiHelper::success());
     }
 
@@ -634,5 +646,59 @@ class OrderController extends BaseController{
         }else {
             return $this->response->array(ApiHelper::success('Success', 200, $order));
         }
+    }
+
+    /**
+     * @api {post} /DealerApi/order/upload_img 上传转账凭证
+     * @apiVersion 1.0.0
+     * @apiName Order upload_img
+     * @apiGroup Order
+     *
+     * @apiParam {integer} payment_type 付款方式：1.在线 6.公司转账
+     * @apiParam {integer} voucher_id 银行凭证图片ID
+     * @apiParam {integer} user_id 用户ID
+     * @apiParam {integer} order_id 订单ID
+     * @apiParam {string} token token
+     * @apiParam {string} random  随机数
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+
+    public function upload_img(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        $payment_type = $request->input('payment_type');
+        $voucher_id = $request->input('voucher_id');
+        $random = $request->input('random');
+        $user_id = $this->auth_user_id;
+        $order = OrderModel::find($order_id);
+        if ($payment_type != 6) {
+            return $this->response->array(ApiHelper::error('不是公司转账方式不需要上传凭证！', 403));
+        }
+        if (!$order){
+            return $this->response->array(ApiHelper::error('没有找到该笔订单！', 403));
+        }else{
+            $result = DB::table('order')
+                    ->where('user_id','=',$user_id)
+                    ->where('id','=',$order->id)
+                    ->where('payment_type','=',6)
+                    ->update(['voucher_id'=>$voucher_id,'status'=>2]);
+
+            if ($result) {
+                $assets = AssetsModel::where('random',$random)->get();
+                foreach ($assets as $asset){
+                    $asset->target_id = $order->id;
+                    $asset->save();
+                }
+            }
+            return $this->response->array(ApiHelper::success('上传成功', 200));
+        }
+
     }
 }

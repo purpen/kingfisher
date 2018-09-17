@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\DealerV1;
 
+use App\Http\ApiHelper;
 use App\Models\AssetsModel;
 use App\Models\InvoiceModel;
 use Illuminate\Http\Request;
@@ -119,36 +120,28 @@ class InvoiceController extends BaseController
         $data['province_id'] = '';
         $data['area_id'] = '';
         if($prover){
-            $data['prover_id'] = $prover['id'];
+            $data['prove_id'] = $prover['id'];
         }else {
-            $data['prover_id'] = '';
+            $data['prove_id'] = '';
         }
         $data['reason'] = '';
         $data['receiving_type'] = 1;
         $data['application_time'] = '';
 //        $data['receiving_id'] = 2;
 
-        $cart = InvoiceModel::create($data);
+        $cart = InvoiceModel::insertGetId($data);
 
         if(!$cart){
             return $this->response->array(ApiHelper::error('添加发票失败！', 500));
         }
         if($prover){
-            $pover = new AssetsModel();
-            $pover['name'] = $prover['name'] ? $prover['name'] : '';
-            $pover['path'] = $prover['path'] ? $prover['path'] : '';
-            $pover['size'] = $prover['size'] ? $prover['size'] : '';
-            $pover['width'] = $prover['width'] ? $prover['width'] : '';
-            $pover['height'] = $prover['height'] ? $prover['height'] : '';
-            $pover['mime'] = $prover['mime'] ? $prover['mime'] : '';
-            $pover['random'] = $prover['random'] ? $prover['random'] : '';
-            $pover['domain'] = $prover['domain'] ? $prover['domain'] : '';
-            $pover['target_id'] = $data['id'] ? $data['id'] : '';
-            $pover['type'] = 24;
-            $prover = $pover->save();
-            if(!$prover){
-                return $this->response->array(ApiHelper::error('添加图片失败！', 501));
+            $assets = AssetsModel::where('random',$prover['random'])->get();
+            foreach($assets as $asse){
+                $asse->target_id = $cart;
+                $asse['type'] = 24;
+                $asse->save();
             }
+
         }
 
         return $this->response->array(ApiHelper::success('添加成功！', 500));
@@ -236,7 +229,11 @@ class InvoiceController extends BaseController
         $receipt['receiving_address'] = $all['receiving_address']  ?  $all['receiving_address'] : '';
         $receipt['receiving_name'] = $all['receiving_name']  ?  $all['receiving_name'] : '';
         $receipt['receiving_phone'] = $all['receiving_phone']  ?  $all['receiving_phone'] : '';
-        $receipt['prove_id'] = $assets['id']  ?  $assets['id'] : '';
+        if($assets){
+            $receipt['prove_id'] = $assets['id'];
+        } else {
+            $receipt['prove_id'] = '';
+        }
 
 
 
@@ -244,22 +241,13 @@ class InvoiceController extends BaseController
             return $this->response->array(ApiHelper::error('更新失败！', 501));
         }
 
-        if($assets){
-                $pover = new AssetsModel();
-                $pover['name'] = $assets['name'] ? $assets['name'] : '';
-                $pover['path'] = $assets['path'] ? $assets['path'] : '';
-                $pover['size'] = $assets['size'] ? $assets['size'] : '';
-                $pover['width'] = $assets['width'] ? $assets['width'] : '';
-                $pover['height'] = $assets['height'] ? $assets['height'] : '';
-                $pover['mime'] = $assets['mime'] ? $assets['mime'] : '';
-                $pover['random'] = $assets['random'] ? $assets['random'] : '';
-                $pover['domain'] = $assets['domain'] ? $assets['domain'] : '';
-                $pover['target_id'] = $all['id'] ? $all['id'] : '';
-                $pover['type'] = 24;
-                $prover = $pover->save();
-            if(!$prover){
-                return $this->response->array(ApiHelper::error('更新失败！', 501));
-            }
+        if(!empty($assets['random'])){
+                $asse = AssetsModel::where('random',$assets['random'])->get();
+                foreach ($asse as $asset){
+                    $asset->target_id = $receipt->id;
+                    $asset['type'] = 24;
+                     $asset->save();
+                }
         }
         return $this->response->array(ApiHelper::success('Success.', 200));
 
@@ -268,7 +256,7 @@ class InvoiceController extends BaseController
     /**
      * @api {post} /DealerApi/invoice/deleted 删除发票
      * @apiVersion 1.0.0
-     * @apiName Cart deleted
+     * @apiName Invoice deleted
      * @apiGroup Cart
      *
      * @apiParam {integer} id invoice id :1

@@ -62,7 +62,7 @@
                                 <li for="bank_name" class="mb-0r control-label col-md-6"><b>企业开户行:</b>{{ $distributors->bank_name }}</li>
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>法人姓名:</b>{{ $distributors->legal_person }}</li>
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>法人手机号:</b>{{ $distributors->legal_phone }}</li>
-                                <li for="phone" class="mb-0r control-label col-md-6"><b>法人身份证号:</b>{{ $distributors->legal_number }}</li>
+                                {{--<li for="phone" class="mb-0r control-label col-md-6"><b>法人身份证号:</b>{{ $distributors->legal_number }}</li>--}}
                                 <li for="bank_number" class="mb-0r control-label col-md-6"><b>银行账号:</b>{{ $distributors->bank_number }}</li>
                                 <li for="business_license_number" class="mb-0r control-label col-md-6"><b>营业执照号:</b>{{ $distributors->business_license_number }}</li>
                                 <li for="taxpayer" class="mb-0r control-label col-md-6"><b>纳税人类型:</b>    @if($distributors->taxpayer == 1)
@@ -77,8 +77,8 @@
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="store_name" class="mb-0r control-label col-md-6"><b>门店名称:</b>{{ $distributors->store_name }}</li>
                                 <li for="province_id" class="mb-0r control-label col-md-6"><b>门店所在地址:</b>{{ $distributors->address }}</li>
-                                <li for="name" class="mb-0r control-label col-md-6"><b>门店联系人姓名:</b>{{ $user->name }}</li>
-                                <li for="phone" class="mb-0r control-label col-md-6"><b>门店联系人手机号:</b>{{ $user->phone }}</li>
+                                <li for="name" class="mb-0r control-label col-md-6"><b>门店联系人姓名:</b>{{ $distributors->name }}</li>
+                                <li for="phone" class="mb-0r control-label col-md-6"><b>门店联系人手机号:</b>{{ $distributors->phone }}</li>
                                 {{--<li for="phone" class="mb-0r control-label col-md-6"><b>用户名:</b>{{ $user->account }}</li>--}}
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>门店联系人职位:</b>{{ $distributors->position }}</li>
                             </ul>
@@ -91,33 +91,33 @@
 
                                 <li for="front_id" class="mb-0r control-label col-md-6"><b>门店正面照片:</b>
                                 @if($assets_front)
-{{--                                    @foreach($assets_front as $v)--}}
-                                        <img src="{{ $assets_front->file->small }}" style="width: 150px;" class="img-thumbnail">
-                                    {{--@endforeach--}}
+                                        <a href="{{$assets_front->file->p800}}" target="_blank">
+                                            <img src="{{$assets_front->file->small}}" alt="" class="img-thumbnail">
+                                        </a>
                                     @endif
                                 </li>
 
                                 <li for="Inside_id" class="mb-0r control-label col-md-6"><b>门店内部照片:</b>
                                     @if($assets_Inside)
-{{--                                        @foreach($assets_Inside as $v)--}}
-                                            <img src="{{ $assets_Inside->file->small }}" style="width: 150px;" class="img-thumbnail">
-                                        {{--@endforeach--}}
+                                        <a href="{{$assets_Inside->file->p800}}" target="_blank">
+                                            <img src="{{$assets_Inside->file->small}}" alt="" class="img-thumbnail">
+                                        </a>
                                     @endif
                                 </li>
 
                                 <li for="portrait_id" class="mb-0r control-label col-md-6"><b>身份证人像面照片:</b>
                                     @if($assets_portrait)
-{{--                                        @foreach($assets_portrait as $v)--}}
-                                            <img src="{{ $assets_portrait->file->small }}" style="width: 150px;" class="img-thumbnail">
-                                        {{--@endforeach--}}
+                                        <a href="{{$assets_portrait->file->p800}}" target="_blank">
+                                            <img src="{{$assets_portrait->file->small}}" alt="" class="img-thumbnail">
+                                        </a>
                                     @endif
                                 </li>
 
                                 <li for="national_emblem_id" class="mb-0r control-label col-md-6"><b>身份证国徽面照片:</b>
                                     @if($assets_national_emblem)
-{{--                                        @foreach($assets_national_emblem as $v)--}}
-                                            <img src="{{ $assets_national_emblem->file->small }}" style="width: 150px;" class="img-thumbnail">
-                                        {{--@endforeach--}}
+                                        <a href="{{$assets_national_emblem->file->p800}}" target="_blank">
+                                            <img src="{{$assets_national_emblem->file->small}}" alt="" class="img-thumbnail">
+                                        </a>
                                     @endif
                                 </li>
 
@@ -147,7 +147,7 @@
                             <hr>
                             <div class="form-group">
                                 <div class="col-sm-3">
-                                    <label for="category_id" class="col-sm-6 control-label {{ $errors->has('category_id') ? ' has-error' : '' }}">选择商品分类<em>*</em></label>
+                                    <label for="category_id" class="col-sm-6 control-label {{ $errors->has('category_id') ? ' has-error' : '' }}"><em style="color: red">*</em> 选择商品分类</label>
 
                                     <div class="input-group  col-md-12">
                                         <div class="col-sm-6" style="padding-top:5px">
@@ -163,7 +163,7 @@
                                 </div>
 
                                 <div class="col-sm-3">
-                                    <label for="authorization_id" class="col-sm-6 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型<em>*</em></label>
+                                    <label for="authorization_id" class="col-sm-6 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}"><em style="color: red">*</em> 选择授权类型</label>
 
                                     <div class="input-group  col-md-12">
                                         <div class="col-sm-6" style="padding-top:5px">
@@ -180,22 +180,23 @@
 
 
                                 <div class="col-sm-3">
-                                    <label for="mode" class="col-sm-6 control-label">选择是否月结<em>*</em></label>
+                                    <label for="mode" class="col-sm-6 control-label"><em style="color: red">*</em> 选择是否月结</label>
                                     <div class="input-group col-md-6">
                                         <select class="chosen-select" name="mode">
-                                            <option value="" >请选择是否月结</option>
-                                                <option value="1"{{ $distributors->mode == 1?'selected':'' }}>月结</option>
+                                            {{--<option value="" >请选择是否月结</option>--}}
                                                 <option value="2"{{ $distributors->mode == 2?'selected':'' }}>非月结</option>
+                                                <option value="1"{{ $distributors->mode == 1?'selected':'' }}>月结</option>
+
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <br><br>
-                                <div class="form-group" style="padding-top: 100px">
+                                <div class="form-group" style="padding-top: 100px;width: 100%">
                                 <h5>电子版合同<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
                                 <hr>
                                 <div class="row mb-2r sku-pic">
-                                    <div class="row mb-2r" id="update-product-img">
+                                    <div class="row mb-2r" id="update-product-img" style="float: left">
                                         <div class="col-md-2">
                                             <div id="picForm" enctype="multipart/form-data">
                                                 <div class="img-add">
@@ -224,13 +225,15 @@
                                             <div class="col-md-2">
                                                 <div class="asset">
                                                     @if($assets_contract)
-                                                        <img src="{{ $assets_contract->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                                        <a href="{{$assets_contract->file->p800}}" target="_blank">
+                                                            <img src="{{$assets_contract->file->small}}" class="img-thumbnail">
+                                                        </a>
 
                                                     <a class="removeimg" value="{{ $assets_contract->id }}"><i class="glyphicon glyphicon-remove"></i></a>
                                                         @endif
                                                 </div>
                                             </div>
-                                    </div>
+                                    </div></div>
                                     <input type="hidden" name="random" value="{{ $random }}">
                                     <input type="hidden" id="id" name="id" value="{{ $distributors->id }}">
                                     <input type="hidden" id="user_id" name="user_id" value="{{ $user_id }}">
@@ -246,7 +249,7 @@
                                 </div>
                         </div>
 
-                    </div>
+
                 </div>
             </div>
                     {{--</form>--}}
@@ -287,6 +290,11 @@
     var diyu =  $("input[name='diyu']").val();
     var mode =  $("select[name='mode']").val();
     var contract_id =  $("input[name='contract_id']").val();
+        if(Jszzdm == '' || diyu == '' || mode == ''){
+         layer.msg("请完善必填项！");
+         return false;
+        }
+
     $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu,'mode':mode,'contract_id':contract_id}, function (data) {
     if(data.status == 0){
     layer.msg('操作成功！');
