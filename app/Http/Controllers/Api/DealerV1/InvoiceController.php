@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\DealerV1;
 
+use App\Http\ApiHelper;
 use App\Models\AssetsModel;
 use App\Models\InvoiceModel;
 use Illuminate\Http\Request;
@@ -255,7 +256,7 @@ class InvoiceController extends BaseController
     /**
      * @api {post} /DealerApi/invoice/deleted 删除发票
      * @apiVersion 1.0.0
-     * @apiName Cart deleted
+     * @apiName Invoice deleted
      * @apiGroup Cart
      *
      * @apiParam {integer} id invoice id :1

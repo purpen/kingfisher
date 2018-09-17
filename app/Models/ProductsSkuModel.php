@@ -211,6 +211,33 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     * 为含有sku_id的数组对象添加该sku的详细信息2
+     * @param  $purchase_sku_relation
+     * @return array
+     */
+    public function detailedSuks($purchase_sku_relation)
+    {
+        foreach ($purchase_sku_relation as $k=>$purchase_sku) {
+            if (!$sku = ProductsSkuModel::find($purchase_sku->sku_id)) {
+                return $purchase_sku_relation;
+            };
+            $purchase_sku_relation[$k]['product_number'] = $sku->product['number'];
+            $purchase_sku_relation[$k]->number = $sku->number;
+            $purchase_sku_relation[$k]->name = $sku->product['title'];
+            $purchase_sku_relation[$k]->mode = $sku->mode;
+            $purchase_sku_relation[$k]->sku_price = $sku->price;
+            $purchase_sku_relation[$k]->sale_price = $sku->product['sale_price'];
+
+            if ($sku->assets) {
+                $purchase_sku_relation[$k]->path = $sku->assets->file->small;
+            } else {
+                $purchase_sku_relation[$k]->path = url('images/default/erp_product.png');
+            }
+        }
+        return $purchase_sku_relation;
+    }
+
+    /**
      * 为含有sku_id的数组对象添加该sku的详细信息
      * @param  $purchase_sku_relation
      * @return array

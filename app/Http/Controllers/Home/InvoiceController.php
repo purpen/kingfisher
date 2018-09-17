@@ -174,14 +174,19 @@ $status= 'all';
             return ajax_json(0,'error');
         }
         $order = OrderModel::find($order_id); //订单
-
+        $where['order_id'] = $order->id;
+        $where['difference'] = 0;
+        $history =  HistoryInvoiceModel::where()->first();
+        $order->company_name = $history->company_name;
+        $order->receiving_name = $history->receiving_name;
+        $order->receiving_phone = $history->receiving_phone;
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
         /*$order->storage_name = $order->storage->name;*/
 
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 
         $product_sku_model = new ProductsSkuModel();
-        $order_sku = $product_sku_model->detailedSku($order_sku); //订单明细
+        $order_sku = $product_sku_model->detailedSuks($order_sku); //订单明细
 
         // 仓库信息
         $storage_list = StorageModel::OfStatus(1)->select(['id','name'])->get();
@@ -232,7 +237,6 @@ $status= 'all';
             'sSearch' => false,
             'express_state_value' => $order->express_state_value,
             'express_content_value' => $express_content_value,
-
             'out_warehouse_number' => $out_warehouse_number,
 
         ]);

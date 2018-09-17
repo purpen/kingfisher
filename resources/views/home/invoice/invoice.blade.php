@@ -151,7 +151,6 @@
                                 <td class="text-center">
                                     <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $order->id }}">
                                 </td>
-                                <td></td>
                                 <td>
                                     @if (in_array($order->status, array(0)))
                                         <span class="label label-default">{{$order->status_val}}</span>
@@ -165,15 +164,41 @@
                                         <span class="label label-success">{{$order->status_val}}</span>
                                     @endif
                                 </td>
-                                <td>{{$order->store ? $order->store->name : ''}}</td>
-                                <td class="magenta-color">
-                                    <span>{{$order->number}}</span><br>
-                                    <small class="text-muted">{{$order->order_start_time}}</small>
+                                <td>{{$order->company_name ? $order->company_name : ''}}</td>
+                                <td>{{$order->number ? $order->number: ''}}</td>
+                                <td >
+                                    {{$order->order_start_time}}
                                 </td>
-                                <td>{{$order->buyer_name}}</td>
-                                <td>{{$order->buyer_summary}}</td>
-                                <td>{{$order->buyer_summary}}</td>
-                                <td>{{$order->seller_summary}}</td>
+                                <td>{{$order->application_time}}</td>
+                                <td>
+                                    @if ($order->receiving_type == 1)
+                                        <span class="label label-danger">未开票</span>
+                                    @endif
+                                        @if ($order->receiving_type == 2)
+                                            <span class="label label-success">审核中</span>
+                                        @endif
+                                        @if ($order->receiving_type == 3)
+                                            <span class="label label-success">已开票</span>
+                                        @endif
+                                        @if ($order->receiving_type == 4)
+                                            <span class="label label-danger">拒绝</span>
+                                        @endif
+                                        @if ($order->receiving_type == 5)
+                                            <span class="label label-danger">已过期</span>
+                                        @endif
+                                </td>
+                                <td>
+                                    @if ($order->receiving_id == 0)
+                                        <span class="label label-danger">未开票</span>
+                                    @endif
+                                    @if ($order->receiving_id == 1)
+                                        <span class="label label-success">增值税普通发票</span>
+                                    @endif
+                                        @if ($order->receiving_id == 2)
+                                            <span class="label label-success">增值税专用发票</span>
+                                        @endif
+                                </td>
+                                <td>{{$order->receiving_name}}</td>
                                 <td>
                                     <span>{{$order->logistics ? $order->logistics->name : ''}}</span><br>
                                     <small class="text-muted">{{$order->express_no}}</small>
@@ -222,7 +247,7 @@
     {{--手动发货弹出框--}}
     @include('modal.add_manual_send_modal')
 
-    @include('mustache.order_info')
+    @include('mustache.invoice_info')
 
     {{--拆单弹出框--}}
     @include('modal.add_split_order')
