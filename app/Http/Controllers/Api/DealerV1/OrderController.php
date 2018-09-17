@@ -235,6 +235,7 @@ class OrderController extends BaseController{
             }
             if (!empty($address)){
                 $orders->address_list = $address;
+                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
             }
             if (!empty($invoice)){
                 $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
@@ -270,7 +271,7 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
         }
 
-        $product_id = explode(',',$request->input('product_id'));
+        $product_id = $request->input('product_id');
         $payment_type = $request->input('payment_type');
 //        $payment_type = 4;
 //        $product_id = [4,3,2,16];
