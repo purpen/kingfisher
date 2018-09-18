@@ -79,8 +79,9 @@
                         </div>
                     </div>
 
+
                     <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
-                        <label for="inputStatus" class="col-sm-2 control-label">状态</label>
+                        <label for="status" class="col-sm-2 control-label">状态</label>
                         <div class="col-sm-10">
                             <div class="radio-inline">
                                 <label class="mr-3r">

@@ -235,7 +235,23 @@ class OrderController extends BaseController{
             }
             if (!empty($address)){
                 $orders->address_list = $address;
-                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
+
+                $province = ChinaCityModel::where('oid',$address->province_id)->select('name')->first();
+                $city = ChinaCityModel::where('oid',$address->city_id)->select('name')->first();
+                $county = ChinaCityModel::where('oid',$address->county_id)->select('name')->first();
+                $town = ChinaCityModel::where('oid',$address->town_id)->select('name')->first();
+                if ($province){
+                    $orders->province = $province->name;
+                }
+                if ($city){
+                    $orders->city = $city->name;
+                }
+                if ($county){
+                    $orders->county = $county->name;
+                }
+                if ($town){
+                    $orders->town = $town->name;
+                }
             }
             if (!empty($invoice)){
                 $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
@@ -261,7 +277,7 @@ class OrderController extends BaseController{
      * @apiParam {string} invoice_id 发票id  0.不开发票
      * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
-     * @apiParam {string} product_id [2,1,4,2,9]
+     * @apiParam {string} product_id  "2,1,4,9"
      *
      */
     public function store(Request $request)
@@ -271,7 +287,7 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
         }
 
-        $product_id = $request->input('product_id');
+        $product_id = explode(",",$request->input('product_id'));
         $payment_type = $request->input('payment_type');
 //        $payment_type = 4;
 //        $product_id = [4,3,2,16];
