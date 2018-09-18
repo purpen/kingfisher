@@ -343,7 +343,13 @@ class ArticleController extends Controller
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 putFile 方法进行文件的上传。
         list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
-        $data = array(
+
+        if ($err !== null) {
+            Log::info($err);
+        } else {
+            Log::info($ret);
+        }
+            $data = array(
             'status'=> 0,
             'message'=> 'ok',
             'url'=> config('qiniu.material_url').$key.'-p1080'."\n"
