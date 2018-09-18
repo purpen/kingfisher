@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
-                @include('home.invoice.audit')
+                @include('home.invoice.make')
             </div>
         </div>
 
@@ -209,9 +209,7 @@
                                     @endrole
 
                                     @if ($status == 8)
-                                        {{--<button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
-                                            <i class="glyphicon glyphicon-hand-right"></i> 手动发货
-                                        </button>--}}
+
                                     @endif
                                 </td>
                             </tr>
@@ -238,7 +236,7 @@
     {{--手动发货弹出框--}}
     @include('modal.add_manual_send_modal')
 
-    @include('mustache.audit_info')
+    @include('mustache.make_info')
 
     {{--拆单弹出框--}}
     @include('modal.add_split_order')

@@ -123,19 +123,11 @@ class InvoiceController extends Controller
             $tab_menu = 'waitpay';
             $order_number =  $request->input('order_number')  ? $request->input('order_number') : '';
             $receiving_id =  $request->input('receiving_id')  ? $request->input('receiving_id') : '';
-            if($order_number && $receiving_id ){
-                $where['order.number']  =  $order_number;
+            $wherein  =  $order_number;
+            if($receiving_id){
                 $where['i.receiving_id'] = $receiving_id;
                 $where['i.receiving_type'] = 2;
-                $where['difference'] = 0;
-            } elseif($order_number){
-                $where['order.number']  =  $order_number;
-                $where['i.receiving_type'] = 2;
-                $where['difference'] = 0;
-            } elseif($receiving_id){
-                $where['i.receiving_id'] = $receiving_id;
-                $where['i.receiving_type'] = 2;
-                $where['difference'] = 0;
+                $where['i.difference'] = 0;
             }else{
                 $where['i.receiving_type'] = 2;
                 $where['i.difference'] = 0;
@@ -171,6 +163,7 @@ class InvoiceController extends Controller
                     ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
                     ->select('order.*','i.*','order.id as id','i.id as invoice_id')
                     ->whereIn('order.status', [8, 10, 20])
+                    ->where('order.number','like','%'.$wherein.'%')
                     ->where($where)
                     ->orderBy('order.id','desc')
                     ->paginate($this->per_page);
@@ -205,6 +198,86 @@ class InvoiceController extends Controller
 
     }
 
+    public function verifyOrderList(Request $request)
+    {
+        $tab_menu = 'waitcheck';
+        $order_number =  $request->input('order_number')  ? $request->input('order_number') : '';
+        $receiving_id =  $request->input('receiving_id')  ? $request->input('receiving_id') : '';
+        $wherein  =  $order_number;
+        if($receiving_id ){
+            $where['i.receiving_id'] = $receiving_id;
+            $where['i.receiving_type'] = 3;
+            $where['difference'] = 0;
+        }else{
+            $where['i.receiving_type'] = 3;
+            $where['i.difference'] = 0;
+        }
+
+//dd($where);
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+
+        $store_list = StoreModel::select('id','name')->get();
+        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
+
+        $supplier_model = new SupplierModel();
+        $supplier_list = $supplier_model->lists();
+        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+
+        //当前用户所在部门创建的订单 查询条件
+        $department = Auth::user()->department;
+        if($department){
+            $id_arr = UserModel
+                ::where('department',$department)
+                ->get()
+                ->pluck('id')
+                ->toArray();
+            $query = OrderModel::whereIn('user_id_sales', $id_arr);
+        }else{
+            $query = OrderModel::query();
+        }
+        $status= 'waitpay';
+        $number = '';
+
+        $order_list = $query
+            ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
+            ->select('order.*','i.*','order.id as id','i.id as invoice_id')
+            ->whereIn('order.status', [8, 10, 20])
+            ->where('order.number','like','%'.$wherein.'%')
+            ->where($where)
+            ->orderBy('order.id','desc')
+            ->paginate($this->per_page);
+
+        $logistics_list = $logistic_list = LogisticsModel
+            ::OfStatus(1)
+            ->select(['id','name'])
+            ->get();
+//        dd($order_list);
+
+        return view('home/invoice.verifyOrderList', [
+            'order_list' => $order_list,
+            'tab_menu' => $tab_menu,
+            'status' => $status,
+            'logistics_list' => $logistics_list,
+            'name' => $number,
+            'per_page' => $this->per_page,
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+            'sSearch' => false,
+            'store_list' => $store_list,
+            'products' => $products,
+            'buyer_name' => '',
+            'buyer_phone' => '',
+            'supplier_id' => '',
+            'from_type' => 0,
+            'supplier_list' => $supplier_list,
+            'distributors' => $distributors,
+
+        ]);
+
+    }
+
     public function rejected(Request $request)
     {
         $order_id = $request->input('id');
@@ -215,6 +288,29 @@ class InvoiceController extends Controller
 
     public function through(Request $request)
     {
+        $id = $request->input('id');
+        $invoice_id = $request->input('invoice_id');
+        $where['order_id'] = $id;
+        $where['id'] = $invoice_id;
+        $res =  HistoryInvoiceModel::where($where)->first();
+        if(!$res){
+            return '无数据';
+        }
+        $res->difference = 0;
+        $res->receiving_type = 3;
+        $res->audit = date('Y-m-d H:i:s',time());
+//        dd($res);
+        $res->reviewer = Auth::user()->id;
+
+        if($res->save()){
+            return redirect('/invoice/nonOrderList');
+        } else{
+            return redirect('home/invoice');
+        }
+
+
+
+
 
     }
     public function lists(Request $request)
@@ -324,6 +420,9 @@ class InvoiceController extends Controller
         $where['id'] = $invoice_id;
         $history =  HistoryInvoiceModel::where($where)->first();
         if($history){
+           $name  = UserModel::where('id',$history['reviewer'])->select('realname')->first();
+            $history['username'] = $name['realname'];
+
             if($history->receiving_id == 1){
                 $history->receiving_id = '增值税普通发票';
                 $history->prove_id = '';
@@ -353,14 +452,15 @@ class InvoiceController extends Controller
                 $history->receiving_type = '';
             }
             $history->invoice_id = $order->id;
-
+            $order->invoices_id = $history['id'];
         }else{
             $history['company_name'] = '';
             $history['receiving_id'] = '';
             $prove = 0;
             $history['invoice_id'] = $order->id;
         }
-       $order->invoices_id = $history['id'];
+
+
         $order->company_name = isset($history['company_name']) ? $history['company_name'] : '';
         $order->receiving_name = isset($history['receiving_name']) ? $history['receiving_name'] : '';
         $order->receiving_phone = isset($history['receiving_phone']) ? $history['receiving_phone'] : '';

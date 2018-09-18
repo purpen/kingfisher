@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class HistoryInvoiceController extends Controller
+class HistoryInvoiceController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -63,9 +63,9 @@ class HistoryInvoiceController extends Controller
 //        $wherein['history_invoice.difference'] = 0;
         $where = [];
         if($receiving_type == 1){
-            $where = [2,3,4];
-        } elseif($receiving_type == 2){
             $where = [1];
+        } elseif($receiving_type == 2){
+            $where = [2,3,4];
         } elseif($receiving_type == 3){
             $where = [5];
         }else {

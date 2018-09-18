@@ -83,8 +83,22 @@ class CartController extends BaseController
                 $mode = ProductsSkuModel::where(['id'=>$v->sku_id])->first();
                 $type = SkuRegionModel::where(['sku_id'=>$v->sku_id])->select('max','min','sell_price')->get();
                 $collection  = CollectionModel::where(['user_id'=>$user_id,'product_id'=>$v->product_id])->first();
+                $assets = AssetsModel::where(['target_id' => $v->sku_id,'type' => 4])->first();//sku
                 $v->cover = '';
-                $v->cover = $mode->first_img;
+                if($assets){
+                    $v->cover = $assets->file->small;
+                } else {
+                    $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
+                    if (count($asset)>0){
+                        $aset = [];
+                        foreach ($asset as $val){
+                            $aset[] = $val->file->small;
+                        }
+                        $v->cover = $aset;
+                    }
+                }
+                //
+//                $v->cover = $mode->first_img;
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
