@@ -79,29 +79,23 @@
                                         {{--<option value="3">地域分类</option>--}}
                                     {{--</select>--}}
                                     <input type="text" name="types" class="form-control float" id="type1" value="{{ old('type') }}" readonly style="padding-right: 72.5px">
-
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
-                        <label for="inputStatus" class="col-sm-2 control-label">状态</label>
+                    <div class="form-group">
+                        <label for="statu" class="col-sm-2 control-label">状态</label>
                         <div class="col-sm-10">
                             <div class="radio-inline">
                                 <label class="mr-3r">
-                                    <input type="radio" name="status" id="status1" value="1">启用
+                                    <input type="radio" name="statu" id="status1" value="1">启用
                                 </label>
                                 <label class="ml-3r">
-                                    <input type="radio" name="status" id="status0" value="0">禁用
+                                    <input type="radio" name="statu" id="status0" value="0">禁用
                                 </label>
                             </div>
                         </div>
-                        @if ($errors->has('status'))
-                            <span class="help-block">
-                                    <strong>{{ $errors->first('status') }}</strong>
-                            </span>
-                        @endif
                     </div>
 
 

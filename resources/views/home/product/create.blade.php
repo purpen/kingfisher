@@ -49,7 +49,7 @@
                     <form id="add-product" role="form" class="form-horizontal" method="post" action="{{ url('/product/store') }}">
                         <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
                         {{ csrf_field() }}{{--token--}}
-        				<input type="hidden" name="cover_id" id="cover_id">
+        				{{--<input type="hidden" name="cover_id" id="cover_id">--}}
                         <h5>商品分类</h5>
                         <hr>
                         <div class="form-group">
@@ -108,7 +108,7 @@
                             <label for="supplier_id" class="col-sm-2 control-label">选择供应商<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-11">
-                                    <select class="chosen-select" name="supplier_id" style="display: none;">
+                                    <select class="chosen-select" name="supplier_id">
                                         <option value="">请选择供应商</option>
                                         @foreach($suppliers as $supplier)
                                             <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
@@ -259,28 +259,33 @@
 
                         <h5>商品介绍展示图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，规格800*800，大小3MB以内］</small></h5>
                         <hr>
-    					<div class="row mb-2r product-pic">
-    						<div class="col-md-2">
-    							<div id="picForm" enctype="multipart/form-data">
-    								<div class="image-add">
+    					{{--<div class="row mb-2r product-pic">--}}
+    						{{--<div class="col-md-2">--}}
+    							{{--<div id="picForm" enctype="multipart/form-data">--}}
+    								{{--<div class="image-add">--}}
     									{{--<span class="glyphicon glyphicon-plus f46"></span>--}}
     									{{--<p class="uptitles">添加图片</p>--}}
-    									<div id="fine-uploaders"></div>
-    								</div>
-    							</div>
-    							<input type="hidden" id="product_details" name="product_details">
-    							<script type="text/template" id="qq-template">
-    								<div id="add-imgs" class="qq-uploader-selector qq-uploader">
-    									<div class="qq-upload-button-selector qq-upload-button">
-    										<div>上传图片</div>
-    									</div>
-    									<ul class="qq-upload-list-selector qq-upload-list">
-    										<li hidden></li>
-    									</ul>
-    								</div>
-    							</script>
-    						</div>
-    					</div>
+    									{{--<div id="fine-uploaders"></div>--}}
+    								{{--</div>--}}
+    							{{--</div>--}}
+    							{{--<input type="hidden" id="product_details" name="product_details">--}}
+    							{{--<script type="text/template" id="qq-template">--}}
+    								{{--<div id="add-imgs" class="qq-uploader-selector qq-uploader">--}}
+    									{{--<div class="qq-upload-button-selector qq-upload-button">--}}
+    										{{--<div>上传图片</div>--}}
+    									{{--</div>--}}
+    									{{--<ul class="qq-upload-list-selector qq-upload-list">--}}
+    										{{--<li hidden></li>--}}
+    									{{--</ul>--}}
+    								{{--</div>--}}
+    							{{--</script>--}}
+    						{{--</div>--}}
+    					{{--</div>--}}
+                        <div class="form-group">
+                            <div class="editor col-sm-6">
+                                <textarea id='myEditor' name="content" class="control-label"></textarea>
+                            </div>
+                        </div>
                         <br>
 
                         {{--<div class="form-group">--}}
@@ -314,6 +319,7 @@
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+    @include('editor::head')
 @endsection
 
 @section('customize_js')
@@ -575,5 +581,4 @@
             {{--ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');--}}
 
         {{--});--}}
-
 @endsection

@@ -818,12 +818,12 @@ class AuthenticateController extends BaseController
             $users = UserModel::where('id', $this->auth_user_id)->first();
             if ($users){
                 $user = $users->update(['cover_id'=>$request['cover_id'],'verify_status'=>1,'supplier_distributor_type'=>3]);
-                if ($user){
-                    $distributors = new DistributorModel();
-                    $distributor =DB::table('distributor')
-                        ->where('user_id','=',$this->auth_user_id)
-                        ->update(['name'=>$request['name'],'phone'=>$request['phone']]);
-                }
+//                if ($user){
+//                    $distributors = new DistributorModel();
+//                    $distributor =DB::table('distributor')
+//                        ->where('user_id','=',$this->auth_user_id)
+//                        ->update(['name'=>$request['name'],'phone'=>$request['phone']]);
+//                }
             }else{
                 return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
             }

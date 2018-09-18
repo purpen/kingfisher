@@ -193,10 +193,11 @@
                             </div>
                             <br><br>
                                 <div class="form-group" style="padding-top: 100px;width: 100%">
-                                <h5>电子版合同<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
+                                <h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
                                 <hr>
                                 <div class="row mb-2r sku-pic">
-                                    <div class="row mb-2r" id="update-product-img" style="float: left">
+                                    {{--<div class="row mb-2r" id="update-product-img" style="float: left">--}}
+                                    <div class="row mb-2r" id="update-product-img">
                                         <div class="col-md-2">
                                             <div id="picForm" enctype="multipart/form-data">
                                                 <div class="img-add">
@@ -222,18 +223,18 @@
                                                 <div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
                                             </div>
                                         </div>
-                                            <div class="col-md-2">
-                                                <div class="asset">
-                                                    @if($assets_contract)
-                                                        <a href="{{$assets_contract->file->p800}}" target="_blank">
-                                                            <img src="{{$assets_contract->file->small}}" class="img-thumbnail">
-                                                        </a>
 
-                                                    <a class="removeimg" value="{{ $assets_contract->id }}"><i class="glyphicon glyphicon-remove"></i></a>
-                                                        @endif
-                                                </div>
-                                            </div>
-                                    </div></div>
+                                        <div class="asset">
+                                            @if($assets_contract)
+                                                <a href="{{$assets_contract->file->p800}}" target="_blank">
+                                                    <img src="{{$assets_contract->file->small}}" style="width: 150px;" class="img-thumbnail">
+                                                </a>
+
+                                                <a class="removeimg" value="{{ $assets_contract->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                                     <input type="hidden" name="random" value="{{ $random }}">
                                     <input type="hidden" id="id" name="id" value="{{ $distributors->id }}">
                                     <input type="hidden" id="user_id" name="user_id" value="{{ $user_id }}">
@@ -349,12 +350,12 @@
     inputName:'file',
     },
     validation: {
-    allowedExtensions: ['jpeg', 'jpg', 'png'],
-    sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-    },
-    messages: {
-    typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-    sizeError: "上传文件最大不超过3M"
+                allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+                sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+                },
+                messages: {
+                typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
+                sizeError: "上传文件最大不超过10M"
     },
     //回调函数
     callbacks: {
@@ -379,7 +380,7 @@
 
     });
     } else {
-    alert('上传图片失败');
+    alert('上传失败！');
     }
     }
     }
