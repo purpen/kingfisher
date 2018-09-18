@@ -73,21 +73,14 @@
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    订单查询
+                    发票管理
                 </div>
             </div>
             <div class="navbar-collapse collapse">
                     @include('home.invoice.historyinvoice')
             </div>
         </div>
-        <div id="down-print" class="container row" style="background-color: wheat;" hidden>
-            <div class="col-md-12">
-                <h4> 未连接打印客户组件，请启动打印组件，刷新重试。
-                    {{--href="http://www.cainiao.com/markets/cnwww/print"--}}
-                    <a  style="color: red;" target="_blank" href="">点击下载打印组件</a>
-                </h4>
-            </div>
-        </div>
+
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-md-8">

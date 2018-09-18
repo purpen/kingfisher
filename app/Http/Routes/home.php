@@ -787,6 +787,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
          Route::match(['get', 'post'], '/invoice/nonOrderList', [
              'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.lists', 'uses' => 'InvoiceController@nonOrderList'
          ]);
+        Route::match(['get', 'post'], '/invoice/verifyOrderList', [
+            'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.lists', 'uses' => 'InvoiceController@verifyOrderList'
+        ]);
 
         Route::get('/invoice/ajaxEdit', [
             'as' => 'admin.invoice.edit', 'acl' => 'admin.invoice.edit', 'uses' => 'InvoiceController@ajaxEdit'
