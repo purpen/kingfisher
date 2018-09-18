@@ -389,9 +389,9 @@
                                         <td>
                                             {{ $sku->weight }}
                                         </td>
-                                        <td>
-                                            {{ $sku->zc_quantity }}
-                                        </td>
+                                        {{--<td>--}}
+                                            {{--{{ $sku->zc_quantity }}--}}
+                                        {{--</td>--}}
                                         <td>
                                             {{ $sku->summary }}
                                         </td>

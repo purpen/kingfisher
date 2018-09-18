@@ -168,18 +168,20 @@ class ProductController extends Controller
         $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
-        $product->product_details = $request->input('product_details','');
+        $product->product_details = $request->input('product_details',0);
         $product->mode = $request->input('mode','');
-        if($product->save()){
+        $res = $product->save();
+
+        if($res){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
                 $asset->target_id = $product->id;
-//                $asset->type = 1;
+                $asset->type = 1;
                 $asset->save();
             }
-            return redirect('/product/edit?id='.$product->id);
-        }else{
-            return "添加失败";
+                return redirect('/product/edit?id='.$product->id);
+            }else{
+                return '保存失败';
         }
     }
 
@@ -310,7 +312,7 @@ class ProductController extends Controller
         $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
-        $product->product_details = $request->input('product_details','');
+        $product->product_details = $request->input('product_details',0);
         $product->mode = $request->input('mode','');
         $result = $product->update();
 
