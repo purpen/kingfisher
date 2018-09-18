@@ -55,7 +55,7 @@
                             <h3 style="color: #9c0033">{{ $error }}</h3>
                         @endforeach
                     @endif
-            		<form id="add-product" role="form" method="post" class="form-horizontal" enctype ="multipart/form-data" action="{{ url('/product/update') }}">
+            		<form id="add-product" role="form" method="post" class="form-horizontal" action="{{ url('/product/update') }}">
                         {{ csrf_field() }}{{--token--}}
             			<input type="hidden" id="product_id" name="product_id" value="{{ $product->id }}">
             			<input type="hidden" name="url" value="{{ $url }}">

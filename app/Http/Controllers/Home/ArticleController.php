@@ -330,14 +330,11 @@ class ArticleController extends Controller
         $token = $auth->uploadToken($bucket);
         //获取文件
         $file = $request->file('image');
-        Log::info($file);
-        Log::info($_FILES);
         if($file == null){
             $filePath = $_FILES['undefined']['tmp_name'];
         }else{
             $filePath = $file->getRealPath();
         }
-        Log::info($filePath);
         //获取文件路径
         // 上传到七牛后保存的文件名
         $date = time();
