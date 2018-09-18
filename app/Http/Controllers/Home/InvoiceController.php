@@ -465,8 +465,22 @@ class InvoiceController extends Controller
     {
         $order_id = $request->input('id');
         $invoice_id = $request->input('invoice_id');
+        $reason = $request->input('reason');
+        $user_id = Auth::user()->id;
+        $history = HistoryInvoiceModel::find($invoice_id);
+        if(!$history){
+            return '500';
+        }
+        $history['reviewer'] = $user_id;
+        $history['audit'] = date('Y-m-d H:i:s',time());
+        $history['difference'] = -1;
+        $history['receiving_type'] = 4;
+        $history['reason'] = $reason;
+        if (!$history->save()){
+            return '500';
+        }
 
-dd($order_id);
+        return 200;
 
     }
     /**

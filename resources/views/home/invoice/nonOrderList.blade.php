@@ -279,9 +279,7 @@
 
 @section('customize_js')
     @parent
-    function myFunction(order_id,invoice_id) {
-      id = order_id;
-      invoice_id = invoice_id;
+    function myFunction() {
         layer.open({
            type: 1 //Page层类型
           ,area: ['500px', '280px']
@@ -289,9 +287,26 @@
           ,shade: 0.2 //遮罩透明度
            ,maxmin: true //允许全屏最小化
             ,anim: 2 //0-6的动画形式，-1不开启
-            ,content: "<form action='/invoice/rejected?id='+id  method='get'><input type='hidden' value='id' name='id'><input type='hidden' value=invoice_id name='invoice_id'><textarea rows='8' cols='60' name='reason'>invoice_id</textarea><br><input style='margin-top:30px;' type='submit' value='提交'></form>"
+            ,content: "<form ><textarea id='invoiceTextarea' rows='8' cols='60' name='reason'></textarea><br><input style='margin-top:30px;' type='submit' value='提交' onclick='invoiceFunction()'></form>"
     });
     }
+    function invoiceFunction(){
+
+    var textarea = $('#invoiceTextarea').val();
+    var order_id = $('#hiddenOrder_id').val();
+    var invoice_id = $('#hiddenInvoice_id').val();
+
+    $.get("/invoice/rejected?reason="+textarea+"&id="+order_id+"&invoice_id="+invoice_id, function(data){
+        if(data == 200){
+                alert('修改成功');
+          location=location
+        }else if(data == 500){
+            alert('修改失败');
+            }
+    });
+
+    }
+
     $('.active').removeClass('active');
     var _token = $('#_token').val();
 

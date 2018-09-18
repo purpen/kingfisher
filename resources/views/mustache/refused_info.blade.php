@@ -344,7 +344,9 @@
             </button>
          <div style="margin-left:20%;display: inline-block">
          <a   href="/invoice/through?id=@{{ id }}&invoice_id=@{{ invoices_id }}"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核通过</a>
-         <a   href="javascript:;"  onclick="myFunction(@{{ id }},@{{ invoices_id }})"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核驳回</a>
+         <a   href="javascript:;"  onclick="myFunction()"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核驳回</a>
+        <input type="hidden" name="invoice_id" value="@{{ invoices_id }}" id="hiddenInvoice_id">
+        <input type="hidden" name="id" value="@{{ id }}" id="hiddenOrder_id">
         </div>
         </div>
 
