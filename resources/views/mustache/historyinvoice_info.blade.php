@@ -277,7 +277,7 @@
                     <span class="form-text text-danger">@{{ receiving_type }}</span>
                 </div>
                 
-                <label class="col-sm-1 control-label">驳回原因</label>
+                <label class="col-sm-1 control-label" style="height:70px;">驳回原因</label>
                 <div class="col-sm-3">
                     <span class="form-text text-danger">@{{ reason }}</span>
                 </div>
@@ -286,7 +286,7 @@
 			<div class="form-group">
                 <label class="col-sm-1 control-label">审核人</label>
                 <div class="col-sm-3">
-                    <span class="form-text text-danger">@{{ reviewer }}</span>
+                    <span class="form-text text-danger">@{{ username }}</span>
                 </div>
                 
                 <label class="col-sm-1 control-label">审核时间</label>

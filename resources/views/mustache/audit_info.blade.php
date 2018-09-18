@@ -343,7 +343,7 @@
             <i class="glyphicon glyphicon-open"></i> 收起
             </button>
          <div style="margin-left:20%;display: inline-block">
-         <a   href="/invoice/through?id=@{{ id }}&invoice_id=@{{ invoices_id }}" target="_blank"  style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核通过</a>
+         <a   href="/invoice/through?id=@{{ id }}&invoice_id=@{{ invoices_id }}"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核通过</a>
          <a   href="/invoice/rejected?id=@{{ id }}&invoice_id=@{{ invoices_id }}"  target="_blank" style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核驳回</a>
         </div>
         </div>

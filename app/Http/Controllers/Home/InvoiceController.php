@@ -215,6 +215,29 @@ class InvoiceController extends Controller
 
     public function through(Request $request)
     {
+        $id = $request->input('id');
+        $invoice_id = $request->input('invoice_id');
+        $where['order_id'] = $id;
+        $where['id'] = $invoice_id;
+        $res =  HistoryInvoiceModel::where($where)->first();
+        if(!$res){
+            return '无数据';
+        }
+        $res->difference = 0;
+        $res->receiving_type = 3;
+        $res->audit = date('Y-m-d H:i:s',time());
+//        dd($res);
+        $res->reviewer = Auth::user()->id;
+
+        if($res->save()){
+            return redirect('/invoice/nonOrderList');
+        } else{
+            return redirect('home/invoice');
+        }
+
+
+
+
 
     }
     public function lists(Request $request)
@@ -324,6 +347,9 @@ class InvoiceController extends Controller
         $where['id'] = $invoice_id;
         $history =  HistoryInvoiceModel::where($where)->first();
         if($history){
+           $name  = UserModel::where('id',$history['reviewer'])->select('realname')->first();
+            $history['username'] = $name['realname'];
+
             if($history->receiving_id == 1){
                 $history->receiving_id = '增值税普通发票';
                 $history->prove_id = '';
@@ -353,14 +379,15 @@ class InvoiceController extends Controller
                 $history->receiving_type = '';
             }
             $history->invoice_id = $order->id;
-
+            $order->invoices_id = $history['id'];
         }else{
             $history['company_name'] = '';
             $history['receiving_id'] = '';
             $prove = 0;
             $history['invoice_id'] = $order->id;
         }
-       $order->invoices_id = $history['id'];
+
+
         $order->company_name = isset($history['company_name']) ? $history['company_name'] : '';
         $order->receiving_name = isset($history['receiving_name']) ? $history['receiving_name'] : '';
         $order->receiving_phone = isset($history['receiving_phone']) ? $history['receiving_phone'] : '';

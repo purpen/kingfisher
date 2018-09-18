@@ -60,20 +60,20 @@ class InvoiceController extends BaseController
         $where['user_id'] = $user_id; 
 
         $invoice = InvoiceModel::where($where)
-            ->select('duty_paragraph','company_name','receiving_id','id')
+            ->select('duty_paragraph','company_name','receiving_id','id','company_phone','opening_bank','bank_account','unit_address','receiving_address','receiving_name','receiving_phone','receiving_id')
             ->orderBy('id','desc')
             ->get();
        if(!$invoice){
            return $this->response->array(ApiHelper::error('error！', 500));
        }
-//        foreach($invoice as $k=>$v){
+        foreach($invoice as $k=>$v){
 ////            $invoice[$k]['province'] =  $v->province->name;
 ////            $invoice[$k]['city'] =  $v->city->name;
 ////            $invoice[$k]['county'] =  $v->county->name;
-//            if($v['receiving_id'] == 2){
-//                $invoice[$k]['cover_url'] = $v->getFirstImgInvoice();
-//            }
-//        }
+            if($v['receiving_id'] == 2){
+                $invoice[$k]['cover_url'] = $v->getFirstImgInvoice();
+            }
+        }
 
         return $this->response->array(ApiHelper::success('Success.', 200, $invoice));
     }

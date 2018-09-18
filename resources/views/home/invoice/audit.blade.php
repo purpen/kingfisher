@@ -1,6 +1,6 @@
 <ul class="nav navbar-nav nav-list">
     <li @if($tab_menu == 'all')class="active"@endif><a href="{{url('/invoice')}}">发票记录</a></li>
-    <li @if($tab_menu == 'waitpay')class="active"@endif><a  href="{{url('/invoice/nonOrderList')}}">审核中</a></li>
+    <li @if($tab_menu == 'waitpay')class="active"@endif><a style="color: red;border-bottom: 1px solid red;" href="{{url('/invoice/nonOrderList')}}">审核中</a></li>
     <li @if($tab_menu == 'waitcheck')class="active"@endif><a href="{{url('/invoice/verifyOrderList')}}">已开票</a></li>
     <li @if($tab_menu == 'waitsend')class="active"@endif><a href="{{url('/invoice/sendOrderList')}}">拒绝</a></li>
     <li @if($tab_menu == 'sended')class="active"@endif><a href="{{url('/invoice/completeOrderList')}}">已过期</a></li>
