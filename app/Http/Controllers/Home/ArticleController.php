@@ -345,8 +345,11 @@ class ArticleController extends Controller
         list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
 
         if ($err !== null) {
+            Log::info(11);
             Log::info($err);
         } else {
+            Log::info(22);
+
             Log::info($ret);
         }
             $data = array(
