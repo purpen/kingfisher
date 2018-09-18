@@ -360,7 +360,7 @@
                                         <th>供货价</th>
                                         <th>颜色/型号</th>
                                         <th>重量（kg）</th>
-                                        <th>自定义库存</th>
+                                        {{--<th>自定义库存</th>--}}
                                         <th>备注</th>
                                         <th>操作</th>
                                     </tr>
@@ -393,9 +393,9 @@
                                         <td>
                                             {{ $sku->weight }}
                                         </td>
-                                        <td>
-                                            {{ $sku->zc_quantity }}
-                                        </td>
+                                        {{--<td>--}}
+                                            {{--{{ $sku->zc_quantity }}--}}
+                                        {{--</td>--}}
                                         <td>
                                             {{ $sku->summary }}
                                         </td>
@@ -479,10 +479,10 @@
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="unique_number" class="form-control">
                                 </div>
-                                <label for="zc_quantity" class="col-sm-2 control-label">自定义库存</label>
-                                <div class="col-sm-4">
-                                    <input type="text" name="zc_quantity" class="form-control">
-                                </div>
+                                {{--<label for="zc_quantity" class="col-sm-2 control-label">自定义库存</label>--}}
+                                {{--<div class="col-sm-4">--}}
+                                    {{--<input type="text" name="zc_quantity" class="form-control">--}}
+                                {{--</div>--}}
                             </div>
                             <div class="form-group">
                                 <label for="summary" class="col-sm-2 control-label">备注</label>
@@ -626,10 +626,10 @@
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="up-unique_number" class="form-control">
                                 </div>
-                                <label for="summary" class="col-sm-2 control-label">自定义库存</label>
-                                <div class="col-sm-4">
-                                    <input type="text" name="zc_quantity" id="up-zc_quantity" class="form-control">
-                                </div>
+                                {{--<label for="summary" class="col-sm-2 control-label">自定义库存</label>--}}
+                                {{--<div class="col-sm-4">--}}
+                                    {{--<input type="text" name="zc_quantity" id="up-zc_quantity" class="form-control">--}}
+                                {{--</div>--}}
                             </div>
                             <div class="form-group">
                                 <label for="summary" class="col-sm-2 control-label">备注</label>

@@ -61,6 +61,7 @@ class InvoiceController extends BaseController
 
         $invoice = InvoiceModel::where($where)
             ->select('duty_paragraph','company_name','receiving_id','id')
+            ->orderBy('id','desc')
             ->get();
        if(!$invoice){
            return $this->response->array(ApiHelper::error('error！', 500));
@@ -144,7 +145,7 @@ class InvoiceController extends BaseController
 
         }
 
-        return $this->response->array(ApiHelper::success('添加成功！', 500));
+        return $this->response->array(ApiHelper::success('添加成功！', 200));
 
 
     }

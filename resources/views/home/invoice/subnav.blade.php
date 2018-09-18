@@ -12,10 +12,10 @@
 </ul>
 <ul class="nav navbar-nav navbar-right">
     <li>
-        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/invoice/seniorSearch')}}" method="POST">
+        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/invoice/lists')}}" method="POST">
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 
-            <select style="width: 130px;height: 34px;">
+            <select style="width: 130px;height: 34px;" name="receiving_id">
                 <option value ="0">请选择</option>
                 <option value ="1">增值税普通发票</option>
                 <option value="2">增值税专用发票</option>

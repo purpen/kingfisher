@@ -38,7 +38,7 @@ class OrderController extends BaseController{
      * @apiName Order orders
      * @apiGroup Order
      *
-     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；2.上传凭证待确认 5.待审核；8.待发货；10.已发货；20.完成
+     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；2.上传凭证待确认 5.待审核；6.待财务审核 8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
      * @apiParam {integer} types 0.全部 1.当月
      * @apiSuccessExample 成功响应:
@@ -107,7 +107,7 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
                 if ($status == 10){
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,8,10])->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
                 if ($status == -1 || $status == 20){
                     $query['status'] = $status;
@@ -127,7 +127,7 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('type',8)->paginate($per_page);
                 }
                 if ($status == 10){
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,8,10])->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('type',8)->paginate($per_page);
                 }
                 if ($status == -1 || $status == 20) {
                     $query['status'] = $status;
@@ -235,6 +235,7 @@ class OrderController extends BaseController{
             }
             if (!empty($address)){
                 $orders->address_list = $address;
+                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
             }
             if (!empty($invoice)){
                 $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
@@ -270,7 +271,7 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
         }
 
-        $product_id = explode(',',$request->input('product_id'));
+        $product_id = $request->input('product_id');
         $payment_type = $request->input('payment_type');
 //        $payment_type = 4;
 //        $product_id = [4,3,2,16];
@@ -514,8 +515,7 @@ class OrderController extends BaseController{
             $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);//新建订单24小时未支付取消订单
             $this->dispatch($job);
         }
-
-        return $this->response->array(ApiHelper::success());
+        return $this->response->array(ApiHelper::success('Success', 200, $orderModel));
     }
 
 

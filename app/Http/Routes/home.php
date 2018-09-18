@@ -784,9 +784,21 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
         Route::match(['get', 'post'], '/invoice/lists', [
             'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.lists', 'uses' => 'InvoiceController@lists'
         ]);
+         Route::match(['get', 'post'], '/invoice/nonOrderList', [
+             'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.lists', 'uses' => 'InvoiceController@nonOrderList'
+         ]);
 
         Route::get('/invoice/ajaxEdit', [
             'as' => 'admin.invoice.edit', 'acl' => 'admin.invoice.edit', 'uses' => 'InvoiceController@ajaxEdit'
+        ]);
+        Route::get('/invoice/rejected', [
+            'as' => 'admin.invoice.rejected', 'acl' => 'admin.invoice.edit', 'uses' => 'InvoiceController@rejected'
+        ]);
+         Route::get('/invoice/through', [
+             'as' => 'admin.invoice.through', 'acl' => 'admin.invoice.edit', 'uses' => 'InvoiceController@through'
+         ]);
+        Route::get('/invoice/history', [
+            'as' => 'admin.invoice.history', 'acl' => 'admin.invoice.history', 'uses' => 'InvoiceController@history'
         ]);
 
 
@@ -1517,7 +1529,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
             'as' => 'admin.articleList', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@articles'
         ]);
         Route::post('/saas/article/imageUpload', [
-            'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@imageUpload'
+//            'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@imageUpload'
+            'as' => 'admin.article.store', 'acl' => 'admin.product.store', 'uses' => 'ArticleController@imageUpload'
         ]);
         //文章删除
         Route::get('/saas/article/delete/{article_id}', [

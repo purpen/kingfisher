@@ -49,7 +49,7 @@
                     <form id="add-product" role="form" class="form-horizontal" method="post" action="{{ url('/product/store') }}">
                         <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
                         {{ csrf_field() }}{{--token--}}
-        				<input type="hidden" name="cover_id" id="cover_id">
+        				{{--<input type="hidden" name="cover_id" id="cover_id">--}}
                         <h5>商品分类</h5>
                         <hr>
                         <div class="form-group">

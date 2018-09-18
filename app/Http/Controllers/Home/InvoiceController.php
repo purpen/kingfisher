@@ -28,83 +28,26 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
 
-        $per_page = $request->input('per_page',50);
-        $category = new InvoiceModel();
-        $where['receiving_type'] = 2;
-        $lists = $category->where($where)->paginate($per_page);
-
-        return view("home/invoice.index", [
-            'lists' => $lists,
-
-        ]);
-    }
-
-    public function lists(Request $request)
     {
         $this->tab_menu = 'all';
+        $order_number =  $request->input('order_number')  ? $request->input('order_number') : '';
+        $receiving_id =  $request->input('receiving_id')  ? $request->input('receiving_id') : '';
+        if($order_number && $receiving_id ){
+            $where['order.number']  =  $order_number;
+            $where['i.receiving_id'] = $receiving_id;
+        } elseif($order_number){
+            $where['order.number']  =  $order_number;
+        } elseif($receiving_id){
+            $where['i.receiving_id'] = $receiving_id;
+        }else{
+            $where = '';
+        }
+
+
         $this->per_page = $request->input('per_page', $this->per_page);
-//        $status = 'all';
-//        $store_list = StoreModel::select('id','name')->get();
-//        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
-//
-//        $supplier_model = new SupplierModel();
-//        $supplier_list = $supplier_model->lists();
-//        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
-//
-//        //当前用户所在部门创建的订单 查询条件
-//        $department = Auth::user()->department;
-//        if($department){
-//            $id_arr = UserModel
-//                ::where('department',$department)
-//                ->get()
-//                ->pluck('id')
-//                ->toArray();
-//            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-//        }else{
-//            $query = OrderModel::query();
-//        }
-//
-//        $number = '';
-//        if ($status === 'all') {
-//            $order_list = $query
-//                ->orderBy('id','desc')
-//                ->paginate($this->per_page);
-//        } else {
-//            $order_list = $query
-//                ->where(['status' => $status, 'suspend' => 0])
-//                ->orderBy('id','desc')
-//                ->paginate($this->per_page);
-//        }
-//
-//        $logistics_list = $logistic_list = LogisticsModel
-//            ::OfStatus(1)
-//            ->select(['id','name'])
-//            ->get();
-//
-//        return view('home/order.invoice', [
-//            'order_list' => $order_list,
-//            'tab_menu' => $this->tab_menu,
-//            'status' => $status,
-//            'logistics_list' => $logistics_list,
-//            'name' => $number,
-//            'per_page' => $this->per_page,
-//            'order_status' => '',
-//            'order_number' => '',
-//            'product_name' => '',
-//            'sSearch' => false,
-//            'store_list' => $store_list,
-//            'products' => $products,
-//            'buyer_name' => '',
-//            'buyer_phone' => '',
-//            'supplier_id' => '',
-//            'from_type' => 0,
-//            'supplier_list' => $supplier_list,
-//            'distributors' => $distributors,
-//
-//        ]);
-//    {
+
+
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
@@ -124,14 +67,215 @@ class InvoiceController extends Controller
         }else{
             $query = OrderModel::query();
         }
-$status= 'all';
+        $status= 'all';
         $number = '';
-        $order_list = $query
-            ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
-            ->select('order.*','i.*','order.id as id','i.id as invoice_id')
-            ->orderBy('order.id','desc')
-            ->paginate($this->per_page);
+        if($where){
+            $order_list = $query
+                ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
+                ->select('order.*','i.*','order.id as id','i.id as invoice_id')
+                ->whereIn('order.status', [8, 10, 20])
+                ->Where($where)
+                ->orderBy('order.id','desc')
+                ->paginate($this->per_page);
+        } else {
+            $order_list = $query
+                ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
+                ->select('order.*','i.*','order.id as id','i.id as invoice_id')
+                ->whereIn('order.status', [8, 10, 20])
+                ->orderBy('order.id','desc')
+                ->paginate($this->per_page);
+        }
 
+//dd($order_list);
+        $logistics_list = $logistic_list = LogisticsModel
+            ::OfStatus(1)
+            ->select(['id','name'])
+            ->get();
+//        dd($order_list[36]);
+
+        return view('home/invoice.index', [
+            'order_list' => $order_list,
+            'tab_menu' => $this->tab_menu,
+            'status' => $status,
+            'logistics_list' => $logistics_list,
+            'name' => $number,
+            'per_page' => $this->per_page,
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+            'sSearch' => false,
+            'store_list' => $store_list,
+            'products' => $products,
+            'buyer_name' => '',
+            'buyer_phone' => '',
+            'supplier_id' => '',
+            'from_type' => 0,
+            'supplier_list' => $supplier_list,
+            'distributors' => $distributors,
+
+        ]);
+    }
+
+    public function nonOrderList(Request $request)
+    {
+
+
+            $tab_menu = 'waitpay';
+            $order_number =  $request->input('order_number')  ? $request->input('order_number') : '';
+            $receiving_id =  $request->input('receiving_id')  ? $request->input('receiving_id') : '';
+            if($order_number && $receiving_id ){
+                $where['order.number']  =  $order_number;
+                $where['i.receiving_id'] = $receiving_id;
+                $where['i.receiving_type'] = 2;
+                $where['difference'] = 0;
+            } elseif($order_number){
+                $where['order.number']  =  $order_number;
+                $where['i.receiving_type'] = 2;
+                $where['difference'] = 0;
+            } elseif($receiving_id){
+                $where['i.receiving_id'] = $receiving_id;
+                $where['i.receiving_type'] = 2;
+                $where['difference'] = 0;
+            }else{
+                $where['i.receiving_type'] = 2;
+                $where['i.difference'] = 0;
+            }
+
+
+            $this->per_page = $request->input('per_page', $this->per_page);
+
+
+            $store_list = StoreModel::select('id','name')->get();
+            $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
+
+            $supplier_model = new SupplierModel();
+            $supplier_list = $supplier_model->lists();
+            $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+
+            //当前用户所在部门创建的订单 查询条件
+            $department = Auth::user()->department;
+            if($department){
+                $id_arr = UserModel
+                    ::where('department',$department)
+                    ->get()
+                    ->pluck('id')
+                    ->toArray();
+                $query = OrderModel::whereIn('user_id_sales', $id_arr);
+            }else{
+                $query = OrderModel::query();
+            }
+            $status= 'waitpay';
+            $number = '';
+
+                $order_list = $query
+                    ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
+                    ->select('order.*','i.*','order.id as id','i.id as invoice_id')
+                    ->whereIn('order.status', [8, 10, 20])
+                    ->where($where)
+                    ->orderBy('order.id','desc')
+                    ->paginate($this->per_page);
+
+            $logistics_list = $logistic_list = LogisticsModel
+                ::OfStatus(1)
+                ->select(['id','name'])
+                ->get();
+//        dd($order_list);
+
+            return view('home/invoice.nonOrderList', [
+                'order_list' => $order_list,
+                'tab_menu' => $tab_menu,
+                'status' => $status,
+                'logistics_list' => $logistics_list,
+                'name' => $number,
+                'per_page' => $this->per_page,
+                'order_status' => '',
+                'order_number' => '',
+                'product_name' => '',
+                'sSearch' => false,
+                'store_list' => $store_list,
+                'products' => $products,
+                'buyer_name' => '',
+                'buyer_phone' => '',
+                'supplier_id' => '',
+                'from_type' => 0,
+                'supplier_list' => $supplier_list,
+                'distributors' => $distributors,
+
+            ]);
+
+    }
+
+    public function rejected(Request $request)
+    {
+        $order_id = $request->input('id');
+        $invoice_id = $request->input('invoice_id');
+
+
+    }
+
+    public function through(Request $request)
+    {
+
+    }
+    public function lists(Request $request)
+    {
+        $this->tab_menu = 'all';
+        $order_number =  $request->input('order_number')  ? $request->input('order_number') : '';
+        $receiving_id =  $request->input('receiving_id')  ? $request->input('receiving_id') : '';
+        if($order_number && $receiving_id ){
+            $where['order.number']  =  $order_number;
+            $where['i.receiving_id'] = $receiving_id;
+        } elseif($order_number){
+            $where['order.number']  =  $order_number;
+        } elseif($receiving_id){
+            $where['i.receiving_id'] = $receiving_id;
+        }else{
+            $where = '';
+        }
+
+
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+
+        $store_list = StoreModel::select('id','name')->get();
+        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
+
+        $supplier_model = new SupplierModel();
+        $supplier_list = $supplier_model->lists();
+        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+
+        //当前用户所在部门创建的订单 查询条件
+        $department = Auth::user()->department;
+        if($department){
+            $id_arr = UserModel
+                ::where('department',$department)
+                ->get()
+                ->pluck('id')
+                ->toArray();
+            $query = OrderModel::whereIn('user_id_sales', $id_arr);
+        }else{
+            $query = OrderModel::query();
+        }
+        $status= 'all';
+        $number = '';
+        if($where){
+            $order_list = $query
+                ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
+                ->select('order.*','i.*','order.id as id','i.id as invoice_id')
+                ->whereIn('order.status', [8, 10, 20])
+                ->Where($where)
+                ->orderBy('order.id','desc')
+                ->paginate($this->per_page);
+        } else {
+            $order_list = $query
+                ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
+                ->select('order.*','i.*','order.id as id','i.id as invoice_id')
+                ->whereIn('order.status', [8, 10, 20])
+                ->orderBy('order.id','desc')
+                ->paginate($this->per_page);
+        }
+
+//dd($order_list);
         $logistics_list = $logistic_list = LogisticsModel
             ::OfStatus(1)
             ->select(['id','name'])
@@ -169,13 +313,15 @@ $status= 'all';
     public function ajaxEdit(Request $request)
     {
         $order_id = (int)$request->input('id');
+        $invoice_id = (int)$request->input('invoice_id');
 
-        if(empty('id')){
+        if(empty('id') && empty($invoice_id)){
             return ajax_json(0,'error');
         }
         $order = OrderModel::find($order_id); //订单
-        $where['order_id'] = $order->id;
-        $where['difference'] = 0;
+        $where['order_id'] = $order_id;
+//        $where['difference'] = 0;
+        $where['id'] = $invoice_id;
         $history =  HistoryInvoiceModel::where($where)->first();
         if($history){
             if($history->receiving_id == 1){
@@ -206,13 +352,15 @@ $status= 'all';
             }else{
                 $history->receiving_type = '';
             }
-
+            $history->invoice_id = $order->id;
 
         }else{
             $history['company_name'] = '';
             $history['receiving_id'] = '';
             $prove = 0;
+            $history['invoice_id'] = $order->id;
         }
+       $order->invoices_id = $history['id'];
         $order->company_name = isset($history['company_name']) ? $history['company_name'] : '';
         $order->receiving_name = isset($history['receiving_name']) ? $history['receiving_name'] : '';
         $order->receiving_phone = isset($history['receiving_phone']) ? $history['receiving_phone'] : '';
@@ -279,6 +427,28 @@ $status= 'all';
 
         ]);
     }
+
+
+    public function  history(Request $request)
+    {
+        $id = $request->input('id');
+        $where['order_id'] = $id;
+        $where['difference'] = -1;
+
+        $history =  HistoryInvoiceModel::where($where)->get();
+        foreach ($history as $k=>$v){
+            if($v['receiving_id'] == 2){
+                $history[$k]['prove_url'] = $v->getFirstImgInvoice();
+            }
+        }
+        return view('home/invoice.history', [
+            'history' => $history,
+
+        ]);
+    }
+
+
+
 
     /**
      * Show the form for creating a new resource.

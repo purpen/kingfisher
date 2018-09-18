@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
-                @include('home.invoice.subnav')
+                @include('home.invoice.audit')
             </div>
         </div>
         <div id="down-print" class="container row" style="background-color: wheat;" hidden>
@@ -245,7 +245,7 @@
     {{--手动发货弹出框--}}
     @include('modal.add_manual_send_modal')
 
-    @include('mustache.invoice_info')
+    @include('mustache.audit_info')
 
     {{--拆单弹出框--}}
     @include('modal.add_split_order')
@@ -540,7 +540,7 @@
     console.log(order_id)
     console.log(invoice_id)
     $.get('{{url('/invoice/ajaxEdit')}}',{'id':order_id,'invoice_id':invoice_id},function (e) {
-
+    console.log(1);
     if(e.status){
     var template = $('#order-info-form').html();
     var views = Mustache.render(template, e.data);
