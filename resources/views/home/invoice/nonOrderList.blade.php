@@ -293,15 +293,19 @@
     function invoiceFunction(){
 
     var textarea = $('#invoiceTextarea').val();
+    if(!textarea){
+        layer.alert('驳回理由为空');
+        return false;
+    }
     var order_id = $('#hiddenOrder_id').val();
     var invoice_id = $('#hiddenInvoice_id').val();
 
     $.get("/invoice/rejected?reason="+textarea+"&id="+order_id+"&invoice_id="+invoice_id, function(data){
         if(data == 200){
-                alert('修改成功');
-          location=location
+             layer.alert('修改成功');
         }else if(data == 500){
-            alert('修改失败');
+            layer.alert('修改失败');
+    location=location;
             }
     });
 

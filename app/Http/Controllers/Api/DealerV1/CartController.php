@@ -251,15 +251,30 @@ class CartController extends BaseController
             }else {
                 $number = '';
             }
+            $assets = AssetsModel::where(['target_id' => $carts->sku_id,'type' => 4])->first();//sku
+            $cover = '';
+            if($assets){
+                $cover = $assets->file->small;
+            } else {
+                $asset = AssetsModel::where(['target_id' => $carts->product_id,'type' => 1])->first();//商品图
+                if (count($asset)>0){
+                    $aset = '';
+//                        foreach ($asset as $val){
+                    $aset = $asset->file->small;
+//                        }
+                    $cover = $aset;
+                }
+            }
 
             $data[$k]=array(
                 'product_id' => $carts->product_id,
+                'id'        => $carts->id,
                 'sku_id'       => $carts->sku_id,
                 'number'        => $number,
                 'price'         => $carts->price,
                 'product_name'  => $carts->product->title,
                 'mode'          => $carts->sku->mode,
-                'cover_url'     =>$carts->sku->first_img,
+                'cover_url'     =>$cover,
 
             );
 
