@@ -101,45 +101,42 @@ class OrderController extends BaseController{
         if ($types == 1) {//当月订单
             if($status != 0) {
                 if ($status === -1) {
-                    $status = 0;
+                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
                 if ($status == 10){
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
-                if ($status == -1 || $status == 20){
+                if ($status == 20){
                     $query['status'] = $status;
                     $orders = OrderModel::orderBy('id', 'desc')->where($query)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
-
             }else{
-                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id',$user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
             }
 
         }else{//全部订单
             if ($status != 0){
                 if ($status === -1) {
-                    $status = 0;
+                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 10){
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
-                if ($status == -1 || $status == 20) {
+                if ($status == 20) {
                     $query['status'] = $status;
                     $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where($query)->paginate($per_page);
                 }
-
             }else{
                 $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
             }
         }
         return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
-
     }
 
     /**
@@ -259,7 +256,7 @@ class OrderController extends BaseController{
                 $orders->invoice_value = $orders->pay_money;//发票金额就是支付金额
             }
         }else{
-            return $this->response->array(ApiHelper::error('订单id不能为空', 200));
+            return $this->response->array(ApiHelper::error('没有找到该笔订单', 404));
         }
         return $this->response->item($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
 
@@ -427,7 +424,6 @@ class OrderController extends BaseController{
             $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
             $product = ProductsModel::where('id',$productSku->product_id)->first();
             $h_invoice = InvoiceModel::where('id','=',$all['invoice_id'])->first();
-
             $order_sku_model = new OrderSkuRelationModel();
             $order_sku_model->order_id = $order_id;
             $order_sku_model->sku_id = $sku_id;
