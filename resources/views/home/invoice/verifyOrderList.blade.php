@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="col-md-4 text-right">
-                       <form id="per_page_from" action="{{ url('/invoice/lists') }}" method="POST">
+                       <form id="per_page_from" action="{{ url('/invoice/verifyOrderList') }}" method="POST">
                                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                                                     <div class="datatable-length">
                                                         <select class="form-control selectpicker input-sm per_page" name="per_page">

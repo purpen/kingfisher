@@ -368,6 +368,92 @@ class InvoiceController extends Controller
         ]);
 
     }
+
+    /**
+     * 发票管理中的已过期
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function completeOrderList(Request $request)
+    {
+        $tab_menu = 'sended';
+        $order_number =  $request->input('order_number')  ? $request->input('order_number') : '';
+        $receiving_id =  $request->input('receiving_id')  ? $request->input('receiving_id') : '';
+        $wherein  =  $order_number;
+        if($receiving_id ){
+            $where['i.receiving_id'] = $receiving_id;
+            $where['i.receiving_type'] = 5;
+            $where['difference'] = 0;
+        }else{
+            $where['i.receiving_type'] = 5;
+            $where['i.difference'] = 0;
+        }
+
+//dd($where);
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+
+        $store_list = StoreModel::select('id','name')->get();
+        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
+
+        $supplier_model = new SupplierModel();
+        $supplier_list = $supplier_model->lists();
+        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+
+        //当前用户所在部门创建的订单 查询条件
+        $department = Auth::user()->department;
+        if($department){
+            $id_arr = UserModel
+                ::where('department',$department)
+                ->get()
+                ->pluck('id')
+                ->toArray();
+            $query = OrderModel::whereIn('user_id_sales', $id_arr);
+        }else{
+            $query = OrderModel::query();
+        }
+        $status= 'waitpay';
+        $number = '';
+
+        $order_list = $query
+            ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
+            ->select('order.*','i.*','order.id as id','i.id as invoice_id')
+            ->whereIn('order.status', [8, 10, 20])
+            ->where('order.number','like','%'.$wherein.'%')
+            ->where($where)
+            ->orderBy('order.id','desc')
+            ->paginate($this->per_page);
+
+        $logistics_list = $logistic_list = LogisticsModel
+            ::OfStatus(1)
+            ->select(['id','name'])
+            ->get();
+//        dd($order_list);
+
+        return view('home/invoice.completeOrderList', [
+            'order_list' => $order_list,
+            'tab_menu' => $tab_menu,
+            'status' => $status,
+            'logistics_list' => $logistics_list,
+            'name' => $number,
+            'per_page' => $this->per_page,
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+            'sSearch' => false,
+            'store_list' => $store_list,
+            'products' => $products,
+            'buyer_name' => '',
+            'buyer_phone' => '',
+            'supplier_id' => '',
+            'from_type' => 0,
+            'supplier_list' => $supplier_list,
+            'distributors' => $distributors,
+
+        ]);
+
+    }
+
     /**
      * 发票管理中的审核中的审核拒绝
      *
