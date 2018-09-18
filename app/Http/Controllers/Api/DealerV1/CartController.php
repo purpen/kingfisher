@@ -268,7 +268,6 @@ class CartController extends BaseController
 
             $data[$k]=array(
                 'product_id' => $carts->product_id,
-                'id'        => $carts->id,
                 'sku_id'       => $carts->sku_id,
                 'number'        => $number,
                 'price'         => $carts->price,
