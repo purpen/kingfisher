@@ -1511,7 +1511,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
         ]);
         Route::post('/saas/article/imageUpload', [
 //            'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@imageUpload'
-            'as' => 'admin.article.store', 'acl' => 'admin.product.viewlist', 'uses' => 'ArticleController@imageUpload'
+            'as' => 'admin.article.store', 'acl' => 'admin.product.store', 'uses' => 'ArticleController@imageUpload'
         ]);
         //文章删除
         Route::get('/saas/article/delete/{article_id}', [
