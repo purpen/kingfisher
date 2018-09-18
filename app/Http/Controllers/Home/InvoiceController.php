@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\AssetsModel;
 use App\Models\HistoryInvoiceModel;
 use App\Models\InvoiceModel;
 use App\Models\LogisticsModel;
@@ -376,6 +377,7 @@ class InvoiceController extends Controller
      */
     public function completeOrderList(Request $request)
     {
+
         $tab_menu = 'sended';
         $order_number =  $request->input('order_number')  ? $request->input('order_number') : '';
         $receiving_id =  $request->input('receiving_id')  ? $request->input('receiving_id') : '';
@@ -464,6 +466,7 @@ class InvoiceController extends Controller
         $order_id = $request->input('id');
         $invoice_id = $request->input('invoice_id');
 
+dd($order_id);
 
     }
     /**

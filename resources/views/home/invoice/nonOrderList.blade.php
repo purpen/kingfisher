@@ -238,7 +238,7 @@
     {{--手动发货弹出框--}}
     @include('modal.add_manual_send_modal')
 
-    @include('mustache.invoice_info')
+    @include('mustache.refused_info')
 
     {{--拆单弹出框--}}
     @include('modal.add_split_order')
@@ -271,6 +271,7 @@
     @include('home/order.distributorOrderInput')
 
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
+    <script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>
     <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
         <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
     </object>
@@ -278,6 +279,19 @@
 
 @section('customize_js')
     @parent
+    function myFunction(order_id,invoice_id) {
+      id = order_id;
+      invoice_id = invoice_id;
+        layer.open({
+           type: 1 //Page层类型
+          ,area: ['500px', '280px']
+           ,title: '拒绝理由。'
+          ,shade: 0.2 //遮罩透明度
+           ,maxmin: true //允许全屏最小化
+            ,anim: 2 //0-6的动画形式，-1不开启
+            ,content: "<form action='/invoice/rejected?id='+id  method='get'><input type='hidden' value='id' name='id'><input type='hidden' value=invoice_id name='invoice_id'><textarea rows='8' cols='60' name='reason'>invoice_id</textarea><br><input style='margin-top:30px;' type='submit' value='提交'></form>"
+    });
+    }
     $('.active').removeClass('active');
     var _token = $('#_token').val();
 

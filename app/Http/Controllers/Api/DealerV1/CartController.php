@@ -91,10 +91,10 @@ class CartController extends BaseController
                 } else {
                     $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
                     if (count($asset)>0){
-                        $aset = [];
-                        foreach ($asset as $val){
-                            $aset[] = $val->file->small;
-                        }
+                        $aset = '';
+//                        foreach ($asset as $val){
+                            $aset = $asset->file->small;
+//                        }
                         $v->cover = $aset;
                     }
                 }
@@ -158,10 +158,10 @@ class CartController extends BaseController
                 } else {
                     $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
                     if (count($asset)>0){
-                        $aset = [];
-                        foreach ($asset as $val){
-                            $aset[] = $val->file->small;
-                        }
+                        $aset = '';
+//                        foreach ($asset as $val){
+                            $aset = $asset->file->small;
+//                        }
                         $v->cover = $aset;
                     }
                 }
