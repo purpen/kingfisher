@@ -29,7 +29,9 @@ class ReceiveOrderController extends Controller
     public function index(Request $request)
     {
 
-        $order_list = OrderModel::where(['type' => 8, 'status' => 6, 'suspend' => 0])->orderBy('id', 'desc')
+//        $order_list = OrderModel::where(['type' => 8, 'status' => 6, 'suspend' => 0])->orderBy('id', 'desc')
+//            ->paginate($this->per_page);
+        $order_list = OrderModel::where('type',8)->where('suspend',0)->whereIn('status',[2,6])->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
         return view('home/receiveOrder.index', [
