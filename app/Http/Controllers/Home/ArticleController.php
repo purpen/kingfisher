@@ -337,6 +337,7 @@ class ArticleController extends Controller
         }else{
             $filePath = $file->getRealPath();
         }
+        Log::info($filePath);
         //获取文件路径
         // 上传到七牛后保存的文件名
         $date = time();
