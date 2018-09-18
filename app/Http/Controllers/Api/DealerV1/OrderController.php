@@ -408,7 +408,7 @@ class OrderController extends BaseController{
             $quantity_arr[] = $val['quantity'];
         }
         if(!$storage_sku->isCount($all['storage_id'][0], $user->department,$sku_id_arr, $quantity_arr)){
-            return ajax_json(0,'仓库/部门库存不足');
+            return $this->response->array(ApiHelper::error('仓库/部门库存不足！', 403));
         }
 
 
