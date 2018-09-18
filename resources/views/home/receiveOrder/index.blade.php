@@ -101,6 +101,7 @@
                         <th>数量</th>
                         <th>实付/运费</th>
                         <th>结算方式</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -135,6 +136,12 @@
                             <td>{{$order->count}}</td>
                             <td>{{$order->total_money}} / {{$order->freight}}</td>
                             <td>{{$order->payment_type}}</td>
+                            <td tdr="nochect">
+                                {{--<a href="{{url('/receiveOrder/show')}}?id={{$order->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>--}}
+                                <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}}" active="1">
+                                    <i class="glyphicon glyphicon-eye-open"></i> 查看
+                                </button>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -148,4 +155,27 @@
         {{--@endif--}}
         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     </div>
+
+    @include('mustache.order_info')
+@endsection
+
+@section('load_private')
+    @parent
+$(".show-order").click(function() {
+var skus = [];
+$(".order-list").remove();
+var order = $(this).parent().parent();
+var obj = $(this);
+if ($(this).attr("active") == 1) {
+var id = $(this).attr("value");
+$.get('{{url('/order/ajaxEdit')}}',{'id':id},function (e) {
+if(e.status == 1){
+var template = $('#order-info-form').html();
+var views = Mustache.render(template, e.data);
+order.after(views);
+obj.attr("active", 0)
+    }
+    },'json');
+    }
+    });
 @endsection
