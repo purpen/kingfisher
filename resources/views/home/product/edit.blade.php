@@ -289,42 +289,46 @@
 
                         <h5>商品详情介绍图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，规格800*800，大小3MB以内］</small></h5>
                         <hr>
-
-                        <div class="row mb-2r" id="update-products-img">
-                            <div class="col-md-2">
-                                <div id="picForm" enctype="multipart/form-data">
-                                    <div class="image-add">
+                        <div class="form-group">
+                            <div class="editor col-sm-6">
+                                <textarea id='myEditor' name="content" class="control-label">{{$product->content}}</textarea>
+                            </div>
+                        </div>
+                        {{--<div class="row mb-2r" id="update-products-img">--}}
+                            {{--<div class="col-md-2">--}}
+                                {{--<div id="picForm" enctype="multipart/form-data">--}}
+                                    {{--<div class="image-add">--}}
                                         {{--<span class="glyphicon glyphicon-plus f46"></span>--}}
                                         {{--<p class="uptitle">添加图片</p>--}}
-                                        <div id="fine-uploaders"></div>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="product_details" name="product_details" value="{{$product->product_details}}">
-                                <script type="text/template" id="qq-template">
-                                    <div id="add-imgs" class="qq-uploader-selector qq-uploader">
-                                        <div class="qq-upload-button-selector qq-upload-button">
-                                            <div>上传图片</div>
-                                        </div>
-                                        <ul class="qq-upload-list-selector qq-upload-list">
-                                            <li hidden></li>
-                                        </ul>
-                                    </div>
-                                </script>
-                            </div>
-                            <div class="col-md-2 mb-3r" style="display: none">
-                                <div style="width: 70px;height: 5px;background: lightblue;">
-                                    <div id="progress_bars" style="width: 0px;height: 5px;background: blue;"></div>
-                                </div>
-                            </div>
-            				@foreach($assetsProductDetails as $v)
-                            <div class="col-md-2">
-            					<div class="asset">
-            						<img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
-            						<a class="removeimg" value="{{ $v->id }}"><i class="glyphicon glyphicon-remove"></i></a>
-            					</div>
-                            </div>
-            				@endforeach
-                        </div>
+                                        {{--<div id="fine-uploaders"></div>--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                                {{--<input type="hidden" id="product_details" name="product_details" value="{{$product->product_details}}">--}}
+                                {{--<script type="text/template" id="qq-template">--}}
+                                    {{--<div id="add-imgs" class="qq-uploader-selector qq-uploader">--}}
+                                        {{--<div class="qq-upload-button-selector qq-upload-button">--}}
+                                            {{--<div>上传图片</div>--}}
+                                        {{--</div>--}}
+                                        {{--<ul class="qq-upload-list-selector qq-upload-list">--}}
+                                            {{--<li hidden></li>--}}
+                                        {{--</ul>--}}
+                                    {{--</div>--}}
+                                {{--</script>--}}
+                            {{--</div>--}}
+                            {{--<div class="col-md-2 mb-3r" style="display: none">--}}
+                                {{--<div style="width: 70px;height: 5px;background: lightblue;">--}}
+                                    {{--<div id="progress_bars" style="width: 0px;height: 5px;background: blue;"></div>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+            				{{--@foreach($assetsProductDetails as $v)--}}
+                            {{--<div class="col-md-2">--}}
+            					{{--<div class="asset">--}}
+            						{{--<img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
+            						{{--<a class="removeimg" value="{{ $v->id }}"><i class="glyphicon glyphicon-remove"></i></a>--}}
+            					{{--</div>--}}
+                            {{--</div>--}}
+            				{{--@endforeach--}}
+                        {{--</div>--}}
                         <br>
 
                         {{--<div class="form-group">--}}
@@ -717,6 +721,8 @@
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+    @include('editor::head')
+
 @endsection
 
 @section('customize_js')

@@ -13,7 +13,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
-use YuanChao\Editor\EndaEditor;
 use App\Helper\Utils;
 
 class ArticleController extends Controller
@@ -331,8 +330,12 @@ class ArticleController extends Controller
         $token = $auth->uploadToken($bucket);
         //获取文件
         $file = $request->file('image');
+        if($file == null){
+            $filePath = $_FILES['undefined']['tmp_name'];
+        }else{
+            $filePath = $file->getRealPath();
+        }
         //获取文件路径
-        $filePath = $file->getRealPath();
         // 上传到七牛后保存的文件名
         $date = time();
         $key = 'article/'.$date.'/'.uniqid();
@@ -343,8 +346,9 @@ class ArticleController extends Controller
         $data = array(
             'status'=> 0,
             'message'=> 'ok',
-            'url'=> config('qiniu.material_url').$key
+            'url'=> config('qiniu.material_url').$key.'-p1080'."\n"
         );
+
         return $data;
     }
 

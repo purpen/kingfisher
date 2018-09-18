@@ -2,7 +2,7 @@
 
 return [
     // 宽度
-    'width'=>'80%',
+    'width'=>'100%',
     'uploadUrl'=> '/saas/article/imageUpload',
     /*
      * 在添加链接的时候可以给定一个ajax链接，这样可以方便的添加在系统中的文章

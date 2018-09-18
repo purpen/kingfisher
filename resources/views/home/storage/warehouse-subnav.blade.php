@@ -1,7 +1,7 @@
 <ul class="nav navbar-nav nav-list">
     <li @if($tab_menu == 'waiting')class="active"@endif><a href="{{url('/enterWarehouse')}}">采购入库</a></li>
     <li @if($tab_menu == 'exchange')class="active"@endif><a href="{{url('/enterWarehouse/changeEnter')}}">调拨入库</a></li>
-    <li @if($tab_menu == 'refund')class="active"@endif><a href="">销售退货入库</a></li>
+    {{--<li @if($tab_menu == 'refund')class="active"@endif><a href="">销售退货入库</a></li>--}}
     <li @if($tab_menu == 'completed')class="active"@endif><a href="{{url('/enterWarehouse/complete')}}">已完成入库</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">

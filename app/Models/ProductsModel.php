@@ -22,7 +22,7 @@ class ProductsModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['title','tit','category_id','brand_id','brand_id','authorization_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','weight','cost_price','summary' , 'product_type','product_details','sales_number'];
+    protected $fillable = ['title','tit','category_id','brand_id','brand_id','authorization_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','weight','cost_price','summary' , 'product_type','product_details','sales_number' , 'content'];
 
     /**
      * 一对多关联products_sku表
