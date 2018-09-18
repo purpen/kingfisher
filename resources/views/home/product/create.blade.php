@@ -46,7 +46,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-product" role="form" class="form-horizontal" method="post" action="{{ url('/product/store') }}">
+                    <form id="add-product" role="form" class="form-horizontal" enctype ="multipart/form-data" method="post" action="{{ url('/product/store') }}">
                         <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
                         {{ csrf_field() }}{{--token--}}
         				<input type="hidden" name="cover_id" id="cover_id">
