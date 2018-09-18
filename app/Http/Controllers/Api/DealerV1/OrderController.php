@@ -277,7 +277,7 @@ class OrderController extends BaseController{
      * @apiParam {string} invoice_id 发票id  0.不开发票
      * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
-     * @apiParam {string} product_id [2,1,4,2,9]
+     * @apiParam {string} product_id  "2,1,4,9"
      *
      */
     public function store(Request $request)
@@ -287,7 +287,7 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
         }
 
-        $product_id = $request->input('product_id');
+        $product_id = explode(",",$request->input('product_id'));
         $payment_type = $request->input('payment_type');
 //        $payment_type = 4;
 //        $product_id = [4,3,2,16];
