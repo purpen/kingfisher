@@ -343,15 +343,17 @@ class ArticleController extends Controller
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 putFile 方法进行文件的上传。
         list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+        Log::info($err);
+        Log::info($ret);
 
-        if ($err !== null) {
-            Log::info(11);
-            Log::info($err);
-        } else {
-            Log::info(22);
-
-            Log::info($ret);
-        }
+//        if ($err !== null) {
+//            Log::info(11);
+//            Log::info($err);
+//        } else {
+//            Log::info(22);
+//
+//            Log::info($ret);
+//        }
             $data = array(
             'status'=> 0,
             'message'=> 'ok',
