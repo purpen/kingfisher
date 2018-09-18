@@ -331,6 +331,7 @@ class ArticleController extends Controller
         //获取文件
         $file = $request->file('image');
         Log::info($file);
+        Log::info($_FILES);
         if($file == null){
             $filePath = $_FILES['undefined']['tmp_name'];
         }else{
