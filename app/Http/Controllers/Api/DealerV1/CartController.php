@@ -88,7 +88,7 @@ class CartController extends BaseController
                 if($assets){
                     $v->cover = $assets->file->small;
                 } else {
-                    $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->get();//商品图
+                    $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
                     if (count($asset)>0){
                         $aset = [];
                         foreach ($asset as $val){
