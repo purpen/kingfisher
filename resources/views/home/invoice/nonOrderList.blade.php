@@ -238,7 +238,7 @@
     {{--手动发货弹出框--}}
     @include('modal.add_manual_send_modal')
 
-    @include('mustache.audit_info')
+    @include('mustache.invoice_info')
 
     {{--拆单弹出框--}}
     @include('modal.add_split_order')

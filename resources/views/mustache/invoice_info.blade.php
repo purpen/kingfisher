@@ -278,7 +278,7 @@
                 </div>
                 
                 <label class="col-sm-1 control-label">驳回原因</label>
-                <div class="col-sm-3">
+                <div class="col-sm-3" style="height:70px;">
                     <span class="form-text text-danger">@{{ reason }}</span>
                 </div>
 				

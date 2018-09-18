@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
-                @include('home.invoice.make')
+                @include('home.invoice.refused')
             </div>
         </div>
 
@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="col-md-4 text-right">
-                       <form id="per_page_from" action="{{ url('/invoice/lists') }}" method="POST">
+                       <form id="per_page_from" action="{{ url('/invoice/sendOrderList') }}" method="POST">
                                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                                                     <div class="datatable-length">
                                                         <select class="form-control selectpicker input-sm per_page" name="per_page">
@@ -209,7 +209,9 @@
                                     @endrole
 
                                     @if ($status == 8)
-
+                                        {{--<button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
+                                            <i class="glyphicon glyphicon-hand-right"></i> 手动发货
+                                        </button>--}}
                                     @endif
                                 </td>
                             </tr>
