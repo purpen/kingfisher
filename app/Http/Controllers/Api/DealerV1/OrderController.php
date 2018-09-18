@@ -277,7 +277,7 @@ class OrderController extends BaseController{
      * @apiParam {string} invoice_id 发票id  0.不开发票
      * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
-     * @apiParam {string} product_id  "2,1,4,9"
+     * @apiParam {string} product_id  '2,1,4,9'
      *
      */
     public function store(Request $request)
