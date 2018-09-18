@@ -731,4 +731,100 @@ class OrderController extends BaseController{
         }
 
     }
+
+
+
+    /**
+     * @api {get} /DealerApi/order/search 订单搜索
+     * @apiVersion 1.0.0
+     * @apiName order search
+     * @apiGroup order
+     *
+     * @apiParam {string} name 商品名称
+     * @apiParam {string} number 订单号
+     * @apiParam {string} buyer_name 收件人
+     * @apiParam {integer} per_page 分页数量  默认10
+     * @apiParam {integer} page 页码
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     * "data": [
+     * {
+     *  "id": 25918,
+     *   "number": "11969757068000",       //订单编号
+     *  "buyer_name": "冯宇",               //收货人
+     *  "pay_money": "119.00",              //支付总金额
+     *  "user_id": 19,
+     * "order_start_time": "0000-00-00 00:00:00", //下单时间
+     * "status": 8,
+     * "status_val": "待发货",                 //订单状态
+     * "payment_type": "在线支付"               //支付方式
+     * "total_money": "299.00",             //商品总金额
+     * "count": 1,                            //商品总数量
+     * "sku_relation": [
+     * {
+     * "sku_id": 42,
+     * "price":   单价
+     * "product_title": "小风扇",                   //商品名称
+     * "quantity": 1,                      //订单明细数量
+     * "sku_mode": "黑色",                     // 颜色/型号
+     * "image": "http://www.work.com/images/default/erp_product1.png",   //sku图片
+     * }
+     * ],
+     *  "meta": {
+     *  "message": "Success.",
+     *  "status_code": 200,
+     *  "pagination": {
+     *  "total": 717,
+     *  "count": 2,
+     *  "per_page": 2,
+     *  "current_page": 1,
+     *  "total_pages": 359,
+     *  "links": {
+     *  "next": "http://www.work.com/DealerApi/orders?page=2"
+     *  }
+     *  }
+     *  }
+     *   }
+     */
+
+
+    public function search(Request $request){
+        $this->per_page = $request->input('per_page', $this->per_page);
+        $name = $request->input('name');
+        $number = $request->input('number');
+        $buyer_name = $request->input('buyer_name');
+        $orders = OrderModel::query()->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+        $orderSku = $orders->orderSkuRelation;//订单详情表
+        if(!empty($order_number)){
+            $orders->where('order.number' ,'like','%'.$number.'%');
+        }
+        if(!empty($order_number)){
+            $orders->where('order.buyer_name' ,'like','%'.$buyer_name.'%');
+        }
+        if(!empty($name)){
+//            $orders->where('order.number' ,'like','%'.$number.'%');
+
+            $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id',$this->auth_user_id)->get();
+            foreach ($orders as $k=>$v){
+                $sku = $v->orderSkuRelation;
+                $order_sku_relations = OrderSkuRelationModel::where('sku_name' , 'like','%'.$name.'%')->get();
+            }
+        }
+       
+
+        $products = ProductsModel::where('title' , 'like', '%'.$name.'%');
+
+        foreach ($products as $key=>$value){
+            $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$this->auth_user_id)->first();
+            if ($follow){
+                $value->follow = 1;//已关注
+            }else{
+                $value->follow = 0;//未关注
+            }
+        }
+        return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
+
+
+    }
 }

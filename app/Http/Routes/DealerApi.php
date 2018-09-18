@@ -253,6 +253,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->post('/DealerApi/order/upload_img',[
             'as' => 'Dealer.Order.upload_img' , 'uses' => 'OrderController@upload_img'
         ]);
+        //订单搜索
+        $api->get('/DealerApi/order/search',[
+            'as' => 'Dealer.Order.search' , 'uses' => 'OrderController@search'
+        ]);
 
         // 经销商修改信息-------------------------------------------------------------------------------------------------
         $api->post('/DealerApi/message/updateMessage', [
