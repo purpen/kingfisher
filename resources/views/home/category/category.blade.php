@@ -351,6 +351,7 @@
         var title = $("input[name='title']").val();
         var order = $("input[name='order']").val();
         var type  = $("select[name='type']").val();
+        var status  = $("input[name='status']:checked").val();
         var _token = $('#_token').val();
 
         {{--区/县--}}
@@ -360,7 +361,7 @@
         if(obj[k].checked)
         check_val.push(obj[k].value);
         }
-        $.post("{{ url('/category/store') }}",{_token:_token,title:title,order:order,type:type,oid:check_val},function(data){
+        $.post("{{ url('/category/store') }}",{_token:_token,title:title,order:order,type:type,oid:check_val,status:status},function(data){
 
             $("input[name='title']").val("");
             if(data.status == 1){
@@ -379,6 +380,7 @@
         var id = $("#category_id").val();
         var order = $("input[name='orders']").val();
         var types = $("#type1").val();
+        var status  = $("input[name='statu']:checked").val();
         var type ='';
         if(types == "商品"){
              type  = 1;
@@ -398,7 +400,7 @@
         if(obj[k].checked)
         check_val.push(obj[k].value);
         }
-        $.post("{{ url('/category/update') }}",{_token:_token,title:title,order:order,type:type,oid:check_val,id:id},function(data){
+        $.post("{{ url('/category/update') }}",{_token:_token,title:title,order:order,type:type,oid:check_val,id:id,status:status},function(data){
 
             $("input[name='title']").val("");
             if(data.status == 1){

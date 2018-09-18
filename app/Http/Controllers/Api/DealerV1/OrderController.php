@@ -235,7 +235,23 @@ class OrderController extends BaseController{
             }
             if (!empty($address)){
                 $orders->address_list = $address;
-                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
+
+                $province = ChinaCityModel::where('oid',$address->province_id)->select('name')->first();
+                $city = ChinaCityModel::where('oid',$address->city_id)->select('name')->first();
+                $county = ChinaCityModel::where('oid',$address->county_id)->select('name')->first();
+                $town = ChinaCityModel::where('oid',$address->town_id)->select('name')->first();
+                if ($province){
+                    $orders->province = $province->name;
+                }
+                if ($city){
+                    $orders->city = $city->name;
+                }
+                if ($county){
+                    $orders->county = $county->name;
+                }
+                if ($town){
+                    $orders->town = $town->name;
+                }
             }
             if (!empty($invoice)){
                 $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
