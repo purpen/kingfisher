@@ -63,6 +63,7 @@ class OrderController extends BaseController{
      * "product_title": "小风扇",                   //商品名称
      * "quantity": 1,                      //订单明细数量
      * "sku_mode": "黑色",                     // 颜色/型号
+     * "sku_name": "黑色-小风扇",                     // sku name
      * "image": "http://www.work.com/images/default/erp_product1.png",   //sku图片
      * }
      * ],
@@ -208,12 +209,17 @@ class OrderController extends BaseController{
             if($orders){
                 $orderSku = $orders->orderSkuRelation;//订单详情表
                 $address = $orders->address;//地址表
-                $invoice = HistoryInvoiceModel::where('order_id',$orders->id)->where('difference',0)->first();//发票历史表状态为0的
+                $invoice = HistoryInvoiceModel::where('order_id',$order_id)->where('difference',0)->first();//发票历史表状态为0的
                 $order_start_time =$orders->order_start_time;
                 $order_timer = strtotime($order_start_time)+ 60*60*24;
                 $orders->over_time = date("Y-m-d H:i:s",$order_timer);//取消时间
-            }
 
+                if ($invoice){
+                    $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
+                    $orders->company_name = $invoice->company_name;//发票抬头
+                    $orders->invoice_value = $invoice->invoice_value;//发票金额就是支付金额
+                }
+            }
             if(!empty($orderSku)){
                 $order_sku = $orderSku->toArray();
                 foreach ($order_sku as $k=>$v){
@@ -250,11 +256,7 @@ class OrderController extends BaseController{
                     $orders->town = $town->name;
                 }
             }
-            if (!empty($invoice)){
-                $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
-                $orders->company_name = $invoice->company_name;//发票抬头
-                $orders->invoice_value = $orders->pay_money;//发票金额就是支付金额
-            }
+
         }else{
             return $this->response->array(ApiHelper::error('没有找到该笔订单', 404));
         }
@@ -347,7 +349,7 @@ class OrderController extends BaseController{
                 return $this->response->array(ApiHelper::error('暂无优惠信息', 403));
             }
         }
-        $invoice_id = $request->input('invoice_id');
+        $invoice_id = $request->input('invoice_id',0);
 
         $all['order_start_time'] = date("Y-m-d H:i:s");
         $all['user_id'] = $user_id;
@@ -424,6 +426,7 @@ class OrderController extends BaseController{
             $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
             $product = ProductsModel::where('id',$productSku->product_id)->first();
             $h_invoice = InvoiceModel::where('id','=',$all['invoice_id'])->first();
+
             $order_sku_model = new OrderSkuRelationModel();
             $order_sku_model->order_id = $order_id;
             $order_sku_model->sku_id = $sku_id;
@@ -448,6 +451,8 @@ class OrderController extends BaseController{
                 $history_invoice->application_time = $order->order_start_time;
                 $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
                 $history_invoice->unit_address = $h_invoice->unit_address;
+                $history_invoice->prove_id = $h_invoice->prove_id;
+                $history_invoice->receiving_type = 2;
 
                 if (!$history_invoice->save()) {
                     return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
@@ -457,11 +462,11 @@ class OrderController extends BaseController{
             if ($order->payment_type == 4) {
                 //月结就直接默认成已付款占货
                 if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '付款占货关联操作失败');
+                    return $this->response->array(ApiHelper::error('付款占货关联操作失败', 403));
                 }
             }else{//订单未付款占货(假定为未付款然后占货)
                 if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '未付款占货关联操作失败');
+                    return $this->response->array(ApiHelper::error('未付款占货关联操作失败', 403));
                 }
             }
 
@@ -496,6 +501,8 @@ class OrderController extends BaseController{
                     $history_invoice->application_time = $order->order_start_time;
                     $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
                     $history_invoice->unit_address = $h_invoice->unit_address;
+                    $history_invoice->prove_id = $h_invoice->prove_id;
+                    $history_invoice->receiving_type = 2;
 
                     if (!$history_invoice->save()) {
                         return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
@@ -505,11 +512,11 @@ class OrderController extends BaseController{
                 if ($order->payment_type == 4) {
                     //月结就直接默认成已付款占货
                     if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '付款占货关联操作失败');
+                        return $this->response->array(ApiHelper::error('付款占货关联操作失败', 403));
                     }
                 }else{//订单未付款占货(假定为未付款然后占货)
                     if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '未付款占货关联操作失败');
+                        return $this->response->array(ApiHelper::error('未付款占货关联操作失败', 403));
                     }
                 }
             }
@@ -604,7 +611,7 @@ class OrderController extends BaseController{
                 $sku_id = $v['sku_id'];
                 $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
                 if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
-                    return ajax_json(0, '未付款减货关联操作失败');
+                    return $this->response->array(ApiHelper::error('未付款减货关联操作失败', 403));
                 }
             }
 
@@ -635,16 +642,19 @@ class OrderController extends BaseController{
     {
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
-        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 10])->first();
+        $order = OrderModel::where(['id' => $order_id,'user_id' => $user_id])->first();
         if(!$order){
             return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
         }else {
             $orders =DB::table('order')
                 ->where('user_id','=',$this->auth_user_id)
+                ->whereIn('status',[5,6,8,10])
                 ->where('id','=',$order_id)
                 ->update(['status'=> 20]);
-
-            return $this->response->array(ApiHelper::success());
+            if ($orders){
+                return $this->response->array(ApiHelper::success());
+            }
+            return $this->response->array(ApiHelper::error('当前状态不可以收货！', 403));
         }
     }
 
@@ -716,14 +726,15 @@ class OrderController extends BaseController{
         }else{
             $result = DB::table('order')
                     ->where('user_id','=',$user_id)
-                    ->where('id','=',$order->id)
+                    ->where('id','=',$order_id)
                     ->where('payment_type','=',6)
                     ->update(['voucher_id'=>$voucher_id,'status'=>2]);
 
             if ($result) {
                 $assets = AssetsModel::where('random',$random)->get();
                 foreach ($assets as $asset){
-                    $asset->target_id = $order->id;
+                    $asset->target_id = $result->id;
+                    $asset->type = 23;
                     $asset->save();
                 }
             }
@@ -768,6 +779,7 @@ class OrderController extends BaseController{
      * "product_title": "小风扇",                   //商品名称
      * "quantity": 1,                      //订单明细数量
      * "sku_mode": "黑色",                     // 颜色/型号
+     * "sku_name": "黑色-小风扇",                     // sku name
      * "image": "http://www.work.com/images/default/erp_product1.png",   //sku图片
      * }
      * ],
@@ -794,37 +806,28 @@ class OrderController extends BaseController{
         $name = $request->input('name');
         $number = $request->input('number');
         $buyer_name = $request->input('buyer_name');
-        $orders = OrderModel::query()->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
-        $orderSku = $orders->orderSkuRelation;//订单详情表
-        if(!empty($order_number)){
-            $orders->where('order.number' ,'like','%'.$number.'%');
+        if (!$name && !$number && !$buyer_name){
+            return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }
-        if(!empty($order_number)){
-            $orders->where('order.buyer_name' ,'like','%'.$buyer_name.'%');
+        if(!empty($number)){
+            $orders = OrderModel::where('number' ,'like','%'.$number.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+        }
+        if(!empty($buyer_name)){
+            $orders = OrderModel::where('buyer_name' ,'like','%'.$buyer_name.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
         }
         if(!empty($name)){
-//            $orders->where('order.number' ,'like','%'.$number.'%');
-
-            $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id',$this->auth_user_id)->get();
-            foreach ($orders as $k=>$v){
-                $sku = $v->orderSkuRelation;
-                $order_sku_relations = OrderSkuRelationModel::where('sku_name' , 'like','%'.$name.'%')->get();
+            $order_sku_relations = OrderSkuRelationModel::where('sku_name' ,'like','%'.$name.'%')->get();
+            $order_id = [];
+            foreach ($order_sku_relations as $v){
+                $order_id[] = $v->order_id;
             }
+            $orders = OrderModel::where('suspend',0)->whereIn('id',$order_id)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
         }
-       
-
-        $products = ProductsModel::where('title' , 'like', '%'.$name.'%');
-
-        foreach ($products as $key=>$value){
-            $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$this->auth_user_id)->first();
-            if ($follow){
-                $value->follow = 1;//已关注
-            }else{
-                $value->follow = 0;//未关注
-            }
+        if (count($orders)>0){
+            return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
+        }else{
+            return $this->response->array(ApiHelper::error('没有找到合适的订单', 404));
         }
-        return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
-
 
     }
 }
