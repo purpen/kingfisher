@@ -323,6 +323,11 @@ class CartController extends BaseController
                     $price = $v['sell_price'] * $vue['number'];
                 }
             }
+            if (empty($price) && count($sku_price) > 0){
+                $count = count($sku_price) - 1;
+                $invoice_price = $sku_price[$count];
+                $price = $invoice_price['sell_price'] * $vue['number'];
+            }
 
             // 如果产品存在，则更新数量和价格
             $cart = ReceiptModel::where(['user_id' => $user_id,'sku_id'=>$vue['sku_id'],'product_id'=>$vue['product_id']])->first();
@@ -409,6 +414,11 @@ class CartController extends BaseController
                 if($vue['number'] >= $v['min'] && $vue['number'] <= $v['max']){
                     $price = $v['sell_price'] * $vue['number'];
                 }
+            }
+            if (empty($price) && count($sku_price) > 0){
+                $count = count($sku_price) - 1;
+                $invoice_price = $sku_price[$count];
+                $price = $invoice_price['sell_price'] * $vue['number'];
             }
 
             // 如果产品存在，则更新数量和价格
@@ -510,6 +520,11 @@ class CartController extends BaseController
 
                 }
 
+            }
+            if (empty($price) && count($sku_price) > 0){
+                $count = count($sku_price) - 1;
+                $invoice_price = $sku_price[$count];
+                $price = $invoice_price['sell_price'] * $vue['number'];
             }
 
             $data['price'] = $price;
