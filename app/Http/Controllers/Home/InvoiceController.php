@@ -623,8 +623,9 @@ class InvoiceController extends Controller
 //        $where['difference'] = 0;
         $where['id'] = $invoice_id;
         $history =  HistoryInvoiceModel::where($where)->first();
-        if($history){
-           $name  = UserModel::where('id',$history['reviewer'])->select('realname')->first();
+    if ($history){
+        if($history['receiving_type'] != 5){
+            $name  = UserModel::where('id',$history['reviewer'])->select('realname')->first();
             $history['username'] = $name['realname'];
             $history['company_phone'] = $history->historyInvoice->company_phone;
             $history['opening_bank	'] = $history->historyInvoice->opening_bank	;
@@ -663,12 +664,20 @@ class InvoiceController extends Controller
             }
             $history->invoice_id = $order->id;
             $order->invoices_id = $history['id'];
-        }else{
+        }elseif($history['receiving_type'] == 5){
+            $history = '';
             $history['company_name'] = '';
             $history['receiving_id'] = '';
             $prove = 0;
             $history['invoice_id'] = $order->id;
         }
+    }else{
+        $history['company_name'] = '';
+        $history['receiving_id'] = '';
+        $prove = 0;
+        $history['invoice_id'] = $order->id;
+    }
+
 
 
         $order->company_name = isset($history['company_name']) ? $history['company_name'] : '';
