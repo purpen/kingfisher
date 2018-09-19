@@ -64,7 +64,7 @@ class HistoryInvoiceController extends BaseController
 
         $wherein['order.user_id'] = $user_id;
 //        $wherein['order.id'] = 1659;
-        $where = [];$notfound = 111;
+        $where = [];
         if($receiving_type == 1){
             $where = [2,3,4];
         } elseif($receiving_type == 2){
@@ -72,7 +72,7 @@ class HistoryInvoiceController extends BaseController
         } elseif($receiving_type == 3){
             $where = [5];
         }elseif($receiving_type == 4){
-            $receiving_type = 999;
+            $receiving = 999;
         }
         $data = [];
         if(!empty($notfound)){
@@ -101,7 +101,7 @@ class HistoryInvoiceController extends BaseController
                 ->orderBy('order.id','desc')
                 ->whereIn('receiving_type',$where)
                 ->paginate($per_page);
-        }elseif($receiving_type){
+        }elseif($receiving){
             $data = OrderModel::select('history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
                 ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
                 ->where('order.number','like','%'.$number.'%')
@@ -133,15 +133,25 @@ class HistoryInvoiceController extends BaseController
 
                 } else{
                     //如果时间到了则为已过期
-//                    $history = HistoryInvoiceModel::find($v->id);
-                    $history = new HistoryInvoiceModel();
-                    $hist = [];
-                    $hist['receiving_type'] = 5;
-                    $hist['receiving_id'] = 0;
-                    $hist['user_id'] = $user_id;
-                    $hist['order_id'] = $v->order_id;
+                    $history = HistoryInvoiceModel::find($v->id);
+                    if($history){
+                        $history->receiving_type  = 5;
+                        $history->receiving_id  = 0;
+                        $history->user_id = $user_id;
+                       $history->order_id = $v->order_id;
 
-                    $invoice = $history->create($hist);
+                        $invoice = $history->save();
+                    }else{
+                        $historyIn = new HistoryInvoiceModel();
+                        $hist = [];
+                        $hist['receiving_type'] = 5;
+                        $hist['receiving_id'] = 0;
+                        $hist['user_id'] = $user_id;
+                        $hist['order_id'] = $v->order_id;
+
+                        $invoice = $historyIn->create($hist);
+                    }
+
                     if(!$invoice){
                         return $this->response->array(ApiHelper::error('error', 500));
                     }
