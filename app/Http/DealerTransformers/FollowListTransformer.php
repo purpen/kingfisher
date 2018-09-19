@@ -8,15 +8,14 @@ use League\Fractal\TransformerAbstract;
 class FollowListTransformer extends TransformerAbstract
 {
 
-    public function transform($products)
+    public function transform(ProductsModel $products)
     {
-        $product = new ProductsModel();
         return [
             'product_id' => $products->id,
             'name' => $products->title,
             'price' => $products->market_price,
             'inventory' => intval($products->inventory),
-            'image' => $product->first_img,
+            'image' => $products->big_img,
         ];
     }
 

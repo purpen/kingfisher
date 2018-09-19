@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Requests\AddReceiveRequest;
+use App\Models\AssetsModel;
 use App\Models\AuditingModel;
 use App\Models\CountersModel;
 use App\Models\Distribution;
+use App\Models\DistributorModel;
 use App\Models\DistributorPaymentModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
@@ -29,8 +31,15 @@ class ReceiveOrderController extends Controller
     public function index(Request $request)
     {
 
-        $order_list = OrderModel::where(['type' => 8, 'status' => 6, 'suspend' => 0])->orderBy('id', 'desc')
+//        $order_list = OrderModel::where(['type' => 8, 'status' => 6, 'suspend' => 0])->orderBy('id', 'desc')
+//            ->paginate($this->per_page);
+        $order_list = OrderModel::where('type',8)->where('suspend',0)->whereIn('status',[2,6])->orderBy('id', 'desc')
             ->paginate($this->per_page);
+
+        foreach ($order_list as $v){
+            $distributor_id = $v->distributor_id;
+            $distributor = DistributorModel::where('id','=',$distributor_id)->first();
+        }
 
         return view('home/receiveOrder.index', [
             'type' => '',
@@ -39,6 +48,7 @@ class ReceiveOrderController extends Controller
             'tab_menu' => $this->tab_menu,
             'per_page' => $this->per_page,
             'order_list' => $order_list,
+            'distributor' => $distributor,
         ]);
     }
 
@@ -404,6 +414,44 @@ class ReceiveOrderController extends Controller
         } else {
             return ajax_json(0, 'error');
         }
+    }
+
+
+    //获取收款单查看详情
+    public function ajaxEdit(Request $request)
+    {
+        $order_id = (int)$request->input('id');
+        $order = OrderModel::find($order_id); //订单
+        if (!$order){
+            return ajax_json(0, 'error');
+        }
+        $distributor_id = $order->distributor_id;
+        $distributor = DistributorModel::where('id','=',$distributor_id)->first();
+        if (!$distributor){
+            return ajax_json(0, 'error');
+        }
+
+        $order->full_name = $distributor->full_name;
+        $order->business_license_number = $distributor->business_license_number;
+        $order->bank_number = $distributor->bank_number;
+        $order->store_name = $distributor->store_name;
+        $order->phone = $distributor->phone;
+        $order->name = $distributor->name;
+
+        if ($order->status == 2){
+            if($order->assets){
+                $order->image = $order->assets->file->small;
+                $order->img = $order->assets->file->p800;
+            }else{
+                $order->image = url('images/default/erp_product.png');
+                $order->img = url('images/default/erp_product1.png');
+            }
+        }else{
+                $order->image = '';
+                $order->img = '';
+        }
+
+        return ajax_json(1,'ok',['order'=>$order]);
     }
 
 
