@@ -101,7 +101,7 @@ class HistoryInvoiceController extends BaseController
                 ->orderBy('order.id','desc')
                 ->whereIn('receiving_type',$where)
                 ->paginate($per_page);
-        }elseif($receiving){
+        }elseif(!empty($receiving)){
             $data = OrderModel::select('history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
                 ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
                 ->where('order.number','like','%'.$number.'%')
@@ -225,7 +225,6 @@ class HistoryInvoiceController extends BaseController
      * @apiVersion 1.0.0
      * @apiName HistoryInvoice application
      * @apiGroup HistoryInvoice
-     * @apiParam {int} id 1:发票历史id
      * @apiParam {int} invoice_id 1:发票表id
      * @apiParam {int} order_id 1:订单id
      * @apiParam {int} invoicevalue 321:订单金额
