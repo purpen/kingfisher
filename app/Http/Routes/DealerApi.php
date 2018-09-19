@@ -46,6 +46,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'history.lists', 'uses' => 'HistoryInvoiceController@lists'
     ]);
 
+    //发票记录申请
+    $api->post('/DealerApi/history/application', [
+        'as' => 'history.application', 'uses' => 'HistoryInvoiceController@application'
+    ]);
+
     //查看普通增值税发票详情-弹框页面
     $api->get('/DealerApi/history/historyTo', [
         'as' => 'history.historyTo', 'uses' => 'HistoryInvoiceController@historyTo'

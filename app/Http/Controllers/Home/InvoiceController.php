@@ -377,7 +377,6 @@ class InvoiceController extends Controller
      */
     public function completeOrderList(Request $request)
     {
-
         $tab_menu = 'sended';
         $order_number =  $request->input('order_number')  ? $request->input('order_number') : '';
         $receiving_id =  $request->input('receiving_id')  ? $request->input('receiving_id') : '';
@@ -627,6 +626,12 @@ class InvoiceController extends Controller
         if($history){
            $name  = UserModel::where('id',$history['reviewer'])->select('realname')->first();
             $history['username'] = $name['realname'];
+            $history['company_phone'] = $history->historyInvoice->company_phone;
+            $history['opening_bank	'] = $history->historyInvoice->opening_bank	;
+            $history['bank_account'] = $history->historyInvoice->bank_account;
+            $history['receiving_address'] = $history->historyInvoice->receiving_address;
+            $history['receiving_name'] = $history->historyInvoice->receiving_name;
+            $history['receiving_phone'] = $history->historyInvoice->receiving_phone;
 
             if($history->receiving_id == 1){
                 $history->receiving_id = '增值税普通发票';
@@ -733,7 +738,11 @@ class InvoiceController extends Controller
         ]);
     }
 
-
+    /**
+     * 获取未通过的发票审核记录
+     * @param Request $request
+     * @return string
+     */
     public function  history(Request $request)
     {
         $id = $request->input('id');
@@ -745,6 +754,12 @@ class InvoiceController extends Controller
             if($v['receiving_id'] == 2){
                 $history[$k]['prove_url'] = $v->getFirstImgInvoice();
             }
+            $history[$k]['company_phone'] = $v->historyInvoice->company_phone;
+            $history[$k]['receiving_name'] = $v->historyInvoice->receiving_name;
+            $history[$k]['bank_account'] = $v->historyInvoice->bank_account;
+            $history[$k]['opening_bank'] = $v->historyInvoice->opening_bank;
+            $history[$k]['receiving_phone'] = $v->historyInvoice->receiving_phone;
+            $history[$k]['receiving_address'] = $v->historyInvoice->receiving_address;
         }
         return view('home/invoice.history', [
             'history' => $history,
