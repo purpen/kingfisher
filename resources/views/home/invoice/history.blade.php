@@ -122,7 +122,7 @@
           <br><br>
             <label class="col-sm-1 control-label">驳回原因</label>
             <div class="col-sm-3">
-                <textarea name="txt" clos=",50" rows="5" warp="virtual" disabled>{{$value->reason}} </textarea>
+                <textarea name="txt" clos=",50" rows="5" warp="virtual" disabled style="margin: 0px; height: 128px; width: 342px;">{{$value->reason}} </textarea>
 
             </div>
             <label class="col-sm-1 control-label">审核人</label>

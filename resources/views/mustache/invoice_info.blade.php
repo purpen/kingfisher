@@ -278,7 +278,7 @@
                 </div>
                 
                 <label class="col-sm-1 control-label">驳回原因</label>
-                <div class="col-sm-3" style="height:70px;">
+                <div class="col-sm-3" style="height:150px;">
                     <span class="form-text text-danger">@{{ reason }}</span>
                 </div>
 				
@@ -349,9 +349,9 @@
                     <span class="form-text text-danger">@{{ receiving_address }}</span>
                 </div> 
 				@{{ #prove }} 
-				 <label class="col-sm-1 control-label" style="margin-left: 450px;margin-top: -360px;">一般纳税人证明</label>
+				 <label class="col-sm-1 control-label" style="margin-left: 450px;margin-top: -460px;">一般纳税人证明</label>
                 <div class="col-sm-3">
-                     <a href="@{{prove_id}}"  target="_blank"><img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" style="height: 100px; width: 100px;margin-left: 600px;margin-top: -550px;"></a>
+                     <a href="@{{prove_id}}"  target="_blank"><img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" style="height: 100px; width: 100px;margin-left: 600px;margin-top: -820px;"></a>
                 
                 </div> 
 		@{{ /prove }} 
