@@ -111,7 +111,6 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                         <tr class="gblack">
-                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
                             <th>
                                 状态
                             </th>
@@ -141,9 +140,7 @@
                         <tbody>
                         @foreach($order_list as $order)
                             <tr>
-                                <td class="text-center">
-                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $order->id }}">
-                                </td>
+
                                 <td>
                                     @if (in_array($order->status, array(0)))
                                         <span class="label label-default">{{$order->status_val}}</span>
