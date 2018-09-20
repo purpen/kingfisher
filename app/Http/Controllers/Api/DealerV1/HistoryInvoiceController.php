@@ -249,7 +249,7 @@ class HistoryInvoiceController extends BaseController
             return $this->response->array(ApiHelper::error('参数错误', 500));
         }
         $invoice = InvoiceModel::find($invoice_id);
-        if ($invoice){
+        if (!$invoice){
             return $this->response->array(ApiHelper::error('数据异常', 412));
         }
         $historyInvoice = new HistoryInvoiceModel();
