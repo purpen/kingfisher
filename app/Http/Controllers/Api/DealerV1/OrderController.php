@@ -730,13 +730,14 @@ class OrderController extends BaseController{
                     ->where('payment_type','=',6)
                     ->update(['voucher_id'=>$voucher_id,'status'=>2]);
 
-            if ($result) {
+            if (!$result){
+                return $this->response->array(ApiHelper::error('修改订单状态失败！', 403));
+            }
                 $assets = AssetsModel::where('random',$random)->get();
                 foreach ($assets as $asset){
                     $asset->target_id = $result->id;
                     $asset->type = 23;
                     $asset->save();
-                }
             }
             return $this->response->array(ApiHelper::success('上传成功', 200));
         }
