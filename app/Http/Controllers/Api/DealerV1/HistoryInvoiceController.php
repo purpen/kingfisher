@@ -214,6 +214,7 @@ class HistoryInvoiceController extends BaseController
         $history['number'] = $history->order->number;
         $history['company_phone'] = $history->historyInvoice->company_phone;
         $history['opening_bank'] = $history->historyInvoice->opening_bank;
+        $history['bank_account'] = $history->historyInvoice->bank_account;
         $history['receiving_address'] = $history->historyInvoice->receiving_address;
         $history['receiving_name'] = $history->historyInvoice->receiving_name;
         $history['receiving_phone'] = $history->historyInvoice->receiving_phone;
