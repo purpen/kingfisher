@@ -85,7 +85,6 @@ class InvoiceController extends Controller
                 ->paginate($this->per_page);
         }
 
-//dd($order_list);
         $logistics_list = $logistic_list = LogisticsModel
             ::OfStatus(1)
             ->select(['id','name'])
@@ -504,7 +503,7 @@ class InvoiceController extends Controller
         $res->reviewer = Auth::user()->id;
 
         if($res->save()){
-            return redirect('/invoice/nonOrderList');
+            return redirect('/invoice');
         } else{
             return redirect('home/invoice');
         }
@@ -623,6 +622,7 @@ class InvoiceController extends Controller
 //        $where['difference'] = 0;
         $where['id'] = $invoice_id;
         $history =  HistoryInvoiceModel::where($where)->first();
+        $between = '';
     if ($history){
         if($history['receiving_type'] != 5){
             $name  = UserModel::where('id',$history['reviewer'])->select('realname')->first();
@@ -655,6 +655,7 @@ class InvoiceController extends Controller
                 $history->receiving_type = '未开票';
             } elseif($history->receiving_type == 2){
                 $history->receiving_type = '审核中';
+                $between = '999';
             }elseif($history->receiving_type == 3){
                 $history->receiving_type = '已开票';
             }elseif($history->receiving_type == 4){
@@ -731,6 +732,7 @@ class InvoiceController extends Controller
         return ajax_json(1, 'ok', [
             'order' => $order,
             'prove' => $prove,
+            'between'=>$between,
             'history'=>$history,
             'order_sku' => $order_sku,
             'storage_list' => $storage_list,
