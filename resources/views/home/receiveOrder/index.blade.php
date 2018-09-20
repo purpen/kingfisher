@@ -121,8 +121,8 @@
                                     {{--<span class="label label-success">{{$order->status_val}}</span>--}}
                                 {{--@endif--}}
                             {{--</td>--}}
-                            <td>{{$distributor->full_name ? $distributor->full_name : ''}}</td>
-                            <td>{{$distributor->store_name ? $distributor->store_name : ''}}</td>
+                            <td>{{$order->distributor? $order->distributor->full_name : ''}}</td>
+                            <td>{{$order->distributor ? $order->distributor->store_name : ''}}</td>
                             <td class="magenta-color">
                                 {{$order->number}}
                             </td>

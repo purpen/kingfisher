@@ -610,8 +610,8 @@ class OrderController extends BaseController{
             foreach ($order_sku as $k=>$v) {
                 $sku_id = $v['sku_id'];
                 $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
-                if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
-                    return $this->response->array(ApiHelper::error('未付款减货关联操作失败', 403));
+                if (!$productSku->addInventory($v['sku_id'], $v['quantity'])) {
+                    return $this->response->array(ApiHelper::error('增加库存操作失败', 403));
                 }
             }
 
