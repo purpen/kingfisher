@@ -167,7 +167,7 @@ class InvoiceController extends Controller
                     ->whereIn('order.status', [8, 10, 20])
                     ->where('order.number','like','%'.$wherein.'%')
                     ->where($where)
-                    ->orderBy('order.id','desc')
+                    ->orderBy('i.application_time','desc')
                     ->paginate($this->per_page);
 
             $logistics_list = $logistic_list = LogisticsModel
@@ -627,8 +627,9 @@ class InvoiceController extends Controller
         if($history['receiving_type'] != 5){
             $name  = UserModel::where('id',$history['reviewer'])->select('realname')->first();
             $history['username'] = $name['realname'];
+            unset($history->opening_bank);
             $history['company_phone'] = $history->historyInvoice->company_phone;
-            $history['opening_bank	'] = $history->historyInvoice->opening_bank	;
+            $history->opening_bank = $history->historyInvoice->opening_bank	;
             $history['bank_account'] = $history->historyInvoice->bank_account;
             $history['receiving_address'] = $history->historyInvoice->receiving_address;
             $history['receiving_name'] = $history->historyInvoice->receiving_name;

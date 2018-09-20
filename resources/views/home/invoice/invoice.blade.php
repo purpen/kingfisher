@@ -147,7 +147,7 @@
                         <tbody>
                         @foreach($order_list as $order)
                             <tr>
-                                
+
                                 <td>
                                     @if (in_array($order->status, array(0)))
                                         <span class="label label-default">{{$order->status_val}}</span>
