@@ -106,14 +106,10 @@ class OrderController extends Controller
             ->select(['id','name'])
             ->get();
 
-        foreach ($order_list as $k=>$v){
-            $distribut = $v->distributor;
-            if ($distribut){
-                $v['store_name'] = $distribut->store_name;
-            }else{
-                $v['store_name'] = '';
-            }
+        foreach ($order_list as $list){
+            $list->store_name = $list->distributor ? $list->distributor->store_name : '';
         }
+
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,

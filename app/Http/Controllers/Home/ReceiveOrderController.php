@@ -36,16 +36,11 @@ class ReceiveOrderController extends Controller
         $order_list = OrderModel::where('type',8)->where('suspend',0)->whereIn('status',[2,6])->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
-        foreach ($order_list as $k=>$v) {
-            $distribut = $v->distributor;
-            if ($distribut) {
-                $v['full_name'] = $distribut->full_name;
-                $v['store_name'] = $distribut->store_name;
-            }else{
-                $v['full_name'] = '';
-                $v['store_name'] = '';
-            }
+        foreach ($order_list as $list){
+            $list->full_name = $list->distributor ? $list->distributor->full_name : '';
+            $list->store_name = $list->distributor ? $list->distributor->store_name : '';
         }
+
         return view('home/receiveOrder.index', [
             'type' => '',
             'where' => '',
@@ -425,7 +420,7 @@ class ReceiveOrderController extends Controller
     public function ajaxEdit(Request $request)
     {
         $order_id = (int)$request->input('id');
-        $order = OrderModel::find($order_id); //订单
+        $order = OrderModel::where('id' , $order_id)->first();
         if (!$order){
             return ajax_json(0, 'error');
         }
