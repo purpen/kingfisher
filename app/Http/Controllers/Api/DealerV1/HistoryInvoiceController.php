@@ -87,6 +87,7 @@ class HistoryInvoiceController extends BaseController
             $data = OrderModel::whereNotIn('id',$heavy)
                 ->select('id as order_id','number','total_money','order_start_time')
                 ->where('number','like','%'.$number.'%')
+                ->where('user_id',$user_id)
                 ->whereIn('status', [8, 10, 20])
                 ->orderBy('order.id','desc')
                 ->paginate($per_page);
