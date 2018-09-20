@@ -730,13 +730,14 @@ class OrderController extends BaseController{
                     ->where('payment_type','=',6)
                     ->update(['voucher_id'=>$voucher_id,'status'=>2]);
 
-            if ($result) {
+            if (!$result){
+                return $this->response->array(ApiHelper::error('修改订单状态失败！', 403));
+            }
                 $assets = AssetsModel::where('random',$random)->get();
                 foreach ($assets as $asset){
                     $asset->target_id = $result->id;
                     $asset->type = 23;
                     $asset->save();
-                }
             }
             return $this->response->array(ApiHelper::success('上传成功', 200));
         }
@@ -751,9 +752,7 @@ class OrderController extends BaseController{
      * @apiName order search
      * @apiGroup order
      *
-     * @apiParam {string} name 商品名称
-     * @apiParam {string} number 订单号
-     * @apiParam {string} buyer_name 收件人
+     * @apiParam {string} name 商品名称/订单号/收件人
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      *
@@ -804,24 +803,25 @@ class OrderController extends BaseController{
     public function search(Request $request){
         $this->per_page = $request->input('per_page', $this->per_page);
         $name = $request->input('name');
-        $number = $request->input('number');
-        $buyer_name = $request->input('buyer_name');
-        if (!$name && !$number && !$buyer_name){
+//        $number = $request->input('number');
+//        $buyer_name = $request->input('buyer_name');
+        if (!$name){
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }
-        if(!empty($number)){
-            $orders = OrderModel::where('number' ,'like','%'.$number.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
-        }
-        if(!empty($buyer_name)){
-            $orders = OrderModel::where('buyer_name' ,'like','%'.$buyer_name.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
-        }
+//        if(!empty($number)){
+//            $orders = OrderModel::where('number' ,'like','%'.$number.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+//        }
+//        if(!empty($buyer_name)){
+//            $orders = OrderModel::where('buyer_name' ,'like','%'.$buyer_name.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+//        }
         if(!empty($name)){
             $order_sku_relations = OrderSkuRelationModel::where('sku_name' ,'like','%'.$name.'%')->get();
             $order_id = [];
             foreach ($order_sku_relations as $v){
                 $order_id[] = $v->order_id;
             }
-            $orders = OrderModel::where('suspend',0)->whereIn('id',$order_id)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+//
+            $orders = OrderModel::where('suspend',0)->whereIn('id',$order_id)->orWhere('number' ,'like','%'.$name.'%')->orWhere('buyer_name' ,'like','%'.$name.'%')->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
         }
         if (count($orders)>0){
             return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());

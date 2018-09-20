@@ -137,6 +137,13 @@ class OrderModel extends BaseModel
     {
         return $this->hasOne('App\Models\SupplierModel', 'supplier_id');
     }
+    /**
+     * 一对一关联经销商
+     */
+    public function distributor()
+    {
+        return $this->belongsTo('App\Models\DistributorModel', 'distributor_id');
+    }
 
     /**
      * 一对多关联assets表单
