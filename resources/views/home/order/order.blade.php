@@ -345,7 +345,7 @@
                                         <span class="label label-success">{{$order->status_val}}</span>
                                     @endif
                                 </td>
-                                <td>{{$order->distributor ? $order->distributor->store_name : ''}}</td>
+                                <td>{{$order->store_name ? $order->store_name : ''}}</td>
                                 <td>
                                     {{$order->number}}
                                 </td>

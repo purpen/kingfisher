@@ -36,9 +36,10 @@ class ReceiveOrderController extends Controller
         $order_list = OrderModel::where('type',8)->where('suspend',0)->whereIn('status',[2,6])->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
-        foreach ($order_list as $v){
-            $distributor_id = $v->distributor_id;
-            $distributor = DistributorModel::where('id','=',$distributor_id)->first();
+        foreach ($order_list as $k=>$v){
+            $distribut = $v->distributor;
+            $v['full_name'] = $distribut->full_name;
+            $v['store_name'] = $distribut->store_name;
         }
 
         return view('home/receiveOrder.index', [
@@ -48,7 +49,7 @@ class ReceiveOrderController extends Controller
             'tab_menu' => $this->tab_menu,
             'per_page' => $this->per_page,
             'order_list' => $order_list,
-            'distributor' => $distributor,
+            'distributor' => $distribut,
         ]);
     }
 
@@ -425,18 +426,29 @@ class ReceiveOrderController extends Controller
         if (!$order){
             return ajax_json(0, 'error');
         }
-        $distributor_id = $order->distributor_id;
-        $distributor = DistributorModel::where('id','=',$distributor_id)->first();
-        if (!$distributor){
-            return ajax_json(0, 'error');
+
+        $distributor = $order->distributor;
+        if ($distributor){
+            $order->full_name = $distributor->full_name?$distributor->full_name:'';
+            $order->business_license_number = $distributor->business_license_number?$distributor->business_license_number:'';
+            $order->bank_number = $distributor->bank_number?$distributor->bank_number:'';
+            $order->store_name = $distributor->store_name?$distributor->store_name:'';
+            $order->phone = $distributor->phone?$distributor->phone:'';
+            $order->name = $distributor->name?$distributor->name:'';
+        }else{
+            $order->full_name = '';
+            $order->business_license_number = '';
+            $order->bank_number = '';
+            $order->store_name = '';
+            $order->phone = '';
+            $order->name = '';
         }
 
-        $order->full_name = $distributor->full_name;
-        $order->business_license_number = $distributor->business_license_number;
-        $order->bank_number = $distributor->bank_number;
-        $order->store_name = $distributor->store_name;
-        $order->phone = $distributor->phone;
-        $order->name = $distributor->name;
+//        $distributor_id = $order->distributor_id;
+//        $distributor = DistributorModel::where('id','=',$distributor_id)->first();
+//        if (!$distributor){
+//            return ajax_json(0, 'error');
+//        }
 
         if ($order->status == 2){
             if($order->assets){
