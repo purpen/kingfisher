@@ -293,7 +293,8 @@ class OrderController extends BaseController{
         if ($product_id){
             $products = ProductsModel::whereIn('id',$product_id)->get();
             foreach ($products as $v){
-                if ($status->mode == 1 && $v->mode == 2){//非月结
+
+                if ($status->mode == 1 && $v->mode == 2 && $payment_type == 4){//非月结
                         return $this->response->array(ApiHelper::error($v->title.'不支持月结支付方式，请选择其他支付方式！', 403));
                 }
             }
@@ -648,13 +649,13 @@ class OrderController extends BaseController{
         }else {
             $orders =DB::table('order')
                 ->where('user_id','=',$this->auth_user_id)
-                ->whereIn('status',[5,6,8,10])
+                ->where('status','=',10)
                 ->where('id','=',$order_id)
                 ->update(['status'=> 20]);
             if ($orders){
                 return $this->response->array(ApiHelper::success());
             }
-            return $this->response->array(ApiHelper::error('当前状态不可以收货！', 403));
+            return $this->response->array(ApiHelper::error('暂未发货还不可以收货！', 403));
         }
     }
 

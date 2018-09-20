@@ -94,7 +94,7 @@ class OrderController extends Controller
             $order_list = $query
                 ->orderBy('id','desc')
                 ->paginate($this->per_page);
-        } else {
+        }else {
             $order_list = $query
                 ->where(['status' => $status, 'suspend' => 0])
                 ->orderBy('id','desc')
@@ -108,9 +108,12 @@ class OrderController extends Controller
 
         foreach ($order_list as $k=>$v){
             $distribut = $v->distributor;
-            $v['store_name'] = $distribut->store_name;
+            if ($distribut){
+                $v['store_name'] = $distribut->store_name;
+            }else{
+                $v['store_name'] = '';
+            }
         }
-
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,

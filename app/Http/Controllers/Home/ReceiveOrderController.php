@@ -36,12 +36,16 @@ class ReceiveOrderController extends Controller
         $order_list = OrderModel::where('type',8)->where('suspend',0)->whereIn('status',[2,6])->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
-        foreach ($order_list as $k=>$v){
+        foreach ($order_list as $k=>$v) {
             $distribut = $v->distributor;
-            $v['full_name'] = $distribut->full_name;
-            $v['store_name'] = $distribut->store_name;
+            if ($distribut) {
+                $v['full_name'] = $distribut->full_name;
+                $v['store_name'] = $distribut->store_name;
+            }else{
+                $v['full_name'] = '';
+                $v['store_name'] = '';
+            }
         }
-
         return view('home/receiveOrder.index', [
             'type' => '',
             'where' => '',
@@ -49,7 +53,6 @@ class ReceiveOrderController extends Controller
             'tab_menu' => $this->tab_menu,
             'per_page' => $this->per_page,
             'order_list' => $order_list,
-            'distributor' => $distribut,
         ]);
     }
 
