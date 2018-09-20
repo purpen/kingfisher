@@ -105,11 +105,7 @@ class OrderController extends Controller
             ::OfStatus(1)
             ->select(['id','name'])
             ->get();
-        foreach ($order_list as $k=>$v){
-            $distributor_id = $v->distributor_id;
-            $distributor = DistributorModel::where('id','=',$distributor_id)->first();//经销商信息
-            $order_list[$k]['store_name'] = $distributor->store_name;
-        }
+
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,

@@ -58,6 +58,12 @@ class DistributorModel extends BaseModel
         return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
 
+    //相对关联订单表
+    public function order()
+    {
+        return $this->hasMany('App\Models\OrderModel', 'distributor_id');
+    }
+
 
     /**
      * 一对多关联分类表
