@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Models\HistoryInvoiceModel;
+use App\Models\InvoiceModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
@@ -14,7 +15,7 @@ use App\Models\StoreModel;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
- 
+
 use App\Http\Controllers\Controller;
 
 class InvoiceController extends Controller
@@ -25,7 +26,6 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-
     {
         $this->tab_menu = 'all';
         $order_number =  $request->input('order_number')  ? $request->input('order_number') : '';
@@ -555,6 +555,7 @@ class InvoiceController extends Controller
         $history =  HistoryInvoiceModel::where($where)->first();
         $between = '';
     if ($history){
+        $invoice_prove = InvoiceModel::find($history['invoice_id']);
         if($history['receiving_type'] != 5){
             $name  = UserModel::where('id',$history['reviewer'])->select('realname')->first();
             $history['username'] = $name['realname'];
@@ -572,7 +573,7 @@ class InvoiceController extends Controller
                 $prove = 0;
             } elseif($history->receiving_id == 2){
                 $history->receiving_id = '增值税专用发票';
-                $history->prove_id = $history->getFirstImgInvoice();
+                $history->prove_id = $invoice_prove->getFirstImgInvoice();
                 $prove = 1;
             } elseif($history->receiving_id == 0){
                 $history->receiving_id = '未开票';
