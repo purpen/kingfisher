@@ -212,7 +212,7 @@
                                     <option @if($order_status == '') selected @endif  value="no">默认分类</option>
                                     <option @if($order_status === 0) selected @endif value="0">已关闭</option>
                                     <option @if($order_status == 1) selected @endif  value="1">待付款</option>
-                                    <option @if($order_status == 5) selected @endif  value="5">待审核</option>
+                                    <option @if($order_status == 5) @elseif($order_status == 2) selected @endif  value="5">待审核</option>
                                     <option @if($order_status == 8) selected @endif  value="8">待发货</option>
                                     <option @if($order_status == 10) selected @endif  value="10">已发货</option>
                                     <option @if($order_status == 20) selected @endif  value="20">已完成</option>
