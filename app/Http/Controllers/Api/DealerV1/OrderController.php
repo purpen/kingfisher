@@ -718,6 +718,10 @@ class OrderController extends BaseController{
         $voucher_id = $request->input('voucher_id');
         $random = $request->input('random');
         $user_id = $this->auth_user_id;
+
+        if (!$order_id && !$payment_type && !$voucher_id && !$random) {
+            return $this->response->array(ApiHelper::error('缺少必要参数', 403));
+        }
         $order = OrderModel::find($order_id);
         if ($payment_type != 6) {
             return $this->response->array(ApiHelper::error('不是公司转账方式不需要上传凭证！', 403));
@@ -736,7 +740,7 @@ class OrderController extends BaseController{
             }
                 $assets = AssetsModel::where('random',$random)->get();
                 foreach ($assets as $asset){
-                    $asset->target_id = $result->id;
+                    $asset->target_id = $order->id;
                     $asset->type = 23;
                     $asset->save();
             }
@@ -801,7 +805,8 @@ class OrderController extends BaseController{
      */
 
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $this->per_page = $request->input('per_page', $this->per_page);
         $name = $request->input('name');
 //        $number = $request->input('number');

@@ -742,7 +742,7 @@ class AuthenticateController extends BaseController
         * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
         * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
         * "distributor_status": 0                       //审核状态：1.待审核；2.已审核；3.关闭；4.重新审核
-        * "mode": "月结",               // 是否可以月结 1.月结 2.非月结
+        * "distributor_mode": "月结",               // 是否可以月结 1.月结 2.非月结
         * },
         *
         * "meta": {
@@ -806,8 +806,8 @@ class AuthenticateController extends BaseController
             $all = $request->all();
             $all['id'] = $request->input('id');
             $rules = [
-                'phone' => 'required',
-                'name' => 'required',
+//                'phone' => 'required',
+//                'name' => 'required',
                 'cover_id' => 'required',
                 ];
 
