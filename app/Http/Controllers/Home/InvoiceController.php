@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
-use App\Models\AssetsModel;
 use App\Models\HistoryInvoiceModel;
-use App\Models\InvoiceModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
@@ -13,12 +11,10 @@ use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\StorageModel;
 use App\Models\StoreModel;
-use App\Models\SupplierModel;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+ 
 use App\Http\Controllers\Controller;
 
 class InvoiceController extends Controller
