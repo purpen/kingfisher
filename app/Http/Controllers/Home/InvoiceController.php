@@ -696,7 +696,8 @@ class InvoiceController extends Controller
         $history =  HistoryInvoiceModel::where($where)->get();
         foreach ($history as $k=>$v){
             if($v['receiving_id'] == 2){
-                $history[$k]['prove_url'] = $v->getFirstImgInvoice();
+                $invoice_prove = InvoiceModel::find($v['id']);
+                $history[$k]['prove_url'] = $invoice_prove->getFirstImgInvoice();
             }
             $history[$k]['company_phone'] = $v->historyInvoice->company_phone;
             $history[$k]['receiving_name'] = $v->historyInvoice->receiving_name;
@@ -704,7 +705,7 @@ class InvoiceController extends Controller
             $history[$k]['opening_bank'] = $v->historyInvoice->opening_bank;
             $history[$k]['receiving_phone'] = $v->historyInvoice->receiving_phone;
             $history[$k]['receiving_address'] = $v->historyInvoice->receiving_address;
-        }
+        }dd($history);
         return view('home/invoice.history', [
             'history' => $history,
         ]);

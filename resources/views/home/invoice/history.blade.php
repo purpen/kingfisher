@@ -94,7 +94,7 @@
                 @endif
             </div>
 
-            <label class="col-sm-1 control-label" style="margin-left: -100px;">申请时间</label>
+            <label class="col-sm-1 control-label" style="margin-left: -130px;">申请时间</label>
             <div class="col-sm-3">
                 <span class="form-text text-danger">{{$value->application_time}} </span>
             </div>
