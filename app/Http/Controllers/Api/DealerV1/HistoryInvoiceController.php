@@ -87,6 +87,7 @@ class HistoryInvoiceController extends BaseController
             $data = OrderModel::whereNotIn('id',$heavy)
                 ->select('id as order_id','number','total_money','order_start_time')
                 ->where('number','like','%'.$number.'%')
+                ->where('user_id',$user_id)
                 ->whereIn('status', [8, 10, 20])
                 ->orderBy('order.id','desc')
                 ->paginate($per_page);
@@ -213,6 +214,7 @@ class HistoryInvoiceController extends BaseController
         $history['number'] = $history->order->number;
         $history['company_phone'] = $history->historyInvoice->company_phone;
         $history['opening_bank'] = $history->historyInvoice->opening_bank;
+        $history['bank_account'] = $history->historyInvoice->bank_account;
         $history['receiving_address'] = $history->historyInvoice->receiving_address;
         $history['receiving_name'] = $history->historyInvoice->receiving_name;
         $history['receiving_phone'] = $history->historyInvoice->receiving_phone;
@@ -248,7 +250,7 @@ class HistoryInvoiceController extends BaseController
             return $this->response->array(ApiHelper::error('参数错误', 500));
         }
         $invoice = InvoiceModel::find($invoice_id);
-        if ($invoice){
+        if (!$invoice){
             return $this->response->array(ApiHelper::error('数据异常', 412));
         }
         $historyInvoice = new HistoryInvoiceModel();

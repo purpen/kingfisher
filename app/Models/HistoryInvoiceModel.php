@@ -55,7 +55,7 @@ class HistoryInvoiceModel extends BaseModel
     {
         $result = $this->imageFile();
         if(is_object($result)){
-            return $result->srcfile;
+            return $result->p500;
         }
         return $result;
     }

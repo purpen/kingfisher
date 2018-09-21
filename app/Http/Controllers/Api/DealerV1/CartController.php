@@ -524,7 +524,7 @@ class CartController extends BaseController
             if (empty($price) && count($sku_price) > 0){
                 $count = count($sku_price) - 1;
                 $invoice_price = $sku_price[$count];
-                $price = $invoice_price['sell_price'] * $vue['number'];
+                $price = $invoice_price['sell_price'] * $v['number'];
             }
 
             $data['price'] = $price;

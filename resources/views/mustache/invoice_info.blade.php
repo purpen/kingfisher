@@ -356,7 +356,7 @@
                 </div> 
 		@{{ /prove }} 
                 <div class="col-sm-3">
-                    <a href="/invoice/history?id=@{{ invoice_id }}" class="form-text text-danger" target="_blank" style="background:rgb(22, 155, 213);color:rgb(255, 255, 255); border-radius:15px;width:150px;height:53px;text-align:center;line-height:53px;">发票审核记录</a>
+                    <a href="/invoice/history?id=@{{ invoice_id }}" class="form-text text-danger" target="_blank" style="background:rgb(22, 155, 213);color:rgb(255, 255, 255); border-radius:15px;width:150px;height:40px;text-align:center;line-height:30px;">发票审核记录</a>
                 </div> 
             </div>			
 			              
@@ -369,7 +369,14 @@
             <i class="glyphicon glyphicon-open"></i> 收起
             </button>
         </div>
-        
+    @{{ #between }}
+         <div style="margin-left:20%;display: inline-block">
+         <a   href="/invoice/through?id=@{{ id }}&invoice_id=@{{ invoices_id }}"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核通过</a>
+         <a   href="javascript:;"  onclick="myFunction()"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核驳回</a>
+        <input type="hidden" name="invoice_id" value="@{{ invoices_id }}" id="hiddenInvoice_id">
+        <input type="hidden" name="id" value="@{{ id }}" id="hiddenOrder_id">
+        </div>
+    @{{ /between }}
     </td>
 </tr>
 @{{ /order }}
