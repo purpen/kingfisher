@@ -89,23 +89,7 @@
                             {{--<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
                                 <i class="glyphicon glyphicon-edit"></i> 创建订单
                             </a>--}}
-                            @if ($status == 5)
-                                <button type="button" id="batch-verify" class="btn btn-success mr-2r">
-                                    <i class="glyphicon glyphicon-ok"></i> 审批
-                                </button>
-                                <button type="button" id="split_order" class="btn btn-warning mr-2r">
-                                    <i class="glyphicon glyphicon-wrench"></i> 拆单
-                                </button>
-                            @endif
 
-                            @if ($status == 8)
-                                <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
-                                    <i class="glyphicon glyphicon-backward"></i> 反审
-                                </button>
-                               {{-- <button type="button" class="btn btn-success mr-2r" id="send-order">
-                                    <i class="glyphicon glyphicon-print"></i> 打印发货
-                                </button>--}}
-                            @endif
 
                         </div>
 
@@ -262,53 +246,15 @@
             </div>
             @if ($order_list)
                 <div class="row">
-                    <div class="col-md-12 text-center">{!! $order_list->appends([   'number' => $name,
+                    <div class="col-md-12 text-center">{!! $order_list->appends([
                                                                                 'per_page' => $per_page ,
-                                                                                'order_status' => $order_status ,
-                                                                                'order_number' => $order_number ,
-                                                                                'product_name' => $product_name,
-                                                                                'buyer_name' => $buyer_name,
-                                                                                'buyer_phone' => $buyer_phone,
-                                                                                'from_type' => $from_type,
                                                                                   ])->render() !!}</div>
                 </div>
             @endif
         </div>
     </div>
-    {{--手动发货弹出框--}}
-    @include('modal.add_manual_send_modal')
 
     @include('mustache.invoice_info')
-
-    {{--拆单弹出框--}}
-    @include('modal.add_split_order')
-
-    {{--导入弹出框--}}
-    @include('home/order.inOrder')
-
-    {{--众筹弹出框--}}
-    @include('home/order.zcOrder')
-
-    {{--联系人弹出框--}}
-    @include('home/order.contactsOrder')
-
-    {{--高级搜搜弹出框--}}
-    {{--@include('home/order.seniorSearch')--}}
-
-    {{--物流倒入弹出框--}}
-    @include('home/order.logisticsOrder')
-
-    {{--代发供应商订单导出--}}
-    @include('home/order.supplierOrderOut')
-
-    {{--代发订单物流信息导入--}}
-    @include('home/order.supplierOrderInput')
-
-    {{--分销渠道订单导出--}}
-    @include('home/order.distributorOrderOut')
-
-    {{--分销渠道订单导入--}}
-    @include('home/order.distributorOrderInput')
 
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
     <script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>

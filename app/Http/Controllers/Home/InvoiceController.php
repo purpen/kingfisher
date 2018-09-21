@@ -45,12 +45,8 @@ class InvoiceController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
 
 
-        $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-        $supplier_model = new SupplierModel();
-        $supplier_list = $supplier_model->lists();
-        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
 
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
@@ -85,31 +81,18 @@ class InvoiceController extends Controller
                 ->paginate($this->per_page);
         }
 
-        $logistics_list = $logistic_list = LogisticsModel
-            ::OfStatus(1)
-            ->select(['id','name'])
-            ->get();
-//        dd($order_list[36]);
+
 
         return view('home/invoice.index', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
             'status' => $status,
-            'logistics_list' => $logistics_list,
             'name' => $number,
             'per_page' => $this->per_page,
-            'order_status' => '',
             'order_number' => '',
-            'product_name' => '',
             'sSearch' => false,
-            'store_list' => $store_list,
             'products' => $products,
-            'buyer_name' => '',
-            'buyer_phone' => '',
-            'supplier_id' => '',
             'from_type' => 0,
-            'supplier_list' => $supplier_list,
-            'distributors' => $distributors,
 
         ]);
     }
@@ -142,9 +125,6 @@ class InvoiceController extends Controller
             $store_list = StoreModel::select('id','name')->get();
             $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-            $supplier_model = new SupplierModel();
-            $supplier_list = $supplier_model->lists();
-            $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
 
             //当前用户所在部门创建的订单 查询条件
             $department = Auth::user()->department;
@@ -174,7 +154,6 @@ class InvoiceController extends Controller
                 ::OfStatus(1)
                 ->select(['id','name'])
                 ->get();
-//        dd($order_list);
 
             return view('home/invoice.nonOrderList', [
                 'order_list' => $order_list,
@@ -183,18 +162,11 @@ class InvoiceController extends Controller
                 'logistics_list' => $logistics_list,
                 'name' => $number,
                 'per_page' => $this->per_page,
-                'order_status' => '',
                 'order_number' => '',
-                'product_name' => '',
                 'sSearch' => false,
                 'store_list' => $store_list,
                 'products' => $products,
-                'buyer_name' => '',
-                'buyer_phone' => '',
-                'supplier_id' => '',
                 'from_type' => 0,
-                'supplier_list' => $supplier_list,
-                'distributors' => $distributors,
 
             ]);
 
@@ -226,9 +198,6 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-        $supplier_model = new SupplierModel();
-        $supplier_list = $supplier_model->lists();
-        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
 
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
@@ -251,7 +220,7 @@ class InvoiceController extends Controller
             ->whereIn('order.status', [8, 10, 20])
             ->where('order.number','like','%'.$wherein.'%')
             ->where($where)
-            ->orderBy('order.id','desc')
+            ->orderBy('i.application_time','desc')
             ->paginate($this->per_page);
 
         $logistics_list = $logistic_list = LogisticsModel
@@ -267,18 +236,13 @@ class InvoiceController extends Controller
             'logistics_list' => $logistics_list,
             'name' => $number,
             'per_page' => $this->per_page,
-            'order_status' => '',
             'order_number' => '',
-            'product_name' => '',
             'sSearch' => false,
             'store_list' => $store_list,
             'products' => $products,
-            'buyer_name' => '',
-            'buyer_phone' => '',
-            'supplier_id' => '',
+
             'from_type' => 0,
-            'supplier_list' => $supplier_list,
-            'distributors' => $distributors,
+
 
         ]);
 
@@ -311,9 +275,7 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-        $supplier_model = new SupplierModel();
-        $supplier_list = $supplier_model->lists();
-        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+
 
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
@@ -336,7 +298,7 @@ class InvoiceController extends Controller
             ->whereIn('order.status', [8, 10, 20])
             ->where('order.number','like','%'.$wherein.'%')
             ->where($where)
-            ->orderBy('order.id','desc')
+            ->orderBy('i.application_time','desc')
             ->paginate($this->per_page);
 
         $logistics_list = $logistic_list = LogisticsModel
@@ -362,8 +324,7 @@ class InvoiceController extends Controller
             'buyer_phone' => '',
             'supplier_id' => '',
             'from_type' => 0,
-            'supplier_list' => $supplier_list,
-            'distributors' => $distributors,
+
 
         ]);
 
@@ -396,9 +357,7 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-        $supplier_model = new SupplierModel();
-        $supplier_list = $supplier_model->lists();
-        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+
 
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
@@ -437,18 +396,10 @@ class InvoiceController extends Controller
             'logistics_list' => $logistics_list,
             'name' => $number,
             'per_page' => $this->per_page,
-            'order_status' => '',
             'order_number' => '',
-            'product_name' => '',
             'sSearch' => false,
             'store_list' => $store_list,
             'products' => $products,
-            'buyer_name' => '',
-            'buyer_phone' => '',
-            'supplier_id' => '',
-            'from_type' => 0,
-            'supplier_list' => $supplier_list,
-            'distributors' => $distributors,
 
         ]);
 
@@ -530,16 +481,11 @@ class InvoiceController extends Controller
             $where = '';
         }
 
-
         $this->per_page = $request->input('per_page', $this->per_page);
-
 
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-        $supplier_model = new SupplierModel();
-        $supplier_list = $supplier_model->lists();
-        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
 
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
@@ -574,12 +520,10 @@ class InvoiceController extends Controller
                 ->paginate($this->per_page);
         }
 
-//dd($order_list);
         $logistics_list = $logistic_list = LogisticsModel
             ::OfStatus(1)
             ->select(['id','name'])
             ->get();
-//        dd($order_list);
 
         return view('home/invoice.invoice', [
             'order_list' => $order_list,
@@ -588,18 +532,10 @@ class InvoiceController extends Controller
             'logistics_list' => $logistics_list,
             'name' => $number,
             'per_page' => $this->per_page,
-            'order_status' => '',
             'order_number' => '',
-            'product_name' => '',
             'sSearch' => false,
             'store_list' => $store_list,
             'products' => $products,
-            'buyer_name' => '',
-            'buyer_phone' => '',
-            'supplier_id' => '',
-            'from_type' => 0,
-            'supplier_list' => $supplier_list,
-            'distributors' => $distributors,
 
         ]);
     }
@@ -619,7 +555,6 @@ class InvoiceController extends Controller
         }
         $order = OrderModel::find($order_id); //订单
         $where['order_id'] = $order_id;
-//        $where['difference'] = 0;
         $where['id'] = $invoice_id;
         $history =  HistoryInvoiceModel::where($where)->first();
         $between = '';
@@ -686,7 +621,7 @@ class InvoiceController extends Controller
         $order->receiving_name = isset($history['receiving_name']) ? $history['receiving_name'] : '';
         $order->receiving_phone = isset($history['receiving_phone']) ? $history['receiving_phone'] : '';
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
-        /*$order->storage_name = $order->storage->name;*/
+
 
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 
@@ -775,7 +710,6 @@ class InvoiceController extends Controller
         }
         return view('home/invoice.history', [
             'history' => $history,
-
         ]);
     }
 
