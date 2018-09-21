@@ -696,7 +696,7 @@ class InvoiceController extends Controller
         $history =  HistoryInvoiceModel::where($where)->get();
         foreach ($history as $k=>$v){
             if($v['receiving_id'] == 2){
-                $invoice_prove = InvoiceModel::find($v['id']);
+                $invoice_prove = InvoiceModel::find($v['invoice_id']);
                 $history[$k]['prove_url'] = $invoice_prove->getFirstImgInvoice();
             }
             $history[$k]['company_phone'] = $v->historyInvoice->company_phone;
