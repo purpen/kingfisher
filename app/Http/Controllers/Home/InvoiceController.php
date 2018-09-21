@@ -705,7 +705,7 @@ class InvoiceController extends Controller
             $history[$k]['opening_bank'] = $v->historyInvoice->opening_bank;
             $history[$k]['receiving_phone'] = $v->historyInvoice->receiving_phone;
             $history[$k]['receiving_address'] = $v->historyInvoice->receiving_address;
-        }dd($history);
+        }
         return view('home/invoice.history', [
             'history' => $history,
         ]);
