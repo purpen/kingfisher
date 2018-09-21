@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Jobs\Job;
+use App\Models\OrderModel;
 use App\Models\UserModel;
 use App\User;
 use Illuminate\Bus\Queueable;
@@ -12,35 +13,45 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels,Queueable,Dispatchable;
+    use InteractsWithQueue, SerializesModels;
 
-    protected $users;
+    protected $order_id;
+    protected $orderModel;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(User $users)
+    public function __construct($order_id,$orderModel)
     {
-        $this->users = $users;
+        $this->order_id = $order_id;
+        $this->orderModel = $orderModel;
     }
 
     /**
-     * Execute the job.User用于获取用户信息/Mailer用于发送邮件
+     * Execute the job.
      *
      * @return void
      */
-    public function handle(Mailer $mailer)
+//    public function handle(Mailer $mailer)
+    public function handle()
     {
-//        $users = $this->users;
-//        $mailer->send('timer.timer',['users'=>$users],function($message) use ($users){
-//            $message->to($users->email)->subject('新功能发布');
-////            $this->job->delete();
-//        });
-        Log::info('我是来自队列,发送了一个邮件', ['id' => $this->user->id, 'realname' => $this->user->realname]);
+        $order_id = $this->order_id;
+        $orderModel = $this->orderModel;
+
+        $orders =DB::table('order')
+//            ->where('user_id','=',$this->auth_user_id)
+            ->where('id','=',$order_id)
+            ->where('type','=',8)
+            ->update(['status'=> 0]);
+        if (!$orders){
+            return false;
+        }
     }
 }

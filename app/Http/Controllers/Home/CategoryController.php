@@ -192,7 +192,7 @@ class CategoryController extends Controller
             $model->region = '['.$region.']';
         }else{
             $title =  $request->input('title');
-            if(CategoriesModel::where('title',$title)->count() > 0){//已有的分类不能重复添加
+            if(CategoriesModel::where('title',$title)->count() > 1){//已有的分类不能重复添加
                 return ajax_json(1,'该分类已存在！');
             }
             $model->title = $title;

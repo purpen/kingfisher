@@ -20,7 +20,7 @@ class HistoryInvoiceModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['order_id','invoice_id','reviewer','audit','apply','company_name','company_phone','opening_bank','bank_account','unit_address','duty_paragraph','receiving_address','receiving_name','receiving_phone','invoice_value','prove_id','receiving_id' , 'reason','receiving_type','difference','application_time'];
+    protected $fillable = ['user_id','order_id','invoice_id','reviewer','audit','company_name','company_phone','opening_bank','bank_account','unit_address','duty_paragraph','receiving_address','receiving_name','receiving_phone','invoice_value','prove_id','receiving_id' , 'reason','receiving_type','difference','application_time'];
 
 
     /**
@@ -29,6 +29,50 @@ class HistoryInvoiceModel extends BaseModel
     public function assets()
     {
         return $this->belongsTo('App\Models\AssetsModel','prove_id');
+    }
+
+    /**
+     * 一对多关联order表单
+     */
+    public function order()
+    {
+        return $this->belongsTo('App\Models\OrderModel','order_id');
+    }
+
+    /**
+     * 相对关联到发票历史表表
+     */
+    public function historyInvoice()
+    {
+        return $this->belongsTo('App\Models\InvoiceModel', 'invoice_id');
+    }
+
+
+    /**
+     * 获取发票封面图
+     */
+    public function getFirstImgInvoice()
+    {
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->small;
+        }
+        return $result;
+    }
+
+    /**
+     * 获取发票图片信息对象
+     */
+    public function imageFile()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 24])
+            ->orderBy('id','desc')
+            ->first();
+        if(empty($asset)){
+            return url('images/default/erp_product.png');
+        }
+        return $asset->file;
     }
 
 }

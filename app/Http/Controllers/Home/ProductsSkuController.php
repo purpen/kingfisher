@@ -59,7 +59,7 @@ class ProductsSkuController extends Controller
         $productSku->summary = $request->input('summary');
         $productSku->user_id = Auth::user()->id;
         $productSku->cover_id = $request->input('cover_id');
-        $productSku->unique_number = $request->input('unique_number','');
+        $productSku->unique_number = $request->input('unique_number');
         $productSku->zc_quantity = $request->input('zc_quantity') ? $request->input('zc_quantity') : 0;
 
         if($productSku->save()){
@@ -69,6 +69,7 @@ class ProductsSkuController extends Controller
                 $asset->type = 4;
                 $asset->save();
             }
+
             $min=array_values($request->input('min'));
             $max=array_values($request->input('max'));
             $sell_price=array_values($request->input('sell_price'));
@@ -189,6 +190,10 @@ class ProductsSkuController extends Controller
             'bid_price' => 'required',
             'cost_price' => 'required',
             'price' => 'required',
+            'unique_number' => 'required',
+            'mins' => 'required',
+            'maxs' => 'required',
+            'sell_prices' => 'required',
 //            'unique_number' => 'required|unique:products_sku,unique_number,'.$sku->id,
         ];
         $messages = [
@@ -197,7 +202,10 @@ class ProductsSkuController extends Controller
             'price.required' => '价格不能为空',
             'bid_price.required' => '标准进价不能为空',
             'cost_price.required' => '成本价不能为空',
-//            'unique_number.unique' => '品牌编号已存在',
+            'unique_number.required' => '69码必填',
+            'mins.required' => '价格区间没填完整',
+            'maxs.required' => '价格区间没填完整',
+            'sell_prices.required' => '价格区间没填完整',
         ];
         $this->validate($request, $rules,$messages);
 

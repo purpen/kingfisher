@@ -12,16 +12,29 @@
             <label class="btn btn-default" id="label-jyi">
                 <input type="radio" id="jyi"> 交易信息
             </label>
-            <label class="btn btn-default" id="label-beiz" style="width: 82px;">
-                <input type="radio" id="beiz"> 备注
-            </label>
             <label class="btn btn-default" id="label-express" style="width: 82px;">
                 <input type="radio" id="express"> 物流信息
+            </label>
+			 <label class="btn btn-default" id="label-beiz" style="width: 82px;">
+                <input type="radio" id="beiz"> 发票信息
             </label>
         </div>
         <form id="form-user" role="form" class="form-horizontal mt-2r">
             <input type="hidden" id="order_id" value="@{{id}}">
-            
+             <div class="form-group">                
+                <label class="col-sm-1 control-label">门店名称</label>
+                <div class="col-sm-2">
+                    <input validate="" showname="门店名称" disabled type="text" class="form-control order" id="company_name" name="company_name" value="@{{company_name}}">
+                </div>
+                <label class="col-sm-1 control-label">联系人姓名</label>
+                <div class="col-sm-2">
+                    <input validate="" showname="联系人姓名" disabled type="text" class="form-control order" id="receiving_name" name="receiving_name" value="@{{receiving_name}}">
+                </div>
+                <label class="col-sm-1 control-label">联系人手机号</label>
+                <div class="col-sm-2">
+                    <input validate="" showname="联系人手机号" disabled type="text" class="form-control order" id="receiving_phone" name="receiving_phone" value="@{{ receiving_phone }}">
+                </div>
+            </div>
             <div class="form-group">
                 <label class="col-sm-1 control-label">物流公司</label>
                 <div class="col-sm-3">
@@ -97,11 +110,11 @@
         <form id="form-product" role="form" class="form-horizontal mt-2r" style="display:none;">
             <div class="form-group">
                 <div class="col-sm-2">
-                    {{--<div class="ml-4r">--}}
-                        {{--<a href=" " class="btn btn-magenta" data-toggle="modal" data-target="#addproduct" id="addproduct-button">--}}
-                            {{--<i class="glyphicon glyphicon-plus"></i> 添加赠品--}}
-                        {{--</a>--}}
-                    {{--</div>--}}
+                    <div class="ml-4r">
+                        <a href="" class="btn btn-magenta" data-toggle="modal" data-target="#addproduct" id="addproduct-button">
+                            <i class="glyphicon glyphicon-plus"></i> 添加赠品
+                        </a>
+                    </div>
                 </div>
                 <div class="col-sm-10 text-right">
                     <div class="mr-3r">
@@ -219,50 +232,15 @@
                 <div class="col-sm-3">
                     <input type="text" class="form-control" disabled="disabled">
                 </div>
+				
             </div>
-
-            <div class="form-group">
-                <label for="invoice_type" class="col-sm-1 control-label">发票类型</label>
+				<label class="col-sm-1 control-label" style="margin-left:-15px;">付款金额</label>
                 <div class="col-sm-3">
-                    <span type="text" name="invoice_type" class="form-text text-info">@{{ invoice_type }}</span>
+                    <input type="text" class="form-control" value="@{{total_money}}" disabled="disabled">
                 </div>
-                <label for="invoice_header" class="col-sm-1 control-label">发票抬头</label>
-                <div class="col-sm-3">
-                    <span type="text" name="invoice_header" class="form-text text-info">@{{ invoice_header }}</span>
-                </div>
-                <label for="invoice_info" class="col-sm-1 control-label">发票内容</label>
-                <div class="col-sm-3">
-                    <span type="text" name="invoice_info" class="form-text text-info">@{{ invoice_info }}</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="invoice_added_value_tax" class="col-sm-1 control-label">增值税发票</label>
-                <div class="col-sm-3">
-                    <span type="text" name="invoice_added_value_tax" class="form-text text-info">@{{ invoice_added_value_tax }}</span>
-                </div>
-                <label for="invoice_ordinary_number" class="col-sm-1 control-label">普通发票号</label>
-                <div class="col-sm-3">
-                    <span type="text" name="invoice_ordinary_number" class="form-text text-info">@{{ invoice_ordinary_number }}</span>
-                </div>
-            </div>
+             
         </form>
-        
-        <form id="form-beiz" role="form" class="form-horizontal mt-2r" style="display:none;">
-            <div class="form-group">
-                <label class="col-sm-1 control-label">买家备注</label>
-                <div class="col-sm-9">
-                    <textarea rows="3" class="form-control" disabled="disabled" id="buyer_summary">@{{ buyer_summary }}</textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-1 control-label">卖家备注</label>
-                <div class="col-sm-9">
-                    <textarea rows="3" class="form-control" id="seller_summary">@{{ seller_summary }}</textarea>
-                </div>
-            </div>
-        </form>
-
+         
         <form id="form-express" role="form" class="form-horizontal mt-2r" style="display:none;">
             <div class="form-group">
                 <label class="col-sm-1 control-label">物流状态</label>
@@ -279,7 +257,112 @@
                 </div>
             </div>
         </form>
-        
+          <form id="form-beiz" role="form" class="form-horizontal mt-2r" style="display:none;">
+		  @{{ #history }}
+               <div class="form-group">
+                <label class="col-sm-1 control-label">发票类型</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_id }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">申请时间</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ application_time }}</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-1 control-label">发票状态</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_type }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">驳回原因</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ reason }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">审核人</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ username }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">审核时间</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ audit }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">单位地址</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ unit_address }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">电话号码</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ company_phone }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">企业名称</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ company_name }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">税号</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ duty_paragraph }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">开户行名称</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ opening_bank }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">银行账户</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ bank_account }}</span>
+                </div>
+				
+            </div>	 
+			<div class="form-group">
+                <label class="col-sm-1 control-label">收件人姓名</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_name }}</span>
+                </div>
+                
+                <label class="col-sm-1 control-label">收件人电话</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_phone }}</span>
+                </div>
+				
+            </div>
+			<div class="form-group">
+                <label class="col-sm-1 control-label">收件地址</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ receiving_address }}</span>
+                </div> 
+				@{{ #prove }} 
+				 <label class="col-sm-1 control-label" style="margin-left: 450px;margin-top: -360px;">一般纳税人证明</label>
+                <div class="col-sm-3">
+                     <img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" style="height: 100px; width: 100px;margin-left: 600px;margin-top: -550px;">
+                
+                </div> 
+		@{{ /prove }} 
+                <div class="col-sm-3">
+                    <a href="/invoice/history?id=@{{ invoice_id }}" class="form-text text-danger" target="_blank" style="background:rgb(22, 155, 213);color:rgb(255, 255, 255); border-radius:15px;width:150px;height:53px;text-align:center;line-height:53px;">发票审核记录</a>
+                </div> 
+            </div>			
+			              
+		@{{ /history }}
+		
+        </form>
         <div class="ptb-2r plr-2r bg-black">
             @{{#change_status}}<button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>@{{ /change_status }}
             <button type="submit" class="btn btn-magenta btn-sm" id="fold">

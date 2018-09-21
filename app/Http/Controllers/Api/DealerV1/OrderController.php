@@ -6,6 +6,7 @@ use App\Http\DealerTransformers\CategoryTransformer;
 use App\Http\DealerTransformers\CityTransformer;
 use App\Http\DealerTransformers\OrderListTransformer;
 use App\Http\DealerTransformers\OrderTransformer;
+use App\Jobs\SendReminderEmail;
 use App\Models\AddressModel;
 use App\Models\AssetsModel;
 use App\Models\AuditingModel;
@@ -37,7 +38,7 @@ class OrderController extends BaseController{
      * @apiName Order orders
      * @apiGroup Order
      *
-     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；2.上传凭证待确认 5.待审核；6.待财务审核 8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
      * @apiParam {integer} types 0.全部 1.当月
      * @apiSuccessExample 成功响应:
@@ -96,15 +97,43 @@ class OrderController extends BaseController{
         }else{
             $query['user_id'] = $user_id;
         }
-        if(!empty($status)){
-            if ($status === -1) {
-                $status = 0;
-            }
-            $query['status'] = $status;
-            $orders = OrderModel::where($query)->where('type',8)->orderBy('id', 'desc')->paginate($per_page);
-        }else{
-            if ($types ==1){//当月订单
+
+        if ($types == 1) {//当月订单
+            if($status != 0) {
+                if ($status === -1) {
+                    $status = 0;
+                }
+                if ($status == 1) {
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                }
+                if ($status == 10){
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                }
+                if ($status == -1 || $status == 20){
+                    $query['status'] = $status;
+                    $orders = OrderModel::orderBy('id', 'desc')->where($query)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                }
+
+            }else{
                 $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+            }
+
+        }else{//全部订单
+            if ($status != 0){
+                if ($status === -1) {
+                    $status = 0;
+                }
+                if ($status == 1) {
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('type',8)->paginate($per_page);
+                }
+                if ($status == 10){
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('type',8)->paginate($per_page);
+                }
+                if ($status == -1 || $status == 20) {
+                    $query['status'] = $status;
+                    $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where($query)->paginate($per_page);
+                }
+
             }else{
                 $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
             }
@@ -136,27 +165,27 @@ class OrderController extends BaseController{
      *  "express_no": 536728987,     //快递单号
      *  "order_start_time": "0000-00-00 00:00:00", //发货时间
      *  "status": 8,
-     *  "status_val": "待发货",                //状态
+     *  "status_val": "待发货",                //状态   2.上传凭证待审核
      *  "receiving_id": "1",          //发票类型(0.不开 1.普通 2.专票)
      *  "company_name": "北京太火红鸟科技有限公司",          //发票抬头
      *  "invoice_value": "1453",        //发票金额
      *  "over_time": "2018-09-11 00:00:00",  //过期时间
      *
-     *  "address_list":[
-     *  "id":1,
-     *  "name": "shusyh"                 //收件人
-     *  "province_id":1         省份oid
-     *  "city_id":2             城市oid
-     *  "county_id":3           区/县oid
-     *  "town_id":4             城镇/乡oid
-     *  "province":1         省份
-     *  "city":2             城市
-     *  "county":3           区/县
-     *  "town":4             城镇/乡
-     *  "address":798艺术广场     详细地址
-     * "phone"：13432522222     电话
-     * ]
-     * "orderSkus": [
+     *   "address": "三亚市天涯海角",
+     *   "province_id": 23,
+     *   "city_id": 3690,
+     *   "county_id": 3696,
+     *   "town_id": 0,
+     *   "name": "小蜜蜂",
+     *   "phone": "17802998888",
+     *   "zip": null,
+     *   "is_default": 0,
+     *   "status": 1,
+     *   "created_at": "2018-09-03 19:22:48",
+     *   "updated_at": "2018-09-04 15:53:10",
+     *   "deleted_at": null,
+     *   "fixed_telephone": null
+     *   "orderSkus": [
      * {
      * "sku_id": 42,
      * "price":   单价
@@ -206,6 +235,23 @@ class OrderController extends BaseController{
             }
             if (!empty($address)){
                 $orders->address_list = $address;
+
+                $province = ChinaCityModel::where('oid',$address->province_id)->select('name')->first();
+                $city = ChinaCityModel::where('oid',$address->city_id)->select('name')->first();
+                $county = ChinaCityModel::where('oid',$address->county_id)->select('name')->first();
+                $town = ChinaCityModel::where('oid',$address->town_id)->select('name')->first();
+                if ($province){
+                    $orders->province = $province->name;
+                }
+                if ($city){
+                    $orders->city = $city->name;
+                }
+                if ($county){
+                    $orders->county = $county->name;
+                }
+                if ($town){
+                    $orders->town = $town->name;
+                }
             }
             if (!empty($invoice)){
                 $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
@@ -231,31 +277,28 @@ class OrderController extends BaseController{
      * @apiParam {string} invoice_id 发票id  0.不开发票
      * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
-     * @apiParam {string} product_id [2,1,4,2,9]
+     * @apiParam {string} product_id  "2,1,4,9"
      *
      */
     public function store(Request $request)
     {
-        $status = DistributorModel::where('user_id',$this->auth_user_id)->select('status')->first();
+        $status = DistributorModel::where('user_id',$this->auth_user_id)->select('status','mode')->first();
         if ($status['status'] != 2) {
             return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
         }
 
-        $product_id = $request->input('product_id');
+        $product_id = explode(",",$request->input('product_id'));
         $payment_type = $request->input('payment_type');
 //        $payment_type = 4;
 //        $product_id = [4,3,2,16];
         if ($product_id){
             $products = ProductsModel::whereIn('id',$product_id)->get();
             foreach ($products as $v){
-                if ($v->mode == 2){//非月结
-                    if ($payment_type == 4){//月结支付
+                if ($status->mode == 1 && $v->mode == 2){//非月结
                         return $this->response->array(ApiHelper::error($v->title.'不支持月结支付方式，请选择其他支付方式！', 403));
-                    }
                 }
             }
         }
-
         $all = $request->all();
         $sku_quantity = $all['sku_id_quantity'];
 
@@ -303,7 +346,7 @@ class OrderController extends BaseController{
             $sku_price[$sku_id]=$sell_price;
 
             $total_money += sprintf("%.2f", $sell_price * $skuData['quantity']);
-        }else{
+            }else{
                 return $this->response->array(ApiHelper::error('暂无优惠信息', 403));
             }
         }
@@ -329,6 +372,7 @@ class OrderController extends BaseController{
         $all['storage_id'] = config('constant.D3IN_storage_id');
         $number = CountersModel::get_number('DD');
         $all['number'] = $number;
+        $all['voucher_id'] = 0;//凭证暂为0
         $all['address_id'] = $request->input('address_id');
 
         $address = AddressModel::where('id','=',$all['address_id'])->first();
@@ -417,11 +461,11 @@ class OrderController extends BaseController{
             if ($order->payment_type == 4) {
                 //月结就直接默认成已付款占货
                 if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '未付款占货关联操作失败');
+                    return ajax_json(0, '付款占货关联操作失败');
                 }
             }else{//订单未付款占货(假定为未付款然后占货)
                 if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '付款占货关联操作失败');
+                    return ajax_json(0, '未付款占货关联操作失败');
                 }
             }
 
@@ -465,11 +509,11 @@ class OrderController extends BaseController{
                 if ($order->payment_type == 4) {
                     //月结就直接默认成已付款占货
                     if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '未付款占货关联操作失败');
+                        return ajax_json(0, '付款占货关联操作失败');
                     }
                 }else{//订单未付款占货(假定为未付款然后占货)
                     if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '付款占货关联操作失败');
+                        return ajax_json(0, '未付款占货关联操作失败');
                     }
                 }
             }
@@ -481,7 +525,13 @@ class OrderController extends BaseController{
             $dataes = new AuditingModel();
             $dataes->datas(1);
         }
-        return $this->response->array(ApiHelper::success());
+
+        $orderModel = OrderModel::find($order_id);
+        if ($orderModel->status == 1){
+            $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);//新建订单24小时未支付取消订单
+            $this->dispatch($job);
+        }
+        return $this->response->array(ApiHelper::success('Success', 200, $orderModel));
     }
 
 
@@ -543,7 +593,7 @@ class OrderController extends BaseController{
     {
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
-        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 1])->first();
+        $order = OrderModel::where(['id' => $order_id ,'user_id' => $user_id , 'status' => 1])->first();
         if(!$order){
             return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
         }else {
@@ -551,6 +601,16 @@ class OrderController extends BaseController{
                 ->where('user_id','=',$this->auth_user_id)
                 ->where('id','=',$order_id)
                 ->update(['status'=> 0]);
+
+            $orderSku = $order->orderSkuRelation;//订单详情表
+            $order_sku = $orderSku->toArray();
+            foreach ($order_sku as $k=>$v) {
+                $sku_id = $v['sku_id'];
+                $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
+                if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
+                    return ajax_json(0, '未付款减货关联操作失败');
+                }
+            }
 
             return $this->response->array(ApiHelper::success());
         }
@@ -590,5 +650,89 @@ class OrderController extends BaseController{
 
             return $this->response->array(ApiHelper::success());
         }
+    }
+
+    /**
+     * @api {post} /DealerApi/order/pay_money 收银台
+     * @apiVersion 1.0.0
+     * @apiName Order pay_money
+     * @apiGroup Order
+     *
+     * @apiParam {integer} order_id 订单id
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+
+    public function pay_money(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        $user_id = $this->auth_user_id;
+        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id])->select('id','number','pay_money')->first();
+        if(!$order){
+            return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
+        }else {
+            return $this->response->array(ApiHelper::success('Success', 200, $order));
+        }
+    }
+
+    /**
+     * @api {post} /DealerApi/order/upload_img 上传转账凭证
+     * @apiVersion 1.0.0
+     * @apiName Order upload_img
+     * @apiGroup Order
+     *
+     * @apiParam {integer} payment_type 付款方式：1.在线 6.公司转账
+     * @apiParam {integer} voucher_id 银行凭证图片ID
+     * @apiParam {integer} user_id 用户ID
+     * @apiParam {integer} order_id 订单ID
+     * @apiParam {string} token token
+     * @apiParam {string} random  随机数
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+
+    public function upload_img(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        $payment_type = $request->input('payment_type');
+        $voucher_id = $request->input('voucher_id');
+        $random = $request->input('random');
+        $user_id = $this->auth_user_id;
+        $order = OrderModel::find($order_id);
+        if ($payment_type != 6) {
+            return $this->response->array(ApiHelper::error('不是公司转账方式不需要上传凭证！', 403));
+        }
+        if (!$order){
+            return $this->response->array(ApiHelper::error('没有找到该笔订单！', 403));
+        }else{
+            $result = DB::table('order')
+                    ->where('user_id','=',$user_id)
+                    ->where('id','=',$order->id)
+                    ->where('payment_type','=',6)
+                    ->update(['voucher_id'=>$voucher_id,'status'=>2]);
+
+            if ($result) {
+                $assets = AssetsModel::where('random',$random)->get();
+                foreach ($assets as $asset){
+                    $asset->target_id = $order->id;
+                    $asset->save();
+                }
+            }
+            return $this->response->array(ApiHelper::success('上传成功', 200));
+        }
+
     }
 }

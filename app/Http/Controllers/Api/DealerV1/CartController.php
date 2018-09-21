@@ -68,6 +68,7 @@ class CartController extends BaseController
         $carts = ReceiptModel::select('receipt.*','p.title')
             ->leftJoin('products as p', 'p.id', '=', 'receipt.product_id')
             ->where('p.title','like','%'.$title.'%')->where('receipt.user_id',$user_id)
+            ->orderBy('id', 'desc')
             ->paginate($per_page);
 
         $count = $this->fetch_count();
@@ -82,8 +83,22 @@ class CartController extends BaseController
                 $mode = ProductsSkuModel::where(['id'=>$v->sku_id])->first();
                 $type = SkuRegionModel::where(['sku_id'=>$v->sku_id])->select('max','min','sell_price')->get();
                 $collection  = CollectionModel::where(['user_id'=>$user_id,'product_id'=>$v->product_id])->first();
+                $assets = AssetsModel::where(['target_id' => $v->sku_id,'type' => 4])->first();//sku
                 $v->cover = '';
-                $v->cover = $mode->first_img;
+                if($assets){
+                    $v->cover = $assets->file->small;
+                } else {
+                    $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
+                    if (count($asset)>0){
+                        $aset = [];
+                        foreach ($asset as $val){
+                            $aset[] = $val->file->small;
+                        }
+                        $v->cover = $aset;
+                    }
+                }
+                //
+//                $v->cover = $mode->first_img;
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
@@ -176,7 +191,7 @@ class CartController extends BaseController
 
 
     /**
-     * @api {post} /DealerApi/settlement 点击结算
+     * @api {post} /DealerApi/cart/settlement 点击结算
      * @apiVersion 1.0.0
      * @apiName Cart settlement
      * @apiGroup Cart
@@ -464,9 +479,8 @@ class CartController extends BaseController
                 if($v['number'] >= $vue['min'] && $v['number'] <= $vue['max']){
                     $price = $vue['sell_price'] * $v['number'];
 
-                } else {
-                    $price = $data->product->sale_price * $v['number'];
                 }
+
             }
 
             $data['price'] = $price;

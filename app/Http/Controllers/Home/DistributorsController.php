@@ -73,6 +73,9 @@ class DistributorsController extends Controller
         if ($distributors->category_id && $distributors->authorization_id){
             $categorie = explode(',',$distributors->category_id);
             $authoriza = explode(',', $distributors->authorization_id);
+        }else{
+            $categorie =[];
+            $authoriza =[];
         }
         if (count($distributors)>0) {
             $province = ChinaCityModel::where('oid', $distributors->province_id)->select('name')->first();
@@ -90,12 +93,12 @@ class DistributorsController extends Controller
 //                $tit .= $val['title'] . ',';
 //            }
             if ($province && $city) {
-                $distributors['address'] = $province->toArray()['name'].','.$city->toArray()['name'];
+                $distributors['address'] = $province->toArray()['name'].','.$city->toArray()['name'].$distributors->store_address;
             }else{
                 $distributors['address'] = '';
             }
             if ($enter_province && $enter_city) {
-                $distributors['enter_address'] = $enter_province->toArray()['name'].','.$enter_city->toArray()['name'];
+                $distributors['enter_address'] = $enter_province->toArray()['name'].','.$enter_city->toArray()['name'].$distributors->enter_Address;
             }else{
                 $distributors['enter_address'] = '';
             }

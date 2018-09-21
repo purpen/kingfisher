@@ -24,21 +24,31 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/invoice', [
         'as' => 'invoice.invoice', 'uses' => 'InvoiceController@lists'
     ]);
-    //普通发票添加
+    //普通发票和专票添加
     $api->post('/DealerApi/invoice/ordinaryAdd', [
-        'as' => 'cart.ordinary', 'uses' => 'InvoiceController@ordinaryAdd'
+        'as' => 'invoice.ordinaryAdd', 'uses' => 'InvoiceController@ordinaryAdd'
     ]);
     // 普通和专票发票删除
     $api->post('/DealerApi/invoice/deleted', [
         'as' => 'invoice.deleted', 'uses' => 'InvoiceController@deleted'
     ]);
-    //普通发票编辑展示与详情
+    //普通发票和专票编辑展示与详情
     $api->post('/DealerApi/invoice/ordinaryList',[
         'as' => 'invoice.ordinaryList','uses' => 'InvoiceController@ordinaryList'
     ]);
-     //普通发票编辑
+     //普通发票和专票编辑
     $api->post('/DealerApi/invoice/ordinaryEdit',[
         'as' => 'invoice.ordinaryEdit','uses' => 'InvoiceController@ordinaryEdit'
+    ]);
+
+    //订单历史发票列表
+    $api->get('/DealerApi/history/lists', [
+        'as' => 'history.lists', 'uses' => 'HistoryInvoiceController@lists'
+    ]);
+
+    //查看普通增值税发票详情-弹框页面
+    $api->get('/DealerApi/history/historyTo', [
+        'as' => 'history.historyTo', 'uses' => 'HistoryInvoiceController@historyTo'
     ]);
 
     // 购物车列表
@@ -191,11 +201,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/product/followList', [
             'as' => 'Dealer.product.followList', 'uses' => 'ProductsController@followList'
         ]);
-////         商品详情
+////      商品详情
         $api->get('/DealerApi/product/info', [
             'as' => 'Dealer.product.info', 'uses' => 'ProductsController@info'
         ]);
-//         商品搜索
+//        商品搜索
         $api->get('/DealerApi/product/search', [
             'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
         ]);
@@ -234,6 +244,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         //确认收货
         $api->post('/DealerApi/order/confirm',[
             'as' => 'Dealer.Order.confirm' , 'uses' => 'OrderController@confirm'
+        ]);
+        //收银台
+        $api->post('/DealerApi/order/pay_money',[
+            'as' => 'Dealer.Order.pay_money' , 'uses' => 'OrderController@pay_money'
+        ]);
+        //上传凭证
+        $api->post('/DealerApi/order/upload_img',[
+            'as' => 'Dealer.Order.upload_img' , 'uses' => 'OrderController@upload_img'
         ]);
 
         // 经销商修改信息-------------------------------------------------------------------------------------------------

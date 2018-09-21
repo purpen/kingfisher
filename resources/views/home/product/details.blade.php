@@ -182,16 +182,16 @@
 
 	</div>
 @endsection
-@include('UEditor::head');
+{{--@include('UEditor::head');--}}
 @section('partial_js')
 	@parent
-	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
-    <script>
-        var ue = UE.getEditor('container');
-        ue.ready(function() {
-//            不可被编辑
-            ue.setDisabled();
-        });
-    </script>
+	{{--<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>--}}
+    {{--<script>--}}
+        {{--var ue = UE.getEditor('container');--}}
+        {{--ue.ready(function() {--}}
+{{--//            不可被编辑--}}
+            {{--ue.setDisabled();--}}
+        {{--});--}}
+    {{--</script>--}}
 
 @endsection
