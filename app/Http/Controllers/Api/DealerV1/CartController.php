@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\DealerV1;
 
+use App\Models\AssetsModel;
 use App\Models\CollectionModel;
 use App\Models\ReceiptModel;
 use App\Models\ProductsModel;
@@ -90,10 +91,10 @@ class CartController extends BaseController
                 } else {
                     $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
                     if (count($asset)>0){
-                        $aset = [];
-                        foreach ($asset as $val){
-                            $aset[] = $val->file->small;
-                        }
+                        $aset = '';
+//                        foreach ($asset as $val){
+                            $aset = $asset->file->small;
+//                        }
                         $v->cover = $aset;
                     }
                 }
@@ -150,8 +151,22 @@ class CartController extends BaseController
                 $mode = ProductsSkuModel::where(['id'=>$v->sku_id])->first();
                 $type = SkuRegionModel::where(['sku_id'=>$v->sku_id])->select('max','min','sell_price')->get();
                 $collection  = CollectionModel::where(['user_id'=>$user_id,'product_id'=>$v->product_id])->first();
+                $assets = AssetsModel::where(['target_id' => $v->sku_id,'type' => 4])->first();//sku
                 $v->cover = '';
-                $v->cover = $mode->first_img;//商品封面图
+                if($assets){
+                    $v->cover = $assets->file->small;
+                } else {
+                    $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
+                    if (count($asset)>0){
+                        $aset = '';
+//                        foreach ($asset as $val){
+                            $aset = $asset->file->small;
+//                        }
+                        $v->cover = $aset;
+                    }
+                }
+                //                $v->cover = '';
+//                $v->cover = $mode->first_img;//商品封面图
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
@@ -236,6 +251,20 @@ class CartController extends BaseController
             }else {
                 $number = '';
             }
+            $assets = AssetsModel::where(['target_id' => $carts->sku_id,'type' => 4])->first();//sku
+            $cover = '';
+            if($assets){
+                $cover = $assets->file->small;
+            } else {
+                $asset = AssetsModel::where(['target_id' => $carts->product_id,'type' => 1])->first();//商品图
+                if (count($asset)>0){
+                    $aset = '';
+//                        foreach ($asset as $val){
+                    $aset = $asset->file->small;
+//                        }
+                    $cover = $aset;
+                }
+            }
 
             $data[$k]=array(
                 'product_id' => $carts->product_id,
@@ -244,7 +273,7 @@ class CartController extends BaseController
                 'price'         => $carts->price,
                 'product_name'  => $carts->product->title,
                 'mode'          => $carts->sku->mode,
-                'cover_url'     =>$carts->sku->first_img,
+                'cover_url'     =>$cover,
 
             );
 
@@ -293,6 +322,11 @@ class CartController extends BaseController
                 if($vue['number'] >= $v['min'] && $vue['number'] <= $v['max']){
                     $price = $v['sell_price'] * $vue['number'];
                 }
+            }
+            if (empty($price) && count($sku_price) > 0){
+                $count = count($sku_price) - 1;
+                $invoice_price = $sku_price[$count];
+                $price = $invoice_price['sell_price'] * $vue['number'];
             }
 
             // 如果产品存在，则更新数量和价格
@@ -380,6 +414,11 @@ class CartController extends BaseController
                 if($vue['number'] >= $v['min'] && $vue['number'] <= $v['max']){
                     $price = $v['sell_price'] * $vue['number'];
                 }
+            }
+            if (empty($price) && count($sku_price) > 0){
+                $count = count($sku_price) - 1;
+                $invoice_price = $sku_price[$count];
+                $price = $invoice_price['sell_price'] * $vue['number'];
             }
 
             // 如果产品存在，则更新数量和价格
@@ -481,6 +520,11 @@ class CartController extends BaseController
 
                 }
 
+            }
+            if (empty($price) && count($sku_price) > 0){
+                $count = count($sku_price) - 1;
+                $invoice_price = $sku_price[$count];
+                $price = $invoice_price['sell_price'] * $v['number'];
             }
 
             $data['price'] = $price;

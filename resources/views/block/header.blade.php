@@ -39,7 +39,6 @@
                     <li role="presentation" class="divider"></li>
                     <li><a href="{{ url('/orderMould') }}">订单模版管理</a></li>
                     <li><a href="{{ url('/fileRecords') }}">导入订单记录</a></li>
-                    <li><a href="{{ url('/invoice') }}">发票管理</a></li>
                     <li><a href="{{ url('/product') }}">商品管理</a></li>
                 </ul>
             </li>
@@ -114,6 +113,7 @@
                     {{--<li><a href="{{url('/payment/brandlist')}}">品牌付款单</a></li>--}}
                     {{--<li><a href="{{url('/receive/channellist')}}">渠道收款单</a></li>--}}
                     <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
+                    <li><a href="{{ url('/invoice') }}">发票管理</a></li>
                     {{--<li><a href="{{url('/order')}}">订单查询</a></li>--}}
                     <li role="presentation" class="divider"></li>
                     <li><a href="{{url('/paymentAccount')}}">财务资料</a></li>

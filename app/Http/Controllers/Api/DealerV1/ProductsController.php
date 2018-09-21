@@ -501,8 +501,8 @@ class ProductsController extends BaseController
         }
 
         $product_ids = array_column($followList->toArray(),'product_id');
-        $products = DB::table('products')
-            ->whereIn('id',$product_ids)
+        $products = ProductsModel::
+             whereIn('id',$product_ids)
             ->orderBy('id', 'desc')
             ->paginate($per_page);
 

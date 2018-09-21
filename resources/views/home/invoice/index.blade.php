@@ -89,23 +89,7 @@
                             {{--<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
                                 <i class="glyphicon glyphicon-edit"></i> 创建订单
                             </a>--}}
-                            @if ($status == 5)
-                                <button type="button" id="batch-verify" class="btn btn-success mr-2r">
-                                    <i class="glyphicon glyphicon-ok"></i> 审批
-                                </button>
-                                <button type="button" id="split_order" class="btn btn-warning mr-2r">
-                                    <i class="glyphicon glyphicon-wrench"></i> 拆单
-                                </button>
-                            @endif
 
-                            @if ($status == 8)
-                                <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
-                                    <i class="glyphicon glyphicon-backward"></i> 反审
-                                </button>
-                               {{-- <button type="button" class="btn btn-success mr-2r" id="send-order">
-                                    <i class="glyphicon glyphicon-print"></i> 打印发货
-                                </button>--}}
-                            @endif
 
                         </div>
 
@@ -262,55 +246,18 @@
             </div>
             @if ($order_list)
                 <div class="row">
-                    <div class="col-md-12 text-center">{!! $order_list->appends([   'number' => $name,
+                    <div class="col-md-12 text-center">{!! $order_list->appends([
                                                                                 'per_page' => $per_page ,
-                                                                                'order_status' => $order_status ,
-                                                                                'order_number' => $order_number ,
-                                                                                'product_name' => $product_name,
-                                                                                'buyer_name' => $buyer_name,
-                                                                                'buyer_phone' => $buyer_phone,
-                                                                                'from_type' => $from_type,
                                                                                   ])->render() !!}</div>
                 </div>
             @endif
         </div>
     </div>
-    {{--手动发货弹出框--}}
-    @include('modal.add_manual_send_modal')
 
-    @include('mustache.historyinvoice_info')
-
-    {{--拆单弹出框--}}
-    @include('modal.add_split_order')
-
-    {{--导入弹出框--}}
-    @include('home/order.inOrder')
-
-    {{--众筹弹出框--}}
-    @include('home/order.zcOrder')
-
-    {{--联系人弹出框--}}
-    @include('home/order.contactsOrder')
-
-    {{--高级搜搜弹出框--}}
-    {{--@include('home/order.seniorSearch')--}}
-
-    {{--物流倒入弹出框--}}
-    @include('home/order.logisticsOrder')
-
-    {{--代发供应商订单导出--}}
-    @include('home/order.supplierOrderOut')
-
-    {{--代发订单物流信息导入--}}
-    @include('home/order.supplierOrderInput')
-
-    {{--分销渠道订单导出--}}
-    @include('home/order.distributorOrderOut')
-
-    {{--分销渠道订单导入--}}
-    @include('home/order.distributorOrderInput')
+    @include('mustache.invoice_info')
 
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
+    <script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>
     <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
         <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
     </object>
@@ -318,6 +265,37 @@
 
 @section('customize_js')
     @parent
+    function myFunction() {
+    layer.open({
+    type: 1 //Page层类型
+    ,area: ['500px', '280px']
+    ,title: '拒绝理由。'
+    ,shade: 0.2 //遮罩透明度
+    ,maxmin: true //允许全屏最小化
+    ,anim: 2 //0-6的动画形式，-1不开启
+    ,content: "<form ><textarea id='invoiceTextarea' rows='8' cols='60' name='reason'></textarea><br><input style='margin-top:30px;' type='submit' value='提交' onclick='invoiceFunction()'></form>"
+    });
+    }
+    function invoiceFunction(){
+
+    var textarea = $('#invoiceTextarea').val();
+    if(!textarea){
+    layer.alert('驳回理由为空');
+    return false;
+    }
+    var order_id = $('#hiddenOrder_id').val();
+    var invoice_id = $('#hiddenInvoice_id').val();
+
+    $.get("/invoice/rejected?reason="+textarea+"&id="+order_id+"&invoice_id="+invoice_id, function(data){
+    if(data == 200){
+    layer.alert('修改成功');
+    }else if(data == 500){
+    layer.alert('修改失败');
+    location=location;
+    }
+    });
+
+    }
     var _token = $('#_token').val();
 
     var PrintTemplate;

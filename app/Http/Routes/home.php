@@ -782,26 +782,32 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
             'as' => 'admin.invoice', 'acl' => 'admin.invoice.viewlist', 'uses' => 'InvoiceController@index'
         ]);
         Route::match(['get', 'post'], '/invoice/lists', [
-            'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.lists', 'uses' => 'InvoiceController@lists'
+            'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.viewlist', 'uses' => 'InvoiceController@lists'
         ]);
          Route::match(['get', 'post'], '/invoice/nonOrderList', [
-             'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.lists', 'uses' => 'InvoiceController@nonOrderList'
+             'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.viewlist', 'uses' => 'InvoiceController@nonOrderList'
          ]);
         Route::match(['get', 'post'], '/invoice/verifyOrderList', [
-            'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.lists', 'uses' => 'InvoiceController@verifyOrderList'
+            'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.viewlist', 'uses' => 'InvoiceController@verifyOrderList'
+        ]);
+        Route::match(['get', 'post'], '/invoice/sendOrderList', [
+            'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.viewlist', 'uses' => 'InvoiceController@sendOrderList'
+        ]);
+        Route::match(['get', 'post'], '/invoice/completeOrderList', [
+            'as' => 'admin.invoice.lists', 'acl' => 'admin.invoice.viewlist', 'uses' => 'InvoiceController@completeOrderList'
         ]);
 
         Route::get('/invoice/ajaxEdit', [
-            'as' => 'admin.invoice.edit', 'acl' => 'admin.invoice.edit', 'uses' => 'InvoiceController@ajaxEdit'
+            'as' => 'admin.invoice.edit', 'acl' => 'admin.invoice.viewlist', 'uses' => 'InvoiceController@ajaxEdit'
         ]);
         Route::get('/invoice/rejected', [
-            'as' => 'admin.invoice.rejected', 'acl' => 'admin.invoice.edit', 'uses' => 'InvoiceController@rejected'
+            'as' => 'admin.invoice.rejected', 'acl' => 'admin.invoice.store', 'uses' => 'InvoiceController@rejected'
         ]);
          Route::get('/invoice/through', [
-             'as' => 'admin.invoice.through', 'acl' => 'admin.invoice.edit', 'uses' => 'InvoiceController@through'
+             'as' => 'admin.invoice.through', 'acl' => 'admin.invoice.store', 'uses' => 'InvoiceController@through'
          ]);
         Route::get('/invoice/history', [
-            'as' => 'admin.invoice.history', 'acl' => 'admin.invoice.history', 'uses' => 'InvoiceController@history'
+            'as' => 'admin.invoice.history', 'acl' => 'admin.invoice.viewlist', 'uses' => 'InvoiceController@history'
         ]);
 
 
@@ -940,6 +946,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
 
         Route::get('/receive/receive', [//收款单
             'as' => 'admin.receive.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@receive'
+        ]);
+
+        Route::get('/receive/ajaxEdit', [
+            'as' => 'admin.receive.edit', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxEdit'
         ]);
         Route::get('/receive/complete', [
             'as' => 'admin.receive.complete', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@complete'

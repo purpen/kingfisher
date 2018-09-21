@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="col-md-4 text-right">
-                       <form id="per_page_from" action="{{ url('/invoice/lists') }}" method="POST">
+                       <form id="per_page_from" action="{{ url('/invoice/nonOrderList') }}" method="POST">
                                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                                                     <div class="datatable-length">
                                                         <select class="form-control selectpicker input-sm per_page" name="per_page">
@@ -111,7 +111,6 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                         <tr class="gblack">
-                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
                             <th>
                                 状态
                             </th>
@@ -141,9 +140,7 @@
                         <tbody>
                         @foreach($order_list as $order)
                             <tr>
-                                <td class="text-center">
-                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $order->id }}">
-                                </td>
+
                                 <td>
                                     @if (in_array($order->status, array(0)))
                                         <span class="label label-default">{{$order->status_val}}</span>
@@ -224,53 +221,17 @@
                 <div class="row">
                     <div class="col-md-12 text-center">{!! $order_list->appends([   'number' => $name,
                                                                                 'per_page' => $per_page ,
-                                                                                'order_status' => $order_status ,
-                                                                                'order_number' => $order_number ,
-                                                                                'product_name' => $product_name,
-                                                                                'buyer_name' => $buyer_name,
-                                                                                'buyer_phone' => $buyer_phone,
-                                                                                'from_type' => $from_type,
+
                                                                                   ])->render() !!}</div>
                 </div>
             @endif
         </div>
     </div>
-    {{--手动发货弹出框--}}
-    @include('modal.add_manual_send_modal')
 
-    @include('mustache.audit_info')
-
-    {{--拆单弹出框--}}
-    @include('modal.add_split_order')
-
-    {{--导入弹出框--}}
-    @include('home/order.inOrder')
-
-    {{--众筹弹出框--}}
-    @include('home/order.zcOrder')
-
-    {{--联系人弹出框--}}
-    @include('home/order.contactsOrder')
-
-    {{--高级搜搜弹出框--}}
-    {{--@include('home/order.seniorSearch')--}}
-
-    {{--物流倒入弹出框--}}
-    @include('home/order.logisticsOrder')
-
-    {{--代发供应商订单导出--}}
-    @include('home/order.supplierOrderOut')
-
-    {{--代发订单物流信息导入--}}
-    @include('home/order.supplierOrderInput')
-
-    {{--分销渠道订单导出--}}
-    @include('home/order.distributorOrderOut')
-
-    {{--分销渠道订单导入--}}
-    @include('home/order.distributorOrderInput')
+    @include('mustache.refused_info')
 
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
+    <script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>
     <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
         <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
     </object>
@@ -278,6 +239,38 @@
 
 @section('customize_js')
     @parent
+    function myFunction() {
+        layer.open({
+           type: 1 //Page层类型
+          ,area: ['500px', '280px']
+           ,title: '拒绝理由。'
+          ,shade: 0.2 //遮罩透明度
+           ,maxmin: true //允许全屏最小化
+            ,anim: 2 //0-6的动画形式，-1不开启
+            ,content: "<form ><textarea id='invoiceTextarea' rows='8' cols='60' name='reason'></textarea><br><input style='margin-top:30px;' type='submit' value='提交' onclick='invoiceFunction()'></form>"
+    });
+    }
+    function invoiceFunction(){
+
+    var textarea = $('#invoiceTextarea').val();
+    if(!textarea){
+        layer.alert('驳回理由为空');
+        return false;
+    }
+    var order_id = $('#hiddenOrder_id').val();
+    var invoice_id = $('#hiddenInvoice_id').val();
+
+    $.get("/invoice/rejected?reason="+textarea+"&id="+order_id+"&invoice_id="+invoice_id, function(data){
+        if(data == 200){
+             layer.alert('修改成功');
+        }else if(data == 500){
+            layer.alert('修改失败');
+    location=location;
+            }
+    });
+
+    }
+
     $('.active').removeClass('active');
     var _token = $('#_token').val();
 

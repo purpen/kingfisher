@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Models\HistoryInvoiceModel;
+use App\Models\InvoiceModel;
+use App\Models\OrderModel;
 use Illuminate\Http\Request;
+use App\Http\ApiHelper;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -59,25 +62,57 @@ class HistoryInvoiceController extends BaseController
         $per_page = $request->input('per_page',20);
         $receiving_type = $request->input('receiving_type');
 
-        $wherein['history_invoice.user_id'] = $user_id;
-//        $wherein['history_invoice.difference'] = 0;
+        $wherein['order.user_id'] = $user_id;
+//        $wherein['order.id'] = 1659;
         $where = [];
         if($receiving_type == 1){
-            $where = [1];
-        } elseif($receiving_type == 2){
             $where = [2,3,4];
+        } elseif($receiving_type == 2){
+            $notfound = 111;
         } elseif($receiving_type == 3){
             $where = [5];
-        }else {
-            $where = [1,2,3,4,5];
+        }elseif($receiving_type == 4){
+            $receiving = 999;
+        }
+        $data = [];
+        if(!empty($notfound)){
+            $historyInvoice = HistoryInvoiceModel::select('order_id')->get();
+            //二维数组改为一维数组
+            foreach($historyInvoice as $key=>$value){
+                $ids[] = $value['order_id'];
+            }
+            //去重
+            $heavy = array_unique($ids);
+
+            $data = OrderModel::whereNotIn('id',$heavy)
+                ->select('id as order_id','number','total_money','order_start_time')
+                ->where('number','like','%'.$number.'%')
+                ->where('user_id',$user_id)
+                ->whereIn('status', [8, 10, 20])
+                ->orderBy('order.id','desc')
+                ->paginate($per_page);
         }
 
-        $data = HistoryInvoiceModel::select('history_invoice.receiving_id','history_invoice.receiving_type','o.id as order_id','history_invoice.id','o.number','o.total_money','o.order_start_time')
-            ->leftJoin('order as o', 'o.id', '=', 'history_invoice.order_id')
-            ->where('o.number','like','%'.$number.'%')
-            ->where($wherein)
-            ->whereIn('receiving_type',$where)
-            ->paginate($per_page);
+        if ($where){
+            $data = OrderModel::select('history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
+                ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
+                ->where('order.number','like','%'.$number.'%')
+                ->whereIn('order.status', [8, 10, 20])
+                ->where($wherein)
+                ->orderBy('order.id','desc')
+                ->whereIn('receiving_type',$where)
+                ->paginate($per_page);
+        }elseif(!empty($receiving)){
+            $data = OrderModel::select('history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
+                ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
+                ->where('order.number','like','%'.$number.'%')
+                ->whereIn('order.status', [8, 10, 20])
+                ->where($wherein)
+                ->orderBy('order.id','desc')
+                ->paginate($per_page);
+        }
+
+
 
         foreach($data as $k=>$v){
             $data[$k]['start'] = strtotime($v['order_start_time']);
@@ -85,22 +120,39 @@ class HistoryInvoiceController extends BaseController
             $v->time  =  date('Y-m-d H:i:s',$data[$k]['start']+180*24*60*60);
             $v->time =strtotime($v->time);
 
-            if($v['receiving_type'] == 1){
+            if(!in_array($v['receiving_type'],[1,2,3,4,5])){
                 if($v->time > time()){
                     $timediff = $v->time -  time();
                     $data[$k]['days']  = intval($timediff/86400);
                     $data[$k]['hours'] = 0;
-                        $remain = $timediff%86400;
-                        $hours = intval($remain/3600);
-                        if($hours){
-                            $data[$k]['hours']  = $hours;
-                        }
-                        $data[$k]['remaining'] = ceil($data[$k]['days'].'.'.$data[$k]['hours']);
+                    $remain = $timediff%86400;
+                    $hours = intval($remain/3600);
+                    if($hours){
+                        $data[$k]['hours']  = $hours;
+                    }
+                    $data[$k]['remaining'] = ceil($data[$k]['days'].'.'.$data[$k]['hours']);
 
                 } else{
+                    //如果时间到了则为已过期
                     $history = HistoryInvoiceModel::find($v->id);
-                    $history->receiving_type = 5;
-                    $invoice = $history->save();
+                    if($history){
+                        $history->receiving_type  = 5;
+                        $history->receiving_id  = 0;
+                        $history->user_id = $user_id;
+                       $history->order_id = $v->order_id;
+
+                        $invoice = $history->save();
+                    }else{
+                        $historyIn = new HistoryInvoiceModel();
+                        $hist = [];
+                        $hist['receiving_type'] = 5;
+                        $hist['receiving_id'] = 0;
+                        $hist['user_id'] = $user_id;
+                        $hist['order_id'] = $v->order_id;
+
+                        $invoice = $historyIn->create($hist);
+                    }
+
                     if(!$invoice){
                         return $this->response->array(ApiHelper::error('error', 500));
                     }
@@ -159,12 +211,72 @@ class HistoryInvoiceController extends BaseController
             return $this->response->array(ApiHelper::error('无此数据', 500));
         }
 
-        $history['total_money'] = $history->order->total_money;
         $history['number'] = $history->order->number;
+        $history['company_phone'] = $history->historyInvoice->company_phone;
+        $history['opening_bank'] = $history->historyInvoice->opening_bank;
+        $history['bank_account'] = $history->historyInvoice->bank_account;
+        $history['receiving_address'] = $history->historyInvoice->receiving_address;
+        $history['receiving_name'] = $history->historyInvoice->receiving_name;
+        $history['receiving_phone'] = $history->historyInvoice->receiving_phone;
         return $this->response->array(ApiHelper::success('Success.', 200, $history));
 
     }
 
+    /**
+     * @api {post} /DealerApi/history/application 开票记录中申请开票
+     * @apiVersion 1.0.0
+     * @apiName HistoryInvoice application
+     * @apiGroup HistoryInvoice
+     * @apiParam {int} invoice_id 1:发票表id
+     * @apiParam {int} order_id 1:订单id
+     * @apiParam {int} invoicevalue 321:订单金额
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *       }
+     *   }
+     * }
+     */
+    public function application(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $invoice_id = $request->input('invoice_id');
+        $order_id = $request->input('order_id');
+        $invoicevalue = $request->input('invoicevalue');
+        if(!$invoice_id || !$order_id || !$invoicevalue){
+            return $this->response->array(ApiHelper::error('参数错误', 500));
+        }
+        $invoice = InvoiceModel::find($invoice_id);
+        if (!$invoice){
+            return $this->response->array(ApiHelper::error('数据异常', 412));
+        }
+        $historyInvoice = new HistoryInvoiceModel();
+        $time = date('Y-m-d H:i:s',time());
+        $data['user_id'] = $user_id;
+        $data['order_id'] = $order_id;
+        $data['invoice_id'] = $invoice_id;
+        $data['receiving_id'] = $invoice['receiving_id'];
+        $data['company_name'] = $invoice['company_name'];
+        $data['invoice_value'] = $invoicevalue;
+        $data['duty_paragraph'] = $invoice['duty_paragraph'];
+        $data['unit_address'] = $invoice['unit_address'];
+        $data['prove_id'] = $invoice['prove_id'];
+        $data['receiving_type'] = 2;
+        $data['application_time'] = $time;
+
+        $res = $historyInvoice::create($data);
+        if($res){
+            return $this->response->array(ApiHelper::success('申请成功', 200));
+        } else {
+            return $this->response->array(ApiHelper::error('申请失败', 500));
+        }
+
+
+
+    }
     /**
      * Show the form for creating a new resource.
      *

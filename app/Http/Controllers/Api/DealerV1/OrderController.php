@@ -63,6 +63,7 @@ class OrderController extends BaseController{
      * "product_title": "小风扇",                   //商品名称
      * "quantity": 1,                      //订单明细数量
      * "sku_mode": "黑色",                     // 颜色/型号
+     * "sku_name": "黑色-小风扇",                     // sku name
      * "image": "http://www.work.com/images/default/erp_product1.png",   //sku图片
      * }
      * ],
@@ -101,45 +102,42 @@ class OrderController extends BaseController{
         if ($types == 1) {//当月订单
             if($status != 0) {
                 if ($status === -1) {
-                    $status = 0;
+                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
                 if ($status == 10){
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
-                if ($status == -1 || $status == 20){
+                if ($status == 20){
                     $query['status'] = $status;
                     $orders = OrderModel::orderBy('id', 'desc')->where($query)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
-
             }else{
-                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id',$user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
             }
 
         }else{//全部订单
             if ($status != 0){
                 if ($status === -1) {
-                    $status = 0;
+                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 10){
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
-                if ($status == -1 || $status == 20) {
+                if ($status == 20) {
                     $query['status'] = $status;
                     $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where($query)->paginate($per_page);
                 }
-
             }else{
                 $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
             }
         }
         return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
-
     }
 
     /**
@@ -211,12 +209,17 @@ class OrderController extends BaseController{
             if($orders){
                 $orderSku = $orders->orderSkuRelation;//订单详情表
                 $address = $orders->address;//地址表
-                $invoice = HistoryInvoiceModel::where('order_id',$orders->id)->where('difference',0)->first();//发票历史表状态为0的
+                $invoice = HistoryInvoiceModel::where('order_id',$order_id)->where('difference',0)->first();//发票历史表状态为0的
                 $order_start_time =$orders->order_start_time;
                 $order_timer = strtotime($order_start_time)+ 60*60*24;
                 $orders->over_time = date("Y-m-d H:i:s",$order_timer);//取消时间
-            }
 
+                if ($invoice){
+                    $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
+                    $orders->company_name = $invoice->company_name;//发票抬头
+                    $orders->invoice_value = $invoice->invoice_value;//发票金额就是支付金额
+                }
+            }
             if(!empty($orderSku)){
                 $order_sku = $orderSku->toArray();
                 foreach ($order_sku as $k=>$v){
@@ -253,13 +256,9 @@ class OrderController extends BaseController{
                     $orders->town = $town->name;
                 }
             }
-            if (!empty($invoice)){
-                $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
-                $orders->company_name = $invoice->company_name;//发票抬头
-                $orders->invoice_value = $orders->pay_money;//发票金额就是支付金额
-            }
+
         }else{
-            return $this->response->array(ApiHelper::error('订单id不能为空', 200));
+            return $this->response->array(ApiHelper::error('没有找到该笔订单', 404));
         }
         return $this->response->item($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
 
@@ -277,7 +276,7 @@ class OrderController extends BaseController{
      * @apiParam {string} invoice_id 发票id  0.不开发票
      * @apiParam {string} token token
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
-     * @apiParam {string} product_id  "2,1,4,9"
+     * @apiParam {string} product_id  '2,1,4,9'
      *
      */
     public function store(Request $request)
@@ -294,7 +293,8 @@ class OrderController extends BaseController{
         if ($product_id){
             $products = ProductsModel::whereIn('id',$product_id)->get();
             foreach ($products as $v){
-                if ($status->mode == 1 && $v->mode == 2){//非月结
+
+                if ($status->mode == 1 && $v->mode == 2 && $payment_type == 4){//非月结
                         return $this->response->array(ApiHelper::error($v->title.'不支持月结支付方式，请选择其他支付方式！', 403));
                 }
             }
@@ -350,7 +350,7 @@ class OrderController extends BaseController{
                 return $this->response->array(ApiHelper::error('暂无优惠信息', 403));
             }
         }
-        $invoice_id = $request->input('invoice_id');
+        $invoice_id = $request->input('invoice_id',0);
 
         $all['order_start_time'] = date("Y-m-d H:i:s");
         $all['user_id'] = $user_id;
@@ -411,7 +411,7 @@ class OrderController extends BaseController{
             $quantity_arr[] = $val['quantity'];
         }
         if(!$storage_sku->isCount($all['storage_id'][0], $user->department,$sku_id_arr, $quantity_arr)){
-            return ajax_json(0,'仓库/部门库存不足');
+            return $this->response->array(ApiHelper::error('仓库/部门库存不足！', 403));
         }
 
 
@@ -452,6 +452,8 @@ class OrderController extends BaseController{
                 $history_invoice->application_time = $order->order_start_time;
                 $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
                 $history_invoice->unit_address = $h_invoice->unit_address;
+                $history_invoice->prove_id = $h_invoice->prove_id;
+                $history_invoice->receiving_type = 2;
 
                 if (!$history_invoice->save()) {
                     return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
@@ -461,11 +463,11 @@ class OrderController extends BaseController{
             if ($order->payment_type == 4) {
                 //月结就直接默认成已付款占货
                 if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '付款占货关联操作失败');
+                    return $this->response->array(ApiHelper::error('付款占货关联操作失败', 403));
                 }
             }else{//订单未付款占货(假定为未付款然后占货)
                 if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                    return ajax_json(0, '未付款占货关联操作失败');
+                    return $this->response->array(ApiHelper::error('未付款占货关联操作失败', 403));
                 }
             }
 
@@ -500,6 +502,8 @@ class OrderController extends BaseController{
                     $history_invoice->application_time = $order->order_start_time;
                     $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
                     $history_invoice->unit_address = $h_invoice->unit_address;
+                    $history_invoice->prove_id = $h_invoice->prove_id;
+                    $history_invoice->receiving_type = 2;
 
                     if (!$history_invoice->save()) {
                         return $this->response->array(ApiHelper::error('发票历史信息保存失败！', 500));
@@ -509,11 +513,11 @@ class OrderController extends BaseController{
                 if ($order->payment_type == 4) {
                     //月结就直接默认成已付款占货
                     if (!$productSku->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '付款占货关联操作失败');
+                        return $this->response->array(ApiHelper::error('付款占货关联操作失败', 403));
                     }
                 }else{//订单未付款占货(假定为未付款然后占货)
                     if (!$productSku->increaseReserveCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
-                        return ajax_json(0, '未付款占货关联操作失败');
+                        return $this->response->array(ApiHelper::error('未付款占货关联操作失败', 403));
                     }
                 }
             }
@@ -607,8 +611,8 @@ class OrderController extends BaseController{
             foreach ($order_sku as $k=>$v) {
                 $sku_id = $v['sku_id'];
                 $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
-                if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
-                    return ajax_json(0, '未付款减货关联操作失败');
+                if (!$productSku->addInventory($v['sku_id'], $v['quantity'])) {
+                    return $this->response->array(ApiHelper::error('增加库存操作失败', 403));
                 }
             }
 
@@ -639,16 +643,19 @@ class OrderController extends BaseController{
     {
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
-        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 10])->first();
+        $order = OrderModel::where(['id' => $order_id,'user_id' => $user_id])->first();
         if(!$order){
             return $this->response->array(ApiHelper::error('没有找到该笔订单！', 500));
         }else {
             $orders =DB::table('order')
                 ->where('user_id','=',$this->auth_user_id)
+                ->where('status','=',10)
                 ->where('id','=',$order_id)
                 ->update(['status'=> 20]);
-
-            return $this->response->array(ApiHelper::success());
+            if ($orders){
+                return $this->response->array(ApiHelper::success());
+            }
+            return $this->response->array(ApiHelper::error('暂未发货还不可以收货！', 403));
         }
     }
 
@@ -711,6 +718,10 @@ class OrderController extends BaseController{
         $voucher_id = $request->input('voucher_id');
         $random = $request->input('random');
         $user_id = $this->auth_user_id;
+
+        if (!$order_id && !$payment_type && !$voucher_id && !$random) {
+            return $this->response->array(ApiHelper::error('缺少必要参数', 403));
+        }
         $order = OrderModel::find($order_id);
         if ($payment_type != 6) {
             return $this->response->array(ApiHelper::error('不是公司转账方式不需要上传凭证！', 403));
@@ -720,18 +731,108 @@ class OrderController extends BaseController{
         }else{
             $result = DB::table('order')
                     ->where('user_id','=',$user_id)
-                    ->where('id','=',$order->id)
+                    ->where('id','=',$order_id)
                     ->where('payment_type','=',6)
                     ->update(['voucher_id'=>$voucher_id,'status'=>2]);
 
-            if ($result) {
+            if (!$result){
+                return $this->response->array(ApiHelper::error('修改订单状态失败！', 403));
+            }
                 $assets = AssetsModel::where('random',$random)->get();
                 foreach ($assets as $asset){
                     $asset->target_id = $order->id;
+                    $asset->type = 23;
                     $asset->save();
-                }
             }
             return $this->response->array(ApiHelper::success('上传成功', 200));
+        }
+
+    }
+
+
+
+    /**
+     * @api {get} /DealerApi/order/search 订单搜索
+     * @apiVersion 1.0.0
+     * @apiName order search
+     * @apiGroup order
+     *
+     * @apiParam {string} name 商品名称/订单号/收件人
+     * @apiParam {integer} per_page 分页数量  默认10
+     * @apiParam {integer} page 页码
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     * "data": [
+     * {
+     *  "id": 25918,
+     *   "number": "11969757068000",       //订单编号
+     *  "buyer_name": "冯宇",               //收货人
+     *  "pay_money": "119.00",              //支付总金额
+     *  "user_id": 19,
+     * "order_start_time": "0000-00-00 00:00:00", //下单时间
+     * "status": 8,
+     * "status_val": "待发货",                 //订单状态
+     * "payment_type": "在线支付"               //支付方式
+     * "total_money": "299.00",             //商品总金额
+     * "count": 1,                            //商品总数量
+     * "sku_relation": [
+     * {
+     * "sku_id": 42,
+     * "price":   单价
+     * "product_title": "小风扇",                   //商品名称
+     * "quantity": 1,                      //订单明细数量
+     * "sku_mode": "黑色",                     // 颜色/型号
+     * "sku_name": "黑色-小风扇",                     // sku name
+     * "image": "http://www.work.com/images/default/erp_product1.png",   //sku图片
+     * }
+     * ],
+     *  "meta": {
+     *  "message": "Success.",
+     *  "status_code": 200,
+     *  "pagination": {
+     *  "total": 717,
+     *  "count": 2,
+     *  "per_page": 2,
+     *  "current_page": 1,
+     *  "total_pages": 359,
+     *  "links": {
+     *  "next": "http://www.work.com/DealerApi/orders?page=2"
+     *  }
+     *  }
+     *  }
+     *   }
+     */
+
+
+    public function search(Request $request)
+    {
+        $this->per_page = $request->input('per_page', $this->per_page);
+        $name = $request->input('name');
+//        $number = $request->input('number');
+//        $buyer_name = $request->input('buyer_name');
+        if (!$name){
+            return $this->response->array(ApiHelper::error('缺少必要参数', 403));
+        }
+//        if(!empty($number)){
+//            $orders = OrderModel::where('number' ,'like','%'.$number.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+//        }
+//        if(!empty($buyer_name)){
+//            $orders = OrderModel::where('buyer_name' ,'like','%'.$buyer_name.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+//        }
+        if(!empty($name)){
+            $order_sku_relations = OrderSkuRelationModel::where('sku_name' ,'like','%'.$name.'%')->get();
+            $order_id = [];
+            foreach ($order_sku_relations as $v){
+                $order_id[] = $v->order_id;
+            }
+//
+            $orders = OrderModel::where('suspend',0)->whereIn('id',$order_id)->orWhere('number' ,'like','%'.$name.'%')->orWhere('buyer_name' ,'like','%'.$name.'%')->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+        }
+        if (count($orders)>0){
+            return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
+        }else{
+            return $this->response->array(ApiHelper::error('没有找到合适的订单', 404));
         }
 
     }

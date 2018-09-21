@@ -19,8 +19,7 @@
         "jpush/jpush": "v3.5.*",
         "chumper/zipper": "1.0.x",
         "intervention/image": "^2.4",
-        "gregwar/captcha": "1.*",
-        "latrell/alipay": "dev-master"
+        "gregwar/captcha": "1.*"
     },
     "minimum-stability": "dev",
     "require-dev": {

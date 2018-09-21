@@ -15,6 +15,7 @@ use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\AuditingModel;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
+use App\Models\DistributorModel;
 use App\Models\FileRecordsModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
@@ -93,7 +94,7 @@ class OrderController extends Controller
             $order_list = $query
                 ->orderBy('id','desc')
                 ->paginate($this->per_page);
-        } else {
+        }else {
             $order_list = $query
                 ->where(['status' => $status, 'suspend' => 0])
                 ->orderBy('id','desc')
@@ -104,6 +105,10 @@ class OrderController extends Controller
             ::OfStatus(1)
             ->select(['id','name'])
             ->get();
+
+        foreach ($order_list as $list){
+            $list->store_name = $list->distributor ? $list->distributor->store_name : '';
+        }
 
         return view('home/order.order', [
             'order_list' => $order_list,

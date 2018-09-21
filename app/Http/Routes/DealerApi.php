@@ -46,6 +46,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'history.lists', 'uses' => 'HistoryInvoiceController@lists'
     ]);
 
+    //发票记录申请
+    $api->post('/DealerApi/history/application', [
+        'as' => 'history.application', 'uses' => 'HistoryInvoiceController@application'
+    ]);
+
     //查看普通增值税发票详情-弹框页面
     $api->get('/DealerApi/history/historyTo', [
         'as' => 'history.historyTo', 'uses' => 'HistoryInvoiceController@historyTo'
@@ -253,6 +258,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->post('/DealerApi/order/upload_img',[
             'as' => 'Dealer.Order.upload_img' , 'uses' => 'OrderController@upload_img'
         ]);
+        //订单搜索
+        $api->get('/DealerApi/order/search',[
+            'as' => 'Dealer.Order.search' , 'uses' => 'OrderController@search'
+        ]);
 
         // 经销商修改信息-------------------------------------------------------------------------------------------------
         $api->post('/DealerApi/message/updateMessage', [
@@ -295,6 +304,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->post('/DealerApi/address/defaulted', [
             'as' => 'Dealer.address.defaulted', 'uses' => 'AddressController@defaulted'
         ]);
+
+        //返回支付页面
+        $api->get('/DealerApi/pay' , ['as' => 'Dealer.pay' , 'uses' => 'PayController@pay']);
+        //查询账单
+        $api->get('/DealerApi/search' , ['as' => 'Dealer.search' , 'uses' => 'PayController@search']);
+        //退款
+        $api->get('/DealerApi/refund' , ['as' => 'Dealer.refund' , 'uses' => 'PayController@refund']);
     });
+
+    //支付宝异步回调接口
+    $api->post('/DealerApi/pay/make_sure', ['as' => 'pay.make_sure', 'uses' => 'PayController@make_sure']);
+    //支付宝同步回调接口
+    $api->post('/DealerApi/pay/alipayReturn', ['as' => 'pay.alipayReturn', 'uses' => 'PayController@alipayReturn']);
 
 });

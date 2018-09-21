@@ -137,6 +137,13 @@ class OrderModel extends BaseModel
     {
         return $this->hasOne('App\Models\SupplierModel', 'supplier_id');
     }
+    /**
+     * 一对一关联经销商
+     */
+    public function distributor()
+    {
+        return $this->belongsTo('App\Models\DistributorModel', 'distributor_id');
+    }
 
     /**
      * 一对多关联assets表单
@@ -258,7 +265,10 @@ class OrderModel extends BaseModel
             case 5:
                 $value = '现结';
                 break;
-            default:
+            case 6:
+                $value = '公司转账';
+            break;
+                default:
                 $value = '在线付款';
         }
 
