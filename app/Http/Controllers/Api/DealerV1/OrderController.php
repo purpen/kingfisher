@@ -453,6 +453,13 @@ class OrderController extends BaseController{
                 $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
                 $history_invoice->unit_address = $h_invoice->unit_address;
                 $history_invoice->prove_id = $h_invoice->prove_id;
+                $history_invoice->company_phone = $h_invoice->company_phone;
+                $history_invoice->opening_bank = $h_invoice->opening_bank;
+                $history_invoice->bank_account = $h_invoice->bank_account;
+                $history_invoice->unit_address = $h_invoice->unit_address;
+                $history_invoice->receiving_address = $h_invoice->receiving_address;
+                $history_invoice->receiving_name = $h_invoice->receiving_name;
+                $history_invoice->receiving_phone = $h_invoice->receiving_phone;
                 $history_invoice->receiving_type = 2;
 
                 if (!$history_invoice->save()) {
@@ -503,6 +510,13 @@ class OrderController extends BaseController{
                     $history_invoice->duty_paragraph = $h_invoice->duty_paragraph;
                     $history_invoice->unit_address = $h_invoice->unit_address;
                     $history_invoice->prove_id = $h_invoice->prove_id;
+                    $history_invoice->company_phone = $h_invoice->company_phone;
+                    $history_invoice->opening_bank = $h_invoice->opening_bank;
+                    $history_invoice->bank_account = $h_invoice->bank_account;
+                    $history_invoice->unit_address = $h_invoice->unit_address;
+                    $history_invoice->receiving_address = $h_invoice->receiving_address;
+                    $history_invoice->receiving_name = $h_invoice->receiving_name;
+                    $history_invoice->receiving_phone = $h_invoice->receiving_phone;
                     $history_invoice->receiving_type = 2;
 
                     if (!$history_invoice->save()) {
