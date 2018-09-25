@@ -49,7 +49,7 @@ class HistoryInvoiceModel extends BaseModel
 
 
     /**
-     * 获取发票封面图
+     * 获取发票一般纳税人证明
      */
     public function getFirstImgInvoice()
     {
@@ -66,7 +66,7 @@ class HistoryInvoiceModel extends BaseModel
     public function imageFile()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 24])
+            ::where(['target_id' => $this->invoice_id, 'type' => 24])
             ->orderBy('id','desc')
             ->first();
         if(empty($asset)){

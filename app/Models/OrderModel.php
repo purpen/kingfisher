@@ -173,7 +173,7 @@ class OrderModel extends BaseModel
      */
     public function OrderVoucher()
     {
-        return $this->belongsTo('App\Models\OrderModel', 'voucher_id');
+        return $this->belongsTo('App\Models\OrderModel', 'prove_id');
     }
 
 
