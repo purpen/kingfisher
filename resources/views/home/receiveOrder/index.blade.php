@@ -123,9 +123,10 @@
                             {{--</td>--}}
                             <td>{{$order->full_name?$order->full_name:''}}</td>
                             <td>{{$order->store_name?$order->store_name : ''}}</td>
-                            <td class="magenta-color">
-                                {{$order->number}}
-                            </td>
+                            {{--<td class="magenta-color">--}}
+                                {{--{{$order->number}}--}}
+                            {{--</td>--}}
+                                <td><a target="_blank" href="{{url('/order/search')}}?number={{$order->number}}">{{$order->number}}</a></td>
                             <td>{{$order->order_start_time}}</td>
                             <td>{{$order->total_money}}</td>
                             <td>{{$order->payment_type}}</td>
