@@ -246,7 +246,14 @@ class ProductsController extends BaseController
         $name = $request->input('name');
         $this->per_page = $request->input('per_page', $this->per_page);
 
-        $products = ProductsModel::where('title' , 'like', '%'.$name.'%')->where('status',2)->orderBy('id', 'desc')
+        $status = DistributorModel::where('user_id', $this->auth_user_id)->select('status','category_id')->first();
+        if ($status['status'] != 2) {
+            return $this->response->array(ApiHelper::error('审核未通过暂时无法搜索商品', 403));
+        }
+
+        $categorys = explode(',',$status['category_id']);
+
+        $products = ProductsModel::where('title' , 'like', '%'.$name.'%')->where('status',2)->whereIn('category_id', $categorys)->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
         foreach ($products as $key=>$value){

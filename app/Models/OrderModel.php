@@ -150,7 +150,7 @@ class OrderModel extends BaseModel
      */
     public function assets()
     {
-        return $this->belongsTo('App\Models\AssetsModel','prove_id');
+        return $this->belongsTo('App\Models\AssetsModel','voucher_id');
     }
 
     /**
