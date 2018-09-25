@@ -33,7 +33,7 @@ class ReceiveOrderController extends Controller
 
 //        $order_list = OrderModel::where(['type' => 8, 'status' => 6, 'suspend' => 0])->orderBy('id', 'desc')
 //            ->paginate($this->per_page);
-        $order_list = OrderModel::where('type',8)->where('suspend',0)->whereIn('status',[2,6])->orderBy('id', 'desc')
+        $order_list = OrderModel::where('type',8)->where('suspend',0)->where('status',6)->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
         foreach ($order_list as $list){
@@ -69,13 +69,12 @@ class ReceiveOrderController extends Controller
             if (!$model->orderCreateReceiveOrder($v->id)) {
                 return ajax_json(0, "ID:'. $v->id .'财务审核订单创建收款单错误");
             }
-
-            // 订单待发货状态
-            if (!$order_model->changeStatus($v->id, 8)) {
-                DB::rollBack();
-                Log::error('Send Order ID:' . $v->id . '订单发货修改状态错误');
-                return ajax_json(0, 'error', '订单发货修改状态错误');
-            }
+                // 订单待发货状态
+                if (!$order_model->changeStatus($v->id, 8)) {
+                    DB::rollBack();
+                    Log::error('Send Order ID:' . $v->id . '订单发货修改状态错误');
+                    return ajax_json(0, 'error', '订单发货修改状态错误');
+                }
 
             // 创建出库单
             $out_warehouse = new OutWarehousesModel();

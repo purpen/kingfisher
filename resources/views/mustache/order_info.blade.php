@@ -23,15 +23,15 @@
             <input type="hidden" id="order_id" value="@{{id}}">
             
             <div class="form-group">
-                <label class="col-sm-1 control-label">物流公司</label>
-                <div class="col-sm-3">
-                    <select class="selectpicker" id="express_id" name="logistic_id" style="display: none;">
-                        <option value="" >选择物流</option>
-                        @{{ #logistic_list }}
-                        <option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>
-                        @{{ /logistic_list }}
-                    </select>
-                </div>
+                {{--<label class="col-sm-1 control-label">物流公司</label>--}}
+                {{--<div class="col-sm-3">--}}
+                    {{--<select class="selectpicker" id="express_id" name="logistic_id" style="display: none;">--}}
+                        {{--<option value="" >选择物流</option>--}}
+                        {{--@{{ #logistic_list }}--}}
+                        {{--<option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>--}}
+                        {{--@{{ /logistic_list }}--}}
+                    {{--</select>--}}
+                {{--</div>--}}
     
                 <label class="col-sm-1 control-label">发货仓库</label>
                 <div class="col-sm-3">

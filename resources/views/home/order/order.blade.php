@@ -661,10 +661,10 @@
     alert('订单ID获取异常');
     return false;
     }
-    if(logistics_id == ''){
-    alert('请选择物流');
-    return false;
-    }
+    {{--if(logistics_id == ''){--}}
+    {{--alert('请选择物流');--}}
+    {{--return false;--}}
+    {{--}--}}
     var regobj = new RegExp("^[0-9]*$");
     if(logistics_no == '' || !regobj.test(logistics_no)){
     alert('物流单号格式不正确');

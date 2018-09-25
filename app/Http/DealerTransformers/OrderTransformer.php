@@ -34,20 +34,21 @@ class OrderTransformer extends TransformerAbstract
             'company_name' => $orders->company_name,
             'invoice_value' => $orders->invoice_value,
             'over_time' => $orders->over_time,
+            'is_voucher' => $orders->is_voucher,
             'orderSku' => $orders->order_skus,
 
-            'phone' => $address->phone,
-            'name' => $address->name,
+            'phone' => $address->phone?$address->phone:$orders->buyer_phone,
+            'name' => $address->name?$address->name:$orders->buyer_name,
             'fixed_telephone' => $address->fixed_telephone?$address->fixed_telephone:'',
-            'province_id' => $address->province_id,
+            'province_id' => $address->province_id?$address->province_id:$orders->buyer_province,
             'province' => $orders->province?$orders->province:'',
-            'city_id' => $address->city_id,
+            'city_id' => $address->city_id?$address->city_id:$orders->buyer_city,
             'city' => $orders->city?$orders->city:'',
-            'county_id' => $address->county_id,
+            'county_id' => $address->county_id?$address->county_id:$orders->buyer_county,
             'county' => $orders->county?$orders->county:'',
-            'town_id' => $address->town_id,
+            'town_id' => $address->town_id?$address->town_id:$orders->buyer_township,
             'town' => $orders->town?$orders->town:'',
-            'address' => $address->address,
+            'address' => $address->address?$address->address:$orders->buyer_address,
         ];
     }
 }
