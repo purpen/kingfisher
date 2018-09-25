@@ -198,7 +198,7 @@
                                 <td>{{$order->receiving_name}}</td>
                                 <td>
                                     <span>{{$order->logistics ? $order->logistics->name : ''}}</span><br>
-                                    <small class="text-muted">{{$order->express_no}}</small>
+                                    <small class="text-muted" style="font-size:13px;">{{$order->express_no}}</small>
                                 </td>
                                 <td>{{$order->count}}</td>
                                 <td>{{$order->total_money}} / {{$order->freight}}</td>

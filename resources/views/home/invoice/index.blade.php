@@ -133,7 +133,7 @@
                         <tr class="gblack">
                             {{--<th class="text-center"><input type="checkbox" id="checkAll"></th>--}}
                             <th>
-                                状态
+                                订单状态
                             </th>
                             <th>
                                 门店名称
@@ -220,7 +220,7 @@
                                 <td>{{$order->receiving_name}}</td>
                                 <td>
                                     <span>{{$order->logistics ? $order->logistics->name : ''}}</span><br>
-                                    <small class="text-muted">{{$order->express_no}}</small>
+                                    <small class="text-muted" style="font-size: 12px;">{{$order->express_no}}</small>
                                 </td>
                                 <td>{{$order->count}}</td>
                                 <td>{{$order->total_money}}</td>
@@ -271,9 +271,9 @@
     ,area: ['500px', '280px']
     ,title: '拒绝理由。'
     ,shade: 0.2 //遮罩透明度
-    ,maxmin: true //允许全屏最小化
+    ,maxmin: false //允许全屏最小化
     ,anim: 2 //0-6的动画形式，-1不开启
-    ,content: "<form ><textarea id='invoiceTextarea' rows='8' cols='60' name='reason'></textarea><br><input style='margin-top:30px;' type='submit' value='提交' onclick='invoiceFunction()'></form>"
+    ,content: "<form style='margin-left:20px;margin-top:20px;'><textarea id='invoiceTextarea' rows='8' cols='60' name='reason'></textarea><br><input style='margin-top:10px;' type='submit' value='提交' class='btn btn-magenta btn-sm mr-3r' onclick='invoiceFunction()'></form>"
     });
     }
     function invoiceFunction(){
