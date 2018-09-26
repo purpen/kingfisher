@@ -36,6 +36,7 @@ class OrderListTransformer extends TransformerAbstract
             'status' => (int)$orders->status,
             'status_val' => $orders->status_val,
             'payment_type' => $orders->payment_type,
+            'is_voucher' => $orders->is_voucher,
             'sku_relation' => $sku_relation,
         ];
     }

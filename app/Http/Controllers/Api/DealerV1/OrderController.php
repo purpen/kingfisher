@@ -46,6 +46,7 @@ class OrderController extends BaseController{
      * "data": [
      * {
      *  "id": 25918,
+     *  "is_voucher": 0 没有上传银行凭证 1.有上传,
      *   "number": "11969757068000",       //订单编号
      *  "buyer_name": "冯宇",               //收货人
      *  "pay_money": "119.00",              //支付总金额
@@ -155,7 +156,7 @@ class OrderController extends BaseController{
      * {
      *  "data": {
      *  "id": 25918,
-     *  "is_voucher": 0 没有上传银行凭证 1.有上传,
+     *  "is_voucher": 0 没有上传银行凭证 1.有上传
      *  "number": "11969757068000",  //订单编号
      *  "pay_money": "119.00",   //应付总金额
      *  "total_money": "299.00",    //商品总金额
@@ -721,7 +722,6 @@ class OrderController extends BaseController{
      * @apiParam {integer} voucher_id 银行凭证图片ID
      * @apiParam {integer} user_id 用户ID
      * @apiParam {integer} order_id 订单ID
-     * @apiParam {integer} is_voucher 是否已上传银行凭证 0.无 1.有
      * @apiParam {string} token token
      * @apiParam {string} random  随机数
      *
@@ -743,7 +743,7 @@ class OrderController extends BaseController{
         $is_voucher = $request->input('is_voucher');
         $user_id = $this->auth_user_id;
 
-        if (!$order_id && !$payment_type && !$voucher_id && !$random && !$is_voucher) {
+        if (!$order_id && !$payment_type && !$voucher_id && !$random) {
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }
         $order = OrderModel::find($order_id);
@@ -757,7 +757,7 @@ class OrderController extends BaseController{
                     ->where('user_id','=',$user_id)
                     ->where('id','=',$order_id)
                     ->where('payment_type','=',6)
-                    ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>$is_voucher]);
+                    ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>1]);
 
             if (!$result){
                 return $this->response->array(ApiHelper::error('修改订单状态失败！', 403));
