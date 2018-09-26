@@ -119,7 +119,7 @@
                         <thead>
                         <tr class="gblack">
                              <th>
-                                状态
+                                订单状态
                             </th>
                             <th>
                                 门店名称
