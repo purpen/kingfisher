@@ -323,9 +323,9 @@
                     <span class="form-text text-danger">@{{ receiving_address }}</span>
                 </div> 
 				@{{ #prove }} 
-				 <label class="col-sm-1 control-label" style="margin-left: 27%;margin-top: -15%;">一般纳税人证明</label>
+				 <label class="col-sm-1 control-label" style="margin-left: 40%;margin-top: -20%;">一般纳税人证明</label>
                 <div class="col-sm-3">
-                     <a href="@{{prove_id}}"  target="_blank"><img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" style="height: 100px; width: 100px;margin-left: 600px;margin-top: -300px;"></a>
+                     <a href="@{{prove_id}}"  target="_blank"><img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" style="height: 100px; width: 100px;margin-left: 212%;margin-top: -120%;"></a>
                 
                 </div> 
 		@{{ /prove }} 

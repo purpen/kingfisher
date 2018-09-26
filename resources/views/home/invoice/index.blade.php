@@ -269,7 +269,7 @@
     layer.open({
     type: 1 //Page层类型
     ,area: ['500px', '280px']
-    ,title: '拒绝理由。'
+    ,title: '拒绝理由'
     ,shade: 0.2 //遮罩透明度
     ,maxmin: false //允许全屏最小化
     ,anim: 2 //0-6的动画形式，-1不开启
