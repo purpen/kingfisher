@@ -796,7 +796,6 @@
     var buyer_tel = $("#buyer_tel").val();
     var buyer_phone = $("#buyer_phone").val();
     {{--var express_id = $("#express_id").val();'express_id': express_id,--}}
-    var express_id = 0;
     var storage_id = $("#storage_id").val();
     var buyer_address = $("#buyer_address").val();
     var buyer_zip = $("#buyer_zip").val();
