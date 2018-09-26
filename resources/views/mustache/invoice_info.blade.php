@@ -269,12 +269,13 @@
                 <div class="col-sm-3">
                     <span class="form-text text-danger">@{{ application_time }}</span>
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="col-sm-1 control-label">发票状态</label>
-                <div class="col-sm-3">
-                    <span class="form-text text-danger">@{{ receiving_type }}</span>
+
+    </div>
+ 
+    <div class="form-group">
+        <label class="col-sm-1 control-label">发票状态</label>
+        <div class="col-sm-3">
+            <span class="form-text text-danger">@{{ receiving_type }}</span>
                 </div>
                 
                 <label class="col-sm-1 control-label">驳回原因</label>
@@ -348,10 +349,10 @@
                 <div class="col-sm-3">
                     <span class="form-text text-danger">@{{ receiving_address }}</span>
                 </div> 
-				@{{ #prove }} 
-				 <label class="col-sm-1 control-label" style="margin-left: 40%;margin-top: -26%;width:120px;">一般纳税人证明</label>
+	    @{{ #prove }}
+				 <label class="col-sm-1 control-label" style="margin-left: 40%;margin-top: -20%;width:120px;">一般纳税人证明</label>
                 <div class="col-sm-3">
-                     <a href="@{{prove_id}}"  target="_blank"><img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" style="height: 100px; width: 100px;margin-left: 220%;margin-top: -172%;"></a>
+                     <a href="@{{prove_id}}"  target="_blank"><img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" style="height: 100px; width: 100px;margin-left: 220%;margin-top: -120%;"></a>
                 
                 </div> 
 		@{{ /prove }} 
