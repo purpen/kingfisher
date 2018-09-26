@@ -7,7 +7,6 @@ use App\Libraries\Alipay\AopSdk;
 use App\Libraries\Alipay\pagepay\buildermodel\AlipayTradePagePayContentBuilder;
 use App\Libraries\Alipay\pagepay\buildermodel\AlipayTradeQueryContentBuilder;
 use App\Libraries\Alipay\pagepay\buildermodel\AlipayTradeRefundContentBuilder;
-//use App\Libraries\Alipay\pagepay\service\AlipayTradeService;
 use App\Models\OrderModel;
 use Illuminate\Http\Request;
 
@@ -15,6 +14,9 @@ use Illuminate\Http\Request;
 //require_once (__DIR__.'../../../../Libraries/Alipay/pagepay/service/AlipayTradeService.php');
 //require_once (__DIR__.'../../../../Libraries/Alipay/pagepay/buildermodel/AlipayTradePagePayContentBuilder.php');
 
+require_once(app_path().'/Libraries/Alipay/config.php');
+require_once(app_path().'/Libraries/Alipay/pagepay/service/AlipayTradeService.php');
+require_once(app_path().'/Libraries/Alipay/pagepay/buildermodel/AlipayTradePagePayContentBuilder.php');
 class PayController extends BaseController
 {
 //    public function __construct(Request $request)
@@ -45,8 +47,6 @@ class PayController extends BaseController
      */
     public function pay(Request $request)
     {
-//var_dump(__DIR__.'/Api/Controllers/Http/../Libraries/Alipay/config.php');die;
-var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
 //        $out_trade_no = $request->input('order_id');
         $out_trade_no = 26;
 //        $number = $request->input('number');
@@ -76,9 +76,8 @@ var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
          * @return $response 支付宝返回的信息
          */
 
-        $aop = new \AlipayTradeService($config);
+        $aop = new \AlipayTradeService(config('alipay.app_id','alipay.merchant_private_key','alipay.notify_url','alipay.return_url','alipay.charset','alipay.sign_type','alipay.gatewayUrl','alipay.alipay_public_key'));
         $response = $aop->pagePay($payRequestBuilder, config('alipay.return_url'),config('alipay.notify_url'));
-
         //输出表单
         return $this->response->array(ApiHelper::success('Success', 200, $response));
     }
@@ -93,6 +92,10 @@ var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
      */
     public function make_sure(Request $request)
     {
+        $order = OrderModel::where('user_id', $this->auth_user_id)->where('id',$out_trade_no)->first();
+        if (!$order) {
+            return $this->response->array(ApiHelper::error('没有找到该笔订单', 403));
+        }
         $arr=$_POST;
 
         $alipaySevice = new \AlipayTradeService($config);

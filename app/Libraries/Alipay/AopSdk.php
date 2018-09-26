@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Libraries\Alipay;
+//namespace App\Libraries\Alipay;
+use App\Libraries\Alipay\lotusphp_runtime\Lotus;
 
 /**
  *
@@ -8,8 +9,8 @@ namespace App\Libraries\Alipay;
  * @author widyhu
  *
  */
-class AopSdk
-{
+//class AopSdk
+//{
     /**
      * AOP SDK 入口文件
      * 请不要修改这个文件，除非你知道怎样修改以及怎样恢复
@@ -24,9 +25,9 @@ class AopSdk
      * SDK工作目录
      * 存放日志，AOP缓存数据
      */
-
-    function run()
-    {
+//
+//    function run()
+//    {
         if (!defined("AOP_SDK_WORK_DIR")) {
             define("AOP_SDK_WORK_DIR", "/tmp/");
         }
@@ -49,10 +50,10 @@ class AopSdk
          */
         $lotusHome = dirname(__FILE__) . DIRECTORY_SEPARATOR . "lotusphp_runtime" . DIRECTORY_SEPARATOR;
         include($lotusHome . "Lotus.php");
-        $lotus = new Lotus;
+        $lotus = new Lotus();
         $lotus->option["autoload_dir"] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'aop';
         $lotus->devMode = AOP_SDK_DEV_MODE;
         $lotus->defaultStoreDir = AOP_SDK_WORK_DIR;
         $lotus->init();
-    }
-}
+//    }
+//}
