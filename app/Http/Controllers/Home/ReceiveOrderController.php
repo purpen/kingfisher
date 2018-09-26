@@ -441,13 +441,7 @@ class ReceiveOrderController extends Controller
             $order->name = '';
         }
 
-//        $distributor_id = $order->distributor_id;
-//        $distributor = DistributorModel::where('id','=',$distributor_id)->first();
-//        if (!$distributor){
-//            return ajax_json(0, 'error');
-//        }
-
-        if ($order->status == 2){
+        if ($order->status == 5 && $order->is_voucher == 1){
             if($order->assets){
                 $order->image = $order->assets->file->small;
                 $order->img = $order->assets->file->p800;
