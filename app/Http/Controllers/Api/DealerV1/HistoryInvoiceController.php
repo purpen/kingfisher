@@ -212,12 +212,12 @@ class HistoryInvoiceController extends BaseController
         }
 
         $history['number'] = $history->order->number;
-        $history['company_phone'] = $history->historyInvoice->company_phone;
-        $history['opening_bank'] = $history->historyInvoice->opening_bank;
-        $history['bank_account'] = $history->historyInvoice->bank_account;
-        $history['receiving_address'] = $history->historyInvoice->receiving_address;
-        $history['receiving_name'] = $history->historyInvoice->receiving_name;
-        $history['receiving_phone'] = $history->historyInvoice->receiving_phone;
+//        $history['company_phone'] = $history->historyInvoice->company_phone;
+//        $history['opening_bank'] = $history->historyInvoice->opening_bank;
+//        $history['bank_account'] = $history->historyInvoice->bank_account;
+//        $history['receiving_address'] = $history->historyInvoice->receiving_address;
+//        $history['receiving_name'] = $history->historyInvoice->receiving_name;
+//        $history['receiving_phone'] = $history->historyInvoice->receiving_phone;
         return $this->response->array(ApiHelper::success('Success.', 200, $history));
 
     }
@@ -262,6 +262,12 @@ class HistoryInvoiceController extends BaseController
         $data['company_name'] = $invoice['company_name'];
         $data['invoice_value'] = $invoicevalue;
         $data['duty_paragraph'] = $invoice['duty_paragraph'];
+        $data['company_phone'] = $invoice['company_phone'];
+        $data['opening_bank'] = $invoice['opening_bank'];
+        $data['bank_account'] = $invoice['bank_account'];
+        $data['receiving_address'] = $invoice['receiving_address'];
+        $data['receiving_name'] = $invoice['receiving_name'];
+        $data['receiving_phone'] = $invoice['receiving_phone'];
         $data['unit_address'] = $invoice['unit_address'];
         $data['prove_id'] = $invoice['prove_id'];
         $data['receiving_type'] = 2;

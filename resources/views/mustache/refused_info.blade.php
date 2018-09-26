@@ -322,10 +322,11 @@
                 <div class="col-sm-3">
                     <span class="form-text text-danger">@{{ receiving_address }}</span>
                 </div> 
-				@{{ #prove }} 
-				 <label class="col-sm-1 control-label" style="margin-left: 450px;margin-top: -233px;">一般纳税人证明</label>
-                <div class="col-sm-3">
-                     <a href="@{{prove_id}}"  target="_blank"><img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" style="height: 100px; width: 100px;margin-left: 600px;margin-top: -300px;"></a>
+				@{{ #prove }}
+    <div class="col-sm-3">
+               <label class="col-sm-1 control-label" style="width:120px;">一般纳税人证明</label>
+
+                   <a href="@{{prove_id}}"  target="_blank"><img src="@{{prove_id}}" alt="100x100" class="img-thumbnail" ></a>
                 
                 </div> 
 		@{{ /prove }} 
@@ -342,7 +343,7 @@
             <button type="submit" class="btn btn-magenta btn-sm" id="fold">
             <i class="glyphicon glyphicon-open"></i> 收起
             </button>
-         <div style="margin-left:20%;display: inline-block">
+         <div style="display: inline-block">
          <a   href="/invoice/through?id=@{{ id }}&invoice_id=@{{ invoices_id }}"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核通过</a>
          <a   href="javascript:;"  onclick="myFunction()"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核驳回</a>
         <input type="hidden" name="invoice_id" value="@{{ invoices_id }}" id="hiddenInvoice_id">

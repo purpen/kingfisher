@@ -21,7 +21,7 @@ use App\Http\Controllers\Controller;
 class InvoiceController extends Controller
 {
     /**
-     * 发票管理中的开票记录
+     * 发票管理中的发票记录
      *
      * @return \Illuminate\Http\Response
      */
@@ -555,35 +555,58 @@ class InvoiceController extends Controller
         $history =  HistoryInvoiceModel::where($where)->first();
         $between = '';
     if ($history){
-        $invoice_prove = InvoiceModel::find($history['invoice_id']);
+//        $invoice_prove = InvoiceModel::find($history['invoice_id']);
         if($history['receiving_type'] != 5){
             $name  = UserModel::where('id',$history['reviewer'])->select('realname')->first();
             $history['username'] = $name['realname'];
-            unset($history->opening_bank);
-            $history['company_phone'] = $history->historyInvoice->company_phone;
-            $history->opening_bank = $history->historyInvoice->opening_bank	;
-            $history['bank_account'] = $history->historyInvoice->bank_account;
-            $history['receiving_address'] = $history->historyInvoice->receiving_address;
-            $history['receiving_name'] = $history->historyInvoice->receiving_name;
-            $history['receiving_phone'] = $history->historyInvoice->receiving_phone;
-
-            if($history->receiving_id == 1){
-                $history->receiving_id = '增值税普通发票';
-                $history->prove_id = '';
-                $prove = 0;
-            } elseif($history->receiving_id == 2){
-                $history->receiving_id = '增值税专用发票';
-                $history->prove_id = $invoice_prove->getFirstImgInvoice();
-                $prove = 1;
-            } elseif($history->receiving_id == 0){
-                $history->receiving_id = '未开票';
-                $history->prove_id = '';
-                $prove = 0;
-            } else {
-                $history->receiving_id = '';
-                $history->prove_id = '';
-                $prove = 0;
+//            unset($history->opening_bank);
+//            $history['company_phone'] = $history->historyInvoice->company_phone;
+//            $history->opening_bank = $history->historyInvoice->opening_bank	;
+//            $history['bank_account'] = $history->historyInvoice->bank_account;
+//            $history['receiving_address'] = $history->historyInvoice->receiving_address;
+//            $history['receiving_name'] = $history->historyInvoice->receiving_name;
+//            $history['receiving_phone'] = $history->historyInvoice->receiving_phone;
+            switch($history->receiving_id){
+                case $history->receiving_id = 1;
+                    $history->receiving_id = '增值税普通发票';
+                    $history->prove_id = '';
+                    $prove = 0;
+                    break;
+                case $history->receiving_id = 2;
+                    $history->receiving_id = '增值税专用发票';
+                    $history->prove_id = $history->getFirstImgInvoice();
+                    $prove = 1;
+                    break;
+                case $history->receiving_id = 0;
+                    $history->receiving_id = '未开票';
+                    $history->prove_id = '';
+                    $prove = 0;
+                    break;
+                default :
+                    $history->receiving_id = '';
+                    $history->prove_id = '';
+                    $prove = 0;
+                    break;
             }
+//
+//              if($history->receiving_id == 1){
+//                  $history->receiving_id = '增值税普通发票';
+//                  $history->prove_id = '';
+//                  $prove = 0;
+//            } elseif($history->receiving_id == 2){
+//                $history->receiving_id = '增值税专用发票';
+//                $history->prove_id = $history->getFirstImgInvoice();
+//                $prove = 1;
+//            } elseif($history->receiving_id == 0){
+//                $history->receiving_id = '未开票';
+//                $history->prove_id = '';
+//                $prove = 0;
+//            } else {
+//                $history->receiving_id = '';
+//                $history->prove_id = '';
+//                $prove = 0;
+//            }
+
             if($history->receiving_type == 1){
                 $history->receiving_type = '未开票';
             } elseif($history->receiving_type == 2){
@@ -696,14 +719,15 @@ class InvoiceController extends Controller
         $history =  HistoryInvoiceModel::where($where)->get();
         foreach ($history as $k=>$v){
             if($v['receiving_id'] == 2){
+//                $invoice_prove = InvoiceModel::find($v['invoice_id']);
                 $history[$k]['prove_url'] = $v->getFirstImgInvoice();
             }
-            $history[$k]['company_phone'] = $v->historyInvoice->company_phone;
-            $history[$k]['receiving_name'] = $v->historyInvoice->receiving_name;
-            $history[$k]['bank_account'] = $v->historyInvoice->bank_account;
-            $history[$k]['opening_bank'] = $v->historyInvoice->opening_bank;
-            $history[$k]['receiving_phone'] = $v->historyInvoice->receiving_phone;
-            $history[$k]['receiving_address'] = $v->historyInvoice->receiving_address;
+//            $history[$k]['company_phone'] = $v->historyInvoice->company_phone;
+//            $history[$k]['receiving_name'] = $v->historyInvoice->receiving_name;
+//            $history[$k]['bank_account'] = $v->historyInvoice->bank_account;
+//            $history[$k]['opening_bank'] = $v->historyInvoice->opening_bank;
+//            $history[$k]['receiving_phone'] = $v->historyInvoice->receiving_phone;
+//            $history[$k]['receiving_address'] = $v->historyInvoice->receiving_address;
         }
         return view('home/invoice.history', [
             'history' => $history,
