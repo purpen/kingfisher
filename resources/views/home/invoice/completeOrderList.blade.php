@@ -199,17 +199,7 @@
                                     <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}} ? {{$order->invoice_id}}" active="1">
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
                                     </button>
-                                    @role(['admin','director','shopkeeper'])
-                                    @if ($order->type != 3)
 
-                                    @endif
-                                    @endrole
-
-                                    @if ($status == 8)
-                                        {{--<button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
-                                            <i class="glyphicon glyphicon-hand-right"></i> 手动发货
-                                        </button>--}}
-                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -219,17 +209,12 @@
             </div>
             @if ($order_list)
                 <div class="row">
-                    <div class="col-md-12 text-center">{!! $order_list->appends([   'number' => $name,
-                                                                                'per_page' => $per_page ,
-
+                    <div class="col-md-12 text-center">{!! $order_list->appends([  'per_page' => $per_page ,
                                                                                   ])->render() !!}</div>
                 </div>
             @endif
         </div>
     </div>
-    {{--手动发货弹出框--}}
-    @include('modal.add_manual_send_modal')
-
     @include('mustache.invoice_info')
 
 
