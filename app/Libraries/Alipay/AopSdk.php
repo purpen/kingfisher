@@ -1,12 +1,5 @@
 <?php
 namespace App\Libraries\Alipay;
-
-/**
- *
- * 微信扫码支付实现类
- * @author widyhu
- *
- */
 class AopSdk
 {
     /**

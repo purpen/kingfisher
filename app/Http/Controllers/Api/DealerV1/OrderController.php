@@ -378,6 +378,7 @@ class OrderController extends BaseController{
         $all['count'] = $count;
         $all['type'] = 8;
         $all['from_type'] = 4;
+        $all['payment_time'] = date("Y-m-d H:i:s");//支付时间
         $all['user_id_sales'] = config('constant.D3IN_user_id_sales');
         $all['store_id'] = config('constant.D3IN_store_id');
 //        $all['storage_id'] = config('constant.D3IN_storage_id');
@@ -740,7 +741,6 @@ class OrderController extends BaseController{
         $payment_type = $request->input('payment_type');
         $voucher_id = $request->input('voucher_id');
         $random = $request->input('random');
-        $is_voucher = $request->input('is_voucher');
         $user_id = $this->auth_user_id;
 
         if (!$order_id && !$payment_type && !$voucher_id && !$random) {
@@ -753,21 +753,27 @@ class OrderController extends BaseController{
         if (!$order){
             return $this->response->array(ApiHelper::error('没有找到该笔订单！', 403));
         }else{
+
+            $assets = AssetsModel::where('random',$random)->get();
+            foreach ($assets as $asset){
+                $asset->target_id = $order->id;
+                $asset->type = 23;
+                $res = $asset->save();
+                if (!$res){
+                    return $this->response->array(ApiHelper::error('图片上传失败！', 403));
+                }
+            }
+
             $result = DB::table('order')
                     ->where('user_id','=',$user_id)
                     ->where('id','=',$order_id)
                     ->where('payment_type','=',6)
-                    ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>1]);
+                    ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>1,'payment_time' => date('Y-m-d h:i:s',time())]);
 
             if (!$result){
                 return $this->response->array(ApiHelper::error('修改订单状态失败！', 403));
             }
-                $assets = AssetsModel::where('random',$random)->get();
-                foreach ($assets as $asset){
-                    $asset->target_id = $order->id;
-                    $asset->type = 23;
-                    $asset->save();
-            }
+
             return $this->response->array(ApiHelper::success('上传成功', 200));
         }
 
@@ -833,8 +839,6 @@ class OrderController extends BaseController{
     {
         $this->per_page = $request->input('per_page', $this->per_page);
         $name = $request->input('name');
-//        $number = $request->input('number');
-//        $buyer_name = $request->input('buyer_name');
         if (!$name){
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }

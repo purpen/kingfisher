@@ -122,7 +122,7 @@ class PayController extends BaseController
                 $orders = OrderModel::
                 where('user_id', '=', $this->auth_user_id)
                     ->where('number', '=', $arr['out_trade_no'])
-                    ->update(['status' => 5]);
+                    ->update(['status' => 5,'payment_time' => $notify_time]);
                 if (!$orders){
                     Log::info('订单状态更新失败！，订单号：'.$number);
                     echo "fail";
