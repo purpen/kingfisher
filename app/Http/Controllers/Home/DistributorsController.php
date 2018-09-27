@@ -137,29 +137,19 @@ class DistributorsController extends Controller
 
     public function search(Request $request)
     {
-        $status = $request->input('status');
+        $status = $request->input('status','');
         $name = $request->input('name');
         $distributors = DistributorModel::where('name', 'like', '%' . $name . '%')->orWhere('store_name', 'like', '%' . $name . '%')->paginate($this->per_page);
 
-        if (count($distributors)>0){
-            foreach ($distributors as $k=>$v){
-                $categories = explode(',',$v['category_id']);
-                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
-                $category = CategoriesModel::whereIn('id',$categories)->where('type',1)->select('title')->get();
-                $str = '';
-
-                if (count($category)>0) {
-                    foreach ($category as $value) {
-                        $str .= $value['title'] . ',';
-                    }
-                    $distributor[$k]['category'] = substr($str,0,-1);
-                }else{
-                    $distributor[$k]['category'] = '';
-                }
+        if (count($distributors)>0) {
+            foreach ($distributors as $k => $v) {
+//                $categories = explode(',', $v['category_id']);
+                $province = ChinaCityModel::where('oid', $v['province_id'])->select('name')->first();
+//                $category = CategoriesModel::whereIn('id', $categories)->where('type', 1)->select('title')->get();
                 if ($province) {
-                    $distributors['province'] = $province->toArray()['name'];
-                }else{
-                    $distributors['province'] = '';
+                    $distributors[$k]['province'] = $province->name;
+                } else {
+                    $distributors[$k]['province'] = '';
                 }
             }
             $distributors = $distributors->toArray();
@@ -170,7 +160,7 @@ class DistributorsController extends Controller
                 'status' => $status,
                 'name' => $name,
             ]);
-        } else {
+        }else {
             return view('home/distributors.distributors');
         }
     }
