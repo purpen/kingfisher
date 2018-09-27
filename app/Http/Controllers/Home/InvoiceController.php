@@ -641,42 +641,14 @@ class InvoiceController extends Controller
         $order->receiving_name = isset($history['receiving_name']) ? $history['receiving_name'] : '';
         $order->receiving_phone = isset($history['receiving_phone']) ? $history['receiving_phone'] : '';
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
-        if ($order->storage_id){
-            $storage_list = StorageModel::find($order->storage_id);
-            $order->storage_name = $storage_list->name;
-        }else {
-            $order->storage_name = '';
-        }
 
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 
         $product_sku_model = new ProductsSkuModel();
         $order_sku = $product_sku_model->detailedSuks($order_sku); //订单明细
 
-        // 仓库信息
-        $storage_list = StorageModel::OfStatus(1)->select(['id','name'])->get();
-        if (!empty($storage_list)) {
-            $max = count($storage_list);
-            for ($i=0; $i<$max; $i++) {
-                if ($storage_list[$i]['id'] == $order->storage_id) {
-                    $storage_list[$i]['selected'] = 'selected';
-                } else {
-                    $storage_list[$i]['selected'] = '';
-                }
-            }
-        }
-        // 物流信息
-        $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
-        if (!empty($logistic_list)) {
-            $max = count($logistic_list);
-            for ($k=0; $k<$max; $k++) {
-                if ($logistic_list[$k]['id'] == $order->express_id) {
-                    $logistic_list[$k]['selected'] = 'selected';
-                } else {
-                    $logistic_list[$k]['selected'] = '';
-                }
-            }
-        }
+
+
 
         $express_content_value = [];
         foreach ($order->express_content_value as $v){
@@ -695,9 +667,7 @@ class InvoiceController extends Controller
             'prove' => $prove,
             'between'=>$between,
             'history'=>$history,
-            'order_sku' => $order_sku,
-            'storage_list' => $storage_list,
-            'logistic_list' => $logistic_list,
+            'order_sku' => $order_sku, 
             'name' => '',
             'order_status' => '',
             'order_number' => '',
