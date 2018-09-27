@@ -1,5 +1,4 @@
 <?php
-//namespace App\Libraries\Alipay\pagepay\service;
 /* *
  * 功能：支付宝电脑网站支付
  * 版本：2.0
@@ -116,7 +115,7 @@ class AlipayTradeService {
 		if($ispage)
 		{
 			$result = $aop->pageExecute($request,"post");
-			echo $result;
+			return $result;
 		}
 		else 
 		{
