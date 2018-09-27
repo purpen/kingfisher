@@ -242,7 +242,7 @@
     function myFunction() {
         layer.open({
            type: 1 //Page层类型
-          ,area: ['500px', '280px']
+          ,area: ['500px', '300px']
            ,title: '拒绝理由'
           ,shade: 0.2 //遮罩透明度
            ,maxmin: false //允许全屏最小化
