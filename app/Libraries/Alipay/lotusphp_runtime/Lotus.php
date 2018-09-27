@@ -1,4 +1,5 @@
 <?php
+namespace App\Libraries\Alipay\lotusphp_runtime;
 class Lotus
 {
 	/**
@@ -54,7 +55,7 @@ class Lotus
 		{
 			if ($defaultStoreDir = realpath($this->defaultStoreDir))
 			{
-				LtStoreFile::$defaultStoreDir = $defaultStoreDir;
+				\LtStoreFile::$defaultStoreDir = $defaultStoreDir;
 			}
 			else
 			{
@@ -98,7 +99,7 @@ class Lotus
 	protected function prepareAutoloader()
 	{
 		require_once $this->lotusRuntimeDir . "Autoloader/Autoloader.php";
-		$autoloader = new LtAutoloader;
+		$autoloader = new \LtAutoloader();
 		$autoloader->autoloadPath[] = $this->lotusRuntimeDir;
 		if (isset($this->option["autoload_dir"]))
 		{
@@ -120,7 +121,7 @@ class Lotus
 
 	protected function prepareConfig()
 	{
-		$this->configHandle = LtObjectUtil::singleton('LtConfig');
+		$this->configHandle = \LtObjectUtil::singleton('LtConfig');
 		if (!$this->devMode)
 		{
 			$configFile = 'conf/conf.php';

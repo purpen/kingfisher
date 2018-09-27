@@ -311,8 +311,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/search' , ['as' => 'Dealer.search' , 'uses' => 'PayController@search']);
         //退款
         $api->get('/DealerApi/refund' , ['as' => 'Dealer.refund' , 'uses' => 'PayController@refund']);
-    });
 
+    });
     //支付宝异步回调接口
     $api->post('/DealerApi/pay/make_sure', ['as' => 'pay.make_sure', 'uses' => 'PayController@make_sure']);
     //支付宝同步回调接口

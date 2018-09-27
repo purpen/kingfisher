@@ -1,28 +1,26 @@
 <?php
 namespace App\Http\Controllers\Api\DealerV1;
 
-
 use App\Http\ApiHelper;
 use App\Libraries\Alipay\AopSdk;
 use App\Libraries\Alipay\pagepay\buildermodel\AlipayTradePagePayContentBuilder;
 use App\Libraries\Alipay\pagepay\buildermodel\AlipayTradeQueryContentBuilder;
 use App\Libraries\Alipay\pagepay\buildermodel\AlipayTradeRefundContentBuilder;
-//use App\Libraries\Alipay\pagepay\service\AlipayTradeService;
 use App\Models\OrderModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
-//require_once (__DIR__.'../../../../Libraries/Alipay/config.php');
-//require_once (__DIR__.'../../../../Libraries/Alipay/pagepay/service/AlipayTradeService.php');
-//require_once (__DIR__.'../../../../Libraries/Alipay/pagepay/buildermodel/AlipayTradePagePayContentBuilder.php');
-
+//require_once(app_path().'/Libraries/Alipay/config.php');
+//require_once(app_path().'/Libraries/Alipay/pagepay/service/AlipayTradeService.php');
+//require_once(app_path().'/Libraries/Alipay/pagepay/buildermodel/AlipayTradePagePayContentBuilder.php');
 class PayController extends BaseController
 {
-//    public function __construct(Request $request)
-//    {
-//        parent::__construct($request);
-//            $this->aopSdkObj=new AopSdk();
-//            $this->aopSdkObj->run();
-//    }
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+            $this->aopSdkObj=new AopSdk();
+            $this->aopSdkObj->run();
+    }
 
     /**
      * @api {get} /DealerApi/pay 上传支付信息获取返回页面
@@ -45,14 +43,9 @@ class PayController extends BaseController
      */
     public function pay(Request $request)
     {
-//var_dump(__DIR__.'/Api/Controllers/Http/../Libraries/Alipay/config.php');die;
-var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
-//        $out_trade_no = $request->input('order_id');
-        $out_trade_no = 26;
-//        $number = $request->input('number');
-        $number='DD2018091900005';
-//        $total_amount = $request->input('pay_money');
-        $total_amount =300;
+        $out_trade_no = $request->input('order_id');
+        $number = $request->input('number');
+        $total_amount = $request->input('pay_money');
         $user_id = $this->auth_user_id;
         if (!$out_trade_no && !$number && !$total_amount) {
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
@@ -61,12 +54,13 @@ var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
         if (!$order) {
             return $this->response->array(ApiHelper::error('没有找到该笔订单', 403));
         }
+        $money = $order->pay_money?$order->pay_money:$order->total_money;
 
         //构造参数
         $payRequestBuilder = new AlipayTradePagePayContentBuilder();
         $payRequestBuilder->setOutTradeNo($out_trade_no);
         $payRequestBuilder->setNumber($number);
-        $payRequestBuilder->setTotalAmount($total_amount);
+        $payRequestBuilder->setTotalAmount($money);
 
         /**
          * return_url 电脑网站支付请求
@@ -76,9 +70,8 @@ var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
          * @return $response 支付宝返回的信息
          */
 
-        $aop = new \AlipayTradeService($config);
+        $aop = new \AlipayTradeService(config('alipay.app_id','alipay.merchant_private_key','alipay.notify_url','alipay.return_url','alipay.charset','alipay.sign_type','alipay.gatewayUrl','alipay.alipay_public_key'));
         $response = $aop->pagePay($payRequestBuilder, config('alipay.return_url'),config('alipay.notify_url'));
-
         //输出表单
         return $this->response->array(ApiHelper::success('Success', 200, $response));
     }
@@ -94,34 +87,47 @@ var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
     public function make_sure(Request $request)
     {
         $arr=$_POST;
+        $alipaySevice = new \AlipayTradeService(config('alipay.app_id','alipay.merchant_private_key','alipay.notify_url','alipay.return_url','alipay.charset','alipay.sign_type','alipay.gatewayUrl','alipay.alipay_public_key'));
 
-        $alipaySevice = new \AlipayTradeService($config);
         $alipaySevice->writeLog(var_export($request->all(), true));
         $result = $alipaySevice->check($arr);
 
         if ($result) {
-//            获取相关数据
-            $out_trade_no = $arr['order_id'];
-            $number = $arr['number'];
-            $total_amount = $arr['pay_money'];
-            $trade_status = $arr['trade_status'];       //交易状态
+            //获取相关数据
+            $number = $arr['out_trade_no'];//订单号
+            $total_amount = $arr['buyer_pay_amount'];//付款金额
+            $trade_status = $arr['trade_status'];//交易状态
+            $notify_time = $arr['gmt_payment'];//交易付款时间
+        $order = OrderModel::where('user_id', $this->auth_user_id)->where('id',$number)->first();
+        if (!$order) {
+            Log::info('没有找到该笔订单，订单号：'.$number);
+            echo "fail";
+            return;
+        }
+
 //            判断数据是否做过处理，如果做过处理，return，没有做过处理，执行支付成功代码
             if ($trade_status == 'TRADE_FINISHED' OR $trade_status == 'TRADE_SUCCESS') {
                 $money = $order->total_money;
-                if ($arr['pay_money'] != $money) {
-                    return $this->response->array(ApiHelper::error('支付金额有误', 403));
+                if ($total_amount != $money) {
+                    Log::info('支付金额有误，订单号：'.$number.','.'交易金额:'.$total_amount);
+                    echo "fail";
+                    return;
                 }
                 $status = $order->status;
                 if ($status != 1){
-                    return $this->response->array(ApiHelper::error('该订单不是待支付订单', 403));
+                    Log::info('该订单不是待支付订单，订单号：'.$number.','.'交易状态:'.$trade_status);
+                    echo "fail";
+                    return;
                 }
 //                修改订单状态
                 $orders = OrderModel::
                 where('user_id', '=', $this->auth_user_id)
-                    ->where('id', '=', $arr['order_id'])
-                    ->update(['status' => 5]);
+                    ->where('number', '=', $arr['out_trade_no'])
+                    ->update(['status' => 5,'payment_time' => $notify_time]);
                 if (!$orders){
-                    return $this->response->array(ApiHelper::error('订单状态更新失败！', 500));
+                    Log::info('订单状态更新失败！，订单号：'.$number);
+                    echo "fail";
+                    return;
                 }
 
                 echo "success";
@@ -135,49 +141,36 @@ var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
     }
 
     /**
-     * @api {get} /DealerApi/Pay/alipayReturn 验证签名 同步通知回调
-     * @apiVersion 1.0.0
-     * @apiName Pay alipayReturn
-     * @apiGroup Pay
-     *
-     * @apiParam {integer} order_id 订单ID
-     * @apiParam {string} number 订单号
-     * @apiParam {string} pay_money 支付金额
-     * @apiParam {string} trade_no 支付宝交易号
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     *     "meta": {
-     *       "message": "Success",
-     *       "status_code": 200
-     *     }
-     *   }
+     * alipayReturn 验证签名 同步通知回调
+     * @param $builder 业务参数，使用buildmodel中的对象生成。
+     * @param $return_url 同步跳转地址，公网可以访问
+     * @param $notify_url 异步通知地址，公网可以访问
+     * @return $response 支付宝返回的信息
      */
 
     public function alipayReturn(Request $request)
     {
-        $user_id = $this->auth_user_id;
-        $arr = $request->all();
-//        $arr=$_GET;
+        $arr=$_GET;
 
-        if (!$arr['order_id'] && !$arr['number'] && !$arr['pay_money'] && !$arr['trade_no']) {
-            return $this->response->array(ApiHelper::error('缺少必要参数', 403));
-        }
-        $order = OrderModel::where('user_id', $user_id)->where('id', $arr['order_id'])->first();
-        if (!$order) {
-            return $this->response->array(ApiHelper::error('没有找到该笔订单', 403));
-        }
-        $money = $order->total_money;
-        if ($arr['pay_money'] != $money) {
-            return $this->response->array(ApiHelper::error('支付金额有误', 403));
-        }
-        $alipaySevice = new \AlipayTradeService($config);
+        $alipaySevice = new \AlipayTradeService(config('alipay.app_id','alipay.merchant_private_key','alipay.notify_url','alipay.return_url','alipay.charset','alipay.sign_type','alipay.gatewayUrl','alipay.alipay_public_key'));
         $result = $alipaySevice->check($arr);
 
         if ($result){
-            $out_trade_no = htmlspecialchars($arr['order_id']);
-            $number = htmlspecialchars($arr['number']);
-            $trade_no = htmlspecialchars($arr['trade_no']);
+            $total_amount = htmlspecialchars($arr['total_amount']);//交易金额
+            $number = htmlspecialchars($arr['out_trade_no']);//订单号
+            $trade_no = htmlspecialchars($arr['trade_no']);//支付宝流水号
+            $order = OrderModel::where('user_id', $this->auth_user_id)->where('id',$number)->first();
+            if (!$order) {
+                Log::info('没有找到该笔订单，订单号：'.$number);
+                echo "fail";
+                return;
+            }
+            $money = $order->total_money;
+            if ($total_amount != $money) {
+                Log::info('支付金额有误，订单号：'.$number.','.'交易金额:'.$total_amount);
+                echo "fail";
+                return;
+            }
 
             return $this->response->array(ApiHelper::success('Success', 200,'支付宝交易号:'.$trade_no));
 
@@ -185,7 +178,6 @@ var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
             //验证失败
             echo "验证失败";
         }
-
     }
 
 
@@ -221,7 +213,8 @@ var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
 //        $RequestBuilder->setOutTradeNo($out_trade_no);
         $RequestBuilder->setTradeNo($trade_no);
 
-        $aop = new \AlipayTradeService($config);
+        $aop = new \AlipayTradeService(config('alipay.app_id','alipay.merchant_private_key','alipay.notify_url','alipay.return_url','alipay.charset','alipay.sign_type','alipay.gatewayUrl','alipay.alipay_public_key'));
+
 
         /**
          * Alipay.trade.query (统一收单线下交易查询)
@@ -273,7 +266,7 @@ var_dump(dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php');die;
         $RequestBuilder->setRefundAmount($refund_amount);
         $RequestBuilder->setRefundReason($refund_reason);
 
-        $aop = new \AlipayTradeService($config);
+        $aop = new \AlipayTradeService(config('alipay.app_id','alipay.merchant_private_key','alipay.notify_url','alipay.return_url','alipay.charset','alipay.sign_type','alipay.gatewayUrl','alipay.alipay_public_key'));
 
         /**
          * Alipay.trade.refund (统一收单交易退款接口)

@@ -1,13 +1,5 @@
 <?php
-
 namespace App\Libraries\Alipay;
-
-/**
- *
- * 微信扫码支付实现类
- * @author widyhu
- *
- */
 class AopSdk
 {
     /**
@@ -24,7 +16,7 @@ class AopSdk
      * SDK工作目录
      * 存放日志，AOP缓存数据
      */
-
+//
     function run()
     {
         if (!defined("AOP_SDK_WORK_DIR")) {
@@ -49,7 +41,7 @@ class AopSdk
          */
         $lotusHome = dirname(__FILE__) . DIRECTORY_SEPARATOR . "lotusphp_runtime" . DIRECTORY_SEPARATOR;
         include($lotusHome . "Lotus.php");
-        $lotus = new Lotus;
+        $lotus = new \Lotus();
         $lotus->option["autoload_dir"] = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'aop';
         $lotus->devMode = AOP_SDK_DEV_MODE;
         $lotus->defaultStoreDir = AOP_SDK_WORK_DIR;
