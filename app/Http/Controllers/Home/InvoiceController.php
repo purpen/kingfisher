@@ -566,24 +566,47 @@ class InvoiceController extends Controller
 //            $history['receiving_address'] = $history->historyInvoice->receiving_address;
 //            $history['receiving_name'] = $history->historyInvoice->receiving_name;
 //            $history['receiving_phone'] = $history->historyInvoice->receiving_phone;
-
-            if($history->receiving_id == 1){
-                $history->receiving_id = '增值税普通发票';
-                $history->prove_id = '';
-                $prove = 0;
-            } elseif($history->receiving_id == 2){
-                $history->receiving_id = '增值税专用发票';
-                $history->prove_id = $history->getFirstImgInvoice();
-                $prove = 1;
-            } elseif($history->receiving_id == 0){
-                $history->receiving_id = '未开票';
-                $history->prove_id = '';
-                $prove = 0;
-            } else {
-                $history->receiving_id = '';
-                $history->prove_id = '';
-                $prove = 0;
+            switch($history->receiving_id){
+                case $history->receiving_id = 1;
+                    $history->receiving_id = '增值税普通发票';
+                    $history->prove_id = '';
+                    $prove = 0;
+                    break;
+                case $history->receiving_id = 2;
+                    $history->receiving_id = '增值税专用发票';
+                    $history->prove_id = $history->getFirstImgInvoice();
+                    $prove = 1;
+                    break;
+                case $history->receiving_id = 0;
+                    $history->receiving_id = '未开票';
+                    $history->prove_id = '';
+                    $prove = 0;
+                    break;
+                default :
+                    $history->receiving_id = '';
+                    $history->prove_id = '';
+                    $prove = 0;
+                    break;
             }
+//
+//              if($history->receiving_id == 1){
+//                  $history->receiving_id = '增值税普通发票';
+//                  $history->prove_id = '';
+//                  $prove = 0;
+//            } elseif($history->receiving_id == 2){
+//                $history->receiving_id = '增值税专用发票';
+//                $history->prove_id = $history->getFirstImgInvoice();
+//                $prove = 1;
+//            } elseif($history->receiving_id == 0){
+//                $history->receiving_id = '未开票';
+//                $history->prove_id = '';
+//                $prove = 0;
+//            } else {
+//                $history->receiving_id = '';
+//                $history->prove_id = '';
+//                $prove = 0;
+//            }
+
             if($history->receiving_type == 1){
                 $history->receiving_type = '未开票';
             } elseif($history->receiving_type == 2){
@@ -618,7 +641,12 @@ class InvoiceController extends Controller
         $order->receiving_name = isset($history['receiving_name']) ? $history['receiving_name'] : '';
         $order->receiving_phone = isset($history['receiving_phone']) ? $history['receiving_phone'] : '';
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
-
+        if ($order->storage_id){
+            $storage_list = StorageModel::find($order->storage_id);
+            $order->storage_name = $storage_list->name;
+        }else {
+            $order->storage_name = '';
+        }
 
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 

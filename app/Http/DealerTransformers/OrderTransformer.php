@@ -34,6 +34,7 @@ class OrderTransformer extends TransformerAbstract
             'company_name' => $orders->company_name,
             'invoice_value' => $orders->invoice_value,
             'over_time' => $orders->over_time,
+            'is_voucher' => $orders->is_voucher,
             'orderSku' => $orders->order_skus,
 
             'phone' => $address->phone?$address->phone:$orders->buyer_phone,

@@ -12,7 +12,7 @@ class UserTransformer extends TransformerAbstract
         return [
             'id' => (int)$users->id,
             'phone' => $users->phone,
-            'realname' => $users->realname,
+            'name' => $users->name,
             'status' => (int)$users->status,
             'type' => (int)$users->type,
             'file' => $users->file,

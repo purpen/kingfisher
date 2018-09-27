@@ -661,10 +661,10 @@
     alert('订单ID获取异常');
     return false;
     }
-    if(logistics_id == ''){
-    alert('请选择物流');
-    return false;
-    }
+    {{--if(logistics_id == ''){--}}
+    {{--alert('请选择物流');--}}
+    {{--return false;--}}
+    {{--}--}}
     var regobj = new RegExp("^[0-9]*$");
     if(logistics_no == '' || !regobj.test(logistics_no)){
     alert('物流单号格式不正确');
@@ -795,7 +795,7 @@
     var buyer_name = $("#buyer_name").val();
     var buyer_tel = $("#buyer_tel").val();
     var buyer_phone = $("#buyer_phone").val();
-    var express_id = $("#express_id").val();
+    {{--var express_id = $("#express_id").val();'express_id': express_id,--}}
     var storage_id = $("#storage_id").val();
     var buyer_address = $("#buyer_address").val();
     var buyer_zip = $("#buyer_zip").val();
@@ -807,7 +807,7 @@
     $.ajax({
     type: "POST",
     url: "{{url('/order/ajaxUpdate')}}",
-    data:{'_token': _token, 'order_id': order_id, 'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'express_id': express_id,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary,'buyer_province':buyer_province,'buyer_city':buyer_city,'buyer_county':buyer_county},
+    data:{'_token': _token, 'order_id': order_id,'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary,'buyer_province':buyer_province,'buyer_city':buyer_city,'buyer_county':buyer_county},
     dataType: "json",
     success: function (e) {
     if(!e.status){

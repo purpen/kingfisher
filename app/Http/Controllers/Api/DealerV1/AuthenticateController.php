@@ -736,7 +736,7 @@ class AuthenticateController extends BaseController
         * {
         * "data": {
         * "id": 1,
-        * "realname": "张三疯",               // 真实姓名
+        * "name": "张三疯",               // 门店联系人姓名
         * "phone": "15810295774",                 // 手机号
         * "status": 1                             // 状态 0.未激活 1.激活
         * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
@@ -757,13 +757,15 @@ class AuthenticateController extends BaseController
            $user_id = $this->auth_user_id;
            $users = UserModel::where('id', $user_id)->first();
 //           获取经销商审核状态
-           $distributor_status = DistributorModel::where('user_id',$users->id)->select('status','mode')->first();
+           $distributor_status = DistributorModel::where('user_id',$users->id)->select('name','status','mode')->first();
            if ($distributor_status){
                $users['distributor_status'] = $distributor_status['status'];
                $users['distributor_mode'] = $distributor_status['mode'];
+               $users['name'] = $distributor_status['name'];
            }else{
                $users['distributor_status'] = 0;
                $users['distributor_mode'] = 0;
+               $users['name'] = '';
            }
            $assets = AssetsModel
                ::find($users->cover_id);

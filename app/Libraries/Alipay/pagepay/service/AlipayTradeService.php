@@ -1,5 +1,4 @@
 <?php
-namespace App\Libraries\Alipay\pagepay\service;
 /* *
  * 功能：支付宝电脑网站支付
  * 版本：2.0
@@ -13,7 +12,6 @@ use App\Libraries\Alipay\aop\request\AlipayTradeFastpayRefundQueryRequest;
 use App\Libraries\Alipay\aop\request\AlipayTradePagePayRequest;
 use App\Libraries\Alipay\aop\request\AlipayTradeQueryRequest;
 use App\Libraries\Alipay\aop\request\AlipayTradeRefundRequest;
-use App\Libraries\Alipay\AopSdk;
 require_once dirname(dirname(dirname ( __FILE__ ))).'/AopSdk.php';
 
 class AlipayTradeService {
@@ -67,9 +65,9 @@ class AlipayTradeService {
 
 	}
 
-    function AlipayWapPayService($alipay_config) {
-        $this->__construct($alipay_config);
-    }
+//    function AlipayWapPayService($alipay_config) {
+//        $this->__construct($alipay_config);
+//    }
 	/**
 	 * Alipay.trade.page.pay
 	 * @param $builder 业务参数，使用buildmodel中的对象生成。
@@ -117,7 +115,7 @@ class AlipayTradeService {
 		if($ispage)
 		{
 			$result = $aop->pageExecute($request,"post");
-			echo $result;
+			return $result;
 		}
 		else 
 		{
