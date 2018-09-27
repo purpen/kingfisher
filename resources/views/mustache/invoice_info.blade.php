@@ -34,30 +34,12 @@
                 <div class="col-sm-2">
                     <input validate="" showname="联系人手机号" disabled type="text" class="form-control order" id="receiving_phone" name="receiving_phone" value="@{{ receiving_phone }}">
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-1 control-label">物流公司</label>
-                <div class="col-sm-3">
-                    <select class="selectpicker" id="express_id" name="logistic_id" style="display: none;">
-                        <option value="" >选择物流</option>
-                        @{{ #logistic_list }}
-                        <option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>
-                        @{{ /logistic_list }}
-                    </select>
+                 <label class="col-sm-1 control-label">发货仓库</label>
+                <div class="col-sm-2">
+                    <input validate="" showname="发货仓库" type="text" class="form-control order" id="buyer_name" name="storage_name" value="@{{storage_name}}">
                 </div>
-    
-                <label class="col-sm-1 control-label">发货仓库</label>
-                <div class="col-sm-3">
-                    <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                        <option value="" >选择仓库</option>
-                        @{{ #storage_list }}
-                        <option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>
-                        @{{ /storage_list }}
-                    </select>
-                </div>
-                <input type="hidden" id="user_id_sales" value="@{{ user_id_sales }}">
             </div>
-            
+
             <div class="form-group">                
                 <label class="col-sm-1 control-label">收货人</label>
                 <div class="col-sm-2">
@@ -110,11 +92,7 @@
         <form id="form-product" role="form" class="form-horizontal mt-2r" style="display:none;">
             <div class="form-group">
                 <div class="col-sm-2">
-                    <div class="ml-4r">
-                        <a href="" class="btn btn-magenta" data-toggle="modal" data-target="#addproduct" id="addproduct-button">
-                            <i class="glyphicon glyphicon-plus"></i> 添加赠品
-                        </a>
-                    </div>
+
                 </div>
                 <div class="col-sm-10 text-right">
                     <div class="mr-3r">
@@ -134,7 +112,7 @@
                                 <th>商品名称</th>
                                 <th>属性</th>
                                 <th>平台商品名 属性</th>
-                                <th>零售价</th>
+                                <th>批发价</th>
                                 <th>数量</th>
                                 <th>优惠</th>
                                 <th>状态</th>
@@ -163,63 +141,17 @@
                 </div>
             </div>
         </form>
-            
-        <div class="modal fade" id="addproduct" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        <h4 class="modal-title" id="gridSystemModalLabel">添加赠品</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group">
-                            <input id="sku_search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">
-                            <span class="input-group-btn">
-                                <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                            </span>
-                        </div>
-                        <div class="mt-4r scrollt">
-                            <div id="user-list"> 
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr class="gblack">
-                                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                                            <th>商品图</th>
-                                            <th>SKU编码</th>
-                                            <th>商品名称</th>
-                                            <th>属性</th>
-                                            <th>库存</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="gift">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="modal-footer pb-r">
-                            <div class="form-group mb-0 sublock">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                <button type="button" id="choose-gift" class="btn btn-magenta">确定</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-                  
         <form id="form-jyi" role="form" class="form-horizontal mt-2r" style="display:none;">
             <div class="form-group">
                 <label class="col-sm-1 control-label">付款方式</label>
                 <div class="col-sm-3">
                     <span class="form-text text-danger">@{{ payment_type }}</span>
                 </div>
-                
-                <label class="col-sm-1 control-label">付款类型</label>
+                <label class="col-sm-1 control-label">支付时间</label>
                 <div class="col-sm-3">
-                    <span class="form-text text-danger">网银</span>
+                    <input type="text" class="form-control" value="@{{ payment_time	 }}" disabled="disabled">
                 </div>
+
             </div>
             
             <div class="form-group">
@@ -230,7 +162,7 @@
                 
                 <label class="col-sm-1 control-label">付款时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" disabled="disabled">
+                    <input type="text" class="form-control" value="@{{ order_start_time }}" disabled="disabled">
                 </div>
 				
             </div>

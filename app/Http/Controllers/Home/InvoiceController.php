@@ -641,7 +641,12 @@ class InvoiceController extends Controller
         $order->receiving_name = isset($history['receiving_name']) ? $history['receiving_name'] : '';
         $order->receiving_phone = isset($history['receiving_phone']) ? $history['receiving_phone'] : '';
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
-
+        if ($order->storage_id){
+            $storage_list = StorageModel::find($order->storage_id);
+            $order->storage_name = $storage_list->name;
+        }else {
+            $order->storage_name = '';
+        }
 
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 
