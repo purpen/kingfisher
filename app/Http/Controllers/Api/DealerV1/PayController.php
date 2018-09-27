@@ -54,12 +54,13 @@ class PayController extends BaseController
         if (!$order) {
             return $this->response->array(ApiHelper::error('没有找到该笔订单', 403));
         }
+        $money = $order->pay_money?$order->pay_money:$order->total_money;
 
         //构造参数
         $payRequestBuilder = new AlipayTradePagePayContentBuilder();
         $payRequestBuilder->setOutTradeNo($out_trade_no);
         $payRequestBuilder->setNumber($number);
-        $payRequestBuilder->setTotalAmount($total_amount);
+        $payRequestBuilder->setTotalAmount($money);
 
         /**
          * return_url 电脑网站支付请求
