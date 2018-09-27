@@ -441,7 +441,7 @@ class ReceiveOrderController extends Controller
             $order->name = '';
         }
 
-        if ($order->status == 5 && $order->is_voucher == 1){
+        if ($order->status == 6 && $order->is_voucher == 1){
             if($order->assets){
                 $order->image = $order->assets->file->small;
                 $order->img = $order->assets->file->p800;
