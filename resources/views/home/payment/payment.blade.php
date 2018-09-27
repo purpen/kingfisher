@@ -59,11 +59,11 @@
             <div class="navbar-collapse collapse">
                 @include('home.payment.subnav')
 
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        <a href="{{ url('/payment/brandlist') }}">品牌付款单列表</a>
-                    </div>
-                </div>
+                {{--<div class="navbar-header">--}}
+                    {{--<div class="navbar-brand">--}}
+                        {{--<a href="{{ url('/payment/brandlist') }}">品牌付款单列表</a>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
             </div>
 
         </div>

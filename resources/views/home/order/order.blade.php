@@ -124,37 +124,37 @@
                                 <li>
                                     <a href="#" id="order-excel">导出</a>
                                 </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel">代发品牌订单导出</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel">分销渠道订单导出</a>
-                                </li>
+                                {{--<li>--}}
+                                    {{--<a href="#" id="supplier-order-excel">代发品牌订单导出</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="distributor-order-excel">分销渠道订单导出</a>--}}
+                                {{--</li>--}}
                             </ul>
                         </div>
 
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                导入 <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#" id="in_order">导入</a>
-                                </li>
+                        {{--<div class="btn-group">--}}
+                            {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                {{--导入 <span class="caret"></span>--}}
+                            {{--</button>--}}
+                            {{--<ul class="dropdown-menu">--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="in_order">导入</a>--}}
+                                {{--</li>--}}
                                 {{--<li>--}}
                                 {{--<a href="#" id="zc_order">众筹订单导入</a>--}}
                                 {{--</li>--}}
-                                <li>
-                                    <a href="#" id="logistics_order">物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel-input">分销渠道订单信息导入</a>
-                                </li>
-                            </ul>
-                        </div>
+                                {{--<li>--}}
+                                    {{--<a href="#" id="logistics_order">物流信息导入</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="distributor-order-excel-input">分销渠道订单信息导入</a>--}}
+                                {{--</li>--}}
+                            {{--</ul>--}}
+                        {{--</div>--}}
 
                         {{--<div class="form-group">--}}
                         {{--<button type="button" id="order-excel" class="btn btn-white mr-2r">--}}

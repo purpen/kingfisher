@@ -184,7 +184,7 @@
         							<td>{{ $sku->summary }}</td>
         							<td>
 										<a class="btn btn-danger btn-sm" onclick="destroySku({{ $sku->id }})">删除</a>
-										<button class="btn btn-default btn-sm" onclick="addVirtualInventory({{$sku->id}})"  value="{{ $sku->id }}">虚拟库存</button>
+										{{--<button class="btn btn-default btn-sm" onclick="addVirtualInventory({{$sku->id}})"  value="{{ $sku->id }}">虚拟库存</button>--}}
 									</td>
         						</tr>
         					@endforeach
