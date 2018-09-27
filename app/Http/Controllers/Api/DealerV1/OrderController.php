@@ -38,7 +38,7 @@ class OrderController extends BaseController{
      * @apiName Order orders
      * @apiGroup Order
      *
-     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；2.上传凭证待确认 5.待审核；6.待财务审核 8.待发货；10.已发货；20.完成
+     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款； 5.待审核；6.待财务审核 8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
      * @apiParam {integer} types 0.全部 1.当月
      * @apiSuccessExample 成功响应:
@@ -106,7 +106,7 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
                 if ($status == 1) {
-                            $orders = OrderModel::orderBy('id', 'desc')->where('status',1)->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                     }
 //                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 if ($status == 10){
@@ -126,7 +126,7 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->where('status',1)->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
 //                    $orders = OrderModel::orderBy('id', 'desc')->where('status',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 10){
@@ -747,7 +747,7 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }
         $order = OrderModel::find($order_id);
-        if ($payment_type != 6) {
+        if ($order->payment_type != "公司转账") {
             return $this->response->array(ApiHelper::error('不是公司转账方式不需要上传凭证！', 403));
         }
         if (!$order){
@@ -760,16 +760,16 @@ class OrderController extends BaseController{
                 $asset->type = 23;
                 $res = $asset->save();
                 if (!$res){
-                    return $this->response->array(ApiHelper::error('图片上传失败！', 403));
+                    return $this->response->array(ApiHelper::error('上传图片失败，请重试！', 403));
                 }
             }
 
+            $time = date('Y-m-d H:i:s',time());
             $result = DB::table('order')
-                    ->where('user_id','=',$user_id)
-                    ->where('id','=',$order_id)
-                    ->where('payment_type','=',6)
-                    ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>1,'payment_time' => date('Y-m-d h:i:s',time())]);
-
+                ->where('user_id','=',$user_id)
+                ->where('id','=',$order_id)
+                ->where('payment_type','=',6)
+                ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>1,'payment_time' => $time]);
             if (!$result){
                 return $this->response->array(ApiHelper::error('修改订单状态失败！', 403));
             }
