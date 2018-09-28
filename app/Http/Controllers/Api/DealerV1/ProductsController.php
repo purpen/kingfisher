@@ -387,7 +387,7 @@ class ProductsController extends BaseController
 //                ->whereIn('category_id', $categorys)
                 ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
                 ->orderBy('id', 'desc')
-                ->groupBy('category_id')
+//                ->groupBy('category_id')
                 ->paginate($per_page);
         }
 
@@ -400,6 +400,14 @@ class ProductsController extends BaseController
                 $value->follow = 1;//已关注
             }else{
                 $value->follow = 0;//未关注
+            }
+
+            if (isset($value->surface_id)){
+
+                $products[$key]->images = $value->getFirstImgAttrbute();
+
+            }else {
+                $products[$key]->images = '';
             }
         }
 

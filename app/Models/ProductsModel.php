@@ -166,6 +166,35 @@ class ProductsModel extends BaseModel
     /**
      * 获取商品封面图
      */
+    public function getFirstImgAttrbute()
+    {
+        $result = $this->imagesFile();
+        if(is_object($result)){
+            return $result->p500;
+        }
+        return $result;
+    }
+    /**
+     * 获取商品图片信息对象
+     */
+    public function imagesFile()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->surface_id, 'type' => 1])
+            ->orderBy('id','desc')
+            ->first();
+        if(empty($asset)){
+            return url('images/default/erp_product.png');
+        }
+        return $asset->file;
+    }
+
+
+
+
+    /**
+     * 获取商品封面图
+     */
     public function getFirstImgAttribute()
     {
 //        $asset = AssetsModel
