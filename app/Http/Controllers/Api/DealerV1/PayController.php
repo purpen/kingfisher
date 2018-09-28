@@ -98,7 +98,7 @@ class PayController extends BaseController
             $total_amount = $arr['buyer_pay_amount'];//付款金额
             $trade_status = $arr['trade_status'];//交易状态
             $notify_time = $arr['gmt_payment'];//交易付款时间
-        $order = OrderModel::where('user_id', $this->auth_user_id)->where('number',$out_trade_no)->first();
+        $order = OrderModel::where('number',$out_trade_no)->first();
         if (!$order) {
             Log::info('没有找到该笔订单，订单号：'.$out_trade_no);
             echo "fail";
@@ -122,7 +122,7 @@ class PayController extends BaseController
 //                修改订单状态
                 $orders = OrderModel::
                 where('user_id', '=', $this->auth_user_id)
-                    ->where('number', '=', $arr['out_trade_no'])
+                    ->where('number', '=', $out_trade_no)
                     ->update(['status' => 5,'payment_time' => $notify_time,'payment_type'=>1]);
                 if (!$orders){
                     Log::info('订单状态更新失败！，订单号：'.$out_trade_no);
