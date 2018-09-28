@@ -286,7 +286,7 @@
                                 <a class="readdimg" style="width: 100px;color: red; margin-left:45px;" value="{{ $asset->id }}">设为封面图</a>
                                     <input type="hidden" id="products_betweenid" name="id" value="{{$product->id}}">
                                 @elseif($asset->between == 1)
-                                    <a href="javascript:;" style="width: 100px;color: red;margin-left:45px; " value="{{ $asset->id }}">封面图</a>
+                                    <a href="javascript:;" class="redeletedimg" style="width: 100px;color: red;margin-left:45px; " value="{{ $asset->id }}">取消封面图</a>
                                  @endif
                             </div>
 
@@ -736,6 +736,20 @@
 @section('customize_js')
     @parent
 
+    $('.redeletedimg').click(function(){
+    var id = $(this).attr("value");
+    var product_id = $('#products_betweenid').val();
+
+    $.post('{{url('/product/ajaxDeleted')}}',{'id':id,'product_id':product_id,'_token':_token},function (e) {
+    console.log(e);
+    if(e.status){
+    layer.alert(e.message);
+    window.location.reload();
+    }else{
+    layer.alert(e.message);
+    }
+    },'json');
+    });
     $('.readdimg').click(function(){
     var id = $(this).attr("value");
     var product_id = $('#products_betweenid').val();

@@ -204,6 +204,22 @@ class ProductController extends Controller
 
     }
 
+    public function ajaxDeleted(Request $request)
+    {
+        $id = $request->input('id');
+        $product_id = $request->input('product_id');
+        if (!$id || !$product_id){
+            return ajax_json(0,'参数错误');
+        }
+
+        $product = ProductsModel::find($product_id);
+        $product->surface_id = '';
+        if(!$product->save()){
+            return ajax_json(0,'修改失败');
+        }
+        return ajax_json(1,'修改成功');
+
+    }
     /**
      * Display the specified resource.
      *
