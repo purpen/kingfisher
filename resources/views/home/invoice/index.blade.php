@@ -84,18 +84,6 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-md-8">
-                    <div class="form-inline">
-                        <div class="form-group">
-                            {{--<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
-                                <i class="glyphicon glyphicon-edit"></i> 创建订单
-                            </a>--}}
-
-
-                        </div>
-
-
-
-                    </div>
 
                 </div>
 
@@ -228,15 +216,7 @@
                                     <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}} ? {{$order->invoice_id}}" active="1">
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
                                     </button>
-                                    @role(['admin','director','shopkeeper'])
 
-                                    @endrole
-
-                                    @if ($status == 8)
-                                        {{--<button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
-                                            <i class="glyphicon glyphicon-hand-right"></i> 手动发货
-                                        </button>--}}
-                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -246,8 +226,7 @@
             </div>
             @if ($order_list)
                 <div class="row">
-                    <div class="col-md-12 text-center">{!! $order_list->appends([
-                                                                                'per_page' => $per_page ,
+                    <div class="col-md-12 text-center">{!! $order_list->appends([ 'per_page' => $per_page ,
                                                                                   ])->render() !!}</div>
                 </div>
             @endif

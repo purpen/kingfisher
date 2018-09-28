@@ -187,6 +187,39 @@ class ProductController extends Controller
         }
     }
 
+    public function ajaxAdd(Request $request)
+    {
+        $id = $request->input('id');
+        $product_id = $request->input('product_id');
+        if (!$id || !$product_id){
+            return ajax_json(0,'参数错误');
+        }
+
+        $product = ProductsModel::find($product_id);
+        $product->surface_id = $id;
+        if(!$product->save()){
+            return ajax_json(0,'修改失败');
+        }
+        return ajax_json(1,'修改成功');
+
+    }
+
+    public function ajaxDeleted(Request $request)
+    {
+        $id = $request->input('id');
+        $product_id = $request->input('product_id');
+        if (!$id || !$product_id){
+            return ajax_json(0,'参数错误');
+        }
+
+        $product = ProductsModel::find($product_id);
+        $product->surface_id = '';
+        if(!$product->save()){
+            return ajax_json(0,'修改失败');
+        }
+        return ajax_json(1,'修改成功');
+
+    }
     /**
      * Display the specified resource.
      *
@@ -227,6 +260,16 @@ class ProductController extends Controller
 
         //获取商品的图片
         $assets = AssetsModel::where(['target_id' => $id, 'type' => 1])->get();
+
+            foreach ($assets as $k => $v){
+                if ($v->id == $product->surface_id){
+                    $assets[$k]->between = 1;
+                }else {
+                    $assets[$k]->between = 0;
+                }
+            }
+
+
         //获取商品详情的图片
         $assetsProductDetails = AssetsModel::where(['target_id' => $id, 'type' => 22])->get();
 

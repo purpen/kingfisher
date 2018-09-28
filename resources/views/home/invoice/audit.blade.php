@@ -16,8 +16,6 @@
                 <option value="2">增值税专用发票</option>
             </select>
             <div class="form-group mr-2r">
-                {{--<a href="" class="btn btn-link">最近7天</a> --}}
-                {{--<a href="" class="btn btn-link">最近30天</a>--}}
             </div>
             <div class="form-group">
                 <div class="input-group">
