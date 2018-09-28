@@ -180,13 +180,17 @@
                             <td>{{$v->amount}}</td>
                             @if($v->payment_type == 1)
                                 <td>支付宝</td>
+                            @elseif($v->payment_type == 2)
+                                <td>货到付款</td>
+                            @elseif($v->payment_type == 3)
+                                <td>账期</td>
                             @elseif($v->payment_type == 4)
                                 <td>月结</td>
+                            @elseif($v->payment_type == 5)
+                                <td>现结</td>
                             @elseif($v->payment_type == 6)
                                 <td>公司转账</td>
                             @endif
-
-
 
                             @if($v->type == 3)
                                 <td><a target="_blank" href="{{url('/order/search')}}?number={{$v->num}}">{{$v->num}}</a></td>

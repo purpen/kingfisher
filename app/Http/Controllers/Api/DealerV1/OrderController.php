@@ -174,13 +174,12 @@ class OrderController extends BaseController{
      *  "over_time": "2018-09-11 00:00:00",  //过期时间
      *
      *   "address": "三亚市天涯海角",
-     *   "province_id": 23,
-     *   "city_id": 3690,
-     *   "county_id": 3696,
-     *   "town_id": 0,
+     *   "province": 陕西,
+     *   "city": 汉中,
+     *   "county": 勉县,
+     *   "town": 0,
      *   "name": "小蜜蜂",
      *   "phone": "17802998888",
-     *   "zip": null,
      *   "is_default": 0,
      *   "status": 1,
      *   "created_at": "2018-09-03 19:22:48",
@@ -719,7 +718,7 @@ class OrderController extends BaseController{
      * @apiName Order upload_img
      * @apiGroup Order
      *
-     * @apiParam {integer} payment_type 付款方式：1.在线 6.公司转账
+     * @apiParam {integer} payment_type 付款方式：6.公司转账
      * @apiParam {integer} voucher_id 银行凭证图片ID
      * @apiParam {integer} user_id 用户ID
      * @apiParam {integer} order_id 订单ID
@@ -747,9 +746,9 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }
         $order = OrderModel::find($order_id);
-        if ($order->payment_type != "公司转账") {
-            return $this->response->array(ApiHelper::error('不是公司转账方式不需要上传凭证！', 403));
-        }
+//        if ($order->payment_type != "公司转账") {
+//            return $this->response->array(ApiHelper::error('不是公司转账方式不需要上传凭证！', 403));
+//        }
         if (!$order){
             return $this->response->array(ApiHelper::error('没有找到该笔订单！', 403));
         }else{
@@ -768,8 +767,8 @@ class OrderController extends BaseController{
             $result = DB::table('order')
                 ->where('user_id','=',$user_id)
                 ->where('id','=',$order_id)
-                ->where('payment_type','=',6)
-                ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>1,'payment_time' => $time]);
+//                ->where('payment_type','=',6)
+                ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>1,'payment_time' => $time,'payment_type'=>6]);
             if (!$result){
                 return $this->response->array(ApiHelper::error('修改订单状态失败！', 403));
             }

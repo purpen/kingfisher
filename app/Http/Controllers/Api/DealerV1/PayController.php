@@ -29,6 +29,7 @@ class PayController extends BaseController
      * @apiGroup Pay
      *
      * @apiParam {integer} order_id 订单ID
+     * @apiParam {integer} payment_type 付款方式：1.在线
      * @apiParam {string} token token
      * @apiParam {string} number 订单号
      * @apiParam {string} pay_money 支付金额
@@ -47,6 +48,7 @@ class PayController extends BaseController
         $number = $request->input('number');
         $total_amount = $request->input('pay_money');
         $user_id = $this->auth_user_id;
+        $payment_type = $request->input('payment_type');
         if (!$out_trade_no && !$number && !$total_amount) {
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }
@@ -123,7 +125,7 @@ class PayController extends BaseController
                 $orders = OrderModel::
                 where('user_id', '=', $this->auth_user_id)
                     ->where('number', '=', $arr['out_trade_no'])
-                    ->update(['status' => 5,'payment_time' => $notify_time]);
+                    ->update(['status' => 5,'payment_time' => $notify_time,'payment_type'=>1]);
                 if (!$orders){
                     Log::info('订单状态更新失败！，订单号：'.$number);
                     echo "fail";
