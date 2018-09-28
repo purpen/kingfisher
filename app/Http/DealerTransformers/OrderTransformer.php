@@ -10,7 +10,7 @@ class OrderTransformer extends TransformerAbstract
     public function transform(OrderModel $orders)
     {
         $price_sku =$orders->orderSkuRelation;
-        $address = $orders->address_list;
+//        $address = $orders->address_list;
 //        $province = $city = $county = $town = '';
 //        if ($address->province) $province = $address->province->name;
 //        if ($address->city) $city = $address->city->name;
@@ -39,10 +39,10 @@ class OrderTransformer extends TransformerAbstract
 
             'phone' => $orders->buyer_phone?$orders->buyer_phone:'',
             'name' => $orders->buyer_name?$orders->buyer_name:'',
-            'province' => $orders->buyer_province?$orders->buyer_province:'',
-            'city' => $orders->buyer_city?$orders->buyer_city:'',
-            'county' => $orders->buyer_county?$orders->buyer_county:'',
-            'town' => $orders->buyer_township?$orders->buyer_township:'',
+            'province' => $orders->province?$orders->province:'',
+            'city' => $orders->city?$orders->city:'',
+            'county' => $orders->county?$orders->county:'',
+            'town' => $orders->town?$orders->town:'',
             'address' => $orders->buyer_address?$orders->buyer_address:'',
         ];
     }

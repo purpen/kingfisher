@@ -206,7 +206,7 @@ class ReceiveOrderController extends Controller
             }
             if ($receive_order->changeStatus(1)){
                 $target_id = $receive_order->target_id;
-                $financial_name = $id->user->realname;
+                $financial_name = $order_name->user->realname;
                 //添加一个收款人 而不是修改
                 $aaa = DB::table('order')->where('id',$target_id)->update(['financial_name'=>$old_financial_name.'.'.$financial_name]);
                 if (!$aaa) {
@@ -283,7 +283,7 @@ class ReceiveOrderController extends Controller
         }
 
         DB::commit();
-        return redirect('/receive');
+        return redirect('/receive/receive');
     }
 
     /**

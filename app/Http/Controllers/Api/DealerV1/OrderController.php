@@ -207,56 +207,53 @@ class OrderController extends BaseController{
     {
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
-        if(!empty($order_id)){
-            $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
-            if($orders){
+        if (!empty($order_id)) {
+            $orders = OrderModel::where('user_id', $user_id)->where('id', $order_id)->first();
+            if ($orders) {
                 $orderSku = $orders->orderSkuRelation;//订单详情表
                 $address = $orders->address;//地址表
-                $invoice = HistoryInvoiceModel::where('order_id',$order_id)->where('difference',0)->first();//发票历史表状态为0的
-                $order_start_time =$orders->order_start_time;
-                $order_timer = strtotime($order_start_time)+ 60*60*24;
-                $orders->over_time = date("Y-m-d H:i:s",$order_timer);//取消时间
+                $invoice = HistoryInvoiceModel::where('order_id', $order_id)->where('difference', 0)->first();//发票历史表状态为0的
+                $order_start_time = $orders->order_start_time;
+                $order_timer = strtotime($order_start_time) + 60 * 60 * 24;
+                $orders->over_time = date("Y-m-d H:i:s", $order_timer);//取消时间
 
-                if ($invoice){
+                if ($invoice) {
                     $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
                     $orders->company_name = $invoice->company_name;//发票抬头
                     $orders->invoice_value = $invoice->invoice_value;//发票金额就是支付金额
                 }
-            }
-            if(!empty($orderSku)){
-                $order_sku = $orderSku->toArray();
-                foreach ($order_sku as $k=>$v){
-                    $sku_id = $v['sku_id'];
-                    $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
 
-                    if($sku->assets){
+                $province = ChinaCityModel::where('oid', $orders->buyer_province)->select('name')->first();
+                $city = ChinaCityModel::where('oid', $orders->buyer_city)->select('name')->first();
+                $county = ChinaCityModel::where('oid', $orders->buyer_county)->select('name')->first();
+                $town = ChinaCityModel::where('oid', $orders->buyer_township)->select('name')->first();
+                if ($province) {
+                    $orders->province = $province->name;
+                }
+                if ($city) {
+                    $orders->city = $city->name;
+                }
+                if ($county) {
+                    $orders->county = $county->name;
+                }
+                if ($town) {
+                    $orders->town = $town->name;
+                }
+            }
+            if (!empty($orderSku)) {
+                $order_sku = $orderSku->toArray();
+                foreach ($order_sku as $k => $v) {
+                    $sku_id = $v['sku_id'];
+                    $sku = ProductsSkuModel::where('id', (int)$sku_id)->first();
+
+                    if ($sku->assets) {
                         $sku->path = $sku->assets->file->small;
-                    }else{
+                    } else {
                         $sku->path = url('images/default/erp_product.png');
                     }
                     $order_sku[$k]['path'] = $sku->path;
                     $order_sku[$k]['product_title'] = $sku->product ? $sku->product->title : '';
                     $orders->order_skus = $order_sku;
-                }
-            }
-            if (!empty($address)){
-                $orders->address_list = $address;
-
-                $province = ChinaCityModel::where('oid',$address->province_id)->select('name')->first();
-                $city = ChinaCityModel::where('oid',$address->city_id)->select('name')->first();
-                $county = ChinaCityModel::where('oid',$address->county_id)->select('name')->first();
-                $town = ChinaCityModel::where('oid',$address->town_id)->select('name')->first();
-                if ($province){
-                    $orders->province = $province->name;
-                }
-                if ($city){
-                    $orders->city = $city->name;
-                }
-                if ($county){
-                    $orders->county = $county->name;
-                }
-                if ($town){
-                    $orders->town = $town->name;
                 }
             }
 

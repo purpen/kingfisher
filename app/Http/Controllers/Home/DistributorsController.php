@@ -105,12 +105,11 @@ class DistributorsController extends Controller
 //            $distributors['category'] =  substr($tit,0,-1);
 //            $distributors['authorization'] = substr($str, 0, -1);
         }
-
-        $assets_front = AssetsModel::where(['target_id' => $id, 'type' =>17])->orderBy('id','desc')->first();
-        $assets_Inside = AssetsModel::where(['target_id' => $id, 'type' => 18])->orderBy('id','desc')->first();
-        $assets_contract = AssetsModel::where(['target_id' => $id, 'type' => 19])->orderBy('id','desc')->first();
-        $assets_portrait = AssetsModel::where(['target_id' => $id, 'type' => 20])->orderBy('id','desc')->first();
-        $assets_national_emblem = AssetsModel::where(['target_id' => $id, 'type' => 21])->orderBy('id','desc')->first();
+        $assets_front = AssetsModel::find($distributors->front_id);
+        $assets_Inside = AssetsModel::find($distributors->Inside_id);
+        $assets_contract = AssetsModel::find($distributors->contract_id);
+        $assets_portrait = AssetsModel::find($distributors->portrait_id);
+        $assets_national_emblem = AssetsModel::find($distributors->national_emblem_id);
         $user = UserModel::where('id',$distributors->user_id)->select('phone','realname','account')->first();
         $random = uniqid();  //获取唯一字符串
         //获取七牛上传token
