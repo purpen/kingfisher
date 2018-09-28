@@ -43,7 +43,7 @@ class PayController extends BaseController
      */
     public function pay(Request $request)
     {
-        $subject = $request->input('order_id');//作为订单名称
+        $subject = '商品明细';//作为订单名称
         $out_trade_no = $request->input('number');//订单号
         $pay_money = $request->input('pay_money');
         $user_id = $this->auth_user_id;
@@ -98,7 +98,7 @@ class PayController extends BaseController
             $total_amount = $arr['buyer_pay_amount'];//付款金额
             $trade_status = $arr['trade_status'];//交易状态
             $notify_time = $arr['gmt_payment'];//交易付款时间
-        $order = OrderModel::where('user_id', $this->auth_user_id)->where('id',$out_trade_no)->first();
+        $order = OrderModel::where('user_id', $this->auth_user_id)->where('number',$out_trade_no)->first();
         if (!$order) {
             Log::info('没有找到该笔订单，订单号：'.$out_trade_no);
             echo "fail";
