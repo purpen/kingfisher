@@ -189,9 +189,9 @@
 
 
                             @if($v->type == 3)
-                                <td><a target="_blank" href="{{url('/order/search')}}?number={{$v->number}}">{{$v->number}}</a></td>
+                                <td><a target="_blank" href="{{url('/order/search')}}?number={{$v->num}}">{{$v->num}}</a></td>
                             @else
-                                <td>{{$v->number}}</td>
+                                <td>{{$v->num}}</td>
                             @endif
                             <td>{{$v->financial_name}}</td>
                             <td>{{$v->summary}}</td>

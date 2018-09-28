@@ -134,7 +134,7 @@ class ReceiveOrderController extends Controller
               ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
               ->where('receive_order.status',0)
               ->where('order.payment_type',4)
-              ->select('receive_order.id as receive_id','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number','order.financial_name')
+              ->select('receive_order.id as receive_id','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
               ->get();
 
         return view('home/receiveOrder.receive', [
@@ -162,7 +162,7 @@ class ReceiveOrderController extends Controller
             ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
             ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
             ->where('receive_order.status',1)
-            ->select('receive_order.id as receive_id','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number','order.financial_name')
+            ->select('receive_order.id as receive_id','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
             ->get();
 
         return view('home/receiveOrder.receive', [
@@ -193,6 +193,8 @@ class ReceiveOrderController extends Controller
                 return ajax_json(0, '参数错误');
             }
             $receive_order = ReceiveOrderModel::find($id);
+            $order_name = OrderModel::where('id',$receive_order->target_id)->first();
+            $old_financial_name=$order_name->financial_name?$order_name->financial_name:'';
             if (!$receive_order) {
                 DB::rollBack();
                 return ajax_json(0, '参数错误');
@@ -204,10 +206,9 @@ class ReceiveOrderController extends Controller
             }
             if ($receive_order->changeStatus(1)){
                 $target_id = $receive_order->target_id;
-                $financial_time = date('Y-m-d H:i:s',time());
                 $financial_name = $id->user->realname;
                 //添加一个收款人 而不是修改
-                $aaa = DB::table('order')->where('id',$target_id)->update(['financial_time'=>$financial_time,'financial_name'=>$financial_name]);
+                $aaa = DB::table('order')->where('id',$target_id)->update(['financial_name'=>$old_financial_name.'.'.$financial_name]);
                 if (!$aaa) {
                     DB::rollBack();
                     return ajax_json(0, '添加审核人失败');
