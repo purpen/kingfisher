@@ -36,7 +36,7 @@ class AlipayTradeRefundRequest
 
 	public function getApiMethodName()
 	{
-		return "Alipay.trade.refund";
+		return "alipay.trade.refund";
 	}
 
 	public function setNotifyUrl($notifyUrl)

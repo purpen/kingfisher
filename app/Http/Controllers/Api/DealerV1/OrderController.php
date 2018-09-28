@@ -38,7 +38,7 @@ class OrderController extends BaseController{
      * @apiName Order orders
      * @apiGroup Order
      *
-     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；2.上传凭证待确认 5.待审核；6.待财务审核 8.待发货；10.已发货；20.完成
+     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款； 5.待审核；6.待财务审核 8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
      * @apiParam {integer} types 0.全部 1.当月
      * @apiSuccessExample 成功响应:
@@ -106,7 +106,7 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
                 if ($status == 1) {
-                            $orders = OrderModel::orderBy('id', 'desc')->where('status',1)->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                     }
 //                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 if ($status == 10){
@@ -126,7 +126,7 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->where('status',1)->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
 //                    $orders = OrderModel::orderBy('id', 'desc')->where('status',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 10){
@@ -174,13 +174,12 @@ class OrderController extends BaseController{
      *  "over_time": "2018-09-11 00:00:00",  //过期时间
      *
      *   "address": "三亚市天涯海角",
-     *   "province_id": 23,
-     *   "city_id": 3690,
-     *   "county_id": 3696,
-     *   "town_id": 0,
+     *   "province": 陕西,
+     *   "city": 汉中,
+     *   "county": 勉县,
+     *   "town": 0,
      *   "name": "小蜜蜂",
      *   "phone": "17802998888",
-     *   "zip": null,
      *   "is_default": 0,
      *   "status": 1,
      *   "created_at": "2018-09-03 19:22:48",
@@ -208,56 +207,53 @@ class OrderController extends BaseController{
     {
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
-        if(!empty($order_id)){
-            $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
-            if($orders){
+        if (!empty($order_id)) {
+            $orders = OrderModel::where('user_id', $user_id)->where('id', $order_id)->first();
+            if ($orders) {
                 $orderSku = $orders->orderSkuRelation;//订单详情表
                 $address = $orders->address;//地址表
-                $invoice = HistoryInvoiceModel::where('order_id',$order_id)->where('difference',0)->first();//发票历史表状态为0的
-                $order_start_time =$orders->order_start_time;
-                $order_timer = strtotime($order_start_time)+ 60*60*24;
-                $orders->over_time = date("Y-m-d H:i:s",$order_timer);//取消时间
+                $invoice = HistoryInvoiceModel::where('order_id', $order_id)->where('difference', 0)->first();//发票历史表状态为0的
+                $order_start_time = $orders->order_start_time;
+                $order_timer = strtotime($order_start_time) + 60 * 60 * 24;
+                $orders->over_time = date("Y-m-d H:i:s", $order_timer);//取消时间
 
-                if ($invoice){
+                if ($invoice) {
                     $orders->receiving_id = $invoice->receiving_id;//发票类型(0.不开 1.普通 2.专票)
                     $orders->company_name = $invoice->company_name;//发票抬头
                     $orders->invoice_value = $invoice->invoice_value;//发票金额就是支付金额
                 }
-            }
-            if(!empty($orderSku)){
-                $order_sku = $orderSku->toArray();
-                foreach ($order_sku as $k=>$v){
-                    $sku_id = $v['sku_id'];
-                    $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
 
-                    if($sku->assets){
+                $province = ChinaCityModel::where('oid', $orders->buyer_province)->select('name')->first();
+                $city = ChinaCityModel::where('oid', $orders->buyer_city)->select('name')->first();
+                $county = ChinaCityModel::where('oid', $orders->buyer_county)->select('name')->first();
+                $town = ChinaCityModel::where('oid', $orders->buyer_township)->select('name')->first();
+                if ($province) {
+                    $orders->province = $province->name;
+                }
+                if ($city) {
+                    $orders->city = $city->name;
+                }
+                if ($county) {
+                    $orders->county = $county->name;
+                }
+                if ($town) {
+                    $orders->town = $town->name;
+                }
+            }
+            if (!empty($orderSku)) {
+                $order_sku = $orderSku->toArray();
+                foreach ($order_sku as $k => $v) {
+                    $sku_id = $v['sku_id'];
+                    $sku = ProductsSkuModel::where('id', (int)$sku_id)->first();
+
+                    if ($sku->assets) {
                         $sku->path = $sku->assets->file->small;
-                    }else{
+                    } else {
                         $sku->path = url('images/default/erp_product.png');
                     }
                     $order_sku[$k]['path'] = $sku->path;
                     $order_sku[$k]['product_title'] = $sku->product ? $sku->product->title : '';
                     $orders->order_skus = $order_sku;
-                }
-            }
-            if (!empty($address)){
-                $orders->address_list = $address;
-
-                $province = ChinaCityModel::where('oid',$address->province_id)->select('name')->first();
-                $city = ChinaCityModel::where('oid',$address->city_id)->select('name')->first();
-                $county = ChinaCityModel::where('oid',$address->county_id)->select('name')->first();
-                $town = ChinaCityModel::where('oid',$address->town_id)->select('name')->first();
-                if ($province){
-                    $orders->province = $province->name;
-                }
-                if ($city){
-                    $orders->city = $city->name;
-                }
-                if ($county){
-                    $orders->county = $county->name;
-                }
-                if ($town){
-                    $orders->town = $town->name;
                 }
             }
 
@@ -719,7 +715,7 @@ class OrderController extends BaseController{
      * @apiName Order upload_img
      * @apiGroup Order
      *
-     * @apiParam {integer} payment_type 付款方式：1.在线 6.公司转账
+     * @apiParam {integer} payment_type 付款方式：6.公司转账
      * @apiParam {integer} voucher_id 银行凭证图片ID
      * @apiParam {integer} user_id 用户ID
      * @apiParam {integer} order_id 订单ID
@@ -747,9 +743,9 @@ class OrderController extends BaseController{
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }
         $order = OrderModel::find($order_id);
-        if ($payment_type != 6) {
-            return $this->response->array(ApiHelper::error('不是公司转账方式不需要上传凭证！', 403));
-        }
+//        if ($order->payment_type != "公司转账") {
+//            return $this->response->array(ApiHelper::error('不是公司转账方式不需要上传凭证！', 403));
+//        }
         if (!$order){
             return $this->response->array(ApiHelper::error('没有找到该笔订单！', 403));
         }else{
@@ -760,16 +756,16 @@ class OrderController extends BaseController{
                 $asset->type = 23;
                 $res = $asset->save();
                 if (!$res){
-                    return $this->response->array(ApiHelper::error('图片上传失败！', 403));
+                    return $this->response->array(ApiHelper::error('上传图片失败，请重试！', 403));
                 }
             }
 
+            $time = date('Y-m-d H:i:s',time());
             $result = DB::table('order')
-                    ->where('user_id','=',$user_id)
-                    ->where('id','=',$order_id)
-                    ->where('payment_type','=',6)
-                    ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>1,'payment_time' => date('Y-m-d h:i:s',time())]);
-
+                ->where('user_id','=',$user_id)
+                ->where('id','=',$order_id)
+//                ->where('payment_type','=',6)
+                ->update(['voucher_id'=>$voucher_id,'status'=>5,'is_voucher'=>1,'payment_time' => $time,'payment_type'=>6]);
             if (!$result){
                 return $this->response->array(ApiHelper::error('修改订单状态失败！', 403));
             }

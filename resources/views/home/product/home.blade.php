@@ -101,7 +101,7 @@
 						<th>成本价</th>
 						@endrole
 						<th>市场售价</th>
-						<th>建议售价</th>
+						<th>供货价</th>
 						<th class="text-center">库存总量</th>
 						<th>备注</th>
 						<th>操作</th>

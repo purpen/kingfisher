@@ -36,7 +36,7 @@ class AlipayTradePrecreateRequest
 
 	public function getApiMethodName()
 	{
-		return "Alipay.trade.precreate";
+		return "alipay.trade.precreate";
 	}
 
 	public function setNotifyUrl($notifyUrl)

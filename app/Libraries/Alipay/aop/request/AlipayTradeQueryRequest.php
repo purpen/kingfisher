@@ -37,7 +37,7 @@ class AlipayTradeQueryRequest
 
 	public function getApiMethodName()
 	{
-		return "Alipay.trade.query";
+		return "alipay.trade.query";
 	}
 
 	public function setNotifyUrl($notifyUrl)
