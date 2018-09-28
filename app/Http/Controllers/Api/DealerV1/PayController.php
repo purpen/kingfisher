@@ -29,7 +29,6 @@ class PayController extends BaseController
      * @apiGroup Pay
      *
      * @apiParam {integer} order_id 订单ID
-     * @apiParam {integer} payment_type 付款方式：1.在线
      * @apiParam {string} token token
      * @apiParam {string} number 订单号
      * @apiParam {string} pay_money 支付金额
@@ -44,25 +43,24 @@ class PayController extends BaseController
      */
     public function pay(Request $request)
     {
-        $out_trade_no = $request->input('order_id');
-        $number = $request->input('number');
-        $total_amount = $request->input('pay_money');
+        $subject = $request->input('order_id');//作为订单名称
+        $out_trade_no = $request->input('number');//订单号
+        $pay_money = $request->input('pay_money');
         $user_id = $this->auth_user_id;
-        $payment_type = $request->input('payment_type');
-        if (!$out_trade_no && !$number && !$total_amount) {
+        if (!$out_trade_no && !$subject && !$pay_money) {
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }
-        $order = OrderModel::where('user_id', $user_id)->where('id',$out_trade_no)->first();
+        $order = OrderModel::where('user_id', $user_id)->where('number',$out_trade_no)->first();
         if (!$order) {
             return $this->response->array(ApiHelper::error('没有找到该笔订单', 403));
         }
-        $money = $order->pay_money?$order->pay_money:$order->total_money;
+        $total_amount = $order->pay_money?$order->pay_money:$order->total_money;
 
         //构造参数
         $payRequestBuilder = new AlipayTradePagePayContentBuilder();
         $payRequestBuilder->setOutTradeNo($out_trade_no);
-        $payRequestBuilder->setNumber($number);
-        $payRequestBuilder->setTotalAmount($money);
+        $payRequestBuilder->setSubject($subject);
+        $payRequestBuilder->setTotalAmount($total_amount);
 
         /**
          * return_url 电脑网站支付请求
@@ -96,13 +94,13 @@ class PayController extends BaseController
 
         if ($result) {
             //获取相关数据
-            $number = $arr['out_trade_no'];//订单号
+            $out_trade_no = $arr['out_trade_no'];//订单号
             $total_amount = $arr['buyer_pay_amount'];//付款金额
             $trade_status = $arr['trade_status'];//交易状态
             $notify_time = $arr['gmt_payment'];//交易付款时间
-        $order = OrderModel::where('user_id', $this->auth_user_id)->where('id',$number)->first();
+        $order = OrderModel::where('user_id', $this->auth_user_id)->where('id',$out_trade_no)->first();
         if (!$order) {
-            Log::info('没有找到该笔订单，订单号：'.$number);
+            Log::info('没有找到该笔订单，订单号：'.$out_trade_no);
             echo "fail";
             return;
         }
@@ -111,13 +109,13 @@ class PayController extends BaseController
             if ($trade_status == 'TRADE_FINISHED' OR $trade_status == 'TRADE_SUCCESS') {
                 $money = $order->total_money;
                 if ($total_amount != $money) {
-                    Log::info('支付金额有误，订单号：'.$number.','.'交易金额:'.$total_amount);
+                    Log::info('支付金额有误，订单号：'.$out_trade_no.','.'交易金额:'.$total_amount);
                     echo "fail";
                     return;
                 }
                 $status = $order->status;
                 if ($status != 1){
-                    Log::info('该订单不是待支付订单，订单号：'.$number.','.'交易状态:'.$trade_status);
+                    Log::info('该订单不是待支付订单，订单号：'.$out_trade_no.','.'交易状态:'.$trade_status);
                     echo "fail";
                     return;
                 }
@@ -127,7 +125,7 @@ class PayController extends BaseController
                     ->where('number', '=', $arr['out_trade_no'])
                     ->update(['status' => 5,'payment_time' => $notify_time,'payment_type'=>1]);
                 if (!$orders){
-                    Log::info('订单状态更新失败！，订单号：'.$number);
+                    Log::info('订单状态更新失败！，订单号：'.$out_trade_no);
                     echo "fail";
                     return;
                 }
@@ -159,17 +157,17 @@ class PayController extends BaseController
 
         if ($result){
             $total_amount = htmlspecialchars($arr['total_amount']);//交易金额
-            $number = htmlspecialchars($arr['out_trade_no']);//订单号
+            $out_trade_no = htmlspecialchars($arr['out_trade_no']);//订单号
             $trade_no = htmlspecialchars($arr['trade_no']);//支付宝流水号
-            $order = OrderModel::where('user_id', $this->auth_user_id)->where('id',$number)->first();
+            $order = OrderModel::where('user_id', $this->auth_user_id)->where('number',$out_trade_no)->first();
             if (!$order) {
-                Log::info('没有找到该笔订单，订单号：'.$number);
+                Log::info('没有找到该笔订单，订单号：'.$out_trade_no);
                 echo "fail";
                 return;
             }
             $money = $order->total_money;
             if ($total_amount != $money) {
-                Log::info('支付金额有误，订单号：'.$number.','.'交易金额:'.$total_amount);
+                Log::info('支付金额有误，订单号：'.$out_trade_no.','.'交易金额:'.$total_amount);
                 echo "fail";
                 return;
             }
@@ -189,7 +187,7 @@ class PayController extends BaseController
      * @apiName Pay search
      * @apiGroup Pay
      *
-     * @apiParam {integer} order_id 订单ID
+     * @apiParam {integer} number 订单号
      * @apiParam {string} token token
      * @apiParam {string} trade_no 支付宝交易号
      *
@@ -204,7 +202,7 @@ class PayController extends BaseController
 
     public function search(Request $request)
     {
-        $out_trade_no = $request->input('order_id');
+        $out_trade_no = $request->input('number');
         $trade_no = $request->input('trade_no');
         if (!$out_trade_no && !$trade_no) {
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
@@ -235,7 +233,7 @@ class PayController extends BaseController
      * @apiName Pay refund
      * @apiGroup Pay
      *
-     * @apiParam {integer} order_id 订单ID
+     * @apiParam {integer} number 订单号
      * @apiParam {string} token token
      * @apiParam {string} token token
      * @apiParam {string} refund_amount 需要退款的金额
@@ -252,7 +250,7 @@ class PayController extends BaseController
      */
     public function refund(Request $request)
     {
-        $out_trade_no = $request->input('order_id');
+        $out_trade_no = $request->input('number');
         $trade_no = $request->input('trade_no');
         //需要退款的金额，该金额不能大于订单金额，必填
         $refund_amount = $request->input('refund_amount');
