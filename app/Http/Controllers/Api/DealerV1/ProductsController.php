@@ -402,7 +402,7 @@ class ProductsController extends BaseController
                 $value->follow = 0;//未关注
             }
 
-            if (isset($value->surface_id)){
+            if ($value->surface_id){
 
                 $products[$key]->images = $value->getFirstImgAttrbute();
 

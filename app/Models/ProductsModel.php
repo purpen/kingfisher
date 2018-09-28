@@ -180,7 +180,7 @@ class ProductsModel extends BaseModel
     public function imagesFile()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->surface_id, 'type' => 1])
+            ::where(['id' => $this->surface_id, 'type' => 1])
             ->orderBy('id','desc')
             ->first();
         if(empty($asset)){
