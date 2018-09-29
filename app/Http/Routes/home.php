@@ -399,6 +399,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
         Route::match(['get', 'post'], '/product/saleList', [
             'as' => 'admin.product.saleList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@saleList'
         ]);
+
+        Route::match(['get', 'post'], '/product/ajaxAdd', [
+            'as' => 'admin.product.ajaxAdd', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@ajaxAdd'
+        ]);
+        Route::match(['get', 'post'], '/product/ajaxDeleted', [
+            'as' => 'admin.product.ajaxAdd', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@ajaxDeleted'
+        ]);
         Route::match(['get', 'post'], '/product/cancList', [
             'as' => 'admin.product.cancList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@cancList'
         ]);

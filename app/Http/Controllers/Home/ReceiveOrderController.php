@@ -84,7 +84,7 @@ class ReceiveOrderController extends Controller
                 return ajax_json(0, 'error', '订单发货,创建出库单错误');
             }
 
-            if ($v->payment_type == "现结") {
+            if ($v->payment_type == "在线付款" || $v->payment_type == "公司转账") {
                 $id = $v->id;
                 $statu = ReceiveOrderModel::query()->where(['target_id' => $id, 'type' => 3])->update(['status' => 1]);
                 $status = $order_model->changeStatus($v->id, 8);
@@ -99,7 +99,13 @@ class ReceiveOrderController extends Controller
                     return ajax_json(0, '审核失败');
                 }
             }
-
+            $financial_time = date('Y-m-d H:i:s',time());
+            $financial_name = $v->user->realname;
+            $aaa = DB::table('order')->where('id',$v->id)->update(['financial_time'=>$financial_time,'financial_name'=>$financial_name]);
+            if (!$aaa) {
+                DB::rollBack();
+                return ajax_json(0, '添加审核人失败');
+            }
         }
         $ids = AuditingModel::where('type', 5)->select('user_id')->first();
         if ($ids) {
@@ -123,9 +129,17 @@ class ReceiveOrderController extends Controller
             ::where('status', 0)
             ->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))
             ->first();
+        $message = DB::table('order')
+              ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
+              ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+              ->where('receive_order.status',0)
+              ->where('order.payment_type',4)
+              ->select('receive_order.id as receive_id','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
+              ->get();
 
         return view('home/receiveOrder.receive', [
             'receive' => $receive,
+            'message' => $message,
             'where' => '',
             'subnav' => 'waitReceive',
             'start_date' => '',
@@ -144,9 +158,16 @@ class ReceiveOrderController extends Controller
         $receive = ReceiveOrderModel::where('status', 1)->paginate($this->per_page);
         $money = ReceiveOrderModel::where('status', 1)->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
 
+        $message = DB::table('order')
+            ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
+            ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+            ->where('receive_order.status',1)
+            ->select('receive_order.id as receive_id','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
+            ->get();
 
         return view('home/receiveOrder.receive', [
             'receive' => $receive,
+            'message' => $message,
             'where' => '',
             'subnav' => 'finishReceive',
             'start_date' => '',
@@ -172,6 +193,8 @@ class ReceiveOrderController extends Controller
                 return ajax_json(0, '参数错误');
             }
             $receive_order = ReceiveOrderModel::find($id);
+            $order_name = OrderModel::where('id',$receive_order->target_id)->first();
+            $old_financial_name=$order_name->financial_name?$order_name->financial_name:'';
             if (!$receive_order) {
                 DB::rollBack();
                 return ajax_json(0, '参数错误');
@@ -181,8 +204,16 @@ class ReceiveOrderController extends Controller
                 DB::rollBack();
                 return ajax_json(0, '收款尚未完成');
             }
-
-            if (!$receive_order->changeStatus(1)) {
+            if ($receive_order->changeStatus(1)){
+                $target_id = $receive_order->target_id;
+                $financial_name = $order_name->user->realname;
+                //添加一个收款人 而不是修改
+                $aaa = DB::table('order')->where('id',$target_id)->update(['financial_name'=>$old_financial_name.'.'.$financial_name]);
+                if (!$aaa) {
+                    DB::rollBack();
+                    return ajax_json(0, '添加审核人失败');
+                }
+            }else{
                 DB::rollBack();
                 return ajax_json(0, '确认付款失败');
             }
@@ -252,7 +283,7 @@ class ReceiveOrderController extends Controller
         }
 
         DB::commit();
-        return redirect('/receive');
+        return redirect('/receive/receive');
     }
 
     /**
@@ -303,24 +334,50 @@ class ReceiveOrderController extends Controller
             default:
                 $status = null;
         }
-
         //搜索列表
-        $receive = ReceiveOrderModel::query();
+//        $receive = ReceiveOrderModel::query();
         if ($where) {
-            $receive->where('number', 'like', '%' . $where . '%')->orWhere('payment_user', 'like', '%' . $where . '%');
+            $message = DB::table('order')
+                ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
+                ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+//                ->where('receive_order.number', 'like', '%' . $where . '%')
+                ->where('receive_order.number','=',$where)
+                ->orWhere('receive_order.payment_user', 'like', '%' . $where . '%')
+                ->select('receive_order.id as receive_id','receive_order.status','receive_order.created_at','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
+                ->get();
+//            $receive->where($receive->number, 'like', '%' . $where . '%')->orWhere('receive_order.payment_user', 'like', '%' . $where . '%');
         }
         if ($status !== null) {
-            $receive->where('status', '=', $status);
+            $message = DB::table('order')
+                ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
+                ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+                ->where('receive_order.status', '=', $status)
+                ->select('receive_order.id as receive_id','receive_order.status','receive_order.created_at','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
+                ->get();
+//            $receive->where($receive->status, '=', $status);
         }
         if ($start_date && $end_date) {
             $start_date = date("Y-m-d H:i:s", strtotime($start_date));
             $end_date = date("Y-m-d H:i:s", strtotime($end_date));
-            $receive->whereBetween('created_at', [$start_date, $end_date]);
+
+            $message = DB::table('order')
+                ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
+                ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+                ->whereBetween('receive_order.created_at', [$start_date, $end_date])
+                ->select('receive_order.id as receive_id','receive_order.status','receive_order.created_at','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
+                ->get();
+//            $receive->whereBetween($receive->created_at, [$start_date, $end_date]);
         }
         if ($type) {
-            $receive->where('type', '=', $type);
+            $message = DB::table('order')
+                ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
+                ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+                ->where('receive_order.type', '=', $type)
+                ->select('receive_order.id as receive_id','receive_order.status','receive_order.created_at','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
+                ->get();
+//            $receive->where($receive->type, '=', $type);
         }
-        $receive = $receive->paginate($this->per_page);
+//        $receive = $receive->paginate($this->per_page);
 
         //收款统计
         $money = ReceiveOrderModel::query();
@@ -339,9 +396,9 @@ class ReceiveOrderController extends Controller
             $money->where('type', '=', $type);
         }
         $money = $money->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
-        if ($receive) {
-            return view('home/receiveOrder.index', [
-                'receive' => $receive,
+        if ($message) {
+            return view('home/receiveOrder.receive', [
+                'message' => $message,
                 'subnav' => $subnav,
                 'count' => '',
                 'where' => $where,

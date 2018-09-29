@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" name="where" class="form-control" placeholder="编号" value="{{ $where or '' }}">
+                        <input type="text" name="where" class="form-control" placeholder="收款单号" value="{{ $where or '' }}">
                         <div class="input-group-btn">
                             <button type="submit" class="btn btn-default">查询</button>
                         </div><!-- /btn-group -->

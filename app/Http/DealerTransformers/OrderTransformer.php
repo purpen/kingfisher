@@ -10,7 +10,7 @@ class OrderTransformer extends TransformerAbstract
     public function transform(OrderModel $orders)
     {
         $price_sku =$orders->orderSkuRelation;
-        $address = $orders->address_list;
+//        $address = $orders->address_list;
 //        $province = $city = $county = $town = '';
 //        if ($address->province) $province = $address->province->name;
 //        if ($address->city) $city = $address->city->name;
@@ -37,18 +37,13 @@ class OrderTransformer extends TransformerAbstract
             'is_voucher' => $orders->is_voucher,
             'orderSku' => $orders->order_skus,
 
-            'phone' => $address->phone?$address->phone:$orders->buyer_phone,
-            'name' => $address->name?$address->name:$orders->buyer_name,
-            'fixed_telephone' => $address->fixed_telephone?$address->fixed_telephone:'',
-            'province_id' => $address->province_id?$address->province_id:$orders->buyer_province,
+            'phone' => $orders->buyer_phone?$orders->buyer_phone:'',
+            'name' => $orders->buyer_name?$orders->buyer_name:'',
             'province' => $orders->province?$orders->province:'',
-            'city_id' => $address->city_id?$address->city_id:$orders->buyer_city,
             'city' => $orders->city?$orders->city:'',
-            'county_id' => $address->county_id?$address->county_id:$orders->buyer_county,
             'county' => $orders->county?$orders->county:'',
-            'town_id' => $address->town_id?$address->town_id:$orders->buyer_township,
             'town' => $orders->town?$orders->town:'',
-            'address' => $address->address?$address->address:$orders->buyer_address,
+            'address' => $orders->buyer_address?$orders->buyer_address:'',
         ];
     }
 }

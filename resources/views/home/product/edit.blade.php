@@ -280,9 +280,16 @@
                             <div class="col-md-2">
             					<div class="asset">
             						<img src="{{ $asset->file->small }}" style="width: 150px;" class="img-thumbnail">
-            						<a class="removeimg" value="{{ $asset->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+            						<a class="removeimg"  value="{{ $asset->id }}"><i class="glyphicon glyphicon-remove"></i></a>
             					</div>
+                                @if(!$asset->between)
+                                <a class="readdimg" style="width: 100px;color: red; margin-left:45px;" value="{{ $asset->id }}">设为封面图</a>
+                                    <input type="hidden" id="products_betweenid" name="id" value="{{$product->id}}">
+                                @elseif($asset->between == 1)
+                                    <a href="javascript:;" class="redeletedimg" style="width: 100px;color: red;margin-left:45px; " value="{{ $asset->id }}">取消封面图</a>
+                                 @endif
                             </div>
+
             				@endforeach
                         </div>
 
@@ -721,12 +728,42 @@
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+    <script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>
     @include('editor::head')
 
 @endsection
 
 @section('customize_js')
     @parent
+
+    $('.redeletedimg').click(function(){
+    var id = $(this).attr("value");
+    var product_id = $('#products_betweenid').val();
+
+    $.post('{{url('/product/ajaxDeleted')}}',{'id':id,'product_id':product_id,'_token':_token},function (e) {
+    console.log(e);
+    if(e.status){
+    layer.alert(e.message);
+    window.location.reload();
+    }else{
+    layer.alert(e.message);
+    }
+    },'json');
+    });
+    $('.readdimg').click(function(){
+    var id = $(this).attr("value");
+    var product_id = $('#products_betweenid').val();
+
+    $.post('{{url('/product/ajaxAdd')}}',{'id':id,'product_id':product_id,'_token':_token},function (e) {
+    console.log(e);
+        if(e.status){
+          layer.alert(e.message);
+          window.location.reload();
+        }else{
+            layer.alert(e.message);
+        }
+    },'json');
+    });
     var is_form = 0; // 判断是否允许提交表单
 
     var _token = $("#_token").val();

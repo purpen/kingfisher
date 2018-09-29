@@ -60,9 +60,9 @@
             </div>
 
              <div class="form-group">
-                <label class="col-sm-1 control-label">下单时间</label>
+                <label class="col-sm-1 control-label">支付时间</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control order mobile" id="order_start_time" name="order_start_time" value="@{{ order_start_time }}">
+                    <input type="text" class="form-control order mobile" id="payment_time" name="payment_time" value="@{{ payment_time }}">
                 </div>
                 <label class="col-sm-1 control-label">订单金额</label>
                 <div class="col-sm-2">

@@ -80,14 +80,7 @@
                 @include('home.invoice.subnav')
             </div>
         </div>
-        <div id="down-print" class="container row" style="background-color: wheat;" hidden>
-            <div class="col-md-12">
-                <h4> 未连接打印客户组件，请启动打印组件，刷新重试。
-                    {{--href="http://www.cainiao.com/markets/cnwww/print"--}}
-                    <a  style="color: red;" target="_blank" href="">点击下载打印组件</a>
-                </h4>
-            </div>
-        </div>
+
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-md-8">
@@ -206,17 +199,8 @@
                                     <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}} ? {{$order->invoice_id}}" active="1">
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
                                     </button>
-                                    @role(['admin','director','shopkeeper'])
-                                    @if ($order->type != 3)
 
-                                    @endif
-                                    @endrole
 
-                                    @if ($status == 8)
-                                        {{--<button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
-                                            <i class="glyphicon glyphicon-hand-right"></i> 手动发货
-                                        </button>--}}
-                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -226,10 +210,9 @@
             </div>
             @if ($order_list)
                 <div class="row">
-                    <div class="col-md-12 text-center">{!! $order_list->appends([   'number' => $name,
+                    <div class="col-md-12 text-center">{!! $order_list->appends([
                                                                                 'per_page' => $per_page ,
-
-                                                                                  ])->render() !!}</div>
+    ])->render() !!}</div>
                 </div>
             @endif
         </div>
@@ -324,11 +307,7 @@
     {
     var printer_address = '127.0.0.1:13528';
     socket = new WebSocket('ws://' + printer_address);
-    {{--if (socket.readyState == 0) {--}}
-    {{--return false;--}}
-    {{--alert('WebSocket连接中...');--}}
-    {{--}--}}
-    {{--打开Socket--}}
+
     socket.onopen = function(event)
     {
     isConnect = 1;

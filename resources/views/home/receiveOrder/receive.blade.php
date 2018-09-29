@@ -108,46 +108,111 @@
                 <thead>
                 <tr class="gblack">
                     <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                    {{--<th>收款单号</th>--}}
+                    {{--<th>付款人</th>--}}
+                    {{--<th>应付金额</th>--}}
+                    {{--<th>收支类型</th>--}}
+                    {{--<th>相关单据</th>--}}
+                    {{--<th>关联人</th>--}}
+                    {{--<th>备注</th>--}}
+                    {{--<th>创建时间</th>--}}
+                    {{--<th>操作</th>--}}
+
                     <th>收款单号</th>
-                    <th>付款人</th>
+                    <th>企业全称</th>
+                    <th>门店名称</th>
+                    <th>门店联系人</th>
                     <th>应付金额</th>
-                    <th>收支类型</th>
-                    <th>相关单据</th>
-                    <th>关联人</th>
+                    <th>支付方式</th>
+                    <th>订单号</th>
+                    <th>操作人</th>
                     <th>备注</th>
                     <th>创建时间</th>
                     <th>操作</th>
                 </tr>
                 </thead>
+                {{--<tbody>--}}
+                    {{--@foreach($receive as $v)--}}
+                        {{--<tr>--}}
+                            {{--<td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>--}}
+                            {{--<td class="magenta-color">{{$v->number}}</td>--}}
+                            {{--<td>{{$v->payment_user}}</td>--}}
+                            {{--<td>{{$v->amount}}</td>--}}
+                            {{--<td>{{$v->type_val}}</td>--}}
+                            {{--@if($v->type == 3)--}}
+                                {{--<td><a target="_blank" href="{{url('/order/search')}}?number={{$v->target_number}}">{{$v->target_number}}</a></td>--}}
+                            {{--@else--}}
+                                {{--<td>{{$v->target_number}}</td>--}}
+                            {{--@endif--}}
+                            {{--<td>{{$v->target_user}}</td>--}}
+                            {{--<td>{{$v->summary}}</td>--}}
+                            {{--<td>{{$v->created_at_val}}</td>--}}
+                            {{--<td>--}}
+                                {{--<a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>--}}
+                                {{--@if($v->status == 0)--}}
+                                {{--<button type="button" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r receive">确认收款</button>--}}
+                                {{--@endif--}}
+                                {{--@if($subnav == 'waitReceive'&& $v->type > 4)--}}
+                                {{--<button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">--}}
+                                    {{--<i class="glyphicon glyphicon-trash"></i>--}}
+                                {{--</button>--}}
+                                {{--@endif--}}
+                                {{--@role(['admin'])--}}
+                                {{--@if($subnav == 'finishReceive' && $v->type > 4)--}}
+                                    {{--<button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">--}}
+                                        {{--<i class="glyphicon glyphicon-trash"></i>--}}
+                                    {{--</button>--}}
+                                {{--@endif--}}
+                                {{--@endrole--}}
+                            {{--</td>--}}
+                        {{--</tr>--}}
+                    {{--@endforeach--}}
+                    {{--</tbody>--}}
+
                 <tbody>
-                    @foreach($receive as $v)
+                    @foreach($message as $v)
                         <tr>
-                            <td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>
+                            <td class="text-center"><input name="Order" type="checkbox" value="{{$v->receive_id}}"></td>
                             <td class="magenta-color">{{$v->number}}</td>
-                            <td>{{$v->payment_user}}</td>
+                            <td>{{$v->full_name}}</td>
+                            <td>{{$v->store_name}}</td>
+                            <td>{{$v->name}}</td>
                             <td>{{$v->amount}}</td>
-                            <td>{{$v->type_val}}</td>
-                            @if($v->type == 3)
-                                <td><a target="_blank" href="{{url('/order/search')}}?number={{$v->target_number}}">{{$v->target_number}}</a></td>
-                            @else
-                                <td>{{$v->target_number}}</td>
+                            @if($v->payment_type == 1)
+                                <td>支付宝</td>
+                            @elseif($v->payment_type == 2)
+                                <td>货到付款</td>
+                            @elseif($v->payment_type == 3)
+                                <td>账期</td>
+                            @elseif($v->payment_type == 4)
+                                <td>月结</td>
+                            @elseif($v->payment_type == 5)
+                                <td>现结</td>
+                            @elseif($v->payment_type == 6)
+                                <td>公司转账</td>
                             @endif
-                            <td>{{$v->target_user}}</td>
+
+                            @if($v->type == 3)
+                                <td><a target="_blank" href="{{url('/order/search')}}?number={{$v->num}}">{{$v->num}}</a></td>
+                            @else
+                                <td>{{$v->num}}</td>
+                            @endif
+                            <td>{{$v->financial_name}}</td>
                             <td>{{$v->summary}}</td>
-                            <td>{{$v->created_at_val}}</td>
+                            <td>{{$v->created_at}}</td>
                             <td>
-                                <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
+                                <a href="{{url('/receive/editReceive')}}?id={{$v->receive_id}}" class="btn btn-white btn-sm mr-r">查看</a>
                                 @if($v->status == 0)
-                                <button type="button" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r receive">确认收款</button>
+                                <button type="button" value="{{$v->receive_id}}" class="btn btn-warning btn-sm mr-r receive">确认收款</button>
                                 @endif
                                 @if($subnav == 'waitReceive'&& $v->type > 4)
-                                <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
+                                <button type="button" id="" value="{{$v->receive_id}}" class="btn btn-white btn-sm mr-r delete">
                                     <i class="glyphicon glyphicon-trash"></i>
                                 </button>
                                 @endif
                                 @role(['admin'])
                                 @if($subnav == 'finishReceive' && $v->type > 4)
-                                    <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
+                                    <button type="button" id="" value="{{$v->receive_id}}" class="btn btn-white btn-sm mr-r delete">
                                         <i class="glyphicon glyphicon-trash"></i>
                                     </button>
                                 @endif
@@ -160,9 +225,9 @@
             </div>
         </div>
         <div class="row">
-            @if ($receive)
-                <div class="col-md-6 col-md-offset-6">{!! $receive->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>
-            @endif
+            {{--@if ($receive)--}}
+                {{--<div class="col-md-6 col-md-offset-6">{!! $receive->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>--}}
+            {{--@endif--}}
         </div>
     </div>
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

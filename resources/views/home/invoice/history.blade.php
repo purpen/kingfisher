@@ -84,7 +84,7 @@
             <label class="col-sm-1 control-label">发票类型</label>
             <div class="col-sm-4">
                 @if ($value->receiving_id == 0)
-                    <span class="label label-default">不开票 </span>
+                    <span class="label label-default">不开票</span>
                 @endif
                 @if ($value->receiving_id == 1)
                     <span class="label label-default">增值税普通发票</span>
