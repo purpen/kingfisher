@@ -882,11 +882,11 @@
     // 审单
     $('#batch-verify').click(function () {
     layer.confirm('确认要通过审批吗？',function(index){
-    var storage_id = $("select[name='storage_id']").val();
-    if(storage_id == ''){
-    layer.msg('请点击查看选择仓库！');
-    return false;
-    }
+    {{--var storage_id = $("select[name='storage_id']").val();--}}
+    {{--if(storage_id == ''){--}}
+    {{--layer.msg('请点击查看选择仓库！');--}}
+    {{--return false;--}}
+    {{--}--}}
 
     var order = [];
     $("input[name='Order']").each(function() {
