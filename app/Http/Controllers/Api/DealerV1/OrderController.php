@@ -103,41 +103,41 @@ class OrderController extends BaseController{
         if ($types == 1) {//当月订单
             if($status != 0) {
                 if ($status === -1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
                     }
 //                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 if ($status == 10){
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('is_voucher',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('is_voucher',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
                 }
                 if ($status == 20){
                     $query['status'] = $status;
-                    $orders = OrderModel::orderBy('id', 'desc')->where($query)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->where($query)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
                 }
             }else{
-                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id',$user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id',$user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
             }
 
         }else{//全部订单
             if ($status != 0){
                 if ($status === -1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->orderBy('id', 'desc')->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->orderBy('id', 'desc')->paginate($per_page);
 //                    $orders = OrderModel::orderBy('id', 'desc')->where('status',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 10){
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('is_voucher',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('is_voucher',0)->where('user_id',$user_id)->where('type',8)->orderBy('id', 'desc')->paginate($per_page);
                 }
                 if ($status == 20) {
                     $query['status'] = $status;
-                    $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where($query)->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where($query)->orderBy('id', 'desc')->paginate($per_page);
                 }
             }else{
-                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->paginate($per_page);
+                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id' , $user_id)->orderBy('id', 'desc')->paginate($per_page);
             }
         }
         return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
@@ -172,6 +172,7 @@ class OrderController extends BaseController{
      *  "company_name": "北京太火红鸟科技有限公司",          //发票抬头
      *  "invoice_value": "1453",        //发票金额
      *  "over_time": "2018-09-11 00:00:00",  //过期时间
+     *
      *
      *   "address": "三亚市天涯海角",
      *   "province": 陕西,
@@ -835,35 +836,34 @@ class OrderController extends BaseController{
     {
         $this->per_page = $request->input('per_page', $this->per_page);
         $name = $request->input('name');
-        if (!$name){
+        if (!$name) {
             return $this->response->array(ApiHelper::error('缺少必要参数', 403));
         }
-//        if(!empty($number)){
-//            $orders = OrderModel::where('number' ,'like','%'.$number.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
-//        }
-//        if(!empty($buyer_name)){
-//            $orders = OrderModel::where('buyer_name' ,'like','%'.$buyer_name.'%')->where('suspend',0)->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
-//        }
-        if(!empty($name)){
-            $order_sku_relations = OrderSkuRelationModel::where('sku_name' ,'like','%'.$name.'%')->get();
-            $order_id = [];
-            foreach ($order_sku_relations as $v){
-                $order_id[] = $v->order_id;
+        $orders = new OrderModel();
+        if (!empty($name)) {
+//            $order_sku_relations = OrderSkuRelationModel::where('sku_name' ,'like','%'.$name.'%')->get();
+//            $order_id = [];
+//            foreach ($order_sku_relations as $v){
+//                $order_id[] = $v->order_id;
+//            }
+            $order_sku = DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->where('products.title', 'like', '%' . $name . '%')
+                ->select('order_sku_relation.order_id as order_id')->get();
+            $arr = [];
+            foreach ($order_sku as $k => $val) {
+                $arr[] = $val->order_id;
             }
-//
-            $orders = OrderModel::where('suspend',0)
-                ->whereIn('id',$order_id)
-                ->orWhere('number' ,'like','%'.$name.'%')
-                ->orWhere('buyer_name' ,'like','%'.$name.'%')
-                ->where('type',8)->where('user_id',$this->auth_user_id)
-                ->orderBy('id', 'desc')
-                ->paginate($this->per_page);
+            $orders = $orders->orWhere('number', 'like', '%' . $name . '%');
+            $orders = $orders->orWhere('buyer_name', 'like', '%' . $name . '%');
+            $orders = $orders->whereIn('id', $arr); 
         }
-        if (count($orders)>0){
+        $orders = $orders->where('type', 8)->where('suspend', 0)->where('user_id', $this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+        if (count($orders) > 0) {
             return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
-        }else{
+        } else {
             return $this->response->array(ApiHelper::error('没有找到合适的订单', 404));
         }
-
     }
 }

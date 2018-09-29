@@ -225,9 +225,9 @@
             </div>
         </div>
         <div class="row">
-            @if ($receive)
-                <div class="col-md-6 col-md-offset-6">{!! $receive->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>
-            @endif
+            {{--@if ($receive)--}}
+                {{--<div class="col-md-6 col-md-offset-6">{!! $receive->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>--}}
+            {{--@endif--}}
         </div>
     </div>
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

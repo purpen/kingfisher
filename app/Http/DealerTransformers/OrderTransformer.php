@@ -23,6 +23,7 @@ class OrderTransformer extends TransformerAbstract
             'user_id' => (int)$orders->user_id,
             'count' => (int)$orders->count,
             'express_no' => $orders->express_no,
+            'express' => $orders->logistics?$orders->logistics->name:'',
             'express_id' => (int)$orders->express_id,
             'order_start_time' =>$orders->order_start_time,
             'status' => (int)$orders->status,

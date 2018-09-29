@@ -334,24 +334,43 @@ class ReceiveOrderController extends Controller
             default:
                 $status = null;
         }
-
         //搜索列表
-        $receive = ReceiveOrderModel::query();
-        if ($where) {
-            $receive->where('number', 'like', '%' . $where . '%')->orWhere('payment_user', 'like', '%' . $where . '%');
+//        $receive = ReceiveOrderModel::query();
+        $message = DB::table('order');
+//            ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
+//            ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+//            ->where('receive_order.number', 'like', '%' . $where . '%')
+//            ->Where('receive_order.number','=',$where)
+//            ->orWhere('order.number','=',$where)
+//            ->orWhere('receive_order.payment_user', 'like', '%' . $where . '%')
+//            ->select('receive_order.id as receive_id','receive_order.status','receive_order.created_at','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
+//            ->get();
+        if (!empty($where)) {
+            $message = $message->orWhere('receive_order.number','=',$where);
+            $message = $message->orWhere('order.number','=',$where);
+            $message = $message->orWhere('receive_order.payment_user', 'like', '%' . $where . '%');
+//           $message->where('receive_order.number','=',$where)->orWhere('receive_order.payment_user', 'like', '%' . $where . '%');
         }
         if ($status !== null) {
-            $receive->where('status', '=', $status);
+            $message = $message->where('receive_order.status', '=', $status);
+//          $receive->where($receive->status, '=', $status);
         }
         if ($start_date && $end_date) {
             $start_date = date("Y-m-d H:i:s", strtotime($start_date));
             $end_date = date("Y-m-d H:i:s", strtotime($end_date));
-            $receive->whereBetween('created_at', [$start_date, $end_date]);
+            $message = $message->whereBetween('receive_order.created_at', [$start_date, $end_date]);
+//       $receive->whereBetween($receive->created_at, [$start_date, $end_date]);
         }
-        if ($type) {
-            $receive->where('type', '=', $type);
+        if (!empty($type)) {
+            $message = $message->where('receive_order.type', '=', $type);
+////        $receive->where($receive->type, '=', $type);
         }
-        $receive = $receive->paginate($this->per_page);
+//        $receive = $receive->paginate($this->per_page);
+
+        $message = $message->join('receive_order', 'receive_order.target_id', '=', 'order.id')
+                   ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+                ->select('receive_order.id as receive_id','receive_order.status','receive_order.created_at','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
+                ->get();
 
         //收款统计
         $money = ReceiveOrderModel::query();
@@ -370,9 +389,9 @@ class ReceiveOrderController extends Controller
             $money->where('type', '=', $type);
         }
         $money = $money->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
-        if ($receive) {
-            return view('home/receiveOrder.index', [
-                'receive' => $receive,
+        if (count($message)>0) {
+            return view('home/receiveOrder.receive', [
+                'message' => $message,
                 'subnav' => $subnav,
                 'count' => '',
                 'where' => $where,
