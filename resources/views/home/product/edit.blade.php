@@ -31,6 +31,17 @@
         float:left;
         width:50px;
     }
+    .removeimg{
+        bottom:5px;
+        color:#fff;
+        font-size:14px;
+        height:20px;
+        left:125px;
+        {{--top:125px;--}}
+        position:absolute;
+        text-align:center;
+        width:20px
+    }
 @endsection
 @section('content')
     @parent
@@ -247,7 +258,7 @@
                             </div>
                         </div>
 
-            			<h5>商品图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
+            			<h5>商品图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，建议规格500*500，大小3MB以内］</small></h5>
                         <hr>
 
                         <div class="row mb-2r" id="update-product-img">
@@ -278,7 +289,7 @@
                             </div>
             				@foreach($assets as $asset)
                             <div class="col-md-2">
-            					<div class="asset">
+            					<div class="asset" style="position: relative;">
             						<img src="{{ $asset->file->small }}" style="width: 150px;" class="img-thumbnail">
             						<a class="removeimg"  value="{{ $asset->id }}"><i class="glyphicon glyphicon-remove"></i></a>
             					</div>
