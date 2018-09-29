@@ -106,7 +106,7 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
                     }
 //                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 if ($status == 10){
