@@ -851,7 +851,13 @@ class OrderController extends BaseController{
                 $order_id[] = $v->order_id;
             }
 //
-            $orders = OrderModel::where('suspend',0)->whereIn('id',$order_id)->orWhere('number' ,'like','%'.$name.'%')->orWhere('buyer_name' ,'like','%'.$name.'%')->where('type',8)->where('user_id',$this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+            $orders = OrderModel::where('suspend',0)
+                ->whereIn('id',$order_id)
+                ->orWhere('number' ,'like','%'.$name.'%')
+                ->orWhere('buyer_name' ,'like','%'.$name.'%')
+                ->where('type',8)->where('user_id',$this->auth_user_id)
+                ->orderBy('id', 'desc')
+                ->paginate($this->per_page);
         }
         if (count($orders)>0){
             return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
