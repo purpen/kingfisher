@@ -159,7 +159,7 @@
                     <input type="text" class="form-control" disabled="disabled">
                 </div>
                 
-                <label class="col-sm-1 control-label">付款时间</label>
+                <label class="col-sm-1 control-label">下单时间</label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" value="@{{ order_start_time }}" disabled="disabled">
                 </div>

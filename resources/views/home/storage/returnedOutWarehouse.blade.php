@@ -25,9 +25,9 @@
     <div class="container mainwrap">
         <div class="row fz-0">
             <div class="col-md-8">
-                <button type="button" class="btn btn-white mr-2r">
-                    <i class="glyphicon glyphicon-arrow-up"></i> 导出
-                </button>
+                {{--<button type="button" class="btn btn-white mr-2r">--}}
+                    {{--<i class="glyphicon glyphicon-arrow-up"></i> 导出--}}
+                {{--</button>--}}
                 @if($tab_menu == 'waiting')
                     <button type="button" class="btn btn-success mr-2r" id="verifyReturned">
                         <i class="glyphicon glyphicon-ok"></i> 审核

@@ -163,6 +163,7 @@ return [
 
         // zip
         Chumper\Zipper\ZipperServiceProvider::class,
+
     ],
 
     /*
@@ -231,6 +232,7 @@ return [
 
         // zip
         'Zipper' => Chumper\Zipper\Zipper::class,
+
     ],
 
     // tmp

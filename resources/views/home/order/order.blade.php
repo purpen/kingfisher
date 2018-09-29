@@ -124,37 +124,37 @@
                                 <li>
                                     <a href="#" id="order-excel">导出</a>
                                 </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel">代发品牌订单导出</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel">分销渠道订单导出</a>
-                                </li>
+                                {{--<li>--}}
+                                    {{--<a href="#" id="supplier-order-excel">代发品牌订单导出</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="distributor-order-excel">分销渠道订单导出</a>--}}
+                                {{--</li>--}}
                             </ul>
                         </div>
 
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                导入 <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#" id="in_order">导入</a>
-                                </li>
+                        {{--<div class="btn-group">--}}
+                            {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                {{--导入 <span class="caret"></span>--}}
+                            {{--</button>--}}
+                            {{--<ul class="dropdown-menu">--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="in_order">导入</a>--}}
+                                {{--</li>--}}
                                 {{--<li>--}}
                                 {{--<a href="#" id="zc_order">众筹订单导入</a>--}}
                                 {{--</li>--}}
-                                <li>
-                                    <a href="#" id="logistics_order">物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel-input">分销渠道订单信息导入</a>
-                                </li>
-                            </ul>
-                        </div>
+                                {{--<li>--}}
+                                    {{--<a href="#" id="logistics_order">物流信息导入</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="distributor-order-excel-input">分销渠道订单信息导入</a>--}}
+                                {{--</li>--}}
+                            {{--</ul>--}}
+                        {{--</div>--}}
 
                         {{--<div class="form-group">--}}
                         {{--<button type="button" id="order-excel" class="btn btn-white mr-2r">--}}
@@ -238,7 +238,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-12" style="    margin-left: -16px;margin-top: 20px;">
 
                                 <label for="order_number_search" class="col-sm-1 control-label">订单编号</label>
                                 <div class="col-sm-2">
@@ -249,19 +249,23 @@
                                     <input type="text" id="product_name_search" name="product_name" value="{{ $product_name }}" class="form-control">
                                 </div>
 
-                                <label for="buyer_name_search" class="col-sm-1 control-label">收货人</label>
+                                <label for="buyer_name_search"  style="margin-left:20px;" class="col-sm-1 control-label">收货人</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="buyer_name_search" name="buyer_name" value="{{ $buyer_name }}"  class="form-control">
                                 </div>
+                                <br>
+                                <br>
+                                <br>
                                 <label for="buyer_phone" class="col-sm-1 control-label">手机号</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="buyer_phone_search" name="buyer_phone" value="{{ $buyer_phone }}" class="form-control">
                                 </div>
+                                <div class="form-group mb-2  text-right">
+                                    <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
+                                </div>
                             </div>
 
-                            <div class="form-group mb-2  text-right">
-                                <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
-                            </div>
+
                         </div>
 
                     </form>

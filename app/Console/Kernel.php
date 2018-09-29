@@ -40,8 +40,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('inspire')
-                 ->everyMinute();
+//        $schedule->command('inspire')
+//                 ->everyMinute();
         
         /**
          * 自营商城平台订单同步任务, 每5分钟
@@ -52,50 +52,50 @@ class Kernel extends ConsoleKernel
         /**
          * ERP未处理订单，自动与各平台同步最新状态
          */
-        $schedule->command('sync:orderStatus')
-                 ->everyFiveMinutes();
+//        $schedule->command('sync:orderStatus')
+//                 ->everyFiveMinutes();
 
         /**
          * 同步订单明细到收款单临时表
          */
-        $schedule->command('sync:receive')
-            ->daily();
+//        $schedule->command('sync:receive')
+//            ->daily();
 
         /**
          * 同步采购详情单
          */
-        $schedule->command('sync:purchases')
-            ->daily();
+//        $schedule->command('sync:purchases')
+//            ->daily();
 
         /**
          * 更新有赞token
          */
-        $schedule->command('sync:yzToken')
-            ->daily();
+//        $schedule->command('sync:yzToken')
+//            ->daily();
 
         /**
          * 同步有赞订单信息
          */
-        $schedule->command('sync:yzOrder')
-            ->everyFiveMinutes();
+//        $schedule->command('sync:yzOrder')
+//            ->everyFiveMinutes();
 
         /**
          * 同步供应商月统计
          */
-        $schedule->command('sync:supplierMonth')
-            ->daily();
+//        $schedule->command('sync:supplierMonth')
+//            ->daily();
 
         /**
          * 更新wxtoken
          */
-        $schedule->command('sync:WxAccessToken')
-            ->hourly();
+//        $schedule->command('sync:WxAccessToken')
+//            ->hourly();
 
         /**
          * 同步分销订单
          */
-        $schedule->command('sync:distributionOrder')
-            ->everyFiveMinutes();
+//        $schedule->command('sync:distributionOrder')
+//            ->everyFiveMinutes();
 
         /*//京东平台订单定时同步任务
         $schedule->call(function(){

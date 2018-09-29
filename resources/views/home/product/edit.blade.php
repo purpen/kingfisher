@@ -31,6 +31,17 @@
         float:left;
         width:50px;
     }
+    .removeimg{
+        bottom:5px;
+        color:#fff;
+        font-size:14px;
+        height:20px;
+        left:125px;
+        {{--top:125px;--}}
+        position:absolute;
+        text-align:center;
+        width:20px
+    }
 @endsection
 @section('content')
     @parent
@@ -59,7 +70,7 @@
                         {{ csrf_field() }}{{--token--}}
             			<input type="hidden" id="product_id" name="product_id" value="{{ $product->id }}">
             			<input type="hidden" name="url" value="{{ $url }}">
-            
+
                         <h5>商品分类</h5>
                         <hr>
                         <div class="form-group">
@@ -86,7 +97,7 @@
                                     <div class="col-sm-8" style="padding-top:5px">
                                         @foreach($lists as $list)
                                             @if($list['type'] == 2)
-                                                <input type="checkbox" name="authorization_id[]" class="checkcla" value="{{ $list->id }}"  @if(in_array($list->id,$authorization)) checked="checked" @endif>{{ $list->title }}
+                                                <input type="checkbox" name="authorization_id[]" class="checkcla" value="{{ $list->id }}"  @if(in_array($list->id,$authorization)) checked="checked" @endif >{{ $list->title }}
                                             @endif
                                         @endforeach
 
@@ -153,7 +164,7 @@
                                 @endif
                             </div>
                         </div>
-            
+
                         <div class="form-group">
                             <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称<em>*</em></label>
                             <div class="col-sm-4">
@@ -165,7 +176,7 @@
                                 @endif
                             </div>
                         </div>
-            
+
                         <div class="form-group">
                             <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称<em>*</em></label>
                             <div class="col-sm-4">
@@ -177,7 +188,7 @@
                                 @endif
                             </div>
                         </div>
-            
+
                         <div class="form-group">
                             <label for="cost_price" class="col-sm-2 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
@@ -188,7 +199,7 @@
                                     </span>
                                 @endif
                             </div>
-                        
+
                             <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">市场售价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" id="market_price" name="market_price" ordertype="b2cCode" class="form-control" value="{{ $product->market_price }}">
@@ -198,7 +209,7 @@
                                     </span>
                                 @endif
                             </div>
-                
+
                             <label for="sale_price" class="col-sm-1 control-label {{ $errors->has('sale_price') ? ' has-error' : '' }}">供货价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" id="sale_price" name="sale_price" ordertype="b2cCode" class="form-control" value="{{ $product->sale_price }}">
@@ -247,7 +258,7 @@
                             </div>
                         </div>
 
-            			<h5>商品图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
+            			<h5>商品图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，建议规格500*500，大小3MB以内］</small></h5>
                         <hr>
 
                         <div class="row mb-2r" id="update-product-img">
@@ -278,7 +289,7 @@
                             </div>
             				@foreach($assets as $asset)
                             <div class="col-md-2">
-            					<div class="asset">
+            					<div class="asset" style="position: relative;">
             						<img src="{{ $asset->file->small }}" style="width: 150px;" class="img-thumbnail">
             						<a class="removeimg"  value="{{ $asset->id }}"><i class="glyphicon glyphicon-remove"></i></a>
             					</div>
@@ -349,7 +360,7 @@
                                 {{--</script>--}}
                             {{--</div>--}}
                         {{--</div>--}}
-                    
+
             			<h5>SKU信息 <a id="appendsku" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加SKU</a></h5>
                         <hr>
                         @if(isset($product->productsSku))
@@ -417,7 +428,7 @@
                             </div>
                         </div>
                         @endif
-                    
+
                         <div class="form-group">
                             <div class="col-sm-12">
                 				<button type="submit" class="btn btn-magenta mr-r btn-lg save">确认更新</button>
@@ -428,7 +439,7 @@
                 </div>
             </div>
         </div>
-        
+
 		{{-- 添加SKU模板 --}}
         <div class="modal fade bs-example-modal-lg" id="appendskuModal" tabindex="-1" role="dialog"
          aria-labelledby="appendskuLabel" aria-hidden="true">
@@ -449,7 +460,7 @@
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
 							<input type="hidden" name="name" value="{{ $product->title }}">
 							<input type="hidden" name="product_number" value="{{ $product->number }}">
-                            
+
                             <div class="form-group">
                                 <label for="number" class="col-sm-2 control-label">sku编码</label>
                                 <div class="col-sm-4">
@@ -597,7 +608,7 @@
                             {{ csrf_field() }}{{--token--}}
                             <input type="hidden" name="random" id="update_sku_random" value="{{ $random[1] }}">{{--图片上传回调随机数--}}
                             <input type="hidden" name="id" id="sku-id">
-                            
+
                             <div class="form-group">
                                 <label for="number" class="col-sm-2 control-label">sku编码</label>
                                 <div class="col-sm-4">
@@ -812,7 +823,7 @@
                 '<img src="@{{ path }}" style="width: 100px;height: 100px;" class="img-thumbnail">',
                 '<a class="removeimg" value="@{{ id }}">删除</a>',
                 '</div>@{{ /assets }}'].join("");
-                
+
             var views = Mustache.render(template, e.data);
             $('#update-sku-img').prepend(views);
 
@@ -921,64 +932,64 @@
 	});
 
     {{--商品详情介绍图片--}}
-    new qq.FineUploader({
-		element: document.getElementById('fine-uploaders'),
-		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址)
-		request: {
-			endpoint: 'https://up.qbox.me',
-			params:  {
-				"token": '{{ $token }}',
-				"x:user_id":'{{ $user_id }}',
-				"x:target_id":'{{ $product->id }}',
-                "x:type": 22,
-			},
-			inputName:'file',
-		},
-		validation: {
-			allowedExtensions: ['jpeg', 'jpg', 'png'],
-			sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-		},
-        messages: {
-            typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-            sizeError: "上传文件最大不超过3M"
-        },
-		//回调函数
-		callbacks: {
-			//上传完成后
-			onComplete: function(id, fileName, responseJSON) {
-				if (responseJSON.success) {
-					console.log(responseJSON.success);
-					$('#update-products-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-                    $("#product_details").val(responseJSON.asset_id);
-					$('.removeimg').click(function(){
-						var id = $(this).attr("value");
-						var img = $(this);
-						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-							if(e.status){
-								img.parent().remove();
-							}else{
-								console.log(e.message);
-							}
-						},'json');
+    {{--new qq.FineUploader({--}}
+		{{--element: document.getElementById('fine-uploaders'),--}}
+		{{--autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传--}}
+		{{--// 远程请求地址（相对或者绝对地址)--}}
+		{{--request: {--}}
+			{{--endpoint: 'https://up.qbox.me',--}}
+			{{--params:  {--}}
+				{{--"token": '{{ $token }}',--}}
+				{{--"x:user_id":'{{ $user_id }}',--}}
+				{{--"x:target_id":'{{ $product->id }}',--}}
+                {{--"x:type": 22,--}}
+			{{--},--}}
+			{{--inputName:'file',--}}
+		{{--},--}}
+		{{--validation: {--}}
+			{{--allowedExtensions: ['jpeg', 'jpg', 'png'],--}}
+			{{--sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes--}}
+		{{--},--}}
+        {{--messages: {--}}
+            {{--typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",--}}
+            {{--sizeError: "上传文件最大不超过3M"--}}
+        {{--},--}}
+		{{--//回调函数--}}
+		{{--callbacks: {--}}
+			{{--//上传完成后--}}
+			{{--onComplete: function(id, fileName, responseJSON) {--}}
+				{{--if (responseJSON.success) {--}}
+					{{--console.log(responseJSON.success);--}}
+					{{--$('#update-products-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+                    {{--$("#product_details").val(responseJSON.asset_id);--}}
+					{{--$('.removeimg').click(function(){--}}
+						{{--var id = $(this).attr("value");--}}
+						{{--var img = $(this);--}}
+						{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
+							{{--if(e.status){--}}
+								{{--img.parent().remove();--}}
+							{{--}else{--}}
+								{{--console.log(e.message);--}}
+							{{--}--}}
+						{{--},'json');--}}
 
-					});
-				} else {
-					alert('上传图片失败');
-				}
-			},
-            onProgress:  function(id,  fileName,  loaded,  total)  {
-                var number = loaded/total*70;
-                console.log(number);
-                $("#progress_bars").parent().parent().show();
-                $("#progress_bars").css({'width':number+'px'});
-                if(loaded == total){
-                    $("#progress_bars").parent().parent().hide();
-                }
+					{{--});--}}
+				{{--} else {--}}
+					{{--alert('上传图片失败');--}}
+				{{--}--}}
+			{{--},--}}
+            {{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+                {{--var number = loaded/total*70;--}}
+                {{--console.log(number);--}}
+                {{--$("#progress_bars").parent().parent().show();--}}
+                {{--$("#progress_bars").css({'width':number+'px'});--}}
+                {{--if(loaded == total){--}}
+                    {{--$("#progress_bars").parent().parent().hide();--}}
+                {{--}--}}
 
-            }
-		}
-	});
+            {{--}--}}
+		{{--}--}}
+	{{--});--}}
 
     {{--sku图片--}}
     new qq.FineUploader({
@@ -1032,7 +1043,7 @@
             }
         }
     });
-    
+
     new qq.FineUploader({
         element: document.getElementById('update-sku-uploader'),
         autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
@@ -1398,10 +1409,4 @@
     }
     })
 
-    {{--var ue = UE.getEditor('container');--}}
-    {{--ue.ready(function() {--}}
-    {{--//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.--}}
-    {{--ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');--}}
-
-    {{--});--}}
 @endsection

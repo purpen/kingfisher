@@ -97,11 +97,11 @@
         <form id="form-product" role="form" class="form-horizontal mt-2r" style="display:none;">
             <div class="form-group">
                 <div class="col-sm-2">
-                    <div class="ml-4r">
-                        <a href=" " class="btn btn-magenta" data-toggle="modal" data-target="#addproduct" id="addproduct-button">
-                            <i class="glyphicon glyphicon-plus"></i> 添加赠品
-                        </a>
-                    </div>
+                    {{--<div class="ml-4r">--}}
+                        {{--<a href=" " class="btn btn-magenta" data-toggle="modal" data-target="#addproduct" id="addproduct-button">--}}
+                            {{--<i class="glyphicon glyphicon-plus"></i> 添加赠品--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
                 </div>
                 <div class="col-sm-10 text-right">
                     <div class="mr-3r">
