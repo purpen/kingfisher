@@ -249,19 +249,23 @@
                                     <input type="text" id="product_name_search" name="product_name" value="{{ $product_name }}" class="form-control">
                                 </div>
 
-                                <label for="buyer_name_search" class="col-sm-1 control-label">收货人</label>
+                                <label for="buyer_name_search"  style="margin-left:20px;" class="col-sm-1 control-label">收货人</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="buyer_name_search" name="buyer_name" value="{{ $buyer_name }}"  class="form-control">
                                 </div>
+                                <br>
+                                <br>
+                                <br>
                                 <label for="buyer_phone" class="col-sm-1 control-label">手机号</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="buyer_phone_search" name="buyer_phone" value="{{ $buyer_phone }}" class="form-control">
                                 </div>
+                                <div class="form-group mb-2  text-right">
+                                    <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
+                                </div>
                             </div>
 
-                            <div class="form-group mb-2  text-right">
-                                <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
-                            </div>
+
                         </div>
 
                     </form>
