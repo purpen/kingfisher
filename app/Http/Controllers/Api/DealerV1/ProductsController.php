@@ -395,7 +395,12 @@ class ProductsController extends BaseController
         foreach ($products as $key=>$value){
             $categorys = CategoriesModel::where('id',$value->category_id)->where('type',1)->select('title')->first();
             $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$this->auth_user_id)->count();
-            $value->categories = $categorys->title;
+            if ($categorys){
+                $value->categories = $categorys->title;
+            }else{
+                $value->categories = '';
+            }
+
             if ($follow){
                 $value->follow = 1;//已关注
             }else{

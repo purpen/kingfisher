@@ -260,7 +260,7 @@ class OrderModel extends BaseModel
                 $value = '账期';
                 break;
             case 4:
-                $value = '月结';
+                $value = '公司月结';
                 break;
             case 5:
                 $value = '现结';
