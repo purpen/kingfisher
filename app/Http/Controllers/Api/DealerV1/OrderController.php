@@ -106,7 +106,7 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->orderBy('id', 'desc')->paginate($per_page);
                     }
 //                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 if ($status == 10){
@@ -850,16 +850,17 @@ class OrderController extends BaseController{
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
                 ->where('products.title', 'like', '%' . $name . '%')
-                ->select('order_sku_relation.order_id as order_id')->get();
-            $arr = [];
+                ->select('order_sku_relation.order_id as order_id')->groupBy('order.id')->get();
+            $orderIdArr = [];
             foreach ($order_sku as $k => $val) {
-                $arr[] = $val->order_id;
+                $orderIdArr[] = $val->order_id;
             }
-            $orders = $orders->orWhere('number', 'like', '%' . $name . '%');
-            $orders = $orders->orWhere('buyer_name', 'like', '%' . $name . '%');
-            $orders = $orders->whereIn('id', $arr);
+
+            $orders = $orderIdArr ? $orders->whereIn('id', $orderIdArr) : $orders->Where('number', 'like', '%' . $name . '%')->orWhere('buyer_name', 'like', '%' . $name . '%');
+
         }
-        $orders = $orders->where('type', 8)->where('suspend', 0)->where('user_id', $this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+        $orders=$orders->where('user_id', $this->auth_user_id);
+        $orders = $orders->orderBy('id', 'desc')->paginate($this->per_page);
         if (count($orders) > 0) {
             return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
         } else {
