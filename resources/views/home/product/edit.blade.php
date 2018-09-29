@@ -36,8 +36,8 @@
         color:#fff;
         font-size:14px;
         height:20px;
-        left:135px;
-        top:90px;
+        left:125px;
+        {{--top:125px;--}}
         position:absolute;
         text-align:center;
         width:20px
@@ -289,7 +289,7 @@
                             </div>
             				@foreach($assets as $asset)
                             <div class="col-md-2">
-            					<div class="asset">
+            					<div class="asset" style="position: relative;">
             						<img src="{{ $asset->file->small }}" style="width: 150px;" class="img-thumbnail">
             						<a class="removeimg"  value="{{ $asset->id }}"><i class="glyphicon glyphicon-remove"></i></a>
             					</div>
