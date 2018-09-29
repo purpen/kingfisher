@@ -857,7 +857,7 @@ class OrderController extends BaseController{
             }
             $orders = $orders->orWhere('number', 'like', '%' . $name . '%');
             $orders = $orders->orWhere('buyer_name', 'like', '%' . $name . '%');
-            $orders = $orders->whereIn('id', $arr);
+            $orders = $orders->whereIn('id', $arr); 
         }
         $orders = $orders->where('type', 8)->where('suspend', 0)->where('user_id', $this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
         if (count($orders) > 0) {
