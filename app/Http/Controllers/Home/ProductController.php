@@ -347,7 +347,8 @@ class ProductController extends Controller
         $region = $request->input('region_id');
         $product->region_id = implode(',', $region);
         $product->supplier_id = $request->input('supplier_id', '');
-        $product->supplier_name = SupplierModel::find($product->supplier_id)->nam;
+        $nam = SupplierModel::find($product->supplier_id)->nam;
+        $product->supplier_name = $nam?$nam:'';
         $product->market_price = $request->input('market_price', '');
         $product->sale_price = $request->input('sale_price');
         $product->cost_price = $request->input('cost_price');

@@ -626,6 +626,9 @@ class OrderController extends Controller
     public function ajaxVerifyOrder(Request $request)
     {
         $order_id_array = $request->input('order');
+        if (empty($order_id_array)){
+            return ajax_json(0,'请先勾选订单');
+        }
 
         foreach ($order_id_array as $order_id) {
 
@@ -648,7 +651,8 @@ class OrderController extends Controller
                 DB::rollBack();
                 return ajax_json(0,'参数错误，not department');
             }
-            $department = UserModel::find($order_model->user_id_sales) ? UserModel::find($order_model->user_id_sales)->department : '';
+//            $department = UserModel::find($order_model->user_id_sales) ? UserModel::find($order_model->user_id_sales)->department : '';
+            $department = 2;
             $storage_sku = new StorageSkuCountModel();
             if (!$storage_id){
                 return ajax_json(0,'请先选择发货仓库,再审核');
