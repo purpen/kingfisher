@@ -106,9 +106,10 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $where['is_voucher'] = 1;
+                    $where['status'] = 5;
+                    $orders = OrderModel::orderBy('id', 'desc')->where('status',1) ->orWhere($where)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                     }
-//                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,2])->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 if ($status == 10){
                     $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('is_voucher',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
                 }
@@ -126,8 +127,9 @@ class OrderController extends BaseController{
                     $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[1,5])->orWhere('is_voucher',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
-//                    $orders = OrderModel::orderBy('id', 'desc')->where('status',1)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
+                    $where['is_voucher'] = 1;
+                    $where['status'] = 5;
+                    $orders = OrderModel::orderBy('id', 'desc')->where('status',1) ->orWhere($where)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 10){
                     $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('is_voucher',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
