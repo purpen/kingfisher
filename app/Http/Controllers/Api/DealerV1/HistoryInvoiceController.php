@@ -10,6 +10,7 @@ use App\Http\ApiHelper;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class HistoryInvoiceController extends BaseController
 {
@@ -83,30 +84,52 @@ class HistoryInvoiceController extends BaseController
             }
             //去重
             $heavy = array_unique($ids);
-
-            $data = OrderModel::whereNotIn('id',$heavy)
-                ->select('id as order_id','number','total_money','order_start_time')
+            $heavy = implode(',',$heavy);
+//            $data = OrderModel::
+//                whereNotNull(DB::raw("(status IN (8,10,20) and  payment_type = 6 and user_id = 1) OR (status IN (5, 6, 7, 10, 20) and payment_type IN (1, 4) and user_id = 1)"))
+//                ->whereNotIn('id',$heavy)
+//                ->select('id as order_id','number','total_money','order_start_time')
+//                ->where('number','like','%'.$number.'%')
+//                ->orderBy('order.id','desc')
+//                ->paginate($per_page);
+            $data = OrderModel::whereRaw(DB::raw("`id` not in (".$heavy.") and ((`status` IN (8,10,20) and  `payment_type` = 6 and `user_id` = ".$user_id.") OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4) and `user_id` = ".$user_id."))"))
+                ->select('id as order_id','number','total_money','order_start_time','status','payment_type')
                 ->where('number','like','%'.$number.'%')
-                ->where('user_id',$user_id)
-                ->whereIn('status', [8, 10, 20])
                 ->orderBy('order.id','desc')
                 ->paginate($per_page);
         }
 
         if ($where){
-            $data = OrderModel::select('history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
+//            $data = OrderModel::select('history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
+//                ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
+//                ->where('order.number','like','%'.$number.'%')
+//                ->whereIn('order.status', [8, 10, 20])
+//                ->where($wherein)
+//                ->orderBy('order.id','desc')
+//                ->whereIn('receiving_type',$where)
+//                ->paginate($per_page);
+
+            $data = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
+                ->select('order.user_id','history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
                 ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
                 ->where('order.number','like','%'.$number.'%')
-                ->whereIn('order.status', [8, 10, 20])
                 ->where($wherein)
                 ->orderBy('order.id','desc')
                 ->whereIn('receiving_type',$where)
                 ->paginate($per_page);
         }elseif(!empty($receiving)){
-            $data = OrderModel::select('history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
+//            $data = OrderModel::select('history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
+//                ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
+//                ->where('order.number','like','%'.$number.'%')
+//                ->whereIn('order.status', [8, 10, 20])
+//                ->where($wherein)
+//                ->orderBy('order.id','desc')
+//                ->paginate($per_page);
+            $data = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
+                ->select('history_invoice.receiving_id','history_invoice.receiving_type','order.id as order_id','history_invoice.id','order.number','order.total_money','order.order_start_time')
                 ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
                 ->where('order.number','like','%'.$number.'%')
-                ->whereIn('order.status', [8, 10, 20])
+//                ->whereIn('order.status', [8, 10, 20])
                 ->where($wherein)
                 ->orderBy('order.id','desc')
                 ->paginate($per_page);
