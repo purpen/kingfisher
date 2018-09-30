@@ -44,6 +44,10 @@ class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
     {
         $order_id = $this->order_id;
         $orderModel = $this->orderModel;
+        // 获取目标订单
+        if (!$order = OrderModel::find($order_id)) {
+            return false;
+        }
         $orders_update = OrderModel::where('id' , $order_id)->first();
         $orders['status'] = 0;
         $orders_update->update($orders);
