@@ -850,16 +850,17 @@ class OrderController extends BaseController{
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
                 ->where('products.title', 'like', '%' . $name . '%')
-                ->select('order_sku_relation.order_id as order_id')->get();
-            $arr = [];
+                ->select('order_sku_relation.order_id as order_id')->groupBy('order.id')->get();
+            $orderIdArr = [];
             foreach ($order_sku as $k => $val) {
-                $arr[] = $val->order_id;
+                $orderIdArr[] = $val->order_id;
             }
-            $orders = $orders->orWhere('number', 'like', '%' . $name . '%');
-            $orders = $orders->orWhere('buyer_name', 'like', '%' . $name . '%');
-            $orders = $orders->whereIn('id', $arr);
+
+            $orders = $orderIdArr ? $orders->whereIn('id', $orderIdArr) : $orders->Where('number', 'like', '%' . $name . '%')->orWhere('buyer_name', 'like', '%' . $name . '%');
+
         }
-        $orders = $orders->where('type', 8)->where('suspend', 0)->where('user_id', $this->auth_user_id)->orderBy('id', 'desc')->paginate($this->per_page);
+        $orders=$orders->where('user_id', $this->auth_user_id);
+        $orders = $orders->orderBy('id', 'desc')->paginate($this->per_page);
         if (count($orders) > 0) {
             return $this->response->paginator($orders, new OrderListTransformer())->setMeta(ApiHelper::meta());
         } else {
