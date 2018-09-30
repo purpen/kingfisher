@@ -167,13 +167,13 @@ class OrderController extends BaseController{
      *  "express_id": 3,        // 物流id
      *  "express": 圆通快递,        //快递名称
      *  "express_no": 536728987,     //快递单号
-     *  "order_start_time": "0000-00-00 00:00:00", //发货时间
+     *  "order_start_time": "0000-00-00 00:00:00", //下单时间
      *  "status": 8,
      *  "status_val": "待发货",                //状态   2.上传凭证待审核
      *  "receiving_id": "1",          //发票类型(0.不开 1.普通 2.专票)
      *  "company_name": "北京太火红鸟科技有限公司",          //发票抬头
      *  "invoice_value": "1453",        //发票金额
-     *  "over_time": "2018-09-11 00:00:00",  //过期时间
+     *  "over_time": "2018-09-11 00:00:00",  //订单过期时间
      *
      *
      *   "address": "三亚市天涯海角",
@@ -554,10 +554,10 @@ class OrderController extends BaseController{
         }
 
         $orderModel = OrderModel::find($order_id);
-        if ($orderModel->status == 1){
-            $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);//新建订单24小时未支付取消订单
-            $this->dispatch($job);
-        }
+//        if ($orderModel->status == 1){
+//            $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);//新建订单24小时未支付取消订单
+//            $this->dispatch($job);
+//        }
         return $this->response->array(ApiHelper::success('Success', 200, $orderModel));
     }
 

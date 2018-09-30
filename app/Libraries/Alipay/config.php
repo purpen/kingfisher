@@ -7,9 +7,9 @@
             'merchant_private_key' =>env('ALIPAY_Merchant_Private_Key'),
 
             //异步通知地址
-            'notify_url' => env('ALIPAY_Notify_URL','https://erp.taihuoniao.com/DealerApi/pay/make_sure'),
+            'notify_url' => env('ALIPAY_Notify_URL','http://k.taihuoniao.com/DealerApi/pay/make_sure'),
             //同步跳转
-            'return_url' => env('ALIPAY_Return_URL' , 'http://d3in.taihuoniao.com/center/order/monthorderlist/1/0/1'),
+            'return_url' => env('ALIPAY_Return_URL' , 'http://fiu_dev.taihuoniao.com/center/order/monthorderlist/1/0/1'),
 
             //编码格式
             'charset' => "UTF-8",
