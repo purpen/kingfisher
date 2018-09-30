@@ -371,8 +371,8 @@
                                     <tr class="gblack">
                                         <th>序号</th>
                                         <th>图片</th>
-                                        <th>69码</th>
                                         <th>sku编码</th>
+                                        <th>69码</th>
                                         <th>成本价</th>
                                         <th>市场售价</th>
                                         <th>供货价</th>
