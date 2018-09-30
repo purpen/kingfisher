@@ -228,8 +228,9 @@ class AlipayTradeService {
 	function writeLog($text) {
 		// $text=iconv("GBK", "UTF-8//IGNORE", $text);
 		//$text = characet ( $text );
-		file_put_contents ( dirname ( __FILE__ ).DIRECTORY_SEPARATOR."./../../log.txt", date ( "Y-m-d H:i:s" ) . "  " . $text . "\r\n", FILE_APPEND );
+		//file_put_contents ( env('ALIPAY_LOG','/tmp/laravel/alipay.txt'), date ( "Y-m-d H:i:s" ) . "  " . $text . "\r\n", FILE_APPEND );
 //        file_put_contents ( dirname ( __FILE__ ).DIRECTORY_SEPARATOR."../log/log.txt", date ( "Y-m-d H:i:s" ) . " " . $text . "\r\n", FILE_APPEND );
+      Log::info( date ( "Y-m-d H:i:s" ) . "  " . $text . "\r\n", FILE_APPEND);
 	}
 }
 
