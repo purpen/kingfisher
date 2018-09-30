@@ -755,7 +755,7 @@
     console.log(e);
     if(e.status){
     layer.alert(e.message);
-    window.location.reload();
+
     }else{
     layer.alert(e.message);
     }
@@ -769,7 +769,7 @@
     console.log(e);
         if(e.status){
           layer.alert(e.message);
-          window.location.reload();
+
         }else{
             layer.alert(e.message);
         }
