@@ -109,13 +109,13 @@ class PayController extends BaseController
             if ($trade_status == 'TRADE_FINISHED' OR $trade_status == 'TRADE_SUCCESS') {
                 $money = $order->total_money;
                 if ($total_amount != $money) {
-                    Log::info('支付金额有误，订单号：'.$out_trade_no.','.'交易金额:'.$total_amount);
+                    Log::info('支付金额有误,用户所付金额：'.$total_amount);
                     echo "fail";
                     return;
                 }
                 $status = $order->status;
                 if ($status != 1){
-                    Log::info('该订单不是待支付订单，订单号：'.$out_trade_no.','.'交易状态:'.$trade_status);
+                    Log::info('该订单不是待支付订单，交易状态：'.$trade_status);
                     echo "fail";
                     return;
                 }

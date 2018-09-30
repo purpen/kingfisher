@@ -486,58 +486,6 @@
 	});
 
 
-    {{--上传商品介绍详情--}}
-    new qq.FineUploader({
-		element: document.getElementById('fine-uploaders'),
-		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址）
-		request: {
-			endpoint: 'https://up.qbox.me',
-			params:  {
-				"token": '{{ $token }}',
-				"x:random": '{{ $random }}',
-				"x:user_id":'{{ $user_id }}'
-			},
-			inputName:'file',
-		},
-		validation: {
-			allowedExtensions: ['jpeg', 'jpg', 'png'],
-			sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-		},
-        messages: {
-            typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-            sizeError: "上传文件最大不超过3M"
-        },
-		//回调函数
-		callbacks: {
-			//上传完成后
-			onComplete: function(id, fileName, responseJSON) {
-				if (responseJSON.success) {
-					console.log(responseJSON.success);
-					$("#product_details").val(responseJSON.asset_id);
-
-					$('.product-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-
-					$('.removeimg').click(function(){
-						var id = $(this).attr("value");
-						var img = $(this);
-						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-							if(e.status){
-								img.parent().remove();
-							}else{
-								console.log(e.message);
-							}
-						},'json');
-
-					});
-				} else {
-					alert('上传图片失败');
-				}
-			}
-		}
-	});
-
-
     /*搜索下拉框*/
     $(".chosen-select").chosen({
         no_results_text: "未找到：",
@@ -574,11 +522,4 @@
     }
     })
 
-    {{--百度编辑器--}}
-        {{--var ue = UE.getEditor('container');--}}
-        {{--ue.ready(function() {--}}
-            {{--//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.--}}
-            {{--ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');--}}
-
-        {{--});--}}
 @endsection

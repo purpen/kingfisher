@@ -856,7 +856,7 @@ class OrderController extends BaseController{
                 $orderIdArr[] = $val->order_id;
             }
 
-            $orders = $orderIdArr ? $orders->whereIn('id', $orderIdArr) : $orders->Where('number', 'like', '%' . $name . '%')->orWhere('buyer_name', 'like', '%' . $name . '%');
+            $orders = $orderIdArr ? $orders->whereIn('id', $orderIdArr) : $orders->where('number', 'like', '%' . $name . '%')->orWhere('buyer_name', 'like', '%' . $name . '%');
 
         }
         $orders=$orders->where('user_id', $this->auth_user_id);
