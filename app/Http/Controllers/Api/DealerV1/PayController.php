@@ -94,15 +94,15 @@ class PayController extends BaseController
 
         if ($result) {
             //获取相关数据
-            $out_trade_no = $arr['out_trade_no'];//订单号
-            $total_amount = $arr['buyer_pay_amount'];//付款金额
-            $trade_status = $arr['trade_status'];//交易状态
-            $notify_time = $arr['gmt_payment'];//交易付款时间
+            $out_trade_no = $_POST['out_trade_no'];//订单号
+            $total_amount = $_POST['buyer_pay_amount'];//付款金额
+            $trade_status = $_POST['trade_status'];//交易状态
+            $notify_time = $_POST['gmt_payment'];//交易付款时间
         $order = OrderModel::where('number',$out_trade_no)->first();
         if (!$order) {
             Log::info('没有找到该笔订单，订单号：'.$out_trade_no);
             echo "fail";
-            return;
+            return false;
         }
 
 //            判断数据是否做过处理，如果做过处理，return，没有做过处理，执行支付成功代码
@@ -111,13 +111,13 @@ class PayController extends BaseController
                 if ($total_amount != $money) {
                     Log::info('支付金额有误,用户所付金额：'.$total_amount);
                     echo "fail";
-                    return;
+                    return false;
                 }
                 $status = $order->status;
                 if ($status != 1){
                     Log::info('该订单不是待支付订单，交易状态：'.$trade_status);
                     echo "fail";
-                    return;
+                    return false;
                 }
 //                修改订单状态
                 $orders = OrderModel::
@@ -126,7 +126,7 @@ class PayController extends BaseController
                 if (!$orders){
                     Log::info('订单状态更新失败！，订单号：'.$out_trade_no);
                     echo "fail";
-                    return;
+                    return false;
                 }
 
                 echo "success";
