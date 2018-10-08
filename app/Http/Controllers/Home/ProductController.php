@@ -208,7 +208,7 @@ class ProductController extends Controller
     {
         $id = $request->input('id');
         $product_id = $request->input('product_id');
-        if (!$id || !$product_id){ 
+        if (!$id || !$product_id){
             return ajax_json(0,'参数错误');
         }
 
