@@ -756,14 +756,15 @@
     var id = $(this).attr("value");
 
     var product_id = $('#products_betweenid').val();
-
+    console.log(product_id);
+    console.log(id);
     $.post('{{url('/product/ajaxDeleted')}}',{'id':id,'product_id':product_id,'_token':_token},function (e) {
     console.log(e);
     if(e.status){
     alert(e.message);
     {{--$(this).text('设为封面图')--}}
     }else{
-    layer.alert(e.message);
+        alert(e.message);
     }
     },'json');
     });
@@ -776,17 +777,19 @@
     $(this).addClass("redeletedimg");
     var id = $(this).attr("value");
     var product_id = $('#products_betweenid').val();
+    console.log(product_id);
+    console.log(id);
     $.post('{{url('/product/ajaxAdd')}}',{'id':id,'product_id':product_id,'_token':_token},function (e) {
     console.log(e);
         if(e.status){
-          alert(e.message);
+             alert(e.message);
 
             {{--$(this).removeClass("3333");--}}
             {{--$(this).addClass("redeletedimg");--}}
             {{--$('.redeletedimg').innerHTML('取消封面图');--}}
             {{--$(this).text('取消封面图');--}}
         }else{
-            layer.alert(e.message);
+           alert(e.message);
         }
     },'json');
     });
