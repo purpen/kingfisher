@@ -13,6 +13,7 @@ class FollowListTransformer extends TransformerAbstract
         return [
             'product_id' => $products->id,
             'name' => $products->title,
+            'status' => $products->status,
             'price' => $products->market_price,
             'inventory' => intval($products->inventory),
             'image' => $products->big_img,
