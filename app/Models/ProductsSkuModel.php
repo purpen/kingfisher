@@ -133,16 +133,13 @@ class ProductsSkuModel extends BaseModel
             ->orderBy('id', 'desc')
             ->first();
         if (empty($asset)) {
-            $asset = AssetsModel
-                ::where(['id' => $this->product_id, 'type' => 1])
+           $result =  AssetsModel::where(['target_id' => $this->product_id,'type' => 1])
                 ->orderBy('id','desc')
                 ->first();
-            $result = $asset->file;
-            if(is_object($result)){
-                return $result->p500;
-            }
-            return $result;
+
+            return $result->file->p500;
         }
+
         return $asset->file->small;
     }
 

@@ -18,7 +18,7 @@ class OrderListTransformer extends TransformerAbstract
                 'price' => $orderSku->price,
                 'quantity' => $orderSku->quantity,
                 'sku_name' => $orderSku->sku_name,
-                'image' => $orderSku->productsSku ? $orderSku->productsSku->getFirstProductsImgAttribute : '' ,
+                'image' => $orderSku->productsSku ? $orderSku->productsSku->getFirstProductsImgAttribute() : '' ,
                 'product_title' => $orderSku->product ? $orderSku->product->title : '' ,
                 'sku_mode' => $orderSku->productsSku ? $orderSku->productsSku->mode : '' ,
             ];
