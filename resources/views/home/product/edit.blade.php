@@ -297,6 +297,7 @@
                                 <a class="readdimg" style="width: 100px;color: red; margin-left:45px;" value="{{ $asset->id }}">设为封面图</a>
                                     <input type="hidden" id="products_betweenid" name="id" value="{{$product->id}}">
                                 @elseif($asset->between == 1)
+                                    <input type="hidden" id="products_betweenid" name="id" value="{{$product->id}}">
                                     <a href="javascript:;" class="redeletedimg" style="width: 100px;color: red;margin-left:45px; " value="{{ $asset->id }}">取消封面图</a>
                                  @endif
                             </div>
