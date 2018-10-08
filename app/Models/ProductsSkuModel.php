@@ -124,6 +124,29 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     * SKU封面图为空时,获取商品图
+     */
+    public function getFirstProductsImgAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 4])
+            ->orderBy('id', 'desc')
+            ->first();
+        if (empty($asset)) {
+            $asset = AssetsModel
+                ::where(['id' => $this->product_id, 'type' => 1])
+                ->orderBy('id','desc')
+                ->first();
+            $result = $asset->file;
+            if(is_object($result)){
+                return $result->p500;
+            }
+            return $result;
+        }
+        return $asset->file->small;
+    }
+
+    /**
      * 获取SKU封面图
      */
     public function getFirstImgAttribute()
