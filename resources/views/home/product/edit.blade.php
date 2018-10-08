@@ -749,17 +749,18 @@
 
     $('.redeletedimg').click(function(){
     {{--alert($(this).index());--}}
-    {{--$(this).text('设为封面图')--}}
-    {{--$('.redeletedimg').text('取消封面图')--}}
-    {{--$(this).removeClass("readdimg");--}}
-    {{--$(this).addClass("redeletedimg");--}}
+    $(this).text('取消封面图')
+    $('.redeletedimg').text('设为封面图')
+    $(this).removeClass("redeletedimg");
+    $(this).addClass("readdimg");
     var id = $(this).attr("value");
+
     var product_id = $('#products_betweenid').val();
 
     $.post('{{url('/product/ajaxDeleted')}}',{'id':id,'product_id':product_id,'_token':_token},function (e) {
     console.log(e);
     if(e.status){
-    layer.alert(e.message);
+    alert(e.message);
     {{--$(this).text('设为封面图')--}}
     }else{
     layer.alert(e.message);
@@ -768,16 +769,17 @@
     });
     $('.readdimg').click(function(){
     {{--alert($(this).index());--}}
+
+    $(this).text('取消封面图');
+    $('.redeletedimg').text('设为封面图');
+    $(this).removeClass("readdimg");
+    $(this).addClass("redeletedimg");
     var id = $(this).attr("value");
     var product_id = $('#products_betweenid').val();
-    {{--$(this).text('取消封面图')--}}
-    {{--$('.redeletedimg').text('设为封面图')--}}
-    {{--$(this).removeClass("readdimg");--}}
-    {{--$(this).addClass("redeletedimg");--}}
     $.post('{{url('/product/ajaxAdd')}}',{'id':id,'product_id':product_id,'_token':_token},function (e) {
     console.log(e);
         if(e.status){
-          layer.alert(e.message);
+          alert(e.message);
 
             {{--$(this).removeClass("3333");--}}
             {{--$(this).addClass("redeletedimg");--}}
