@@ -285,16 +285,29 @@
 
 
     $(document).on("click","#batch-verify",function(obj){
+            if($("input[name='category_id']").prop("checked")){
+                var diyu = $("input[name='diyu']").val();
+                }else{
+                layer.msg("请完善必填项！");
+                return false;
+                }
+                if($("input[name='authorization_id']").prop("checked")){
+                var Jszzdm = $("input[name='Jszzdm']").val();
+                }else{
+                layer.msg("请完善必填项！");
+                return false;
+                }
     layer.confirm('确认要通过审核吗？',function(index){
-    var id =  $("input[name='id']").val();
-    var Jszzdm =  $("input[name='Jszzdm']").val();
-    var diyu =  $("input[name='diyu']").val();
-    var mode =  $("select[name='mode']").val();
-    var contract_id =  $("input[name='contract_id']").val();
-        if(Jszzdm == '' || diyu == '' || mode == ''){
-         layer.msg("请完善必填项！");
-         return false;
-        }
+                var id = $("input[name='id']").val();
+                var Jszzdm = $("input[name='Jszzdm']").val();
+                var diyu = $("input[name='diyu']").val();
+                var mode = $("select[name='mode']").val();
+                var contract_id = $("input[name='contract_id']").val();
+
+                {{--if(Jszzdm == '' || diyu == '' || mode == ''){--}}
+                {{--layer.msg("请完善必填项！");--}}
+                {{--return false;--}}
+                {{--}--}}
 
     $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu,'mode':mode,'contract_id':contract_id}, function (data) {
     if(data.status == 0){
