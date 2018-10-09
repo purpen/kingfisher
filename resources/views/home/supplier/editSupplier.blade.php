@@ -120,7 +120,7 @@
 					<div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
 					<label for="inputBank_address" class="col-sm-2 control-label">开户行地址</label>
 					<div class="col-sm-7">
-					<input type="text" class="form-control" value="{{$supplier->bank_address}}" id="inputBank_address" name="bank_address" placeholder="开户银行">
+					<input type="text" class="form-control" value="{{$supplier->bank_address}}" id="inputBank_address" name="bank_address" placeholder="开户行地址">
 					@if ($errors->has('bank_address'))
 					<span class="help-block">
 					<strong>{{ $errors->first('bank_address') }}</strong>
