@@ -109,14 +109,8 @@
 					</div>
 
 
-					{{--<div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">--}}
-					<label for="inputBank_number" class="col-sm-2 control-label">开户账号</label>
-					<div class="col-sm-9">
-					<input type="text" class="form-control" value="{{$supplier->bank_number}}" id="inputBank_number" name="bank_number" placeholder="开户行号">
-					</div>
-					<br>
-					<br>
-					<br>
+
+
 					{{--@if ($errors->has('bank_number'))--}}
 					{{--<span class="help-block">--}}
 					{{--<strong>{{ $errors->first('bank_number') }}</strong>--}}
@@ -125,7 +119,7 @@
 					{{--</div>--}}
 					<div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
 					<label for="inputBank_address" class="col-sm-2 control-label">开户行地址</label>
-					<div class="col-sm-3">
+					<div class="col-sm-7">
 					<input type="text" class="form-control" value="{{$supplier->bank_address}}" id="inputBank_address" name="bank_address" placeholder="开户银行">
 					@if ($errors->has('bank_address'))
 					<span class="help-block">
@@ -133,6 +127,14 @@
 					</span>
 					@endif
 					</div>
+						<br>
+						<br>
+						<br>
+					<div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">
+						<label for="inputBank_number" class="col-sm-2 control-label">开户账号</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" value="{{$supplier->bank_number}}" id="inputBank_number" name="bank_number" placeholder="开户行号">
+						</div>
 					<div class="form-group {{ $errors->has('ein') ? ' has-error' : '' }}">
 					<label for="inputAddress" class="col-sm-2 control-label">税号</label>
 					<div class="col-sm-3">
