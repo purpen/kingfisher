@@ -174,10 +174,7 @@
 					{{--<strong>{{ $errors->first('general_taxpayer') }}</strong>--}}
 					{{--</span>--}}
 					{{--@endif--}}
-					<label for="inputTel" class="col-sm-2 control-label">开票税率</label>
-					<div class="col-sm-3">
-					<input type="text" class="form-control" id="inputTaxRate" value="{{$supplier->tax_rate}}" name="tax_rate" placeholder="开票税率">
-					</div>
+
 					{{--</div>--}}
 
 					{{--<div class="form-group">--}}
@@ -190,13 +187,14 @@
 					{{--<strong>{{ $errors->first('discount') }}</strong>--}}
 					{{--</span>--}}
 					{{--@endif--}}
-					{{--<label for="inputTel" class="col-sm-2 control-label">开票税率</label>--}}
-					{{--<div class="col-sm-3">--}}
-					{{--<input type="text" class="form-control" id="inputTaxRate" value="{{$supplier->tax_rate}}" name="tax_rate" placeholder="开票税率">--}}
-					{{--</div>--}}
 					{{--</div>--}}
 
 					<div class="form-group {{ $errors->has('legal_person') ? ' has-error' : '' }}">
+						<label for="inputTaxRate" class="col-sm-2 control-label">开票税率</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="inputTaxRate" value="{{$supplier->tax_rate}}" name="tax_rate" placeholder="开票税率">
+						</div>
+
 						<label for="inputLegalPerson" class="col-sm-2 control-label">公司法人</label>
 						<div class="col-sm-3">
 							<input type="text" class="form-control" id="inputLegalPerson" value="{{$supplier->legal_person}}" name="legal_person" placeholder="法人">
