@@ -228,17 +228,22 @@
 
 @section('customize_js')
     @parent
+    function invoiceApproved(){
+        layer.confirm('确认要通过审核吗？',function(index){
+        var order_id = $('#hiddenOrder_id').val();
+        var invoice_id = $('#hiddenInvoice_id').val();
 
-    function myFunction() {
-    layer.open({
-    type: 1 //Page层类型
-    ,area: ['500px', '300px']
-    ,title: '拒绝理由'
-    ,shade: 0.2 //遮罩透明度
-    ,maxmin: false //允许全屏最小化
-    ,anim: 2 //0-6的动画形式，-1不开启
-    ,content: "<form style='margin-left:20px;margin-top:20px;'><textarea id='invoiceTextarea' rows='8' cols='60' name='reason'></textarea><br><input style='margin-top:10px;' type='submit' value='提交' class='btn btn-magenta btn-sm mr-3r' onclick='invoiceFunction()'></form>"
-    });
+        $.get("/invoice/through?id="+order_id+"&invoice_id="+invoice_id, function(data){
+            if(data == 200){
+             layer.alert('审核通过');
+             location.reload();
+            }else if(data == 500){
+                layer.alert('审核通过失败');
+                window.location.reload()
+
+            }
+            });
+        });
     }
     function invoiceFunction(){
 
@@ -252,9 +257,10 @@
 
     $.get("/invoice/rejected?reason="+textarea+"&id="+order_id+"&invoice_id="+invoice_id, function(data){
     if(data == 200){
-    layer.alert('修改成功');
+    layer.alert('驳回成功');
+    window.location.reload()
     }else if(data == 500){
-    layer.alert('修改失败');
+    layer.alert('驳回失败');
     location=location;
     }
     });

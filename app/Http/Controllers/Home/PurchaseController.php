@@ -223,7 +223,7 @@ class PurchaseController extends Controller
                 $arr = DB::update("update purchases set msg=? where id IN ($ins)", $bind_values);
             } else {
                 if (!$purchaseModel->returnedChangeStatus($id_arr)) {
-                    return ajax_json(0, '驳回失败');
+                    return ajax_json(0, '您还没有勾选采购单！');
                 }
                 $arr = DB::update("update purchases set msg=? where id = $id_arr", [$msg]);
 
