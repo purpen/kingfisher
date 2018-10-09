@@ -297,6 +297,7 @@
                                 <a class="readdimg" style="width: 100px;color: red; margin-left:45px;" value="{{ $asset->id }}">设为封面图</a>
                                     <input type="hidden" id="products_betweenid" name="id" value="{{$product->id}}">
                                 @elseif($asset->between == 1)
+                                    <input type="hidden" id="products_betweenid" name="id" value="{{$product->id}}">
                                     <a href="javascript:;" class="redeletedimg" style="width: 100px;color: red;margin-left:45px; " value="{{ $asset->id }}">取消封面图</a>
                                  @endif
                             </div>
@@ -739,7 +740,7 @@
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
-    <script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>
+    {{--<script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>--}}
     @include('editor::head')
 
 @endsection
@@ -749,42 +750,47 @@
 
     $('.redeletedimg').click(function(){
     {{--alert($(this).index());--}}
-    {{--$(this).text('设为封面图')--}}
-    {{--$('.redeletedimg').text('取消封面图')--}}
-    {{--$(this).removeClass("readdimg");--}}
-    {{--$(this).addClass("redeletedimg");--}}
+    $(this).text('取消封面图')
+    $('.redeletedimg').text('设为封面图')
+    $(this).removeClass("redeletedimg");
+    $(this).addClass("readdimg");
     var id = $(this).attr("value");
-    var product_id = $('#products_betweenid').val();
 
+    var product_id = $('#products_betweenid').val();
+    console.log(product_id);
+    console.log(id);
     $.post('{{url('/product/ajaxDeleted')}}',{'id':id,'product_id':product_id,'_token':_token},function (e) {
     console.log(e);
     if(e.status){
-    layer.alert(e.message);
+    alert(e.message);
     {{--$(this).text('设为封面图')--}}
     }else{
-    layer.alert(e.message);
+        alert(e.message);
     }
     },'json');
     });
     $('.readdimg').click(function(){
     {{--alert($(this).index());--}}
+
+    $(this).text('取消封面图');
+    $('.redeletedimg').text('设为封面图');
+    $(this).removeClass("readdimg");
+    $(this).addClass("redeletedimg");
     var id = $(this).attr("value");
     var product_id = $('#products_betweenid').val();
-    {{--$(this).text('取消封面图')--}}
-    {{--$('.redeletedimg').text('设为封面图')--}}
-    {{--$(this).removeClass("readdimg");--}}
-    {{--$(this).addClass("redeletedimg");--}}
+    console.log(product_id);
+    console.log(id);
     $.post('{{url('/product/ajaxAdd')}}',{'id':id,'product_id':product_id,'_token':_token},function (e) {
     console.log(e);
         if(e.status){
-          layer.alert(e.message);
+             alert(e.message);
 
             {{--$(this).removeClass("3333");--}}
             {{--$(this).addClass("redeletedimg");--}}
             {{--$('.redeletedimg').innerHTML('取消封面图');--}}
             {{--$(this).text('取消封面图');--}}
         }else{
-            layer.alert(e.message);
+           alert(e.message);
         }
     },'json');
     });

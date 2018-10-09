@@ -209,8 +209,8 @@ class SupplierController extends Controller
         $supplier->nam = $request->input('nam');
         $supplier->address = $request->input('address');
         $supplier->ein = $request->input('ein');
-//        $supplier->bank_number = $request->input('bank_number');
-//        $supplier->bank_address = $request->input('bank_address');
+        $supplier->bank_number = $request->input('bank_number');
+        $supplier->bank_address = $request->input('bank_address');
 //        $supplier->general_taxpayer = $request->input('general_taxpayer');
         $supplier->legal_person = $request->input('legal_person');
         $supplier->tel = $request->input('tel');
@@ -231,7 +231,7 @@ class SupplierController extends Controller
 //        $supplier->electronic_contract_report_id = $request->input('electronic_contract_report_id', 0);//电子版合同
 //        $supplier->discount = $request->input('discount');
 
-//        $supplier->tax_rate = $request->input('tax_rate');
+        $supplier->tax_rate = $request->input('tax_rate');
         $supplier->start_time = $request->input('start_time');
         $supplier->end_time = $request->input('end_time');
         $supplier->relation_user_id = $request->input('relation_user_id');

@@ -491,6 +491,7 @@ class ProductsController extends BaseController
      * "data": [
      * {
      * "id": 2,
+     * "status": 2,                             状态：1.待上架2.上架 3.已下架
      * "product_id": 60,                   // 商品ID
      * "number": "116110418454",           // 商品编号
      * "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
@@ -519,13 +520,22 @@ class ProductsController extends BaseController
         if (!$followList) {
             return $this->response->array(ApiHelper::error('您还没有关注的商品！', 403));
         }
+        $category = DistributorModel::where('user_id', $this->auth_user_id)->select('category_id')->first();
+        //商品分类
+        $categorys = explode(',',$category['category_id']);
 
         $product_ids = array_column($followList->toArray(),'product_id');
         $products = ProductsModel::
              whereIn('id',$product_ids)
-            ->where('status', '=', 2)
+//            ->where('status', '=', 2)
             ->orderBy('id', 'desc')
             ->paginate($per_page);
+        foreach ($products as $key=>$value) {
+            if(!in_array($value->category_id,$categorys))
+            {
+                $value->status = 3;//已下架
+            }
+        }
 
         if (count($products)>0) {
             return $this->response->paginator($products, new FollowListTransformer())->setMeta(ApiHelper::meta());
