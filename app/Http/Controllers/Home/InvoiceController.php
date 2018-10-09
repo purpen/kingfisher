@@ -46,6 +46,7 @@ class InvoiceController extends Controller
 
 
         //当前用户所在部门创建的订单 查询条件
+        /*
         $department = Auth::user()->department;
         if($department){
             $id_arr = UserModel
@@ -57,6 +58,8 @@ class InvoiceController extends Controller
         }else{
             $query = OrderModel::query();
         }
+         */
+        $query = OrderModel::query();
         $status= 'all'; 
         if($where){
 //            $order_list = $query
@@ -135,6 +138,7 @@ class InvoiceController extends Controller
 
 
         //当前用户所在部门创建的订单 查询条件
+        /*
         $department = Auth::user()->department;
         if($department){
             $id_arr = UserModel
@@ -146,6 +150,8 @@ class InvoiceController extends Controller
         }else{
             $query = OrderModel::query();
         }
+         */
+        $query = OrderModel::query();
         $status= 'waitpay';
 
 //            $order_list = $query
@@ -208,6 +214,7 @@ class InvoiceController extends Controller
 
 
         //当前用户所在部门创建的订单 查询条件
+        /*
         $department = Auth::user()->department;
         if($department){
             $id_arr = UserModel
@@ -219,6 +226,8 @@ class InvoiceController extends Controller
         }else{
             $query = OrderModel::query();
         }
+         */
+        $query = OrderModel::query();
         $status= 'waitpay';
 
 //        $order_list = $query
@@ -285,6 +294,7 @@ class InvoiceController extends Controller
 
 
         //当前用户所在部门创建的订单 查询条件
+        /*
         $department = Auth::user()->department;
         if($department){
             $id_arr = UserModel
@@ -296,6 +306,8 @@ class InvoiceController extends Controller
         }else{
             $query = OrderModel::query();
         }
+         */
+        $query = OrderModel::query();
         $status= 'waitpay';
 
 //        $order_list = $query
@@ -361,6 +373,7 @@ class InvoiceController extends Controller
 
 
         //当前用户所在部门创建的订单 查询条件
+        /*
         $department = Auth::user()->department;
         if($department){
             $id_arr = UserModel
@@ -372,6 +385,8 @@ class InvoiceController extends Controller
         }else{
             $query = OrderModel::query();
         }
+         */
+        $query = OrderModel::query();
         $status= 'waitpay';
 
 //        $order_list = $query
@@ -489,6 +504,7 @@ class InvoiceController extends Controller
 
 
         //当前用户所在部门创建的订单 查询条件
+        /*
         $department = Auth::user()->department;
         if($department){
             $id_arr = UserModel
@@ -500,6 +516,8 @@ class InvoiceController extends Controller
         }else{
             $query = OrderModel::query();
         }
+         */
+        $query = OrderModel::query();
         $status= 'all';
         if($where){
 //            $order_list = $query
