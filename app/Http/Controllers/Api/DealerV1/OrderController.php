@@ -310,6 +310,7 @@ class OrderController extends BaseController{
 
         $total_money = 0;
         $count = 0;
+        $num = 0;
         $sell_price = 0;
         $sku_price = [];
         $skus = new ProductsSkuModel();
@@ -323,7 +324,6 @@ class OrderController extends BaseController{
             }
 
             $sku_region = SkuRegionModel::where('sku_id', $sku_id)->get();
-
             if (count($sku_region)>0) {
 //            求最大值
             $max = 0;
@@ -341,7 +341,6 @@ class OrderController extends BaseController{
                     $price = $val['sell_price'];
                 }
             }
-
             foreach ($sku_region as $k => $v) {
                 if ($count >= $v['min'] && $count <= $v['max']) {
                     $sell_price = $v['sell_price'];
@@ -356,6 +355,7 @@ class OrderController extends BaseController{
             $sku_price[$sku_id]=$sell_price;
 
             $total_money += sprintf("%.2f", $sell_price * $skuData['quantity']);
+            $num += $skuData['quantity'];
             }else{
                 return $this->response->array(ApiHelper::error('暂无优惠信息', 403));
             }
@@ -374,7 +374,7 @@ class OrderController extends BaseController{
         }
         $all['total_money'] = $total_money;
         $all['pay_money'] = $total_money;
-        $all['count'] = $count;
+        $all['count'] = $num;
         $all['type'] = 8;
         $all['from_type'] = 4;
         $all['payment_time'] = date("Y-m-d H:i:s");//支付时间
