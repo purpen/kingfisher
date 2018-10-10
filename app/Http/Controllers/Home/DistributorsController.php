@@ -193,7 +193,7 @@ class DistributorsController extends Controller
             if ($category_id != '' && $authorization_id != '') {
                 $distributors = DB::update("update distributor set category_id='$category_id',authorization_id='$authorization_id',mode='$mode',contract_id='$contract_id' where id=$id");
                 if (!$distributors) {
-                    return ajax_json(1, '警告：分类信息保存失败');
+                    return ajax_json(1, '警告：请完善必填项');
                 }
             }
             if (!$distributorsModel->verify($id)) {
