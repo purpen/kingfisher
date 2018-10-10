@@ -426,6 +426,23 @@ class OrderController extends Controller
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
         /*$order->storage_name = $order->storage->name;*/
 
+        $province = ChinaCityModel::where('oid', $order->buyer_province)->select('name')->first();
+        $city = ChinaCityModel::where('oid', $order->buyer_city)->select('name')->first();
+        $county = ChinaCityModel::where('oid', $order->buyer_county)->select('name')->first();
+        $town = ChinaCityModel::where('oid', $order->buyer_township)->select('name')->first();
+        if ($province) {
+            $order->province = $province->name;
+        }
+        if ($city) {
+            $order->city = $city->name;
+        }
+        if ($county) {
+            $order->county = $county->name;
+        }
+        if ($town) {
+            $order->town = $town->name;
+        }
+
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 
         $product_sku_model = new ProductsSkuModel();
