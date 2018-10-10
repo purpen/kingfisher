@@ -446,7 +446,7 @@ class InvoiceController extends Controller
         $where['id'] = $invoice_id;
         $res =  HistoryInvoiceModel::where($where)->first();
         if(!$res){
-            return '无数据';
+            return '500';
         }
         $res->difference = 0;
         $res->receiving_type = 3;
@@ -455,9 +455,9 @@ class InvoiceController extends Controller
         $res->reviewer = Auth::user()->id;
 
         if($res->save()){
-            return redirect('/invoice');
+            return 200;
         } else{
-            return redirect('home/invoice');
+            return 500;
         }
 
 

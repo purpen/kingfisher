@@ -275,8 +275,36 @@
             <i class="glyphicon glyphicon-open"></i> 收起
             </button>
          <div style="display: inline-block">
-         <a   href="/invoice/through?id=@{{ id }}&invoice_id=@{{ invoices_id }}"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核通过</a>
-         <a   href="javascript:;"  onclick="myFunction()"   style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核驳回</a>
+   <div class="container">
+    <a  onclick="invoiceApproved()"  style="background:rgb(22, 155, 213)" class="btn btn-magenta btn-sm mr-3r"  >审核通过</a>
+
+    <button class="btn btn-magenta btn-sm mr-3r" data-toggle="modal"  data-target="#myModal">审核驳回</button>
+
+
+    <form method="post"  class="form-horizontal" role="form" id="myForm" onsubmit="return ">
+        <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                 <div class="modal-content">
+                     <div class="btn-info modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                         <h4>驳回原因</h4>
+                     </div>
+
+                    <div class="modal-body">
+                       <div class="form-group" style="margin-left:40px;">
+                             <textarea id='invoiceTextarea' rows='8' cols='60' name='reason'></textarea>
+                        </div>
+                     </div>
+                    <div class="modal-footer">
+                        <button type="button"  onclick="invoiceFunction()" class="btn btn-info">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
         <input type="hidden" name="invoice_id" value="@{{ invoices_id }}" id="hiddenInvoice_id">
         <input type="hidden" name="id" value="@{{ id }}" id="hiddenOrder_id">
         </div>
