@@ -369,15 +369,17 @@ class OrderController extends BaseController{
 
         if ($all['payment_type'] == 4){
            $all['status'] = 5;//已付款待审核
+            $all['payment_time'] = date("Y-m-d H:i:s");//支付时间
         }else{
            $all['status'] = 1;//待付款
+            $all['payment_time'] = '';
         }
         $all['total_money'] = $total_money;
         $all['pay_money'] = $total_money;
         $all['count'] = $num;
         $all['type'] = 8;
         $all['from_type'] = 4;
-        $all['payment_time'] = date("Y-m-d H:i:s");//支付时间
+
         $all['user_id_sales'] = config('constant.D3IN_user_id_sales');
         $all['store_id'] = config('constant.D3IN_store_id');
 //        $all['storage_id'] = config('constant.D3IN_storage_id');
