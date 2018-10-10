@@ -180,10 +180,6 @@ class DistributorsController extends Controller
         $authorization_id = $request->input('Jszzdm');
         $mode = $request->input('mode')?$request->input('mode'):'';
         $contract_id = $request->input('contract_id')?$request->input('contract_id'):0;
-//        if ($category_id = '@Model.Jszzdm' || $authorization_id = '@Model.diyu') {
-//            return ajax_json(1, '警告：请先完善必填项');
-//
-//        }
         $distributorsModel = DistributorModel::find($id);
         if($distributorsModel !='') {
 
