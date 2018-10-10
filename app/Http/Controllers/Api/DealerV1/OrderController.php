@@ -554,10 +554,10 @@ class OrderController extends BaseController{
         }
 
         $orderModel = OrderModel::find($order_id);
-//        if ($orderModel->status == 1){
-//            $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);//新建订单24小时未支付取消订单
-//            $this->dispatch($job);
-//        }
+        if ($orderModel->status == 1){
+            $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);//新建订单24小时未支付取消订单
+            $this->dispatch($job);
+        }
         return $this->response->array(ApiHelper::success('Success', 200, $orderModel));
     }
 
