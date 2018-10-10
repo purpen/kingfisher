@@ -158,10 +158,10 @@
                                             @endforeach
 
                                         </div>
-                                        <input type="hidden" name="diyu" id="diyu" value="@Model.diyu" />
+                                        <input type="hidden" name="diyu" id="diyu" value="" />
                                     </div>
                                 </div>
-
+                                {{--@Model.diyu@Model.Jszzdm--}}
                                 <div class="col-sm-3">
                                     <label for="authorization_id" class="col-sm-6 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}"><em style="color: red">*</em> 选择授权类型</label>
 
@@ -174,7 +174,7 @@
                                             @endforeach
 
                                         </div>
-                                        <input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />
+                                        <input type="hidden" name="Jszzdm" id="Jszzdm" value="" />
                                     </div>
                                 </div>
 
