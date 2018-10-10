@@ -63,19 +63,19 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label">省份</label>
                 <div class="col-sm-2">
-                    <input validate="" disabled  showname="省份" type="text" class="form-control order" id="buyer_province" name="buyer_province" value="@{{buyer_province}}">
+                    <input validate="" disabled  showname="省份" type="text" class="form-control order" id="buyer_province" name="buyer_province" value="@{{province}}">
                 </div>
                 <label class="col-sm-1 control-label">市</label>
                 <div class="col-sm-2">
-                    <input type="text" disabled  class="form-control order mobile" id="buyer_city" name="buyer_city" value="@{{ buyer_city }}">
+                    <input type="text" disabled  class="form-control order mobile" id="buyer_city" name="buyer_city" value="@{{ city }}">
                 </div>
                 <label class="col-sm-1 control-label">区/县</label>
                 <div class="col-sm-2">
-                    <input validate="" disabled  showname="" type="text" class="form-control order" id="buyer_county" name="buyer_county" value="@{{ buyer_county }}">
+                    <input validate="" disabled  showname="" type="text" class="form-control order" id="buyer_county" name="buyer_county" value="@{{ county }}">
                 </div>
                 <label class="col-sm-1 control-label">镇</label>
                 <div class="col-sm-2">
-                    <input validate="" disabled  showname="" type="text" class="form-control order" id="buyer_township" name="buyer_township" value="@{{ buyer_township }}">
+                    <input validate="" disabled  showname="" type="text" class="form-control order" id="buyer_township" name="buyer_township" value="@{{ town }}">
                 </div>
             </div>
 
@@ -217,7 +217,7 @@
                 
                 <label class="col-sm-1 control-label">付款时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" disabled="disabled">
+                    <input type="text" class="form-control" disabled="disabled" value="@{{ payment_time }}">
                 </div>
             </div>
 
