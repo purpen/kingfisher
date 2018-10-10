@@ -47,7 +47,9 @@ class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
 
         $orders =DB::table('order')
             ->where('id','=',$order_id)
-//            ->where('type','=',8)
+            ->where('status','=',1)
+            ->where('is_voucher','!=',1)
+            ->where('type','=',8)
             ->update(['status'=> 0]);
         if (!$orders){
             return false;

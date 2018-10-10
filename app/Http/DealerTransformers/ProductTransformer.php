@@ -38,7 +38,8 @@ class ProductTransformer extends TransformerAbstract
                 'market_price' => $sku->bid_price,
 //                'image' => $sku->saas_img,
                 'image' => $sku->first_img,
-                'inventory' => intval($sku->quantity),
+//                'inventory' => intval($sku->quantity),
+                'inventory' => intval($sku->count_num),
                 'sku_region' => $sku_region_array,
             ];
         }
@@ -89,6 +90,7 @@ class ProductTransformer extends TransformerAbstract
             'name' => $product->title,
             'price' => $product->cost_price,
             'inventory' => intval($product->inventory),
+//            'inventory' => intval($product->count_num),
 //            'image' => $product->first_img,
             'one_image' => $product->big_img,
             'image' => $product->imag,

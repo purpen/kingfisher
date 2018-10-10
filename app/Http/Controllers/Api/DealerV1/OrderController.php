@@ -317,8 +317,8 @@ class OrderController extends BaseController{
         foreach ($sku_id_quantity as $skuData) {
             $sku_id = $skuData['sku_id'];
             $count = $skuData['quantity'];
-            $quantity = ProductsSkuModel::where('id',$sku_id)->select('quantity')->first();
-            $quantitys = $quantity->quantity;
+            $quantity = ProductsSkuModel::where('id',$sku_id)->first();
+            $quantitys = $quantity->count_num;
             if ($count > $quantitys){
                 return $this->response->array(ApiHelper::error('sku库存不足！', 403));
             }
