@@ -444,6 +444,9 @@ class OrderController extends Controller
         if ($town) {
             $order->town = $town->name;
         }
+        if ($order->payment_time == '0000-00-00 00:00:00'){
+            $order->payment_time = '';
+        }
 
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 
