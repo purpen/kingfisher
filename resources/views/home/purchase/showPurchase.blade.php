@@ -135,8 +135,8 @@
                 </table>
             </div>
         </div>
-
-        @if ($purchase->verified == 1)
+        @if(in_array($purchase->verified,[1,2]))
+        {{--@if ($purchase->verified == 1)--}}
         <div style="text-align: center">
             <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
         <button type="button" class="btn btn-success mr-2r" id="approved">

@@ -66,7 +66,7 @@
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    付款单
+                    收款单
                 </div>
             </div>
 
