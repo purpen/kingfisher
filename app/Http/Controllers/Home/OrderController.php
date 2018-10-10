@@ -77,6 +77,7 @@ class OrderController extends Controller
         $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
 
         //当前用户所在部门创建的订单 查询条件
+        /*
         $department = Auth::user()->department;
         if($department){
             $id_arr = UserModel
@@ -88,7 +89,8 @@ class OrderController extends Controller
         }else{
             $query = OrderModel::query();
         }
-
+         */
+        $query = OrderModel::query();
         $number = '';
         if ($status === 'all') {
             $order_list = $query
