@@ -557,7 +557,7 @@ class OrderController extends BaseController{
 
         $orderModel = OrderModel::find($order_id);
         if ($orderModel->status == 1){
-            $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);//新建订单24小时未支付取消订单
+            $job = (new SendReminderEmail($order_id,$orderModel))->delay(config('constant.D3IN_over_time'));//新建订单24小时未支付取消订单
             $this->dispatch($job);
         }
         return $this->response->array(ApiHelper::success('Success', 200, $orderModel));
@@ -636,7 +636,7 @@ class OrderController extends BaseController{
             foreach ($order_sku as $k=>$v) {
                 $sku_id = $v['sku_id'];
                 $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
-                if (!$productSku->addInventory($v['sku_id'], $v['quantity'])) {
+                if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
                     return $this->response->array(ApiHelper::error('增加库存操作失败', 403));
                 }
             }
