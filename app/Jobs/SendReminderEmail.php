@@ -53,6 +53,7 @@ class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
             ->where('type','=',8)
             ->update(['status'=> 0]);
         if (!$orders){
+            Log::error("订单延时任务获取订单失败");
             return false;
         }
 
@@ -62,6 +63,7 @@ class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
             $sku_id = $v['sku_id'];
             $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
             if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
+                Log::error("订单延时任务失败2");
                 return false;
             }
         }
