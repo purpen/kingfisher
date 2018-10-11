@@ -53,7 +53,7 @@ class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
             ->where('type','=',8)
             ->update(['status'=> 0]);
         if (!$orders){
-            Log::error("订单延时任务获取订单失败");
+            Log::info("订单延时任务获取符合要求订单失败");
             return false;
         }
 
