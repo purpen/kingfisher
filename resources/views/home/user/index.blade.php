@@ -78,13 +78,13 @@
 								<span>部门</span>
 								<div class="input-group">
 									<select class="form-control selectpicker" name="department" style="display: none;">
-										<option @if($department == 10) selected @endif value="10">选择</option>
-										<option @if($department == 0) selected @endif value="0">默认</option>
-										<option @if($department == 1) selected @endif value="1">Fiu</option>
+										{{--<option @if($department == 10) selected @endif value="10">选择</option>--}}
+										{{--<option @if($department == 0) selected @endif value="0">默认</option>--}}
+										{{--<option @if($department == 1) selected @endif value="1">Fiu</option>--}}
 										<option @if($department == 2) selected @endif value="2">D3IN</option>
-										<option @if($department == 3) selected @endif value="3">海外</option>
-										<option @if($department == 4) selected @endif value="4">电商</option>
-										<option @if($department == 5) selected @endif value="5">支持</option>
+										{{--<option @if($department == 3) selected @endif value="3">海外</option>--}}
+										{{--<option @if($department == 4) selected @endif value="4">电商</option>--}}
+										{{--<option @if($department == 5) selected @endif value="5">支持</option>--}}
 									</select>
 								</div>
 
@@ -272,31 +272,31 @@
                                     <label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">部门</label>
                                     <div class="col-sm-10">
                                         <div class="radio-inline">
-                                            <label class="mr-3r">
-                                                <input name="department" value="0" type="radio">默认
-                                            </label>
-                                            <label class="ml-3r">
-                                                <input name="department" value="1" type="radio">Fiu店&nbsp&nbsp&nbsp&nbsp
-                                            </label>
+                                            {{--<label class="mr-3r">--}}
+                                                {{--<input name="department" value="0" type="radio">默认--}}
+                                            {{--</label>--}}
+                                            {{--<label class="ml-3r">--}}
+                                                {{--<input name="department" value="1" type="radio">Fiu店&nbsp&nbsp&nbsp&nbsp--}}
+                                            {{--</label>--}}
                                             <label class="ml-3r">
                                                 <input name="department" value="2" type="radio">D3IN&nbsp&nbsp&nbsp&nbsp
                                             </label>
-                                            <label class="ml-3r">
-                                                <input name="department" value="3" type="radio">海外
-                                            </label>
+                                            {{--<label class="ml-3r">--}}
+                                                {{--<input name="department" value="3" type="radio">海外--}}
+                                            {{--</label>--}}
 
                                         </div>
                                     </div>
-									<div class="col-sm-10">
-										<div class="radio-inline">
-											<label class="mr-3r">
-												<input name="department" value="4" type="radio">电商
-											</label>
-											<label class="ml-3r">
-												<input name="department" value="5" type="radio">支持
-											</label>
-										</div>
-									</div>
+									{{--<div class="col-sm-10">--}}
+										{{--<div class="radio-inline">--}}
+											{{--<label class="mr-3r">--}}
+												{{--<input name="department" value="4" type="radio">电商--}}
+											{{--</label>--}}
+											{{--<label class="ml-3r">--}}
+												{{--<input name="department" value="5" type="radio">支持--}}
+											{{--</label>--}}
+										{{--</div>--}}
+									{{--</div>--}}
                                 </div>
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
@@ -408,18 +408,18 @@
                                     <label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">部门</label>
                                     <div class="col-sm-10">
                                         <div class="radio-inline">
-                                            <label class="mr-3r">
-                                                <input name="department" value="0" type="radio" id="department0">默认
-                                            </label>
-                                            <label class="ml-3r">
-                                                <input name="department" value="1" type="radio" id="department1">Fiu店&nbsp&nbsp&nbsp&nbsp
-                                            </label>
+                                            {{--<label class="mr-3r">--}}
+                                                {{--<input name="department" value="0" type="radio" id="department0">默认--}}
+                                            {{--</label>--}}
+                                            {{--<label class="ml-3r">--}}
+                                                {{--<input name="department" value="1" type="radio" id="department1">Fiu店&nbsp&nbsp&nbsp&nbsp--}}
+                                            {{--</label>--}}
                                             <label class="ml-3r">
                                                 <input name="department" value="2" type="radio" id="department2">D3IN&nbsp&nbsp&nbsp&nbsp
                                             </label>
-                                            <label class="ml-3r">
-                                                <input name="department" value="3" type="radio" id="department3">海外
-                                            </label>
+                                            {{--<label class="ml-3r">--}}
+                                                {{--<input name="department" value="3" type="radio" id="department3">海外--}}
+                                            {{--</label>--}}
                                         </div>
                                     </div>
                                     <div class="col-sm-10">
