@@ -126,7 +126,8 @@ class ReceiveOrderController extends Controller
     {
         $receive = ReceiveOrderModel::where('status', 0)->paginate($this->per_page);
         $money = ReceiveOrderModel
-            ::where('type', 3)
+            ::where('status', 0)
+            ->where('type', 3)
             ->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))
             ->first();
         $message = DB::table('order')
@@ -157,7 +158,8 @@ class ReceiveOrderController extends Controller
     {
         $receive = ReceiveOrderModel::where('status', 1)->paginate($this->per_page);
         $money = ReceiveOrderModel
-            ::where('type', 3)
+            ::where('status', 1)
+            ->where('type', 3)
             ->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))
             ->first();
 
