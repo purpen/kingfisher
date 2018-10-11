@@ -33,10 +33,10 @@ class ReceiveOrderController extends Controller
 
 //        $order_list = OrderModel::where(['type' => 8, 'status' => 6, 'suspend' => 0])->orderBy('id', 'desc')
 //            ->paginate($this->per_page);
-        $order_list = OrderModel::where('type',8)->where('suspend',0)->where('status',6)->orderBy('id', 'desc')
+        $order_list = OrderModel::where('type', 8)->where('suspend', 0)->where('status', 6)->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
-        foreach ($order_list as $list){
+        foreach ($order_list as $list) {
             $list->full_name = $list->distributor ? $list->distributor->full_name : '';
             $list->store_name = $list->distributor ? $list->distributor->store_name : '';
         }
@@ -69,12 +69,12 @@ class ReceiveOrderController extends Controller
             if (!$model->orderCreateReceiveOrder($v->id)) {
                 return ajax_json(0, "ID:'. $v->id .'财务审核订单创建收款单错误");
             }
-                // 订单待发货状态
-                if (!$order_model->changeStatus($v->id, 8)) {
-                    DB::rollBack();
-                    Log::error('Send Order ID:' . $v->id . '订单发货修改状态错误');
-                    return ajax_json(0, 'error', '订单发货修改状态错误');
-                }
+            // 订单待发货状态
+            if (!$order_model->changeStatus($v->id, 8)) {
+                DB::rollBack();
+                Log::error('Send Order ID:' . $v->id . '订单发货修改状态错误');
+                return ajax_json(0, 'error', '订单发货修改状态错误');
+            }
 
             // 创建出库单
             $out_warehouse = new OutWarehousesModel();
@@ -99,9 +99,9 @@ class ReceiveOrderController extends Controller
                     return ajax_json(0, '审核失败');
                 }
             }
-            $financial_time = date('Y-m-d H:i:s',time());
+            $financial_time = date('Y-m-d H:i:s', time());
             $financial_name = $v->user->realname;
-            $aaa = DB::table('order')->where('id',$v->id)->update(['financial_time'=>$financial_time,'financial_name'=>$financial_name]);
+            $aaa = DB::table('order')->where('id', $v->id)->update(['financial_time' => $financial_time, 'financial_name' => $financial_name]);
             if (!$aaa) {
                 DB::rollBack();
                 return ajax_json(0, '添加审核人失败');
@@ -119,23 +119,24 @@ class ReceiveOrderController extends Controller
 
     /**
      * Display a listing of the resource.
-     *财务付款单
+     *财务收款单
      * @return \Illuminate\Http\Response
      */
     public function receive(Request $request)
     {
         $receive = ReceiveOrderModel::where('status', 0)->paginate($this->per_page);
         $money = ReceiveOrderModel
-            ::where('status', 0)
+            ::where('status', 1)
+            ->where('type', 1)
             ->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))
             ->first();
         $message = DB::table('order')
-              ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
-              ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
-              ->where('receive_order.status',0)
-              ->where('order.payment_type',4)
-              ->select('receive_order.id as receive_id','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
-              ->get();
+            ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
+            ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+            ->where('receive_order.status', 0)
+            ->where('order.payment_type', 4)
+            ->select('receive_order.id as receive_id', 'receive_order.number', 'distributor.full_name', 'distributor.store_name', 'distributor.name', 'receive_order.amount', 'receive_order.summary', 'receive_order.type', 'receive_order.created_at', 'receive_order.status', 'order.payment_type', 'order.number as num', 'order.financial_name')
+            ->get();
 
         return view('home/receiveOrder.receive', [
             'receive' => $receive,
@@ -156,13 +157,17 @@ class ReceiveOrderController extends Controller
     public function complete(Request $request)
     {
         $receive = ReceiveOrderModel::where('status', 1)->paginate($this->per_page);
-        $money = ReceiveOrderModel::where('status', 1)->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
+        $money = ReceiveOrderModel
+            ::where('status', 1)
+            ->where('type', 1)
+            ->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))
+            ->first();
 
         $message = DB::table('order')
             ->join('receive_order', 'receive_order.target_id', '=', 'order.id')
             ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
-            ->where('receive_order.status',1)
-            ->select('receive_order.id as receive_id','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
+            ->where('receive_order.status', 1)
+            ->select('receive_order.id as receive_id', 'receive_order.number', 'distributor.full_name', 'distributor.store_name', 'distributor.name', 'receive_order.amount', 'receive_order.summary', 'receive_order.type', 'receive_order.created_at', 'receive_order.status', 'order.payment_type', 'order.number as num', 'order.financial_name')
             ->get();
 
         return view('home/receiveOrder.receive', [
@@ -193,8 +198,8 @@ class ReceiveOrderController extends Controller
                 return ajax_json(0, '参数错误');
             }
             $receive_order = ReceiveOrderModel::find($id);
-            $order_name = OrderModel::where('id',$receive_order->target_id)->first();
-            $old_financial_name=$order_name->financial_name?$order_name->financial_name:'';
+            $order_name = OrderModel::where('id', $receive_order->target_id)->first();
+            $old_financial_name = $order_name->financial_name ? $order_name->financial_name : '';
             if (!$receive_order) {
                 DB::rollBack();
                 return ajax_json(0, '参数错误');
@@ -204,16 +209,16 @@ class ReceiveOrderController extends Controller
                 DB::rollBack();
                 return ajax_json(0, '收款尚未完成');
             }
-            if ($receive_order->changeStatus(1)){
+            if ($receive_order->changeStatus(1)) {
                 $target_id = $receive_order->target_id;
                 $financial_name = $order_name->user->realname;
                 //添加一个收款人 而不是修改
-                $aaa = DB::table('order')->where('id',$target_id)->update(['financial_name'=>$old_financial_name.'.'.$financial_name]);
+                $aaa = DB::table('order')->where('id', $target_id)->update(['financial_name' => $old_financial_name . '.' . $financial_name]);
                 if (!$aaa) {
                     DB::rollBack();
                     return ajax_json(0, '添加审核人失败');
                 }
-            }else{
+            } else {
                 DB::rollBack();
                 return ajax_json(0, '确认付款失败');
             }
@@ -346,8 +351,8 @@ class ReceiveOrderController extends Controller
 //            ->select('receive_order.id as receive_id','receive_order.status','receive_order.created_at','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
 //            ->get();
         if (!empty($where)) {
-            $message = $message->orWhere('receive_order.number','=',$where);
-            $message = $message->orWhere('order.number','=',$where);
+            $message = $message->orWhere('receive_order.number', '=', $where);
+            $message = $message->orWhere('order.number', '=', $where);
             $message = $message->orWhere('receive_order.payment_user', 'like', '%' . $where . '%');
 //           $message->where('receive_order.number','=',$where)->orWhere('receive_order.payment_user', 'like', '%' . $where . '%');
         }
@@ -368,9 +373,9 @@ class ReceiveOrderController extends Controller
 //        $receive = $receive->paginate($this->per_page);
 
         $message = $message->join('receive_order', 'receive_order.target_id', '=', 'order.id')
-                   ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
-                ->select('receive_order.id as receive_id','receive_order.status','receive_order.created_at','receive_order.number','distributor.full_name','distributor.store_name','distributor.name','receive_order.amount','receive_order.summary','receive_order.type','receive_order.created_at','receive_order.status','order.payment_type','order.number as num','order.financial_name')
-                ->get();
+            ->join('distributor', 'distributor.id', '=', 'order.distributor_id')
+            ->select('receive_order.id as receive_id', 'receive_order.status', 'receive_order.created_at', 'receive_order.number', 'distributor.full_name', 'distributor.store_name', 'distributor.name', 'receive_order.amount', 'receive_order.summary', 'receive_order.type', 'receive_order.created_at', 'receive_order.status', 'order.payment_type', 'order.number as num', 'order.financial_name')
+            ->get();
 
         //收款统计
         $money = ReceiveOrderModel::query();
@@ -389,7 +394,7 @@ class ReceiveOrderController extends Controller
             $money->where('type', '=', $type);
         }
         $money = $money->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
-        if (count($message)>0) {
+        if (count($message) > 0) {
             return view('home/receiveOrder.receive', [
                 'message' => $message,
                 'subnav' => $subnav,
@@ -469,20 +474,20 @@ class ReceiveOrderController extends Controller
     public function ajaxEdit(Request $request)
     {
         $order_id = (int)$request->input('id');
-        $order = OrderModel::where('id' , $order_id)->first();
-        if (!$order){
+        $order = OrderModel::where('id', $order_id)->first();
+        if (!$order) {
             return ajax_json(0, 'error');
         }
 
         $distributor = $order->distributor;
-        if ($distributor){
-            $order->full_name = $distributor->full_name?$distributor->full_name:'';
-            $order->business_license_number = $distributor->business_license_number?$distributor->business_license_number:'';
-            $order->bank_number = $distributor->bank_number?$distributor->bank_number:'';
-            $order->store_name = $distributor->store_name?$distributor->store_name:'';
-            $order->phone = $distributor->phone?$distributor->phone:'';
-            $order->name = $distributor->name?$distributor->name:'';
-        }else{
+        if ($distributor) {
+            $order->full_name = $distributor->full_name ? $distributor->full_name : '';
+            $order->business_license_number = $distributor->business_license_number ? $distributor->business_license_number : '';
+            $order->bank_number = $distributor->bank_number ? $distributor->bank_number : '';
+            $order->store_name = $distributor->store_name ? $distributor->store_name : '';
+            $order->phone = $distributor->phone ? $distributor->phone : '';
+            $order->name = $distributor->name ? $distributor->name : '';
+        } else {
             $order->full_name = '';
             $order->business_license_number = '';
             $order->bank_number = '';
@@ -491,20 +496,20 @@ class ReceiveOrderController extends Controller
             $order->name = '';
         }
 
-        if ($order->status == 6 && $order->is_voucher == 1){
-            if($order->assets){
+        if ($order->status == 6 && $order->is_voucher == 1) {
+            if ($order->assets) {
                 $order->image = $order->assets->file->small;
                 $order->img = $order->assets->file->p800;
-            }else{
+            } else {
                 $order->image = url('images/default/erp_product.png');
                 $order->img = url('images/default/erp_product1.png');
             }
-        }else{
-                $order->image = '';
-                $order->img = '';
+        } else {
+            $order->image = '';
+            $order->img = '';
         }
 
-        return ajax_json(1,'ok',['order'=>$order]);
+        return ajax_json(1, 'ok', ['order' => $order]);
     }
 
 
