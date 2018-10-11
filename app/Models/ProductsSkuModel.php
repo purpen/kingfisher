@@ -175,6 +175,14 @@ class ProductsSkuModel extends BaseModel
         return $asset->file->p500;
     }
 
+    //获取sku可售库存
+    public function getCountNumAttribute()
+    {
+        $sell_count = $this->quantity - $this->reserve_count - $this->pay_count;
+
+        return $sell_count;
+    }
+
     /**
      *sku列表
      * @param $where <模糊搜索查询参数>

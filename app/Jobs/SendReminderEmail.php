@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Jobs\Job;
 use App\Models\OrderModel;
+use App\Models\ProductsSkuModel;
 use App\Models\UserModel;
 use App\User;
 use Illuminate\Bus\Queueable;
@@ -47,11 +48,24 @@ class SendReminderEmail extends Job implements SelfHandling, ShouldQueue
 
         $orders =DB::table('order')
             ->where('id','=',$order_id)
-//            ->where('type','=',8)
+            ->where('status','=',1)
+            ->where('is_voucher','!=',1)
+            ->where('type','=',8)
             ->update(['status'=> 0]);
         if (!$orders){
             return false;
         }
+
+        $orderSku = $orderModel->orderSkuRelation;//订单详情表
+        $order_sku = $orderSku->toArray();
+        foreach ($order_sku as $k=>$v) {
+            $sku_id = $v['sku_id'];
+            $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
+            if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
+                return false;
+            }
+        }
+
         Log::info('订单id:' . $order_id . '已取消');
     }
 }

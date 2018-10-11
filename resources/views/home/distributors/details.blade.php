@@ -158,10 +158,11 @@
                                             @endforeach
 
                                         </div>
+                                        {{--<input type="hidden" name="diyu" id="diyu" value="@Model.diyu" />--}}
                                         <input type="hidden" name="diyu" id="diyu" value="" />
                                     </div>
                                 </div>
-                                {{--@Model.diyu@Model.Jszzdm--}}
+
                                 <div class="col-sm-3">
                                     <label for="authorization_id" class="col-sm-6 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}"><em style="color: red">*</em> 选择授权类型</label>
 
@@ -174,6 +175,7 @@
                                             @endforeach
 
                                         </div>
+                                        {{--<input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />--}}
                                         <input type="hidden" name="Jszzdm" id="Jszzdm" value="" />
                                     </div>
                                 </div>
@@ -297,17 +299,32 @@
                 {{--layer.msg("请完善必填项！");--}}
                 {{--return false;--}}
                 {{--}--}}
-    layer.confirm('我已勾选商品分类和授权条件，确认通过审核',function(index){
-                var id = $("input[name='id']").val();
-                var Jszzdm = $("input[name='Jszzdm']").val();
-                var diyu = $("input[name='diyu']").val();
-                var mode = $("select[name='mode']").val();
-                var contract_id = $("input[name='contract_id']").val();
 
-                if(Jszzdm == '' || diyu == '' || mode == ''){
-                layer.msg("请完善必填项！");
+                var diyu =[];
+                $('input[name="category_id"]:checked').each(function(){
+                diyu.push($(this).val());
+                });
+                if(diyu == ''){
+                layer.msg("请先完善必填项！");
                 return false;
                 }
+
+                var Jszzdm =[];//定义一个数组
+                $('input[name="authorization_id"]:checked').each(function(){//遍历每一个名字为interest的复选框，其中选中的执行函数
+                Jszzdm.push($(this).val());//将选中的值添加到数组Jszzdm中
+                });
+
+                if(Jszzdm == ''){
+                    layer.msg("请先完善必填项！");
+                    return false;
+                    }
+
+    layer.confirm('我已勾选商品分类和授权条件，确认通过审核',function(index){
+                var id = $("input[name='id']").val();
+                {{--var Jszzdm = $("input[name='Jszzdm']").val();--}}
+                {{--var diyu = $("input[name='diyu']").val();--}}
+                var mode = $("select[name='mode']").val();
+                var contract_id = $("input[name='contract_id']").val();
 
     $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu,'mode':mode,'contract_id':contract_id}, function (data) {
     if(data.status == 0){

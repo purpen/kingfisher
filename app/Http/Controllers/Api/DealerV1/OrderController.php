@@ -317,8 +317,8 @@ class OrderController extends BaseController{
         foreach ($sku_id_quantity as $skuData) {
             $sku_id = $skuData['sku_id'];
             $count = $skuData['quantity'];
-            $quantity = ProductsSkuModel::where('id',$sku_id)->select('quantity')->first();
-            $quantitys = $quantity->quantity;
+            $quantity = ProductsSkuModel::where('id',$sku_id)->first();
+            $quantitys = $quantity->count_num;
             if ($count > $quantitys){
                 return $this->response->array(ApiHelper::error('sku库存不足！', 403));
             }
@@ -369,15 +369,17 @@ class OrderController extends BaseController{
 
         if ($all['payment_type'] == 4){
            $all['status'] = 5;//已付款待审核
+            $all['payment_time'] = date("Y-m-d H:i:s");//支付时间
         }else{
            $all['status'] = 1;//待付款
+            $all['payment_time'] = '';
         }
         $all['total_money'] = $total_money;
         $all['pay_money'] = $total_money;
         $all['count'] = $num;
         $all['type'] = 8;
         $all['from_type'] = 4;
-        $all['payment_time'] = date("Y-m-d H:i:s");//支付时间
+
         $all['user_id_sales'] = config('constant.D3IN_user_id_sales');
         $all['store_id'] = config('constant.D3IN_store_id');
 //        $all['storage_id'] = config('constant.D3IN_storage_id');
@@ -555,7 +557,7 @@ class OrderController extends BaseController{
 
         $orderModel = OrderModel::find($order_id);
         if ($orderModel->status == 1){
-            $job = (new SendReminderEmail($order_id,$orderModel))->delay(60 * 60 * 24);//新建订单24小时未支付取消订单
+            $job = (new SendReminderEmail($order_id,$orderModel))->delay(config('constant.D3IN_over_time'));//新建订单24小时未支付取消订单
             $this->dispatch($job);
         }
         return $this->response->array(ApiHelper::success('Success', 200, $orderModel));
@@ -634,7 +636,7 @@ class OrderController extends BaseController{
             foreach ($order_sku as $k=>$v) {
                 $sku_id = $v['sku_id'];
                 $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
-                if (!$productSku->addInventory($v['sku_id'], $v['quantity'])) {
+                if (!$productSku->decreaseReserveCount($v['sku_id'], $v['quantity'])) {
                     return $this->response->array(ApiHelper::error('增加库存操作失败', 403));
                 }
             }
