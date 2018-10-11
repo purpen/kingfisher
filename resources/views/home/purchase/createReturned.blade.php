@@ -45,11 +45,11 @@
                         <label for="number" class="col-sm-1 control-label">部门:</label>
                         <div class="col-sm-2">
                             <select class="selectpicker" id="department" name="department" style="display: none;">
-                                <option value="">选择部门</option>
-                                <option @if($purchase->department == 1) selected @endif value="1">fiu</option>
+                                {{--<option value="">选择部门</option>--}}
+                                {{--<option @if($purchase->department == 1) selected @endif value="1">fiu</option>--}}
                                 <option @if($purchase->department == 2) selected @endif value="2">D3IN</option>
-                                <option @if($purchase->department == 3) selected @endif value="3">海外</option>
-                                <option @if($purchase->department == 4) selected @endif value="4">电商</option>
+                                {{--<option @if($purchase->department == 3) selected @endif value="3">海外</option>--}}
+                                {{--<option @if($purchase->department == 4) selected @endif value="4">电商</option>--}}
                             </select>
                         </div>
                     </div>
