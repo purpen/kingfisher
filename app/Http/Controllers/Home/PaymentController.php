@@ -102,21 +102,35 @@ class paymentController extends Controller
     public function ajaxCharge(Request $request)
     {
         $ids = $request->input('id');
+        if (count($ids)>0) {
         DB::beginTransaction();
-        foreach ($ids as $id){
+        if (is_array($ids)){
+        foreach ($ids as $id) {
             $purchase = new PurchaseModel();
-            $status = $purchase->changeStatus($id,2);
-            if(!$status)
-            {
+            $status = $purchase->changeStatus($id, 2);
+            if (!$status) {
                 DB::rollBack();
-                return ajax_json(0,'记账失败');
+                return ajax_json(0, '记账失败');
             }
-            if(!$this->purchaseCreatePayable($id))
-            {
+            if (!$this->purchaseCreatePayable($id)) {
                 DB::rollBack();
-                return ajax_json(0,'记账失败');
+                return ajax_json(0, '记账失败');
             }
-
+        }
+        }else{
+            $purchase = new PurchaseModel();
+            $status = $purchase->changeStatus($ids, 2);
+            if (!$status) {
+                DB::rollBack();
+                return ajax_json(0, '记账失败');
+            }
+            if (!$this->purchaseCreatePayable($ids)) {
+                DB::rollBack();
+                return ajax_json(0, '记账失败');
+            }
+        }
+        }else{
+            return ajax_json(0,'您还没有选择！');
         }
         DB::commit();
         return  ajax_json(1,'记账成功');

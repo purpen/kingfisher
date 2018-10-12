@@ -193,7 +193,7 @@ class PurchaseController extends Controller
                 }
             }
         }else{
-            return ajax_json(0,'请还没有选择采购单！');
+            return ajax_json(0,'您还没有选择采购单！');
 
         }
 
