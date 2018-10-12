@@ -36,6 +36,28 @@
 
     });
 
+    $('#charges').click(function () {
+    layer.confirm('确认要通过审核吗？',function(index){
+    var arr_id = $("input[name='ids']").val();
+    var _token = $("input[name='_token']").val();
+    {{--var arr_id = [];--}}
+    {{--$("input[name='Order']").each(function () {--}}
+    {{--if ($(this).is(':checked')) {--}}
+    {{--arr_id.push($(this).val());--}}
+    {{--}--}}
+    {{--});--}}
+    $.post('/payment/ajaxCharge',{'_token':_token,'id':arr_id},function (e) {
+    if(e.status){
+    layer.msg('操作成功！');
+    location.href = '{{url('/purchase')}}';
+    {{--location.reload();--}}
+    }else if(e.status == 0){
+    alert(e.message);
+    }
+    },'json');
+    });
+    });
+
     {{--主管领导驳回审核--}}
     {{--$('#rejected').click(function () {--}}
 
@@ -135,9 +157,9 @@
                 </table>
             </div>
         </div>
-        @if(in_array($purchase->verified,[1,2]))
-        {{--@if ($purchase->verified == 1)--}}
         <div style="text-align: center">
+{{--        @if(in_array($purchase->verified,[1,2]))--}}
+        @if ($purchase->verified == 1)
             <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
         <button type="button" class="btn btn-success mr-2r" id="approved">
             <i class="glyphicon glyphicon-ok"></i> 通过审批
@@ -146,8 +168,14 @@
             <i class="glyphicon glyphicon-remove"></i> 驳回审批
         </button>
 
+            @elseif($purchase->verified == 2)
+                    <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
+                    <button type="button" class="btn btn-success mr-2r" id="charges">
+                        <i class="glyphicon glyphicon-ok"></i> 通过审批
+                    </button>
 
         @endif
+
         <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">
             <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
         </button>
