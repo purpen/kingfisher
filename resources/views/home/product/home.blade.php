@@ -128,7 +128,7 @@
 							</td>
 							<td>
 								<img src="@if($product->surface_id){{$product->getFirstImgAttrbute() }}@else{{$product->first_img}}@endif" class="img-thumbnail" style="width: 80px;">
-							</td>
+							</td> 
 							<td class="magenta-color">
 								{{ $product->number }}
 							</td>
