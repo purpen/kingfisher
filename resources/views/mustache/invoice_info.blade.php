@@ -298,7 +298,7 @@
 		
         </form>
         <div class="ptb-2r plr-2r bg-black">
-            @{{#change_status}}<button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>@{{ /change_status }}
+{{--            @{{#change_status}}<button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>@{{ /change_status }}--}}
             <button type="submit" class="btn btn-magenta btn-sm" id="fold">
             <i class="glyphicon glyphicon-open"></i> 收起
             </button>
