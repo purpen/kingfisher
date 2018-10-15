@@ -263,6 +263,13 @@ class ProductsController extends BaseController
             }else{
                 $value->follow = 0;//未关注
             }
+            if ($value->surface_id){
+
+                $products[$key]->images = $value->getFirstImgAttrbute();
+
+            }else {
+                $products[$key]->images = '';
+            }
         }
         return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
 
