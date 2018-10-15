@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\ChinaCityModel;
 use App\Models\HistoryInvoiceModel;
 use App\Models\InvoiceModel;
 use App\Models\LogisticsModel;
@@ -565,6 +566,30 @@ class InvoiceController extends Controller
             return ajax_json(0,'error');
         }
         $order = OrderModel::find($order_id); //订单
+        $order->logistic_name = $order->logistics ? $order->logistics->name : '';
+
+        $province = ChinaCityModel::where('oid', $order->buyer_province)->select('name')->first();
+        $city = ChinaCityModel::where('oid', $order->buyer_city)->select('name')->first();
+        $county = ChinaCityModel::where('oid', $order->buyer_county)->select('name')->first();
+        $town = ChinaCityModel::where('oid', $order->buyer_township)->select('name')->first();
+        if ($province) {
+            $order->province = $province->name;
+        }
+        if ($city) {
+            $order->city = $city->name;
+        }
+        if ($county) {
+            $order->county = $county->name;
+        }
+        if ($town) {
+            $order->town = $town->name;
+        }
+        if ($order->payment_time == '0000-00-00 00:00:00'){
+            $order->payment_time = '';
+        }
+        if ($order->status == 0){
+            $order->payment_time = '';
+        }
         $where['order_id'] = $order_id;
         $where['id'] = $invoice_id;
         $history =  HistoryInvoiceModel::where($where)->first();
