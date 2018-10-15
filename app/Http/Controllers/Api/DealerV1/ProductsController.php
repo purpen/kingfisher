@@ -272,7 +272,7 @@ class ProductsController extends BaseController
             if ($value->surface_id){
 
                 $products[$key]->images = $value->getFirstImgAttrbute();
-
+ 
             }else {
                 $products[$key]->images = '';
             }
