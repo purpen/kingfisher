@@ -184,7 +184,7 @@ class CartController extends BaseController
                 $data['data'][$k] = array(
                     'id' => $v->id,
                     'product_name'=>$cart->title,//商品名称
-                    'inventory' =>$mode->intval($mode->getCountNumAttribute()),//商品库存数量
+                    'inventory' =>intval($mode->getCountNumAttribute()),//商品库存数量
                     'market_price'=>$cart->market_price,//商品销售价
                     'product_id' => $v->product_id,//商品id
                     'price' => 0,//购买价格
