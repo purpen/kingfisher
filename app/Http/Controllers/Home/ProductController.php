@@ -452,7 +452,7 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         $this->per_page = $request->input('per_page', $this->per_page);
-        $name = $request->input('search');
+        $name = trim($request->input('search'));
         $supplier_id = $request->input('supplier_id') ? $request->input('supplier_id') : 0;
         if ($supplier_id !== 0) {
             $products = ProductsModel::where('supplier_id', $supplier_id)->paginate($this->per_page);
