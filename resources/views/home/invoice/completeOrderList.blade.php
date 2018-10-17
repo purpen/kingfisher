@@ -194,7 +194,7 @@
                                     <small class="text-muted" style="font-size: 12px;">{{$order->express_no}}</small>
                                 </td>
                                 <td>{{$order->count}}</td>
-                                <td>{{$order->total_money}} / {{$order->freight}}</td>
+                                <td>{{$order->total_money}}</td>
                                 <td tdr="nochect">
                                     <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}} ? {{$order->invoice_id}}" active="1">
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
