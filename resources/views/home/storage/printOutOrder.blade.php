@@ -180,7 +180,7 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-10">收货地址: @{{ buyer_province }} @{{ buyer_city }} @{{ buyer_address }}</div>
+            <div class="col-lg-10">收货地址: @{{ province }} @{{ city }} @{{ buyer_address }}</div>
         </div>
         <br>
         <table class="table table-bordered">
