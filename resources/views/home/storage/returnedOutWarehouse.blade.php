@@ -73,6 +73,7 @@
                         <th>出库数量</th>
                         <th>已出库数量</th>
                         <th>制单时间</th>
+                        <th>出库时间</th>
                         <th>制单人</th>
                         <th>操作</th>
                     </tr>
@@ -113,6 +114,7 @@
                             <td>{{$out_warehouse->count}}</td>
                             <td>{{$out_warehouse->out_count}}</td>
                             <td>{{$out_warehouse->created_at_val}}</td>
+                            <td>{{$out_warehouse->order_send_time}}</td>
                             <td>{{$out_warehouse->user_name}}</td>
                             <td>
 
