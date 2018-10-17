@@ -433,7 +433,8 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                 				<button type="submit" class="btn btn-magenta mr-r btn-lg save">确认更新</button>
-                				<button type="button" class="btn btn-white cancel btn-lg once" onclick="window.history.back()">取消</button>
+                                <button type="button" class="btn btn-white btn-lg cancel once"><a href="{{url('/product')}}" style="text-decoration:none">取消</a></button>
+                				{{--<button type="button" class="btn btn-white cancel btn-lg once" onclick="window.history.back()">取消</button>--}}
                             </div>
                         </div>
             		</form>
@@ -582,8 +583,9 @@
                             </div>
 
     		                <div class="modal-footer">
-    							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>
-    							<button type="submit" class="btn btn-magenta">确定</button>
+    							{{--<button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>--}}
+                                <button type="button" class="btn btn-white btn-lg cancel once"><a href="{{url('/product')}}" style="text-decoration:none">取消</a></button>
+                                <button type="submit" class="btn btn-magenta">确定</button>
     						</div>
 					    </form>
 		            </div>
