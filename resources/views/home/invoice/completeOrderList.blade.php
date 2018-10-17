@@ -131,7 +131,6 @@
                             <th>
                                 收货人
                             </th>
-                            <th>物流/运单号</th>
                             <th>商品数量</th>
                             <th>总金额</th>
                             <th>操作</th>
@@ -154,7 +153,7 @@
                                         <span class="label label-success">{{$order->status_val}}</span>
                                     @endif
                                 </td>
-                                <td>{{$order->company_name ? $order->company_name : ''}}</td>
+                                <td>{{$order->store_name ? $order->store_name : ''}}</td>
                                 <td>{{$order->number ? $order->number: ''}}</td>
                                 <td >
                                     {{$order->order_start_time}}
@@ -189,10 +188,7 @@
                                         @endif
                                 </td>
                                 <td>{{$order->receiving_name}}</td>
-                                <td>
-                                    <span>{{$order->logistics ? $order->logistics->name : ''}}</span><br>
-                                    <small class="text-muted" style="font-size: 12px;">{{$order->express_no}}</small>
-                                </td>
+
                                 <td>{{$order->count}}</td>
                                 <td>{{$order->total_money}}</td>
                                 <td tdr="nochect">

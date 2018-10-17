@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Models\ChinaCityModel;
+use App\Models\DistributorModel;
 use App\Models\HistoryInvoiceModel;
 use App\Models\InvoiceModel;
 use App\Models\LogisticsModel;
@@ -52,6 +53,8 @@ class InvoiceController extends Controller
         }
 
 
+
+
         return view('home/invoice.index', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
@@ -77,6 +80,16 @@ class InvoiceController extends Controller
             ->where('order.number','like','%'.$wherein.'%')
             ->orderBy('order.id','desc')
             ->paginate($this->per_page);
+        foreach ($order_list as $k=>$v){
+            if ($v->distributor_id){
+                $where['id'] = $v->distributor_id;
+                $distributor[$k] = DistributorModel::where($where)->first();
+                $order_list[$k]['store_name'] = $distributor[$k]['store_name'];
+            }else {
+                $order_list[$k]['store_name'] = '';
+            }
+
+        }
         return $order_list;
     }
 
@@ -94,6 +107,16 @@ class InvoiceController extends Controller
             ->Where($where)
             ->orderBy('order.id','desc')
             ->paginate($this->per_page);
+        foreach ($order_list as $k=>$v){
+            if ($v->distributor_id){
+                $where['id'] = $v->distributor_id;
+                $distributor[$k] = DistributorModel::where($where)->first();
+                $order_list[$k]['store_name'] = $distributor[$k]['store_name'];
+            }else {
+                $order_list[$k]['store_name'] = '';
+            }
+
+        }
         return $order_list;
     }
 
@@ -398,6 +421,18 @@ class InvoiceController extends Controller
         }
         $order = OrderModel::find($order_id); //订单
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
+
+            if ($order->distributor_id){
+                $where['id'] = $order->distributor_id;
+                $distributor = DistributorModel::where($where)->first();
+                $order['store_name'] = $distributor['store_name'];
+                $order['phone'] = $distributor['phone'];
+                $order['name'] = $distributor['name'];
+            }else {
+                $order['store_name'] = '';
+                $order['phone'] = '';
+                $order['name'] = '';
+            }
 
         $province = ChinaCityModel::where('oid', $order->buyer_province)->select('name')->first();
         $city = ChinaCityModel::where('oid', $order->buyer_city)->select('name')->first();
