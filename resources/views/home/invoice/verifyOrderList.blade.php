@@ -189,7 +189,7 @@
                                         @endif
                                 </td>
                                 <td>{{$order->receiving_name}}</td>
-                             
+
                                 <td>{{$order->count}}</td>
                                 <td>{{$order->total_money}}  </td>
                                 <td tdr="nochect">

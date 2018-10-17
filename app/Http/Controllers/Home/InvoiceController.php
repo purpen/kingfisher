@@ -109,8 +109,8 @@ class InvoiceController extends Controller
             ->paginate($this->per_page);
         foreach ($order_list as $k=>$v){
             if ($v->distributor_id){
-                $where['id'] = $v->distributor_id;
-                $distributor[$k] = DistributorModel::where($where)->first();
+                $isWhere['id'] = $v->distributor_id;
+                $distributor[$k] = DistributorModel::where($isWhere)->first();
                 $order_list[$k]['store_name'] = $distributor[$k]['store_name'];
             }else {
                 $order_list[$k]['store_name'] = '';
