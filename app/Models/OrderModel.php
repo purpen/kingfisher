@@ -99,7 +99,7 @@ class OrderModel extends BaseModel
     }
 
     /**
-     * 相对关联调拨表
+     * 相对关联出库表
      */
     public function outWarehouses()
     {

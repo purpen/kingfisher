@@ -428,6 +428,7 @@ class OrderController extends Controller
 
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
         /*$order->storage_name = $order->storage->name;*/
+        $order->outWarehousesTime = $order->outWarehouses ? $order->outWarehouses->created_at : '';
 
         $province = ChinaCityModel::where('oid', $order->buyer_province)->select('name')->first();
         $city = ChinaCityModel::where('oid', $order->buyer_city)->select('name')->first();
