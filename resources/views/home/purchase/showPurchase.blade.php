@@ -59,17 +59,17 @@
     });
 
     {{--主管领导驳回审核--}}
-    $('#rejected').click(function () {
+    {{--$('#rejected').click(function () {--}}
 
-    layer.open({
-    type: 1,
-    skin: 'layui-layer-rim',
-    area: ['420px', '240px'],
-    content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="javascript:location.reload();" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'
-    });
+    {{--layer.open({--}}
+    {{--type: 1,--}}
+    {{--skin: 'layui-layer-rim',--}}
+    {{--area: ['420px', '240px'],--}}
+    {{--content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="javascript:location.reload();" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'--}}
+    {{--});--}}
 
     $(document).on("click","#sure",function(obj){
-    var msg=$("#msg").val();
+    var msg=$("#invoiceTextarea").val();
     var _token = $("input[name='_token']").val();
     var id =  $("input[name='ids']").val();
     $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id,'msg':msg}, function (e) {
@@ -81,7 +81,7 @@
     }
     },'json');
     });
-    });
+    {{--});--}}
     @endsection
 
 @section('content')
@@ -164,14 +164,16 @@
         <button type="button" class="btn btn-success mr-2r" id="approved">
             <i class="glyphicon glyphicon-ok"></i> 通过审批
         </button>
-        <button type="button" class="btn btn-warning mr-2r" id="rejected">
+        <button type="button" class="btn btn-warning mr-2r" id="rejected" data-toggle="modal" data-target="#myModal">
             <i class="glyphicon glyphicon-remove"></i> 驳回审批
         </button>
+
             @elseif($purchase->verified == 2)
                     <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
                     <button type="button" class="btn btn-success mr-2r" id="charges">
                         <i class="glyphicon glyphicon-ok"></i> 通过审批
                     </button>
+
         @endif
 
         <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">
@@ -180,6 +182,29 @@
     </div>
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     </div>
+    <form method="post"  class="form-ho rizontal" role="form" id="myForm" onsubmit="return ">
+        <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="btn-info modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4>请填写驳回原因：</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group" style="margin-left:40px;">
+                            <textarea id='invoiceTextarea' rows='8' cols='60' name='msg'></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"  id="sure" class="btn btn-info">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
 @endsection
 
 @section('customize_js')

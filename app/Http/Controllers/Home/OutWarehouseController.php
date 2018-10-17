@@ -101,6 +101,11 @@ class OutWarehouseController extends Controller
                 default:
                     return view('errors.503');
             }
+            if ($out_warehouse->order) {
+                $out_warehouse->order_send_time = $out_warehouse->order->order_send_time;
+            } else {
+                $out_warehouse->order_send_time = '';
+            }
             $out_warehouse->storage_name = $out_warehouse->storage->name;
             if ($out_warehouse->user) {
                 $out_warehouse->user_name = $out_warehouse->user->realname;

@@ -206,6 +206,7 @@ class ProductsController extends BaseController
      * @apiGroup Products
      *
      * @apiParam {string} name 商品名称
+     * @apiParam {string} categories_id  商品分类ID 0代表所有 其他正常
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      *
@@ -219,6 +220,7 @@ class ProductsController extends BaseController
      *      "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
      *      "price": "200.00",                      // 商品供货价
      *      "inventory": 1,                         // 库存
+     *      "categorie": xiaomi,                    // 分类名称
      *      "follow":1                              //已关注
      *      "image": "http://erp.me/images/default/erp_product.png",
      *     "product_details":  "http://erp.me/images/default/erp_product1.png",
@@ -244,6 +246,7 @@ class ProductsController extends BaseController
 
     public function search(Request $request){
         $name = $request->input('name');
+        $categories_id = $request->input('categories_id');
         $this->per_page = $request->input('per_page', $this->per_page);
 
         $status = DistributorModel::where('user_id', $this->auth_user_id)->select('status','category_id')->first();
@@ -252,9 +255,15 @@ class ProductsController extends BaseController
         }
 
         $categorys = explode(',',$status['category_id']);
+        if ($categories_id == 0) {
 
         $products = ProductsModel::where('title' , 'like', '%'.$name.'%')->where('status',2)->whereIn('category_id', $categorys)->orderBy('id', 'desc')
             ->paginate($this->per_page);
+
+        }else{
+            $products = ProductsModel::where('title' , 'like', '%'.$name.'%')->where('status',2)->where('category_id','=',$categories_id)->whereIn('category_id', $categorys)->orderBy('id', 'desc')
+                ->paginate($this->per_page);
+        }
 
         foreach ($products as $key=>$value){
             $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$this->auth_user_id)->first();
@@ -262,6 +271,13 @@ class ProductsController extends BaseController
                 $value->follow = 1;//已关注
             }else{
                 $value->follow = 0;//未关注
+            }
+            if ($value->surface_id){
+
+                $products[$key]->images = $value->getFirstImgAttrbute();
+
+            }else {
+                $products[$key]->images = '';
             }
         }
         return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());

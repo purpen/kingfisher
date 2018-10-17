@@ -24,15 +24,15 @@
              <div class="form-group">                
                 <label class="col-sm-1 control-label">门店名称</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="门店名称" disabled type="text" class="form-control order" id="company_name" name="company_name" value="@{{company_name}}">
+                    <input validate="" showname="门店名称" disabled type="text" class="form-control order" id="store_name" name="store_name" value="@{{store_name}}">
                 </div>
                 <label class="col-sm-1 control-label">联系人姓名</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="联系人姓名" disabled type="text" class="form-control order" id="receiving_name" name="receiving_name" value="@{{receiving_name}}">
+                    <input validate="" showname="联系人姓名" disabled type="text" class="form-control order" id="name" name="name" value="@{{name}}">
                 </div>
                 <label class="col-sm-1 control-label">联系人手机号</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="联系人手机号" disabled type="text" class="form-control order" id="receiving_phone" name="receiving_phone" value="@{{ receiving_phone }}">
+                    <input validate="" showname="联系人手机号" disabled type="text" class="form-control order" id="phone" name="phone" value="@{{ phone }}">
                 </div>
                  <label class="col-sm-1 control-label">发货仓库</label>
                 <div class="col-sm-2">
@@ -58,19 +58,19 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label">省份</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="省份" type="text" class="form-control order" id="buyer_province" name="buyer_province" value="@{{buyer_province}}">
+                    <input validate="" showname="省份" type="text" class="form-control order" id="buyer_province" name="buyer_province" value="@{{province}}">
                 </div>
                 <label class="col-sm-1 control-label">市</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control order mobile" id="buyer_city" name="buyer_city" value="@{{ buyer_city }}">
+                    <input type="text" class="form-control order mobile" id="buyer_city" name="buyer_city" value="@{{ city }}">
                 </div>
                 <label class="col-sm-1 control-label">区/县</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="" type="text" class="form-control order" id="buyer_county" name="buyer_county" value="@{{ buyer_county }}">
+                    <input validate="" showname="" type="text" class="form-control order" id="buyer_county" name="buyer_county" value="@{{ county }}">
                 </div>
                 <label class="col-sm-1 control-label">镇</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="" type="text" class="form-control order" id="buyer_township" name="buyer_township" value="@{{ buyer_township }}">
+                    <input validate="" showname="" type="text" class="form-control order" id="buyer_township" name="buyer_township" value="@{{ town }}">
                 </div>
             </div>
 
@@ -298,7 +298,7 @@
 		
         </form>
         <div class="ptb-2r plr-2r bg-black">
-            @{{#change_status}}<button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>@{{ /change_status }}
+{{--            @{{#change_status}}<button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>@{{ /change_status }}--}}
             <button type="submit" class="btn btn-magenta btn-sm" id="fold">
             <i class="glyphicon glyphicon-open"></i> 收起
             </button>
