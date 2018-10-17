@@ -86,6 +86,7 @@ class CartController extends BaseController
                 $collection  = CollectionModel::where(['user_id'=>$user_id,'product_id'=>$v->product_id])->first();
                 $assets = AssetsModel::where(['target_id' => $v->sku_id,'type' => 4])->first();//sku
                 $v->cover = '';
+                $v->product_status = $cart->status;
                 if($assets){
                     $v->cover = $assets->file->small;
                 } else {
@@ -127,6 +128,7 @@ class CartController extends BaseController
                     'market_price'=>$cart->market_price,//商品销售价
                     'product_id' => $v->product_id,//商品id
                     'price' => 0,//购买价格
+                    'products_status'=>$v->product_status,//商品上下架
                     'number' => $v->number,//购买数量
                     'cover_url' => $v->cover,//图片url
                     'mode' => $mode->mode,
@@ -152,6 +154,7 @@ class CartController extends BaseController
                 $type = SkuRegionModel::where(['sku_id'=>$v->sku_id])->select('max','min','sell_price')->get();
                 $collection  = CollectionModel::where(['user_id'=>$user_id,'product_id'=>$v->product_id])->first();
                 $assets = AssetsModel::where(['target_id' => $v->sku_id,'type' => 4])->first();//sku
+                $v->product_status = $cart->status;
                 $v->cover = '';
                 if($assets){
                     $v->cover = $assets->file->small;
@@ -188,6 +191,7 @@ class CartController extends BaseController
                     'market_price'=>$cart->market_price,//商品销售价
                     'product_id' => $v->product_id,//商品id
                     'price' => 0,//购买价格
+                    'products_status'=> $v->product_status,
                     'number' => $v->number,//购买数量
                     'cover_url' => $v->cover,//图片url
                     'mode' => $mode->mode,

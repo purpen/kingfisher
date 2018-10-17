@@ -60,40 +60,23 @@ class InvoiceController extends Controller
         }
         $status= 'all'; 
         if($where){
-//            $order_list = $query
-//                ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
-//                ->select('order.*','i.*','order.id as id','i.id as invoice_id')
-//                ->whereIn('order.status', [8, 10, 20])
-//                ->where('order.number','like','%'.$wherein.'%')
-//                ->Where($where)
-//                ->orderBy('order.id','desc')
-//                ->paginate($this->per_page);
+
             $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
                 ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
                 ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
                 ->where('order.number','like','%'.$wherein.'%')
-//                ->whereIn('order.status', [8, 10, 20])
                 ->Where($where)
                 ->orderBy('order.id','desc')
                 ->paginate($this->per_page);
         } else {
-//            $order_list = $query
-//                ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
-//                ->select('order.*','i.*','order.id as id','i.id as invoice_id')
-//                ->whereIn('order.status', [8, 10, 20])
-//                ->where('order.number','like','%'.$wherein.'%')
-//                ->orderBy('order.id','desc')
-//                ->paginate($this->per_page);
             $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
                 ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
                 ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
                 ->where('order.number','like','%'.$wherein.'%')
-//                ->whereIn('order.status', [8, 10, 20])
                 ->orderBy('order.id','desc')
                 ->paginate($this->per_page);
         }
 
-//dd($order_list);
 
         return view('home/invoice.index', [
             'order_list' => $order_list,
@@ -149,19 +132,10 @@ class InvoiceController extends Controller
         }
         $status= 'waitpay';
 
-//            $order_list = $query
-//                ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
-//                ->select('order.*','i.*','order.id as id','i.id as invoice_id')
-//                ->whereIn('order.status', [8, 10, 20])
-//                ->where('order.number','like','%'.$wherein.'%')
-//                ->where($where)
-//                ->orderBy('i.application_time','desc')
-//                ->paginate($this->per_page);
         $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
             ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
             ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
             ->where('order.number','like','%'.$wherein.'%')
-//                ->whereIn('order.status', [8, 10, 20])
             ->Where($where)
             ->orderBy('history_invoice.application_time','desc')
             ->paginate($this->per_page);
@@ -222,19 +196,10 @@ class InvoiceController extends Controller
         }
         $status= 'waitpay';
 
-//        $order_list = $query
-//            ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
-//            ->select('order.*','i.*','order.id as id','i.id as invoice_id')
-//            ->whereIn('order.status', [8, 10, 20])
-//            ->where('order.number','like','%'.$wherein.'%')
-//            ->where($where)
-//            ->orderBy('i.application_time','desc')
-//            ->paginate($this->per_page);
         $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
             ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
             ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
             ->where('order.number','like','%'.$wherein.'%')
-//                ->whereIn('order.status', [8, 10, 20])
             ->Where($where)
             ->orderBy('history_invoice.application_time','desc')
             ->paginate($this->per_page);
@@ -299,20 +264,11 @@ class InvoiceController extends Controller
         }
         $status= 'waitpay';
 
-//        $order_list = $query
-//            ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
-//            ->select('order.*','i.*','order.id as id','i.id as invoice_id')
-//            ->whereIn('order.status', [8, 10, 20])
-//            ->where('order.number','like','%'.$wherein.'%')
-//            ->where($where)
-//            ->orderBy('i.application_time','desc')
-//            ->paginate($this->per_page);
 
         $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
             ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
             ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
             ->where('order.number','like','%'.$wherein.'%')
-//                ->whereIn('order.status', [8, 10, 20])
             ->Where($where)
             ->orderBy('history_invoice.application_time','desc')
             ->paginate($this->per_page);
@@ -375,19 +331,11 @@ class InvoiceController extends Controller
         }
         $status= 'waitpay';
 
-//        $order_list = $query
-//            ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
-//            ->select('order.*','i.*','order.id as id','i.id as invoice_id')
-//            ->whereIn('order.status', [8, 10, 20])
-//            ->where('order.number','like','%'.$wherein.'%')
-//            ->where($where)
-//            ->orderBy('order.id','desc')
-//            ->paginate($this->per_page);
+
         $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
             ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
             ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
             ->where('order.number','like','%'.$wherein.'%')
-//                ->whereIn('order.status', [8, 10, 20])
             ->Where($where)
             ->orderBy('history_invoice.application_time','desc')
             ->paginate($this->per_page);
@@ -503,37 +451,21 @@ class InvoiceController extends Controller
         }
         $status= 'all';
         if($where){
-//            $order_list = $query
-//                ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
-//                ->select('order.*','i.*','order.id as id','i.id as invoice_id')
-//                ->whereIn('order.status', [8, 10, 20])
-//                ->where('order.number','like','%'.$wherein.'%')
-//                ->Where($where)
-//                ->orderBy('order.id','desc')
-//                ->paginate($this->per_page);
+
             $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
                 ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
                 ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
                 ->where('order.number','like','%'.$wherein.'%')
-//                ->whereIn('order.status', [8, 10, 20])
                 ->Where($where)
                 ->orderBy('order.id','desc')
                 ->paginate($this->per_page);
 
         } else {
-//            $order_list = $query
-//                ->leftjoin('history_invoice as i', 'order.id', '=', 'i.order_id')
-//                ->select('order.*','i.*','order.id as id','i.id as invoice_id')
-//                ->whereIn('order.status', [8, 10, 20])
-//                ->where('order.number','like','%'.$wherein.'%')
-//                ->orderBy('order.id','desc')
-//                ->paginate($this->per_page);
+
             $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
                 ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
                 ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
                 ->where('order.number','like','%'.$wherein.'%')
-//                ->whereIn('order.status', [8, 10, 20])
-//                ->Where($where)
                 ->orderBy('order.id','desc')
                 ->paginate($this->per_page);
         }
