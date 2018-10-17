@@ -146,26 +146,7 @@ class InvoiceController extends Controller
 
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
-<<<<<<< HEAD
 
-
-        //当前用户所在部门创建的订单 查询条件
-        /*
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
-         */
-        $query = OrderModel::query();
-=======
->>>>>>> origin/liujiadong
         $status= 'waitpay';
         $order_list = $this->invoiceWmd($where,$wherein);
 
@@ -211,25 +192,6 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-<<<<<<< HEAD
-
-        //当前用户所在部门创建的订单 查询条件
-        /*
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
-         */
-        $query = OrderModel::query();
-=======
->>>>>>> origin/liujiadong
         $status= 'waitpay';
         $order_list = $this->invoiceWmd($where,$wherein);
 
@@ -277,26 +239,6 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-<<<<<<< HEAD
-
-
-        //当前用户所在部门创建的订单 查询条件
-        /*
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
-         */
-        $query = OrderModel::query();
-=======
->>>>>>> origin/liujiadong
         $status= 'waitpay';
         $order_list = $this->invoiceWmd($where,$wherein);
 
@@ -343,26 +285,6 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-<<<<<<< HEAD
-
-
-        //当前用户所在部门创建的订单 查询条件
-        /*
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
-         */
-        $query = OrderModel::query();
-=======
->>>>>>> origin/liujiadong
         $status= 'waitpay';
         $order_list = $this->invoiceWmd($where,$wherein);
 
@@ -463,25 +385,6 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-<<<<<<< HEAD
-
-        //当前用户所在部门创建的订单 查询条件
-        /*
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
-         */
-        $query = OrderModel::query();
-=======
->>>>>>> origin/liujiadong
         $status= 'all';
         if($where){
             $order_list = $this->invoiceWmd($where,$wherein);
