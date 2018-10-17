@@ -14,6 +14,7 @@ use App\Models\OrderSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentReceiptOrderDetailModel;
+use App\Models\ProductsSkuModel;
 use App\Models\ReceiveOrderModel;
 use App\Models\SupplierModel;
 use App\Models\User;
@@ -66,7 +67,7 @@ class ReceiveOrderController extends Controller
         foreach ($order as $v) {
             // 创建订单收款单
             $model = new ReceiveOrderModel();
-            if (!$model->orderCreateReceiveOrder($v->id)) {
+            if (!$receive_order = $model->orderCreateReceiveOrder($v->id)) {
                 return ajax_json(0, "ID:'. $v->id .'财务审核订单创建收款单错误");
             }
             // 订单待发货状态
@@ -85,10 +86,15 @@ class ReceiveOrderController extends Controller
             }
 
             if ($v->payment_type == "在线付款" || $v->payment_type == "公司转账") {
-                $id = $v->id;
-                $statu = ReceiveOrderModel::query()->where(['target_id' => $id, 'type' => 3])->update(['status' => 1]);
+                $statu = $receive_order->update(['status' => 1, 'received_money' => $receive_order->amount]);
                 $status = $order_model->changeStatus($v->id, 8);
-                if (!($statu && $status)) {
+
+                // 为付款占货转付款占货
+                $productSku = new ProductsSkuModel();
+                $status1 = $productSku->orderDecreaseReserveCount($v->id);
+                $status2 = $productSku->orderIncreasePayCount($v->id);
+
+                if (!$statu || !$status || !$status1 || !$status2) {
                     DB::rollBack();
                     return ajax_json(0, '审核失败');
                 }

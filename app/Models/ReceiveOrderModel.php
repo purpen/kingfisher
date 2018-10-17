@@ -2,6 +2,7 @@
 /**
  * 财务收款单
  */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -23,30 +24,35 @@ class ReceiveOrderModel extends BaseModel
      * @var string
      */
     protected $table = 'receive_order';
-    
+
     //相对关联订单表
-    public function order(){
-        return $this->belongsTo('App\Models\OrderModel','target_id');
+    public function order()
+    {
+        return $this->belongsTo('App\Models\OrderModel', 'target_id');
     }
 
     //相对关联用户表
-    public function user(){
-        return $this->belongsTo('App\Models\UserModel','user_id');
+    public function user()
+    {
+        return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
 
     //相对关联采购退货表
-    public function returnedPurchase(){
-        return $this->belongsTo('App\Models\ReturnedPurchasesModel','target_id');
+    public function returnedPurchase()
+    {
+        return $this->belongsTo('App\Models\ReturnedPurchasesModel', 'target_id');
     }
 
     //一对一关联代发供货商收款单
-    public function supplierReceipt(){
-        return $this->hasOne('App\Models\SupplierReceiptModel','target_id');
+    public function supplierReceipt()
+    {
+        return $this->hasOne('App\Models\SupplierReceiptModel', 'target_id');
     }
 
     //相对关联代发收、付款明细
-    public function paymentReceiptOrderDetailModel(){
-        return $this->hasOne('App\Models\PaymentReceiptOrderDetailModel','target_id');
+    public function paymentReceiptOrderDetailModel()
+    {
+        return $this->hasOne('App\Models\PaymentReceiptOrderDetailModel', 'target_id');
     }
 
     /**
@@ -54,18 +60,18 @@ class ReceiveOrderModel extends BaseModel
      */
     public function getTargetNumberAttribute()
     {
-        switch ($this->type){
+        switch ($this->type) {
             case 3:
-                if($this->order){
+                if ($this->order) {
                     $target_number = $this->order->number;
-                }else{
+                } else {
                     $target_number = '';
                 }
                 break;
             case 4:
-                if($this->returnedPurchase){
+                if ($this->returnedPurchase) {
                     $target_number = $this->returnedPurchase->number;
-                }else{
+                } else {
                     $target_number = '';
                 }
                 break;
@@ -78,11 +84,11 @@ class ReceiveOrderModel extends BaseModel
     //收款单关联人访问修改
     public function getTargetUserAttribute()
     {
-        switch ($this->type){
+        switch ($this->type) {
             case 3:
-                if($this->order && $this->order->user){
+                if ($this->order && $this->order->user) {
                     $target_user = $this->order->user->realname;
-                }else{
+                } else {
                     $target_user = '';
                 }
                 break;
@@ -97,7 +103,7 @@ class ReceiveOrderModel extends BaseModel
      */
     public function getTypeValAttribute()
     {
-        switch ($this->type){
+        switch ($this->type) {
             case 3:
                 $type = '订单';
                 break;
@@ -122,9 +128,10 @@ class ReceiveOrderModel extends BaseModel
      * @param int $status 更改后的状态
      * @return bool
      */
-    public function changeStatus($status){
+    public function changeStatus($status)
+    {
         $this->status = (int)$status;
-        if(!$this->save()){
+        if (!$this->save()) {
             return false;
         }
         return true;
@@ -133,11 +140,12 @@ class ReceiveOrderModel extends BaseModel
     /**
      * 根据订单创建收款单
      * @param int $order_id 订单ID
-     * @return bool
+     * @return ReceiveOrderModel|bool
      */
-    public function orderCreateReceiveOrder($order_id){
+    public function orderCreateReceiveOrder($order_id)
+    {
         $order = OrderModel::find($order_id);
-        if(!$order){
+        if (!$order) {
             return false;
         }
 
@@ -146,7 +154,7 @@ class ReceiveOrderModel extends BaseModel
         $receiveOrder->amount = $order->pay_money;
         $receiveOrder->payment_user = $order->buyer_name;
         $receiveOrder->type = 3;
-        switch ($order->type){
+        switch ($order->type) {
             case 1:    //订单
                 $receiveOrder->status = 1;  //已付款
                 break;
@@ -176,16 +184,16 @@ class ReceiveOrderModel extends BaseModel
         }
 
         $receiveOrder->target_id = $order_id;
-        $receiveOrder->user_id = Auth::user()?Auth::user()->id:0;
+        $receiveOrder->user_id = Auth::user() ? Auth::user()->id : 0;
         $number = CountersModel::get_number('SK');
-        if($number == false){
+        if ($number == false) {
             return false;
         }
         $receiveOrder->number = $number;
-        if(!$receiveOrder->save()){
+        if (!$receiveOrder->save()) {
             return false;
-        }else{
-            return true;
+        } else {
+            return $receiveOrder;
         }
     }
 
@@ -194,9 +202,10 @@ class ReceiveOrderModel extends BaseModel
      * @param int $order_id 订单ID
      * @return bool
      */
-    public function returnedCreateReceiveOrder($returnedOrder_id){
+    public function returnedCreateReceiveOrder($returnedOrder_id)
+    {
         $order = ReturnedPurchasesModel::find($returnedOrder_id);
-        if(!$order){
+        if (!$order) {
             return false;
         }
 
@@ -209,23 +218,24 @@ class ReceiveOrderModel extends BaseModel
         $receiveOrder->target_id = $returnedOrder_id;
         $receiveOrder->user_id = Auth::user()->id;
         $number = CountersModel::get_number('SK');
-        if($number == false){
+        if ($number == false) {
             return false;
         }
         $receiveOrder->number = $number;
-        if(!$receiveOrder->save()){
+        if (!$receiveOrder->save()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-        //收款单列表
-        public function lists(){
-            $orderSkuRelation=new OrderSkuRelationModel();
-            $target_id=$orderSkuRelation->target_id;
-            $receiveOrder = self::where('target_id',$target_id)->select('id')->get();
-            return $receiveOrder;
+    //收款单列表
+    public function lists()
+    {
+        $orderSkuRelation = new OrderSkuRelationModel();
+        $target_id = $orderSkuRelation->target_id;
+        $receiveOrder = self::where('target_id', $target_id)->select('id')->get();
+        return $receiveOrder;
 
     }
 
