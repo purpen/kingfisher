@@ -42,39 +42,13 @@ class InvoiceController extends Controller
 
         $this->per_page = $request->input('per_page', $this->per_page);
 
-
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-
-        //当前用户所在部门创建的订单 查询条件
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
         $status= 'all'; 
         if($where){
-
-            $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
-                ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
-                ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
-                ->where('order.number','like','%'.$wherein.'%')
-                ->Where($where)
-                ->orderBy('order.id','desc')
-                ->paginate($this->per_page);
+            $order_list = $this->invoiceWmd($where,$wherein);
         } else {
-            $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
-                ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
-                ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
-                ->where('order.number','like','%'.$wherein.'%')
-                ->orderBy('order.id','desc')
-                ->paginate($this->per_page);
+            $order_list = $this->invoiceMd($wherein);
         }
 
 
@@ -90,6 +64,39 @@ class InvoiceController extends Controller
 
         ]);
     }
+
+    /**
+     * @param $wherein
+     * @return mixed 无where条件sql
+     */
+    public function invoiceMd($wherein)
+    {
+        $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
+            ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
+            ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
+            ->where('order.number','like','%'.$wherein.'%')
+            ->orderBy('order.id','desc')
+            ->paginate($this->per_page);
+        return $order_list;
+    }
+
+    /**
+     * @param $where
+     * @param $wherein
+     * @return mixed 有where条件sql
+     */
+    public function invoiceWmd($where,$wherein)
+    {
+        $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
+            ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
+            ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
+            ->where('order.number','like','%'.$wherein.'%')
+            ->Where($where)
+            ->orderBy('order.id','desc')
+            ->paginate($this->per_page);
+        return $order_list;
+    }
+
     /**
      * 发票管理中的审核中
      *
@@ -116,29 +123,9 @@ class InvoiceController extends Controller
 
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
-
-
-        //当前用户所在部门创建的订单 查询条件
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
         $status= 'waitpay';
+        $order_list = $this->invoiceWmd($where,$wherein);
 
-        $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
-            ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
-            ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
-            ->where('order.number','like','%'.$wherein.'%')
-            ->Where($where)
-            ->orderBy('history_invoice.application_time','desc')
-            ->paginate($this->per_page);
 
 
         return view('home/invoice.nonOrderList', [
@@ -181,28 +168,8 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-
-        //当前用户所在部门创建的订单 查询条件
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
         $status= 'waitpay';
-
-        $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
-            ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
-            ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
-            ->where('order.number','like','%'.$wherein.'%')
-            ->Where($where)
-            ->orderBy('history_invoice.application_time','desc')
-            ->paginate($this->per_page);
+        $order_list = $this->invoiceWmd($where,$wherein);
 
 
         return view('home/invoice.verifyOrderList', [
@@ -248,30 +215,9 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-
-
-        //当前用户所在部门创建的订单 查询条件
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
         $status= 'waitpay';
+        $order_list = $this->invoiceWmd($where,$wherein);
 
-
-        $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
-            ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
-            ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
-            ->where('order.number','like','%'.$wherein.'%')
-            ->Where($where)
-            ->orderBy('history_invoice.application_time','desc')
-            ->paginate($this->per_page);
 
         return view('home/invoice.sendOrderList', [
             'order_list' => $order_list,
@@ -315,30 +261,9 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-
-
-        //当前用户所在部门创建的订单 查询条件
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
         $status= 'waitpay';
+        $order_list = $this->invoiceWmd($where,$wherein);
 
-
-        $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
-            ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
-            ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
-            ->where('order.number','like','%'.$wherein.'%')
-            ->Where($where)
-            ->orderBy('history_invoice.application_time','desc')
-            ->paginate($this->per_page);
 
 
         return view('home/invoice.completeOrderList', [
@@ -436,38 +361,12 @@ class InvoiceController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
-
-        //当前用户所在部门创建的订单 查询条件
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel
-                ::where('department',$department)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-            $query = OrderModel::whereIn('user_id_sales', $id_arr);
-        }else{
-            $query = OrderModel::query();
-        }
         $status= 'all';
         if($where){
-
-            $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
-                ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
-                ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
-                ->where('order.number','like','%'.$wherein.'%')
-                ->Where($where)
-                ->orderBy('order.id','desc')
-                ->paginate($this->per_page);
+            $order_list = $this->invoiceWmd($where,$wherein);
 
         } else {
-
-            $order_list = OrderModel::whereRaw(DB::raw("((`status` IN (8,10,20) and  `payment_type` = 6) OR (`status` IN (5, 6, 7, 10, 20) and `payment_type` IN (1, 4)))"))
-                ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
-                ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
-                ->where('order.number','like','%'.$wherein.'%')
-                ->orderBy('order.id','desc')
-                ->paginate($this->per_page);
+            $order_list = $this->invoiceMd($wherein);
         }
 
 
