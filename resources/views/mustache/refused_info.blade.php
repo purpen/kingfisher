@@ -146,11 +146,11 @@
                 <div class="col-sm-3">
                     <span class="form-text text-danger">@{{ payment_type }}</span>
                 </div>
-                
-              <label class="col-sm-1 control-label">支付时间</label>
+                 <label class="col-sm-1 control-label">下单时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" value="@{{ payment_time	 }}" disabled="disabled">
+                    <input type="text" class="form-control" value="@{{ order_start_time }}" disabled="disabled">
                 </div>
+
             </div>
             
             <div class="form-group">
@@ -158,11 +158,11 @@
                 <div class="col-sm-3">
                     <input type="text" class="form-control" disabled="disabled">
                 </div>
-                
-                <label class="col-sm-1 control-label">下单时间</label>
+                 <label class="col-sm-1 control-label">支付时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" value="@{{ order_start_time }}" disabled="disabled">
+                    <input type="text" class="form-control" value="@{{ payment_time	 }}" disabled="disabled">
                 </div>
+
 				
             </div>
 				<label class="col-sm-1 control-label" style="margin-left:-15px;">付款金额</label>
