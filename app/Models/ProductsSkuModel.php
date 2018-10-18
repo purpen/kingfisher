@@ -120,7 +120,7 @@ class ProductsSkuModel extends BaseModel
      */
     public function SkuRegion()
     {
-        return $this->hasMany('App\Models\SkuRegionModel','sku_id');
+        return $this->hasMany('App\Models\SkuRegionModel', 'sku_id');
     }
 
     /**
@@ -133,8 +133,8 @@ class ProductsSkuModel extends BaseModel
             ->orderBy('id', 'desc')
             ->first();
         if (empty($asset)) {
-           $result =  AssetsModel::where(['target_id' => $this->product_id,'type' => 1])
-                ->orderBy('id','desc')
+            $result = AssetsModel::where(['target_id' => $this->product_id, 'type' => 1])
+                ->orderBy('id', 'desc')
                 ->first();
 
             return $result->file->p500;
@@ -245,7 +245,7 @@ class ProductsSkuModel extends BaseModel
      */
     public function detailedSuks($purchase_sku_relation)
     {
-        foreach ($purchase_sku_relation as $k=>$purchase_sku) {
+        foreach ($purchase_sku_relation as $k => $purchase_sku) {
             if (!$sku = ProductsSkuModel::find($purchase_sku->sku_id)) {
                 return $purchase_sku_relation;
             };
@@ -472,6 +472,26 @@ class ProductsSkuModel extends BaseModel
         }
         foreach ($order_sku as $sku) {
             if (!$this->decreaseReserveCount($sku->sku_id, $sku->quantity)) {
+                return false;
+            };
+        }
+        return true;
+    }
+
+    /**
+     * 订单付款时，增加仓库付款占货数量
+     * @param $order_id
+     * @return bool
+     */
+    public function orderIncreasePayCount($order_id)
+    {
+        $order_id = (int)$order_id;
+        $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
+        if (!$order_sku) {
+            return false;
+        }
+        foreach ($order_sku as $sku) {
+            if (!$this->increasePayCount($sku->sku_id, $sku->quantity)) {
                 return false;
             };
         }

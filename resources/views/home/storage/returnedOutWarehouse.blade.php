@@ -73,6 +73,9 @@
                         <th>出库数量</th>
                         <th>已出库数量</th>
                         <th>制单时间</th>
+                        @if($tab_menu == 'finished')
+                        <th>出库时间</th>
+                        @endif
                         <th>制单人</th>
                         <th>操作</th>
                     </tr>
@@ -113,6 +116,9 @@
                             <td>{{$out_warehouse->count}}</td>
                             <td>{{$out_warehouse->out_count}}</td>
                             <td>{{$out_warehouse->created_at_val}}</td>
+                            @if(!empty($out_warehouse->order_send_time))
+                            <td>{{$out_warehouse->order_send_time}}</td>
+                            @endif
                             <td>{{$out_warehouse->user_name}}</td>
                             <td>
 

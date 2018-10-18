@@ -742,7 +742,7 @@
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
-    <script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>
+    {{--<script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>--}}
     @include('editor::head')
 
 @endsection

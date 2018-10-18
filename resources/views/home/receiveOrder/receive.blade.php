@@ -98,8 +98,7 @@
                 </div>
             </div>
             <div class="col-md-4 text-right">
-                <span>应收金额：<span class="text-danger">{{ $money->amount_sum }}</span> 元</span>
-                <span>已收金额：<span class="text-danger">{{ $money->received_sum }}</span> 元</span>
+                <span>金额：<span class="text-danger">{{ $money->amount_sum }}</span> 元</span>
             </div>
         </div>
         <div class="row">

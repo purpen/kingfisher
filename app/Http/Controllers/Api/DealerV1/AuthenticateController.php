@@ -435,9 +435,9 @@ class AuthenticateController extends BaseController
         $data['text'] = '【太火鸟】验证码：' . $code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
 
         $yunpian = new Yunpian();
-        $yunpian->sendOneSms($data);
+//        $yunpian->sendOneSms($data);
 
-        return $this->response->array(ApiHelper::success('请求成功！', 200));
+        return $this->response->array(ApiHelper::success('请求成功！', 200,['code' => $code]));
     }
 
 

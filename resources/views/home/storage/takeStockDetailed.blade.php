@@ -136,7 +136,8 @@
                     target.text(max_count - number);
                     return false;
                 } else if (date_obj.status == 0) {
-                    alert(date_obj.msg);
+                    alert(date_obj.message);
+                    location.reload();
                 } else {
                     alert(date_obj.message);
                 }

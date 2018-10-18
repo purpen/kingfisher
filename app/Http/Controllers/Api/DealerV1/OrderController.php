@@ -28,6 +28,7 @@ use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends BaseController{
@@ -555,12 +556,13 @@ class OrderController extends BaseController{
             $dataes->datas(1);
         }
 
-        $orderModel = OrderModel::find($order_id);
-        if ($orderModel->status == 1){
-            $job = (new SendReminderEmail($order_id,$orderModel))->delay(config('constant.D3IN_over_time'));//新建订单24小时未支付取消订单
+        if ($order->status == 1){
+            Log::info("创建延迟队列1");
+            $job = (new SendReminderEmail($order_id,$order))->delay(config('constant.D3IN_over_time'));//新建订单24小时未支付取消订单
             $this->dispatch($job);
+            Log::info("创建延迟队列2");
         }
-        return $this->response->array(ApiHelper::success('Success', 200, $orderModel));
+        return $this->response->array(ApiHelper::success('Success', 200, $order));
     }
 
 

@@ -24,15 +24,15 @@
              <div class="form-group">                
                 <label class="col-sm-1 control-label">门店名称</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="门店名称" disabled type="text" class="form-control order" id="company_name" name="company_name" value="@{{company_name}}">
+                    <input validate="" showname="门店名称" disabled type="text" class="form-control order" id="store_name" name="store_name" value="@{{store_name}}">
                 </div>
                 <label class="col-sm-1 control-label">联系人姓名</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="联系人姓名" disabled type="text" class="form-control order" id="receiving_name" name="receiving_name" value="@{{receiving_name}}">
+                    <input validate="" showname="联系人姓名" disabled type="text" class="form-control order" id="name" name="name" value="@{{name}}">
                 </div>
                 <label class="col-sm-1 control-label">联系人手机号</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="联系人手机号" disabled type="text" class="form-control order" id="receiving_phone" name="receiving_phone" value="@{{ receiving_phone }}">
+                    <input validate="" showname="联系人手机号" disabled type="text" class="form-control order" id="phone" name="phone" value="@{{ phone }}">
                 </div>
                 <label class="col-sm-1 control-label">发货仓库</label>
                 <div class="col-sm-2">
@@ -146,11 +146,11 @@
                 <div class="col-sm-3">
                     <span class="form-text text-danger">@{{ payment_type }}</span>
                 </div>
-                
-              <label class="col-sm-1 control-label">支付时间</label>
+                 <label class="col-sm-1 control-label">下单时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" value="@{{ payment_time	 }}" disabled="disabled">
+                    <input type="text" class="form-control" value="@{{ order_start_time }}" disabled="disabled">
                 </div>
+
             </div>
             
             <div class="form-group">
@@ -158,11 +158,11 @@
                 <div class="col-sm-3">
                     <input type="text" class="form-control" disabled="disabled">
                 </div>
-                
-                <label class="col-sm-1 control-label">下单时间</label>
+                 <label class="col-sm-1 control-label">支付时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" value="@{{ order_start_time }}" disabled="disabled">
+                    <input type="text" class="form-control" value="@{{ payment_time	 }}" disabled="disabled">
                 </div>
+
 				
             </div>
 				<label class="col-sm-1 control-label" style="margin-left:-15px;">付款金额</label>
