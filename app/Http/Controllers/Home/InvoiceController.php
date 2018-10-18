@@ -78,7 +78,7 @@ class InvoiceController extends Controller
             ->select('order.*','history_invoice.*','order.id as id','history_invoice.id as invoice_id')
             ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
             ->where('order.number','like','%'.$wherein.'%')
-            ->orderBy('order.id','desc')
+            ->orderBy('history_invoice.application_time','desc')
             ->paginate($this->per_page);
         foreach ($order_list as $k=>$v){
             if ($v->distributor_id){
@@ -105,7 +105,7 @@ class InvoiceController extends Controller
             ->leftJoin('history_invoice', 'order.id', '=', 'history_invoice.order_id')
             ->where('order.number','like','%'.$wherein.'%')
             ->Where($where)
-            ->orderBy('order.id','desc')
+            ->orderBy('history_invoice.application_time','desc')
             ->paginate($this->per_page);
         foreach ($order_list as $k=>$v){
             if ($v->distributor_id){
