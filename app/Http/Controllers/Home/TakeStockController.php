@@ -49,7 +49,7 @@ class TakeStockController extends Controller
             ->get();
 
         if ($data->isEmpty()) {
-            return redirect()->action('Home\TakeStockController@index');
+            return redirect()->action('Home\TakeStockController@index')->with('status', '仓库为空，不能盘点!');
         }
 
         try {
@@ -83,7 +83,7 @@ class TakeStockController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
+            Log::error($e);
         }
 
         return redirect()->action('Home\TakeStockController@index');
