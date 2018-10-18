@@ -25,7 +25,7 @@ class ProductRequest extends Request
     public function rules()
     {
         return [
-            'title' => 'required|max:50',
+            'title' => 'required|max:200',
             'category_id' => 'required',
             'supplier_id' => 'required',
             'sale_price' => 'required',
@@ -38,7 +38,7 @@ class ProductRequest extends Request
     {
         return [
             'title.required' => '名称不能为空',
-            'title.max' => '名称长度不能大于50',
+            'title.max' => '名称长度不能大于100',
             'category_id.required' => '请选择分类',
             'supplier_id.required' => '请选择供应商',
             'sale_price.required' => '销售价格不能为空',
