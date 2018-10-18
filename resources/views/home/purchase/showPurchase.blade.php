@@ -102,6 +102,7 @@
             <div class="col-md-12">
                 <h5>基本信息</h5>
                 <hr>
+                <p><strong>单据编号：</strong> <span>{{$purchase->number}}</span></p>
                 <p><strong>采购类型：</strong> <span>{{$purchase->type_val}}</span></p>
                 <p><strong>来源供应商：</strong> <span>{{$purchase->supplier}}</span></p>
                 <p><strong>预计到货时间：</strong> <span>@if($purchase->predict_time != '0000-00-00') {{$purchase->predict_time}} @endif</span></p>
