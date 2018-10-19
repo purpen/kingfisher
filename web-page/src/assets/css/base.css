@@ -14,7 +14,7 @@ html{
 body{
   overflow-x: hidden;
   margin: 0 auto;
-  font-family:'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif !important;
+  font-family:'HanHei SC', 'MicrosoftYaHei', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif !important;
 }
 
 #app {
@@ -23,27 +23,10 @@ body{
 
 .container {
   margin: 0 auto;
+  padding: 0 50px;
 }
 .min-height350 {
   min-height: 350px;
-}
-
-/* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
-@media screen and (min-width: 1200px) { 
-  .container {width: 1200px} 
-} 
-
-/* 设置了浏览器宽度不大于1200px时  显示992px宽度 */ 
-@media screen and (min-width: 992px) and (max-width: 1199px) {
-  .container {
-    width: 992px;
-  }
-}
-/* 设置了浏览器宽度不大于992px,不小于769时  显示768px宽度 */ 
-@media screen and (min-width: 768px) and (max-width: 991px) {
-  .container {
-    width: 768px;
-  }
 }
 
 p{
@@ -308,11 +291,7 @@ button.is-custom.is-outlined.is-loading:after {
   color: rgba(112,123,135,.92);
   text-transform: none;
   font-weight: 400;
-  padding: .85rem 1.5rem .85rem 1.5rem!important;
-}
-
-.menu-list .item {
-  font-size: 1.5rem;
+  padding: .85rem 1.5rem .85rem 0rem !important;
 }
 
 .menu-list .item:hover {
@@ -344,6 +323,7 @@ button.is-custom.is-outlined.is-loading:after {
   border: 1px solid #ccc;
   padding: 0px 20px 20px 20px;
   min-height: 350px;
+  border-radius: 6px;
 }
 .right-content .content-box.no-border {
   border: none;
@@ -540,21 +520,20 @@ img.avatar {
 }
 
 .layout-logo{
-  width: 130px;
-  height: 30px;
+  width: 71px;
+  height: 47px;
   color: #fff;
   float: left;
   position: relative;
+  margin-right: 26px;
 }
 .layout-logo img {
-  width: 60px;
+  width: 71px;
   position: absolute;
-  top: 15px;
+  top: 7px;
+  height: 47px;
 }
 
-.layout-nav {
-  margin-left: 150px;
-}
 
 .layout-nav .ivu-menu-item, .layout-nav .ivu-menu-submenu {
   font-size: 1.6rem;
@@ -648,19 +627,6 @@ img.avatar {
 
 .menu-list {
   padding: 0 0 0 0;
-}
-
-.menu-list .item {
-  display: block;
-  cursor: pointer;
-  border: none;
-  height: auto;
-  text-align: left;
-  line-height: 1em;
-  color: rgba(112,123,135,.92);
-  text-transform: none;
-  font-weight: 400;
-  padding: .85rem 1.5rem .85rem 1.5rem!important;
 }
 
 .menu-list .item {

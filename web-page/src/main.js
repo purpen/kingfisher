@@ -24,6 +24,11 @@ import '@/assets/css/public.css'
 Vue.prototype.$http = axios
 Vue.use(iView)
 
+// eventbus
+import BusFactory from 'vue-happy-bus'
+// 使用全局变量引用
+Vue.prototype.$BusFactory = BusFactory
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

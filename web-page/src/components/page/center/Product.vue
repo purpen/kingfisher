@@ -24,9 +24,11 @@
                 <div class="allOrder">
                   <span class="font-14 cursor" @click="allOrder">全部产品</span>
                 </div>
-                <div>
+                <div style="display: flex">
                   <Input v-model="search" icon="ios-search" placeholder="输入产品名称搜索" style="width: 200px"></Input>
-                  <Button class="color-ff5a5f" @click="searchOrder(search)">确定</Button>
+                  <div>
+                    <Button class="color-ff5a5f" @click="searchOrder(search)">确定</Button>
+                  </div>
                 </div>
               </div>
             </Col>
@@ -62,7 +64,7 @@
         </div>
       </Col>
     </Row>
-
+    <div class="blank20"></div>
   </div>
 </template>
 
@@ -126,7 +128,6 @@ export default {
       self.$http.get(api.productRecommendList, {params: {token: token, per_page: this.query.size, page: this.query.page}})
       .then(function (response) {
         self.isLoading = false
-        console.log(response)
         if (response.data && response.data.meta.status_code === 200) {
           if (response.data.data.length !== 0) {
             if (response.data.meta.pagination.total) {
@@ -168,6 +169,8 @@ export default {
         // this.query.count = this.count
       }
     }
+  },
+  computed: {
   },
   created: function () {
     this.loadList()
