@@ -840,7 +840,7 @@
 
             $('#updateskuModal').modal('show');
 
-            var template = ['@{{ #assets }}<div class="mb-3r">',
+            var template = ['@{{ #assets }}<div class="col-md-4">',
                 '<img src="@{{ path }}" style="width: 150px;" class="img-thumbnail">',
                 '<a class="removeimg" value="@{{ id }}"><i class="glyphicon glyphicon-remove"></i></a>',
                 '</div>@{{ /assets }}'].join("");
