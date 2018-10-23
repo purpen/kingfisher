@@ -4,17 +4,20 @@
  */
 namespace App\Http\Controllers\Home;
 
+use App\Models\AllocationOutModel;
 use App\Models\EnterWarehouseSkuRelationModel;
 use App\Models\EnterWarehousesModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseModel;
+use App\Models\PurchasingWarehousingModel;
 use App\Models\StorageSkuCountModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\EnterWarehouseRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -104,6 +107,49 @@ class EnterWarehouseController extends Controller
         ]);
     }
 
+    /**
+     * 采购入库单编辑入库明细展示
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showPurchase(Request $request, $id)
+    {
+        $enter_warehouse = EnterWarehousesModel::find($id);
+        //如果是调拨单入库，检测调拨单是否已出库
+        if($enter_warehouse->type == 3){
+            //调拨单ID
+            $chang_id = $enter_warehouse->target_id;
+            $out_warehouse = OutWarehousesModel::where(['type' => 3,'target_id' => $chang_id])->first();
+            if(!$out_warehouse){
+                return '参数错误';
+            }
+            if($out_warehouse->storage_status == 0){
+                return '调拨仓库还没有出库，不能入库操作';
+            }
+        }
+
+        $enter_warehouse->changeWarehouse_id = $enter_warehouse->changeWarehouse?$enter_warehouse->changeWarehouse->id:'';
+        $enter_warehouse->changeWarehouse_department = $enter_warehouse->changeWarehouse?$enter_warehouse->changeWarehouse->in_department:'';//调入部门
+        $enter_warehouse->purchase_id = $enter_warehouse->purchase?$enter_warehouse->purchase->id:'';
+        $enter_warehouse->purchase_department = $enter_warehouse->purchase?$enter_warehouse->purchase->department:'';
+        $enter_warehouse->storage_id = $enter_warehouse->storage?$enter_warehouse->storage->id:'';
+        $enter_warehouse->storage_name = $enter_warehouse->storage?$enter_warehouse->storage->name:'';
+        $enter_warehouse->not_count = $enter_warehouse->count - $enter_warehouse->in_count;
+        // 获取明细
+        $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
+
+        $sku_model = new ProductsSkuModel();
+        $enter_skus = $sku_model->detailedSku($enter_sku);
+        foreach ($enter_sku as $sku){
+            $sku->not_count = $sku->count - $sku->in_count;
+        }
+        return view('home.storage.purchasingWarehousing', [
+            'enter_warehouse' => $enter_warehouse,
+            'enter_skus' => $enter_skus,
+            'tab_menu' => $this->tab_menu,
+        ]);
+    }
 
     /**
      * 获取入库单详细信息
@@ -153,7 +199,6 @@ class EnterWarehouseController extends Controller
         }
 
         $data = ['enter_warehouse' => $enter_warehouse, 'enter_sku' => $enter_sku];
-        
         return ajax_json(1, 'ok', $data);
     }
 
@@ -231,8 +276,13 @@ class EnterWarehouseController extends Controller
     public function update(EnterWarehouseRequest $request)
     {
         $enter_warehouse_id = (int)$request->input('enter_warehouse_id');
-
         $summary = $request->input('summary');
+        $storage_id = $request->input('storage_id');
+        $purchase_id = $request->input('purchase_id');
+        $purchase_department = $request->input('purchase_department');
+
+        $changeWarehouse_id = $request->input('changeWarehouse_id');
+        $changeWarehouse_department = $request->input('changeWarehouse_department');
         // 入库单明细ID
         $enter_sku_id_arr = $request->input('enter_sku_id');
         $sku_id_arr = $request->input('sku_id');
@@ -292,6 +342,35 @@ class EnterWarehouseController extends Controller
             }
 
             $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
+
+            if ($enter_warehouse_model->type == 1){
+            $purchasing_warehousing = new PurchasingWarehousingModel();
+            $purchasing_warehousing->user_id = Auth::user()->id;
+            $purchasing_warehousing->sku_id = $sku_id_arr[$i];
+            $purchasing_warehousing->storage_id = $storage_id;
+            $purchasing_warehousing->purchases_id = $purchase_id;
+            $purchasing_warehousing->department = $purchase_department;
+            $purchasing_warehousing->number = $count_arr[$i];
+            $purchasing_warehousing->storage_time = date("Y-m-d H:i:s");
+                if (!$purchasing_warehousing->save()) {
+                    DB::rollBack();
+                    return view('errors.503');
+                }
+            }elseif ($enter_warehouse_model->type == 3){
+            $allocation_out = new AllocationOutModel();
+            $allocation_out->user_id = Auth::user()->id;
+            $allocation_out->sku_id = $sku_id_arr[$i];
+            $allocation_out->storage_id = $storage_id;
+            $allocation_out->allocation_id = $changeWarehouse_id;
+            $allocation_out->number = $count_arr[$i];
+            $allocation_out->department = $changeWarehouse_department;
+            $allocation_out->type = 1;
+            $allocation_out->outorin_time = date("Y-m-d H:i:s");
+                if (!$allocation_out->save()) {
+                    DB::rollBack();
+                    return view('errors.503');
+                }
+            }
         }
         
         // 修改入库单入库状态、相关单据入库数量、入库状态、明细入库数量
@@ -308,10 +387,11 @@ class EnterWarehouseController extends Controller
             DB::rollBack();
             return view('errors.503');
         }
+
         // 事务结束
         DB::commit();
-
-        return back()->withInput();
+        return redirect('/enterWarehouse');
+//        return back()->withInput();
     }
 
     /**

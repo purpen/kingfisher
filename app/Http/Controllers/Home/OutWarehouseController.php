@@ -175,6 +175,52 @@ class OutWarehouseController extends Controller
     }
 
     /**
+     * 调拨出库单编辑入库明细展示
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showOut(Request $request, $id)
+    {
+        $out_warehouse = OutWarehousesModel::find($id);
+        //判断是否审核通过
+        if ($out_warehouse->status == 0) {
+            return '尚未审核';
+        }
+
+        $out_warehouse->order_id = $out_warehouse->order ? $out_warehouse->order->id :'';
+        $out_warehouse->order_department = $out_warehouse->order ? $out_warehouse->order->type :'';
+        $out_warehouse->changeWarehouse = $out_warehouse->changeWarehouse ? $out_warehouse->changeWarehouse->id :'';
+        $out_warehouse->changeWarehouse_department = $out_warehouse->changeWarehouse ? $out_warehouse->changeWarehouse->department :'';
+        $out_warehouse->storage_id = $out_warehouse->storage ? $out_warehouse->storage->id :'';
+
+        $out_warehouse->storage_name = $out_warehouse->storage->name;
+        $out_warehouse->not_count = $out_warehouse->count - $out_warehouse->out_count;
+        $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $id)->get();
+
+        $sku_model = new ProductsSkuModel();
+        $out_sku = $sku_model->detailedSku($out_sku);
+        foreach ($out_sku as $sku) {
+            $sku->not_count = (int)($sku->count - $sku->out_count);
+        }
+
+        // 如果是调拨出库单返回调拨入库的仓库地址信息
+        $consignor = null;
+        $change = null;
+        if ($out_warehouse->type == 3) {
+            $change = ChangeWarehouseModel::find($out_warehouse->target_id);
+            $consignor = ConsignorModel::where(['storage_id' => $change->in_storage_id])->first();
+        }
+        return view('home.storage.changeWarehouseOut', [
+            'out_warehouse' => $out_warehouse,
+            'out_sku' => $out_sku,
+            'consignor' => $consignor,
+            'change' => $change
+        ]);
+
+    }
+
+    /**
      * 获取出库单详细信息
      * @param Request $request
      * @return string
