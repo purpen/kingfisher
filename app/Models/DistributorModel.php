@@ -23,7 +23,7 @@ class DistributorModel extends BaseModel
      * @var array
      */
 
-    protected $fillable = ['front_id','Inside_id','portrait_id','national_emblem_id','number','phone', 'store_name', 'name', 'operation_situation', 'bank_number', 'cover_id', 'bank_name','business_license_number','taxpayer','area_id','province_id','authorization_id','city_id','county_id','status','category_id','user_id','position','full_name','legal_person','legal_phone','legal_number','ein','enter_phone','enter_province','enter_city','enter_county'];
+    protected $fillable = ['front_id','Inside_id','portrait_id','national_emblem_id','number','phone', 'store_name', 'name', 'operation_situation', 'bank_number', 'cover_id', 'bank_name','business_license_number','taxpayer','area_id','province_id','authorization_id','city_id','county_id','status','category_id','user_id','position','full_name','legal_person','legal_phone','legal_number','ein','enter_phone','enter_province','enter_city','enter_county','business_contacts'];
 
 
     //一对一关联附件表门店正面照片
