@@ -609,6 +609,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
         Route::get('/enterWarehouse/ajaxPrintInfo', [
             'as' => 'admin.enter.warehouse.ajaxPrintInfo', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@ajaxPrintInfo'
         ]);
+
+        Route::get('/enterWarehouse/showPurchase/{id}', [
+            'as' => 'admin.enter.warehouse.showPurchase', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@showPurchase'
+        ]);
         /**
          * 出库
          */
