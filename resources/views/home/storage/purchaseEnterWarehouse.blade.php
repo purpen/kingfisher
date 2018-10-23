@@ -262,7 +262,9 @@
                             <td>{{ $enter_warehouse->user->realname }}</td>
                             <td tdr="nochect">
                                 @if($tab_menu !== 'completed')
-                                <button type="button" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm edit-enter">编辑入库</button>
+{{--                                <button type="button" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm edit-enter">编辑入库</button>--}}
+                                    <a href="{{ url('/enterWarehouse/showPurchase/') }}/{{ $enter_warehouse->id }}" class="btn btn-white btn-sm">编辑入库</a>
+
                                 @endif
                                 <a href="{{ url('/enterWarehouse/show/') }}/{{ $enter_warehouse->id }}" class="btn btn-white btn-sm">查看详细</a>
                                 @if($tab_menu !== 'completed')

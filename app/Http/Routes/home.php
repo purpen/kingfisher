@@ -656,6 +656,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
         Route::post('/outWarehouse/ajaxSendOut', [
             'as' => 'admin.out.warehouse.update', 'acl' => 'admin.warehouse.store', 'uses' => 'OutWarehouseController@ajaxSendOut'
         ]);
+        Route::get('/outWarehouse/showOut/{id}', [
+            'as' => 'admin.out.warehouse.showOut', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@showOut'
+        ]);
 
         /**
          * 调拨单

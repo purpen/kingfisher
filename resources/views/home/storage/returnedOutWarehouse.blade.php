@@ -122,20 +122,22 @@
                             <td>{{$out_warehouse->user_name}}</td>
                             <td>
 
-                                @if($tab_menu == 'exchanged')
-                                    <button type="button" id="edit-enter" value="{{$out_warehouse->id}}"
-                                            class="btn btn-white btn-sm mr-r edit-enter">编辑出库
-                                    </button>
-                                @endif
+{{--                                @if($tab_menu == 'exchanged')--}}
+                                    {{--<button type="button" id="edit-enter" value="{{$out_warehouse->id}}"--}}
+                                            {{--class="btn btn-white btn-sm mr-r edit-enter">编辑出库--}}
+                                    {{--</button>--}}
+                                {{--@endif--}}
 
-                                @if($tab_menu == 'saled')
-                                    <button type="button" class="btn btn-success btn-sm manual-send"
-                                            value="{{$out_warehouse->target_id}}">
-                                        <i class="glyphicon glyphicon-hand-right"></i> 手动发货
-                                    </button>
-                                @endif
+                                {{--@if($tab_menu == 'saled')--}}
+                                    {{--<button type="button" class="btn btn-success btn-sm manual-send"--}}
+                                            {{--value="{{$out_warehouse->target_id}}">--}}
+                                        {{--<i class="glyphicon glyphicon-hand-right"></i> 手动发货--}}
+                                    {{--</button>--}}
+                                {{--@endif--}}
 
                                 @if($tab_menu == 'saled' || $tab_menu == 'exchanged')
+                                    <a href="{{ url('/outWarehouse/showOut/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">编辑出库</a>
+
                                     <button type="button" id="print-enter" value="{{$out_warehouse->id}}"
                                             target_id="{{ $out_warehouse->target_id }}"
                                             out_type="{{ $out_warehouse->type }}"
