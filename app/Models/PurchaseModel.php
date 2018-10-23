@@ -58,6 +58,11 @@ class PurchaseModel extends BaseModel
     {
         return $this->hasMany('App\Models\PurchaseSkuRelationModel','purchase_id');
     }
+    //一对多关联采购入库单明细
+    public function purchasingWarehousing()
+    {
+        return $this->hasMany('App\Models\PurchasingWarehousingModel','purchase_id');
+    }
 
     /**
      * 审核状态访问设置
