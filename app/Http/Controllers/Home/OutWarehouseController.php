@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Home;
 
 use App\Helper\KdnOrderTracesSub;
 use App\Jobs\PushExpressInfo;
+use App\Models\AllocationOutModel;
 use App\Models\ChangeWarehouseModel;
+use App\Models\ChinaCityModel;
 use App\Models\ConsignorModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
@@ -175,7 +177,7 @@ class OutWarehouseController extends Controller
     }
 
     /**
-     * 调拨出库单编辑入库明细展示
+     * 订单出库单编辑出库明细展示
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -187,12 +189,77 @@ class OutWarehouseController extends Controller
         if ($out_warehouse->status == 0) {
             return '尚未审核';
         }
+        $province_id = $out_warehouse->order ? $out_warehouse->order->buyer_province : '';
+        $city_id = $out_warehouse->order ? $out_warehouse->order->buyer_city : '';
+        $county_id = $out_warehouse->order ? $out_warehouse->order->buyer_county : '';
+        $town_id = $out_warehouse->order ? $out_warehouse->order->buyer_township : '';
+        $address = $out_warehouse->order ? $out_warehouse->order->buyer_address : '';
+        $province = ChinaCityModel::where('oid', $province_id)->select('name')->first();
+        $city = ChinaCityModel::where('oid', $city_id)->select('name')->first();
+        $county = ChinaCityModel::where('oid', $county_id)->select('name')->first();
+        $town = ChinaCityModel::where('oid', $town_id)->select('name')->first();
 
-        $out_warehouse->order_id = $out_warehouse->order ? $out_warehouse->order->id :'';
-        $out_warehouse->order_department = $out_warehouse->order ? $out_warehouse->order->type :'';
-        $out_warehouse->changeWarehouse = $out_warehouse->changeWarehouse ? $out_warehouse->changeWarehouse->id :'';
-        $out_warehouse->changeWarehouse_department = $out_warehouse->changeWarehouse ? $out_warehouse->changeWarehouse->department :'';
-        $out_warehouse->storage_id = $out_warehouse->storage ? $out_warehouse->storage->id :'';
+        $province_name = $province ? $province->name : '';
+        $city_name = $city ? $city->name : '';
+        $county_name = $county ? $county->name : '';
+        $town_name = $town ? $town->name : '';
+        $out_warehouse->full_address = $province_name.' '.$city_name.' '.$county_name.' '.$town_name.' '.$address;
+
+        $out_warehouse->order_id = $out_warehouse->order ? $out_warehouse->order->id : '';
+        $out_warehouse->order_department = config('constant.D3IN_department');
+        $out_warehouse->num = $out_warehouse->order ? $out_warehouse->order->number : '';
+        $out_warehouse->buyer_name = $out_warehouse->order ? $out_warehouse->order->buyer_name : '';
+        $out_warehouse->buyer_phone = $out_warehouse->order ? $out_warehouse->order->buyer_phone : '';
+        $out_warehouse->storage_id = $out_warehouse->storage ? $out_warehouse->storage->id : '';
+
+        $out_warehouse->outWarehouse_sku = $out_warehouse->created_at;//出库单创建时间
+        $out_warehouse->storage_name = $out_warehouse->storage->name;
+        $out_warehouse->not_count = $out_warehouse->count - $out_warehouse->out_count;
+        $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $id)->get();
+
+        $sku_model = new ProductsSkuModel();
+        $out_sku = $sku_model->detailedSku($out_sku);
+        foreach ($out_sku as $sku) {
+            $sku->not_count = (int)($sku->count - $sku->out_count);
+        }
+
+        // 如果是调拨出库单返回调拨入库的仓库地址信息
+        $consignor = null;
+        $change = null;
+        if ($out_warehouse->type == 3) {
+            $change = ChangeWarehouseModel::find($out_warehouse->target_id);
+            $consignor = ConsignorModel::where(['storage_id' => $change->in_storage_id])->first();
+        }
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
+
+        return view('home.storage.orderOutWarehouses', [
+            'out_warehouse' => $out_warehouse,
+            'out_sku' => $out_sku,
+            'consignor' => $consignor,
+            'change' => $change,
+            'tab_menu' => $this->tab_menu,
+            'logistics_list' => $logistics_list
+        ]);
+
+    }
+
+    /**
+     * 调拨出库单编辑出库明细展示
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showOutWare(Request $request, $id)
+    {
+        $out_warehouse = OutWarehousesModel::find($id);
+        //判断是否审核通过
+        if ($out_warehouse->status == 0) {
+            return '尚未审核';
+        }
+
+        $out_warehouse->changeWarehouse_id = $out_warehouse->changeWarehouse ? $out_warehouse->changeWarehouse->id : '';
+        $out_warehouse->changeWarehouse_department = $out_warehouse->changeWarehouse ? $out_warehouse->changeWarehouse->out_department : '';//调出部门
+        $out_warehouse->storage_id = $out_warehouse->storage ? $out_warehouse->storage->id : '';
 
         $out_warehouse->storage_name = $out_warehouse->storage->name;
         $out_warehouse->not_count = $out_warehouse->count - $out_warehouse->out_count;
@@ -211,11 +278,13 @@ class OutWarehouseController extends Controller
             $change = ChangeWarehouseModel::find($out_warehouse->target_id);
             $consignor = ConsignorModel::where(['storage_id' => $change->in_storage_id])->first();
         }
+
         return view('home.storage.changeWarehouseOut', [
             'out_warehouse' => $out_warehouse,
             'out_sku' => $out_sku,
             'consignor' => $consignor,
-            'change' => $change
+            'change' => $change,
+            'tab_menu' => $this->tab_menu,
         ]);
 
     }
@@ -276,6 +345,10 @@ class OutWarehouseController extends Controller
     {
         $out_warehouse_id = (int)$request->input('out_warehouse_id');
         $summary = $request->input('summary');
+        $storage_id = $request->input('storage_id');
+        $changeWarehouse_id = $request->input('changeWarehouse_id');
+        $changeWarehouse_department = $request->input('changeWarehouse_department');
+
         $out_sku_id_arr = $request->input('out_sku_id');
         $sku_id_arr = $request->input('sku_id');
         $count_arr = $request->input('count');
@@ -326,6 +399,23 @@ class OutWarehouseController extends Controller
 
 
                         $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
+
+                        if ($out_warehouse_model->type == 3){//调拨出库
+                            $allocation_out = new AllocationOutModel();
+                            $allocation_out->user_id = Auth::user()->id;
+                            $allocation_out->sku_id = $sku_id_arr[$i];
+                            $allocation_out->storage_id = $storage_id;
+                            $allocation_out->allocation_id = $changeWarehouse_id;
+                            $allocation_out->number = $count_arr[$i];
+                            $allocation_out->department = $changeWarehouse_department;
+                            $allocation_out->type = 2;
+                            $allocation_out->outorin_time = date("Y-m-d H:i:s");
+                            if (!$allocation_out->save()) {
+                                DB::rollBack();
+                                return view('errors.503');
+                            }
+                        }
+
                     } else {
                         DB::roolBack();
                         return view('errors.503');
@@ -348,7 +438,8 @@ class OutWarehouseController extends Controller
                 }
 
                 DB::commit();
-                return back()->withInput();
+                return redirect('/outWarehouse');
+//                return back()->withInput();
             } else {
                 DB::roolBack();
                 return view('errors.503');
