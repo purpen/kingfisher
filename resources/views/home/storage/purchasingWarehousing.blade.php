@@ -39,9 +39,11 @@
     })
     .keyup(function(){
     var count = $(this).val();
-    var countNum = $(this).parent().parent().find(".counts").text();
-    if(eval(count) > eval(countNum)){
-    layer.msg("数量不能大于需入库数量！");
+    var count_one = $(this).parent().parent().find(".counts").text();
+    var count_two = $(this).parent().parent().find(".incounts").text();
+    if(eval(count) > eval(count_one - count_two)){
+    layer.msg("数量不能大于可入库数量！");
+    $(".count").val("");
     return false;
     }
     })
@@ -116,7 +118,7 @@
                                 <td>{{ $enter_sku->name }}</td>
                                 <td>{{ $enter_sku->mode }}</td>
                                 <td class="counts">{{ $enter_sku->count }}</td>
-                                <td>{{ $enter_sku->in_count }}</td>
+                                <td class="incounts">{{ $enter_sku->in_count }}</td>
                                 <td>
                                     <input type="hidden" name="enter_sku_id[]" value="{{$enter_sku->id}}">
                                     <input type="hidden" name="sku_id[]" value="{{$enter_sku->sku_id}}">

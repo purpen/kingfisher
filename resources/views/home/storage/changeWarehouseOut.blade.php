@@ -39,9 +39,11 @@
     })
     .keyup(function(){
     var count = $(this).val();
-    var countNum = $(this).parent().parent().find(".counts").text();
-    if(eval(count) > eval(countNum)){
-    layer.msg("数量不能大于需入库数量！");
+    var count_one = $(this).parent().parent().find(".counts").text();
+    var count_two = $(this).parent().parent().find(".incounts").text();
+    if(eval(count) > eval(count_one - count_two)){
+    layer.msg("数量不能大于可入库数量！");
+    $(".count").val("");
     return false;
     }
     })
@@ -68,6 +70,9 @@
 
         <div class="modal-body">
             <form id="addsku" class="form-horizontal" method="post" action="{{ url('/outWarehouse/update') }}">
+
+                <input type="hidden" name="out_warehouse_id" value="{{$out_warehouse->id}}">
+                <input type="hidden" name="storage_id" value="{{$out_warehouse->storage_id}}">
                 <div id="append-sku">
                     <div class="form-group">
                         <label for="goodsSku" class="col-sm-2 control-label">商品扫描</label>
@@ -76,11 +81,6 @@
                         </div>
                     </div>
                     {{ csrf_field() }}
-                    {{--@{{#enter_warehouse}}--}}
-                    <input type="hidden" name="out_warehouse_id" value="{{$out_warehouse->id}}">
-                    <input type="hidden" name="storage_id" value="{{$out_warehouse->storage_id}}">
-                    <input type="hidden" name="order_department" value="{{$out_warehouse->order_department}}">
-                    <input type="hidden" name="order_id" value="{{$out_warehouse->order_id}}">
 
                     <div class="form-group">
                         <label for="number" class="col-sm-2 control-label">仓库:</label>
@@ -93,7 +93,6 @@
                             <p class="form-text">{{ $out_warehouse->department_val }}</p>
                         </div>
                     </div>
-                    {{--@{{/enter_warehouse}}--}}
 
                     <table class="table table-hover table-bordered">
                         <thead>
@@ -101,9 +100,9 @@
                             <th>SKU编码</th>
                             <th>商品名称</th>
                             <th>商品属性</th>
-                            <th>需入库数量</th>
-                            <th>已入库数量</th>
-                            <th>本次入库数量</th>
+                            <th>需出库数量</th>
+                            <th>已出库数量</th>
+                            <th>本次出库数量</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -116,9 +115,9 @@
                                 <td>{{ $enter_sku->name }}</td>
                                 <td>{{ $enter_sku->mode }}</td>
                                 <td class="counts">{{ $enter_sku->count }}</td>
-                                <td>{{ $enter_sku->in_count }}</td>
+                                <td class="incounts">{{ $enter_sku->out_count }}</td>
                                 <td>
-                                    <input type="hidden" name="enter_sku_id[]" value="{{$enter_sku->id}}">
+                                    <input type="hidden" name="out_sku_id[]" value="{{$enter_sku->id}}">
                                     <input type="hidden" name="sku_id[]" value="{{$enter_sku->sku_id}}">
                                     <input type="text" onkeyup="onlyNum(this)" maxlength="{{$enter_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$enter_sku->not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可入库数量">
                                 </td>
@@ -131,8 +130,8 @@
                             <td colspan="3">合计</td>
 {{--                            @{{#enter_warehouse}}--}}
                             <td><span id="total" class="magenta-color">{{ $out_warehouse->count }}</span></td>
-                            <td><span id="changetotal" spantotal="0" class="magenta-color">{{ $out_warehouse->in_count }}</span></td>
-                            <td>未入库：<span id="changetotal" spantotal="0" class="magenta-color">{{$out_warehouse->not_count}}</span></td>
+                            <td><span id="changetotal" spantotal="0" class="magenta-color">{{ $out_warehouse->out_count }}</span></td>
+                            <td>未出库：<span id="changetotal" spantotal="0" class="magenta-color">{{$out_warehouse->not_count}}</span></td>
                             {{--@{{/enter_warehouse}}--}}
                         </tr>
                         </tfoot>
@@ -141,7 +140,7 @@
                     <input type="hidden" name="changeWarehouse_department" value="{{$out_warehouse->changeWarehouse_department}}">
                     <input type="hidden" name="changeWarehouse_id" value="{{$out_warehouse->changeWarehouse_id}}">
                     <div class="form-group">
-                        <label for="summary" class="col-sm-2 control-label">入库备注</label>
+                        <label for="summary" class="col-sm-2 control-label">出库备注</label>
                         <div class="col-sm-8">
                             <textarea rows="2" class="form-control" name="summary">{{ $out_warehouse->summary }}</textarea>
                         </div>
@@ -150,7 +149,7 @@
                 </div>
 
                 <div class="modal-footer" style="text-align: center">
-                    <button type="submit" class="btn btn-magenta">确认提交</button>
+                    <button type="submit" class="btn btn-magenta makesure">确认提交</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>
                 </div>
             </form>

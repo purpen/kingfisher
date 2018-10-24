@@ -135,15 +135,18 @@
                                     {{--</button>--}}
                                 {{--@endif--}}
 
-                                @if($tab_menu == 'saled' || $tab_menu == 'exchanged')
+                                @if($tab_menu == 'saled')
                                     <a href="{{ url('/outWarehouse/showOut/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">编辑出库</a>
+
+                                    @elseif($tab_menu == 'exchanged')
+                                    <a href="{{ url('/outWarehouse/showOutWare/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">编辑出库</a>
+                                @endif
 
                                     <button type="button" id="print-enter" value="{{$out_warehouse->id}}"
                                             target_id="{{ $out_warehouse->target_id }}"
                                             out_type="{{ $out_warehouse->type }}"
                                             class="btn btn-white btn-sm mr-r print-enter">打印预览
                                     </button>
-                                @endif
                             </td>
                         </tr>
                     @endforeach
