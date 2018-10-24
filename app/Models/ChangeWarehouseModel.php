@@ -36,6 +36,13 @@ class ChangeWarehouseModel extends BaseModel
     {
         return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
     }
+
+
+    // 一对一关联出库表
+    public function outWarehouses()
+    {
+        return $this->hasOne('App\Models\OutWarehousesModel','target_id');
+    }
     //一对多关联调拨出/入库单明细
     public function allocationOut()
     {
