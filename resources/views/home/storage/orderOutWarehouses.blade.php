@@ -69,30 +69,44 @@
     <div class="container mainwrap">
 
         <div class="modal-body">
-            <form id="addsku" class="form-horizontal" method="post" action="{{ url('/outWarehouse/update') }}">
+{{--            <form id="addsku" class="form-horizontal" method="post" action="{{ url('/outWarehouse/update') }}">--}}
+            <form id="addsku" class="form-horizontal" method="post">
 
                 <input type="hidden" name="out_warehouse_id" value="{{$out_warehouse->id}}">
                 <input type="hidden" name="storage_id" value="{{$out_warehouse->storage_id}}">
                 <div id="append-sku">
-                    <div class="form-group">
-                        <label for="goodsSku" class="col-sm-2 control-label">商品扫描</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="goodsSku" class="form-control">
-                        </div>
-                    </div>
                     {{ csrf_field() }}
 
-                    <div class="form-group">
-                        <label for="number" class="col-sm-2 control-label">仓库:</label>
-                        <div class="col-sm-3">
-                            <p class="form-text">{{ $out_warehouse->storage_name }}</p>
-                        </div>
+                            <div class="form-group">
+                                <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">订单编号:</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="number" name="number" class="form-control" readonly value="{{ $out_warehouse->num }}">
+                                </div>
+                                <label for="outWarehouse_sku" class="col-sm-2 control-label {{ $errors->has('outWarehouse_sku') ? ' has-error' : '' }}">制单日期:</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="outWarehouse_sku" name="outWarehouse_sku" class="form-control" readonly value="{{ $out_warehouse->outWarehouse_sku }}">
+                                </div>
 
-                        <label for="department" class="col-sm-2 control-label">部门:</label>
-                        <div class="col-sm-3">
-                            <p class="form-text">{{ $out_warehouse->department_val }}</p>
-                        </div>
-                    </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="buyer_name" class="col-sm-2 control-label {{ $errors->has('buyer_name') ? ' has-error' : '' }}">收货人姓名:</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="buyer_name" name="buyer_name" class="form-control" readonly value="{{ $out_warehouse->buyer_name }}">
+                                </div>
+                                <label for="buyer_phone" class="col-sm-2 control-label {{ $errors->has('buyer_phone') ? ' has-error' : '' }}">收货人电话:</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="buyer_phone" name="buyer_phone" class="form-control" readonly value="{{ $out_warehouse->buyer_phone }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="full_address" class="col-sm-2 control-label">收货地址:</label>
+                                <div class="col-sm-6">
+                                    <input type="text" id="full_address" name="full_address" class="form-control" readonly value="{{ $out_warehouse->full_address }}">
+                                </div>
+                            </div>
+
 
                     <table class="table table-hover table-bordered">
                         <thead>
@@ -125,13 +139,16 @@
                         @endforeach
 
                         </tbody>
+                        <input type="hidden" name="order_department" value="{{$out_warehouse->order_department}}">
+                        <input type="hidden" name="order_id" id="order_id" value="{{$out_warehouse->order_id}}">
+                        <input type="hidden" name="full_address" value="{{$out_warehouse->full_address}}">
                         <tfoot>
                         <tr class="active">
                             <td colspan="3">合计</td>
 {{--                            @{{#enter_warehouse}}--}}
                             <td><span id="total" class="magenta-color">{{ $out_warehouse->count }}</span></td>
                             <td><span id="changetotal" spantotal="0" class="magenta-color">{{ $out_warehouse->out_count }}</span></td>
-                            <td>未出库：<span id="changetotal" spantotal="0" class="magenta-color">{{$out_warehouse->not_count}}</span></td>
+                            <td>未入库：<span id="changetotal" spantotal="0" class="magenta-color">{{$out_warehouse->not_count}}</span></td>
                             {{--@{{/enter_warehouse}}--}}
                         </tr>
                         </tfoot>
@@ -139,13 +156,33 @@
 
                     <input type="hidden" name="changeWarehouse_department" value="{{$out_warehouse->changeWarehouse_department}}">
                     <input type="hidden" name="changeWarehouse_id" value="{{$out_warehouse->changeWarehouse_id}}">
+                    <input type="hidden" name="outWarehouse_sku" value="{{$out_warehouse->outWarehouse_sku}}">
                     <div class="form-group">
                         <label for="summary" class="col-sm-2 control-label">出库备注</label>
                         <div class="col-sm-8">
                             <textarea rows="2" class="form-control" name="summary">{{ $out_warehouse->summary }}</textarea>
                         </div>
                     </div>
-
+                    <input type="hidden" name="num" value="{{$out_warehouse->num}}">
+                    <input type="hidden" name="buyer_name" value="{{$out_warehouse->buyer_name}}">
+                    <input type="hidden" name="buyer_phone" value="{{$out_warehouse->buyer_phone}}">
+                        <hr>
+                            <div class="row">
+                                <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56">快递公司</label>
+                                <div class="col-sm-8">
+                                    <select class="selectpicker" id="logistics_id" name="logistics_id" style="display: none;">
+                                        @foreach($logistics_list as $logistics)
+                                            <option value='{{$logistics->id}}'>{{$logistics->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56">快递单号</label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="logistics_no" class="form-control float" id="logistics_no" placeholder="快递单号" required>
+                                </div>
+                            </div>
                 </div>
 
                 <div class="modal-footer" style="text-align: center">
@@ -166,5 +203,27 @@
 
             @section('customize_js')
                 @parent
+                $(".makesure").click(function () {
+                var order_id = $("#order_id").val();
+                var logistics_id = $("#logistics_id").val();
+                var logistics_no = $("#logistics_no").val();
+
+                if (order_id == '') {
+                alert('订单ID获取异常');
+                return false;
+                }
+                if (logistics_id == '') {
+                alert('请选择物流');
+                return false;
+                }
+                var regobj = new RegExp("^[0-9]*$");
+                if (logistics_no == '' || !regobj.test(logistics_no)) {
+                alert('物流单号格式不正确');
+                return false;
+                }
+                {{--console.log(order_id);--}}
+                {{--console.log(logistics_id);--}}
+                {{--console.log(logistics_no);return false;--}}
+                })
 
             @endsection
