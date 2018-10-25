@@ -105,7 +105,7 @@ class PurchaseController extends Controller
      */
     public function ajaxVerified(Request $request)
     {
-        $id_arr = $request->input('id')?$request->input('id'):'';
+        $id_arr = $request->input('id') ? $request->input('id') : '';
         if ($id_arr != '') {
             foreach ($id_arr as $id) {
                 $purchase = new PurchaseModel();
@@ -115,10 +115,10 @@ class PurchaseController extends Controller
                 }
 
             }
-        }else{
-            return ajax_json(0,'您还没有勾选');
+        } else {
+            return ajax_json(0, '您还没有勾选');
         }
-        return ajax_json(1,'审核成功');
+        return ajax_json(1, '审核成功');
     }
 
     /**
@@ -128,53 +128,53 @@ class PurchaseController extends Controller
      */
     public function ajaxDirectorVerified(Request $request)
     {
-        $id_arr = $request->input('id')?$request->input('id'):'';
-        if (count($id_arr)>0) {
-            if (is_array($id_arr)){
-            foreach ($id_arr as $id) {
-                try {
-                    DB::beginTransaction();
-                    $purchase = new PurchaseModel();
-                    $status = $purchase->changeStatus($id, 1);
-                    if ($status) {
-                        $ids = AuditingModel::where('type',4)->select('user_id')->first();
-                        if ($ids){
-                            //发送审核短信通知
-                            $dataes = new AuditingModel();
-                            $dataes->datas(4);
+        $id_arr = $request->input('id') ? $request->input('id') : '';
+        if (count($id_arr) > 0) {
+            if (is_array($id_arr)) {
+                foreach ($id_arr as $id) {
+                    try {
+                        DB::beginTransaction();
+                        $purchase = new PurchaseModel();
+                        $status = $purchase->changeStatus($id, 1);
+                        if ($status) {
+                            $ids = AuditingModel::where('type', 4)->select('user_id')->first();
+                            if ($ids) {
+                                //发送审核短信通知
+                                $dataes = new AuditingModel();
+                                $dataes->datas(4);
+                            }
+                        } else {
+                            DB::rollBack();
+                            return ajax_json(0, '审核失败');
                         }
-                    }else{
-                        DB::rollBack();
-                        return ajax_json(0, '审核失败');
-                    }
 
-                    $enter_warehouse_model = new EnterWarehousesModel();
-                    if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id)) {
+                        $enter_warehouse_model = new EnterWarehousesModel();
+                        if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id)) {
+                            DB::rollBack();
+                            return ajax_json(0, '审核成功');
+                        }
+
+                        DB::commit();
+                    } catch (\Exception $e) {
                         DB::rollBack();
+                        Log::error($e);
                         return ajax_json(0, '审核成功');
                     }
-
-                    DB::commit();
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                    Log::error($e);
-                    return ajax_json(0, '审核成功');
                 }
-            }
 
-            }else{
+            } else {
                 try {
                     DB::beginTransaction();
                     $purchase = new PurchaseModel();
                     $status = $purchase->changeStatus($id_arr, 1);
                     if ($status) {
-                        $ids = AuditingModel::where('type',4)->select('user_id')->first();
-                        if ($ids){
+                        $ids = AuditingModel::where('type', 4)->select('user_id')->first();
+                        if ($ids) {
                             //发送审核短信通知
                             $dataes = new AuditingModel();
                             $dataes->datas(4);
                         }
-                    }else{
+                    } else {
                         DB::rollBack();
                         return ajax_json(0, '审核失败');
                     }
@@ -192,12 +192,12 @@ class PurchaseController extends Controller
                     return ajax_json(0, '审核成功');
                 }
             }
-        }else{
-            return ajax_json(0,'您还没有选择采购单！');
+        } else {
+            return ajax_json(0, '您还没有选择采购单！');
 
         }
 
-        return ajax_json(1,'审核成功');
+        return ajax_json(1, '审核成功');
     }
 
     /**
@@ -207,10 +207,10 @@ class PurchaseController extends Controller
      */
     public function ajaxDirectorReject(Request $request)
     {
-        $id_arr = $request->input('id')?$request->input('id'):'';
+        $id_arr = $request->input('id') ? $request->input('id') : '';
         $msg = $request->input('msg');
         $purchaseModel = new PurchaseModel();
-        if (count($id_arr)>0) {
+        if (count($id_arr) > 0) {
             if (is_array($id_arr)) {
                 foreach ($id_arr as $id) {
                     if (!$purchaseModel->returnedChangeStatus($id)) {
@@ -228,11 +228,11 @@ class PurchaseController extends Controller
                 $arr = DB::update("update purchases set msg=? where id = $id_arr", [$msg]);
 
             }
-        }else{
-            return ajax_json(0,'参数错误');
+        } else {
+            return ajax_json(0, '参数错误');
         }
 
-        return ajax_json(1,'操作成功!');
+        return ajax_json(1, '操作成功!');
 
     }
 
@@ -323,8 +323,8 @@ class PurchaseController extends Controller
                     $purchaseSku->freight = $freights[$i];
                     $purchaseSku->save();
                 }
-                $ids = AuditingModel::where('type',3)->select('user_id')->first();
-                if ($ids){
+                $ids = AuditingModel::where('type', 3)->select('user_id')->first();
+                if ($ids) {
                     //发送审核短信通知
                     $dataes = new AuditingModel();
                     $dataes->datas(3);
@@ -353,7 +353,7 @@ class PurchaseController extends Controller
         $id = $request->input('id');
         $purchase = PurchaseModel::find($id);
         $purchase->supplier = $purchase->supplier->name;
-        $suppliers = SupplierModel::where('id',$purchase->supplier_id)->select('ein','tax_rate','bank_number','bank_address')->first();
+        $suppliers = SupplierModel::where('id', $purchase->supplier_id)->select('ein', 'tax_rate', 'bank_number', 'bank_address')->first();
         $purchase->ein = $suppliers->ein;
         $purchase->tax_rate = $suppliers->tax_rate;
         $purchase->bank_number = $suppliers->bank_number;
@@ -483,8 +483,8 @@ class PurchaseController extends Controller
                     $purchaseSku->save();
                 }
 
-                $ids = AuditingModel::where('type',3)->select('user_id')->first();
-                if ($ids){
+                $ids = AuditingModel::where('type', 3)->select('user_id')->first();
+                if ($ids) {
                     //发送审核短信通知
                     $dataes = new AuditingModel();
                     $dataes->datas(3);
@@ -561,6 +561,14 @@ class PurchaseController extends Controller
                             if (!$storageSkuCountModel->save()) {
                                 return 'error1';
                             }
+
+                            // sku
+                            $sku = ProductsSkuModel::query()->where('id', $info->sku_id)->first();
+                            $sku->decrement("quantity", $in_count);
+
+                            // product
+                            $product = ProductsModel::find($sku->product_id);
+                            $product->decrement('inventory', $in_count);
                         }
                     }
 
@@ -590,7 +598,7 @@ class PurchaseController extends Controller
 
                         $outWarehouseSkuRelation = $outWarehouses->outWarehouseSkuRelation;
 
-                        //已出库的数量 增加到对应仓库库存
+                        //已出库的数量 增加到对应仓库库存/sku
                         if (!$outWarehouseSkuRelation->isEmpty()) {
                             foreach ($outWarehouseSkuRelation as $info) {
                                 if ($out_count = $info->out_count) {
@@ -602,6 +610,13 @@ class PurchaseController extends Controller
                                     if (!$storageSkuCountModel->save()) {
                                         return 'error2';
                                     }
+
+                                    $sku = ProductsSkuModel::query()->where('id', $info->sku_id)->first();
+                                    $sku->increment("quantity", $out_count);
+
+                                    // product
+                                    $product = ProductsModel::query()->find($sku->product_id);
+                                    $product->increment('inventory', $out_count);
                                 }
                             }
 
