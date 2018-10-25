@@ -69,8 +69,7 @@
     <div class="container mainwrap">
 
         <div class="modal-body">
-{{--            <form id="addsku" class="form-horizontal" method="post" action="{{ url('/outWarehouse/update') }}">--}}
-            <form id="addsku" class="form-horizontal" method="post">
+            <form id="addsku" class="form-horizontal" method="post" action="{{ url('/outWarehouse/update') }}">
 
                 <input type="hidden" name="out_warehouse_id" value="{{$out_warehouse->id}}">
                 <input type="hidden" name="storage_id" value="{{$out_warehouse->storage_id}}">
@@ -120,35 +119,34 @@
                         </tr>
                         </thead>
                         <tbody>
-
-                        @foreach ($out_sku as $enter_sku)
+                        @foreach ($out_skus as $out_sku)
                             <tr>
                                 <td class="magenta-color">
-                                    {{ $enter_sku->number }}
+                                    {{ $out_sku->number }}
                                 </td>
-                                <td>{{ $enter_sku->name }}</td>
-                                <td>{{ $enter_sku->mode }}</td>
-                                <td class="counts">{{ $enter_sku->count }}</td>
-                                <td class="incounts">{{ $enter_sku->out_count }}</td>
+                                <td>{{ $out_sku->name }}</td>
+                                <td>{{ $out_sku->mode }}</td>
+                                <td class="counts">{{ $out_sku->count }}</td>
+                                <td class="incounts">{{ $out_sku->out_count }}</td>
                                 <td>
-                                    <input type="hidden" name="out_sku_id[]" value="{{$enter_sku->id}}">
-                                    <input type="hidden" name="sku_id[]" value="{{$enter_sku->sku_id}}">
-                                    <input type="text" onkeyup="onlyNum(this)" maxlength="{{$enter_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$enter_sku->not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可入库数量" required>
+                                    <input type="hidden" name="out_sku_id[]" value="{{$out_sku->id}}">
+                                    <input type="hidden" name="sku_id[]" value="{{$out_sku->sku_id}}">
+                                    <input type="text" onkeyup="onlyNum(this)" maxlength="{{$out_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$out_sku->not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可入库数量" required>
                                 </td>
                             </tr>
                         @endforeach
 
                         </tbody>
+
                         <input type="hidden" name="order_department" value="{{$out_warehouse->order_department}}">
                         <input type="hidden" name="order_id" id="order_id" value="{{$out_warehouse->order_id}}">
-                        <input type="hidden" name="full_address" value="{{$out_warehouse->full_address}}">
                         <tfoot>
                         <tr class="active">
                             <td colspan="3">合计</td>
 {{--                            @{{#enter_warehouse}}--}}
                             <td><span id="total" class="magenta-color">{{ $out_warehouse->count }}</span></td>
                             <td><span id="changetotal" spantotal="0" class="magenta-color">{{ $out_warehouse->out_count }}</span></td>
-                            <td>未入库：<span id="changetotal" spantotal="0" class="magenta-color">{{$out_warehouse->not_count}}</span></td>
+                            <td>未出库：<span id="changetotal" spantotal="0" class="magenta-color">{{$out_warehouse->not_count}}</span></td>
                             {{--@{{/enter_warehouse}}--}}
                         </tr>
                         </tfoot>
@@ -156,11 +154,10 @@
 
                     <input type="hidden" name="changeWarehouse_department" value="{{$out_warehouse->changeWarehouse_department}}">
                     <input type="hidden" name="changeWarehouse_id" value="{{$out_warehouse->changeWarehouse_id}}">
-                    <input type="hidden" name="outWarehouse_sku" value="{{$out_warehouse->outWarehouse_sku}}">
                     <div class="form-group">
                         <label for="summary" class="col-sm-2 control-label">出库备注</label>
                         <div class="col-sm-8">
-                            <textarea rows="2" class="form-control" name="summary">{{ $out_warehouse->summary }}</textarea>
+                            <textarea rows="2" class="form-control" id="summary" name="summary">{{ $out_warehouse->summary }}</textarea>
                         </div>
                     </div>
                     <input type="hidden" name="num" value="{{$out_warehouse->num}}">
@@ -205,9 +202,8 @@
                 @parent
                 $(".makesure").click(function () {
                 var order_id = $("#order_id").val();
-                var logistics_id = $("#logistics_id").val();
-                var logistics_no = $("#logistics_no").val();
-
+                var logistics_id = $("select[name='logistics_id']").val();
+                var logistics_no = $("input[name='logistics_no']").val();
                 if (order_id == '') {
                 alert('订单ID获取异常');
                 return false;
@@ -221,9 +217,6 @@
                 alert('物流单号格式不正确');
                 return false;
                 }
-                {{--console.log(order_id);--}}
-                {{--console.log(logistics_id);--}}
-                {{--console.log(logistics_no);return false;--}}
                 })
 
             @endsection

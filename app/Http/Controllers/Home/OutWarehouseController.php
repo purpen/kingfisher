@@ -10,6 +10,8 @@ use App\Models\ChinaCityModel;
 use App\Models\ConsignorModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
+use App\Models\OrderOutModel;
+use App\Models\OutgoingLogisticsModel;
 use App\Models\OutWarehouseSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
@@ -218,25 +220,15 @@ class OutWarehouseController extends Controller
         $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $id)->get();
 
         $sku_model = new ProductsSkuModel();
-        $out_sku = $sku_model->detailedSku($out_sku);
+        $out_skus = $sku_model->detailedSku($out_sku);
         foreach ($out_sku as $sku) {
             $sku->not_count = (int)($sku->count - $sku->out_count);
         }
 
-        // 如果是调拨出库单返回调拨入库的仓库地址信息
-        $consignor = null;
-        $change = null;
-        if ($out_warehouse->type == 3) {
-            $change = ChangeWarehouseModel::find($out_warehouse->target_id);
-            $consignor = ConsignorModel::where(['storage_id' => $change->in_storage_id])->first();
-        }
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
-
         return view('home.storage.orderOutWarehouses', [
             'out_warehouse' => $out_warehouse,
-            'out_sku' => $out_sku,
-            'consignor' => $consignor,
-            'change' => $change,
+            'out_skus' => $out_skus,
             'tab_menu' => $this->tab_menu,
             'logistics_list' => $logistics_list
         ]);
@@ -266,7 +258,7 @@ class OutWarehouseController extends Controller
         $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $id)->get();
 
         $sku_model = new ProductsSkuModel();
-        $out_sku = $sku_model->detailedSku($out_sku);
+        $out_skus = $sku_model->detailedSku($out_sku);
         foreach ($out_sku as $sku) {
             $sku->not_count = (int)($sku->count - $sku->out_count);
         }
@@ -281,7 +273,7 @@ class OutWarehouseController extends Controller
 
         return view('home.storage.changeWarehouseOut', [
             'out_warehouse' => $out_warehouse,
-            'out_sku' => $out_sku,
+            'out_skus' => $out_skus,
             'consignor' => $consignor,
             'change' => $change,
             'tab_menu' => $this->tab_menu,
@@ -346,8 +338,14 @@ class OutWarehouseController extends Controller
         $out_warehouse_id = (int)$request->input('out_warehouse_id');
         $summary = $request->input('summary');
         $storage_id = $request->input('storage_id');
-        $changeWarehouse_id = $request->input('changeWarehouse_id');
-        $changeWarehouse_department = $request->input('changeWarehouse_department');
+        $changeWarehouse_id = $request->input('changeWarehouse_id','');
+        $changeWarehouse_department = $request->input('changeWarehouse_department','');
+
+        $order_department = $request->input('order_department','');
+        $order_id = $request->input('order_id','');
+        //获取快递公司ID  快递单号
+        $logistics_id = $request->input('logistics_id','');
+        $logistics_no = $request->input('logistics_no','');
 
         $out_sku_id_arr = $request->input('out_sku_id');
         $sku_id_arr = $request->input('sku_id');
@@ -397,23 +395,36 @@ class OutWarehouseController extends Controller
                             }
                         }
 
-
                         $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
 
-                        if ($out_warehouse_model->type == 3){//调拨出库
-                            $allocation_out = new AllocationOutModel();
-                            $allocation_out->user_id = Auth::user()->id;
-                            $allocation_out->sku_id = $sku_id_arr[$i];
-                            $allocation_out->storage_id = $storage_id;
-                            $allocation_out->allocation_id = $changeWarehouse_id;
-                            $allocation_out->number = $count_arr[$i];
-                            $allocation_out->department = $changeWarehouse_department;
-                            $allocation_out->type = 2;
-                            $allocation_out->outorin_time = date("Y-m-d H:i:s");
-                            if (!$allocation_out->save()) {
+                        if ($out_warehouse_model->type == 2){//订单出库
+                            $order_out = new OrderOutModel();
+                            $order_out->user_id = Auth::user()->id;
+                            $order_out->sku_id = $sku_id_arr[$i];
+                            $order_out->order_id = $order_id;
+                            $order_out->storage_id = $storage_id;
+                            $order_out->department = $order_department;
+                            $order_out->number = $count_arr[$i];
+                            $order_out->outage_time = date("Y-m-d H:i:s");
+                            if (!$order_out->save()) {
                                 DB::rollBack();
                                 return view('errors.503');
                             }
+                            $this->ajaxSendOut($request);
+                        }
+                        }elseif ($out_warehouse_model->type == 3){//调拨出库
+                        $allocation_out = new AllocationOutModel();
+                        $allocation_out->user_id = Auth::user()->id;
+                        $allocation_out->sku_id = $sku_id_arr[$i];
+                        $allocation_out->storage_id = $storage_id;
+                        $allocation_out->allocation_id = $changeWarehouse_id;
+                        $allocation_out->number = $count_arr[$i];
+                        $allocation_out->department = $changeWarehouse_department;
+                        $allocation_out->type = 2;
+                        $allocation_out->outorin_time = date("Y-m-d H:i:s");
+                        if (!$allocation_out->save()) {
+                            DB::rollBack();
+                            return view('errors.503');
                         }
 
                     } else {
@@ -438,7 +449,7 @@ class OutWarehouseController extends Controller
                 }
 
                 DB::commit();
-                return redirect('/outWarehouse');
+                return redirect('/outWarehouse/orderOut');
 //                return back()->withInput();
             } else {
                 DB::roolBack();
@@ -482,14 +493,27 @@ class OutWarehouseController extends Controller
                 return ajax_json(0, 'error', '物流不存在');
             }
 
-            $order_model->express_id = $logistics_id;
+            $out_warehouse_id = (int)$request->input('out_warehouse_id');
+            $out_warehouse_model = OutWarehousesModel::find($out_warehouse_id);
+            if ($out_warehouse_model->storage_status == 5){
+                $order_model->express_id = $logistics_id;
 
-            //快递单号保存
-            $order_model->express_no = $logistics_no;
-            if (!$order_model->save()) {
+                //快递单号保存
+                $order_model->express_no = $logistics_no;
+                if (!$order_model->save()) {
+                    DB::rollBack();
+                    Log::error('ID:' . $order_id . '订单运单号保存失败');
+                    return ajax_json(0, 'error', '订单运单号保存失败');
+                }
+            }
+            $outgoing_logistics = new OutgoingLogisticsModel();
+            $outgoing_logistics->order_id = $order_id;
+            $outgoing_logistics->logistics_company = $logistics_id;
+            $outgoing_logistics->odd_numbers = $logistics_no;
+            if (!$outgoing_logistics->save()) {
                 DB::rollBack();
-                Log::error('ID:' . $order_id . '订单运单号保存失败');
-                return ajax_json(0, 'error', '订单运单号保存失败');
+                Log::error('ID:' . $order_id . '订单出库快递信息保存失败');
+                return ajax_json(0, 'error', '订单出库快递信息保存失败');
             }
 
             //订阅订单物流
@@ -529,7 +553,6 @@ class OutWarehouseController extends Controller
                         }
                     }
 
-
                     $sku_arr[$out_sku->sku_id] = $out_sku->count;
                 }
 
@@ -547,7 +570,6 @@ class OutWarehouseController extends Controller
                 DB::roolBack();
                 return view('errors.503');
             }
-
 
             DB::commit();
 
