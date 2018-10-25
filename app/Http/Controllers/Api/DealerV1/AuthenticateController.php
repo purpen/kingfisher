@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Helper\Tools;
@@ -33,14 +34,14 @@ class AuthenticateController extends BaseController
     {
         $str = trim($str);
 
-         if ($phrase = Cache::get($str)){
+        if ($phrase = Cache::get($str)) {
             $builder = new CaptchaBuilder($phrase);
-        }else{
-         //生成验证码图片的Builder对象，配置相应属性
-             $builder = new CaptchaBuilder();
-             $phrase = $builder->getPhrase();
+        } else {
+            //生成验证码图片的Builder对象，配置相应属性
+            $builder = new CaptchaBuilder();
+            $phrase = $builder->getPhrase();
             //设置缓存10分钟过期
-            Cache::put($str,$phrase,10);
+            Cache::put($str, $phrase, 10);
         }
         //可以设置图片宽高及字体
         $builder->build($width = 120, $height = 40, $font = null);
@@ -63,16 +64,16 @@ class AuthenticateController extends BaseController
      *     }
      * }
      */
-    public function checkCaptcha($str,$captcha)
+    public function checkCaptcha($str, $captcha)
     {
         $str = trim($str);
         $captcha = trim($captcha);
         $res = Cache::get($str);
 
-        if ($res === null){
+        if ($res === null) {
             return $this->response->array(ApiHelper::error('暂无匹配参数!', 403));
         }
-        if (strtolower($res) == strtolower($captcha)){
+        if (strtolower($res) == strtolower($captcha)) {
             Cache::forget($str);
             return $this->response->array(ApiHelper::success());
         }
@@ -95,19 +96,18 @@ class AuthenticateController extends BaseController
      * "data":{
      * 'url':  "http://www.work.com/DealerApi/auth/createCapcha?ed17dd"    //图片验证码路径
      * 'str':    'abuxbsn'  //随机字符串
-
      * }
      * }
      */
     public function captchaUrl(Request $request)
     {
         $str = substr(md5(microtime(true)), 0, 10);
-        $url = route('auth.createCapcha',$str);//路由加随机字符串
+        $url = route('auth.createCapcha', $str);//路由加随机字符串
         $data = [
-            'url'=>$url,
-            'str'=>$str
+            'url' => $url,
+            'str' => $str
         ];
-        return $this->response->array(ApiHelper::success('ok！', 200,$data));
+        return $this->response->array(ApiHelper::success('ok！', 200, $data));
     }
 
 
@@ -141,11 +141,11 @@ class AuthenticateController extends BaseController
             'code.required' => '短信验证码必填',
         ];
 
-        $payload = app('request')->only( 'code','phone');
-        $validator = app('validator')->make($payload, $rules,$message);
+        $payload = app('request')->only('code', 'phone');
+        $validator = app('validator')->make($payload, $rules, $message);
         //  验证格式
         if ($validator->fails()) {
-            throw new StoreResourceFailedException('请求参数格式有误！',  $validator->errors());
+            throw new StoreResourceFailedException('请求参数格式有误！', $validator->errors());
         }
         // 验证验证码
         if (!$this->isExistCode($payload['phone'], $payload['code'], 1)) {
@@ -224,11 +224,11 @@ class AuthenticateController extends BaseController
             'password.required' => '密码必填',
         ];
 
-        $payload = app('request')->only('password','phone','province_id','city_id','county_id');
-        $validator = app('validator')->make($payload, $rules,$message);
+        $payload = app('request')->only('password', 'phone', 'province_id', 'city_id', 'county_id');
+        $validator = app('validator')->make($payload, $rules, $message);
         // 验证格式
         if ($validator->fails()) {
-            throw new StoreResourceFailedException('新用户注册失败！',  $validator->errors());
+            throw new StoreResourceFailedException('新用户注册失败！', $validator->errors());
         }
 
 //        // 验证验证码
@@ -251,21 +251,21 @@ class AuthenticateController extends BaseController
         $user->supplier_distributor_type = 3;     // 经销商类型
         $res = $user->save();
 
-        if ($res){
+        if ($res) {
             $uid = $user->id;
             $distributors = new DistributorModel();
             $distributors->name = $request['name'];
-            $user_id = DistributorModel::where('user_id',$this->auth_user_id)->select('user_id')->first();
+            $user_id = DistributorModel::where('user_id', $this->auth_user_id)->select('user_id')->first();
             if ($user_id) {
                 return $this->response->array(ApiHelper::error('该用户已注册！', 403));
             }
             $distributors->user_id = (int)$uid;
-            $distributors->enter_province = $request->input('enter_province','');
-            $distributors->enter_city = $request->input('enter_city','');
-            $distributors->enter_county = $request->input('enter_county','');
-            $distributors->store_name = $request->input('store_name','');
-            $distributors->enter_phone = $request->input('enter_phone','');
-            $distributors->ein = $request->input('ein','');
+            $distributors->enter_province = $request->input('enter_province', '');
+            $distributors->enter_city = $request->input('enter_city', '');
+            $distributors->enter_county = $request->input('enter_county', '');
+            $distributors->store_name = $request->input('store_name', '');
+            $distributors->enter_phone = $request->input('enter_phone', '');
+            $distributors->ein = $request->input('ein', '');
             $distributors->province_id = (int)$request['province_id'];//省oid
             $distributors->city_id = (int)$request['city_id'];//市oid
             $distributors->county_id = (int)$request['county_id'];//区oid
@@ -277,28 +277,28 @@ class AuthenticateController extends BaseController
             $distributors->Inside_id = $request->input('Inside_id', 0);
             $distributors->portrait_id = $request->input('portrait_id', 0);
             $distributors->national_emblem_id = $request->input('national_emblem_id', 0);
-            $distributors->bank_number = $request->input('bank_number','');
-            $distributors->bank_name = $request->input('bank_name','');
-            $distributors->business_license_number = $request->input('business_license_number','');
-            $distributors->taxpayer = $request->input('taxpayer','');
-            $distributors->position = $request->input('position','');
-            $distributors->full_name = $request->input('full_name','');
-            $distributors->legal_person = $request->input('legal_person','');
-            $distributors->legal_phone = $request->input('legal_phone','');
-            $distributors->legal_number = $request->input('legal_number','');
-            $distributors->store_address = $request->input('store_address','');
-            $distributors->enter_Address = $request->input('enter_Address','');
-            $distributors->contract_id = $request->input('enter_Address','');
-            $distributors->mode = $request->input('mode','');
+            $distributors->bank_number = $request->input('bank_number', '');
+            $distributors->bank_name = $request->input('bank_name', '');
+            $distributors->business_license_number = $request->input('business_license_number', '');
+            $distributors->taxpayer = $request->input('taxpayer', '');
+            $distributors->position = $request->input('position', '');
+            $distributors->full_name = $request->input('full_name', '');
+            $distributors->legal_person = $request->input('legal_person', '');
+            $distributors->legal_phone = $request->input('legal_phone', '');
+            $distributors->legal_number = $request->input('legal_number', '');
+            $distributors->store_address = $request->input('store_address', '');
+            $distributors->enter_Address = $request->input('enter_Address', '');
+            $distributors->contract_id = $request->input('enter_Address', '');
+            $distributors->mode = $request->input('mode', '');
             $distributors->status = 1;
             $result = $distributors->save();
             if ($result) {
-                $assets = AssetsModel::where('random',$request->input('random'))->get();
-                foreach ($assets as $asset){
+                $assets = AssetsModel::where('random', $request->input('random'))->get();
+                foreach ($assets as $asset) {
                     $asset->target_id = $distributors->id;
                     $asset->save();
                 }
-        }
+            }
             $token = JWTAuth::fromUser($user);
             return $this->response->array(ApiHelper::success('注册成功', 200, compact('token')));
         } else {
@@ -355,17 +355,17 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
             // attempt to verify the credentials and create a token for the user
-                if(preg_match("/^1[34578]{1}\d{9}$/",$credentials['account'])){//手机号
-                    $data = [
-                        'phone' => $credentials['account'],
-                        'password' => $credentials['password'],
-                    ];
-            }else{//用户名
-                    $data = [
-                        'account' => $credentials['account'],
-                        'password' => $credentials['password'],
-                    ];
-                }
+            if (preg_match("/^1[34578]{1}\d{9}$/", $credentials['account'])) {//手机号
+                $data = [
+                    'phone' => $credentials['account'],
+                    'password' => $credentials['password'],
+                ];
+            } else {//用户名
+                $data = [
+                    'account' => $credentials['account'],
+                    'password' => $credentials['password'],
+                ];
+            }
 
             if (!$token = JWTAuth::attempt($data)) {
                 return $this->response->array(ApiHelper::error('账户名或密码错误', 412));
@@ -435,9 +435,9 @@ class AuthenticateController extends BaseController
         $data['text'] = '【太火鸟】验证码：' . $code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
 
         $yunpian = new Yunpian();
-//        $yunpian->sendOneSms($data);
+        $yunpian->sendOneSms($data);
 
-        return $this->response->array(ApiHelper::success('请求成功！', 200,['code' => $code]));
+        return $this->response->array(ApiHelper::success('请求成功！', 200));
     }
 
 
@@ -501,8 +501,8 @@ class AuthenticateController extends BaseController
     }
 
 
-        // 验证注册验证码是否正确,并删除验证码数据
-        public function isExistCode($phone, $code, $type)
+    // 验证注册验证码是否正确,并删除验证码数据
+    public function isExistCode($phone, $code, $type)
     {
 
         $result = CaptchaModel::where(['phone' => $phone, 'code' => $code, 'type' => $type])->first();
@@ -537,7 +537,6 @@ class AuthenticateController extends BaseController
 
         return $this->response->array(ApiHelper::success('退出成功', 200));
     }
-
 
 
     /**
@@ -703,8 +702,8 @@ class AuthenticateController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
-        $captcha_img = $this->checkCaptcha($all['str'],$all['captcha']);//调用验证图片验证码
-        if (!$captcha_img){
+        $captcha_img = $this->checkCaptcha($all['str'], $all['captcha']);//调用验证图片验证码
+        if (!$captcha_img) {
             return $this->response->array(ApiHelper::error('图片验证码错误', 403));
         }
         // 验证验证码
@@ -724,111 +723,111 @@ class AuthenticateController extends BaseController
     }
 
 
-       /**
-        * @api {get} /DealerApi/auth/user 获取用户信息
-        * @apiVersion 1.0.0
-        * @apiName DealerUser user
-        * @apiGroup DealerUser
-        *
-        * @apiParam {string} token
-        *
-        * @apiSuccessExample 成功响应:
-        * {
-        * "data": {
-        * "id": 1,
-        * "name": "张三疯",               // 门店联系人姓名
-        * "phone": "15810295774",                 // 手机号
-        * "status": 1                             // 状态 0.未激活 1.激活
-        * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
-        * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
-        * "distributor_status": 0                       //审核状态：1.待审核；2.已审核；3.关闭；4.重新审核
-        * "distributor_mode": "月结",               // 是否可以月结 1.月结 2.非月结
-        * },
-        *
-        * "meta": {
-        * "message": "Success.",
-        * "status_code": 200
-        * }
-        * }Request $request
-        */
+    /**
+     * @api {get} /DealerApi/auth/user 获取用户信息
+     * @apiVersion 1.0.0
+     * @apiName DealerUser user
+     * @apiGroup DealerUser
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": {
+     * "id": 1,
+     * "name": "张三疯",               // 门店联系人姓名
+     * "phone": "15810295774",                 // 手机号
+     * "status": 1                             // 状态 0.未激活 1.激活
+     * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
+     * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
+     * "distributor_status": 0                       //审核状态：1.待审核；2.已审核；3.关闭；4.重新审核
+     * "distributor_mode": "月结",               // 是否可以月结 1.月结 2.非月结
+     * },
+     *
+     * "meta": {
+     * "message": "Success.",
+     * "status_code": 200
+     * }
+     * }Request $request
+     */
 
-       public function AuthUser()
-       {
-           $user_id = $this->auth_user_id;
-           $users = UserModel::where('id', $user_id)->first();
+    public function AuthUser()
+    {
+        $user_id = $this->auth_user_id;
+        $users = UserModel::where('id', $user_id)->first();
 //           获取经销商审核状态
-           $distributor_status = DistributorModel::where('user_id',$users->id)->select('name','status','mode')->first();
-           if ($distributor_status){
-               $users['distributor_status'] = $distributor_status['status'];
-               $users['distributor_mode'] = $distributor_status['mode'];
-               $users['name'] = $distributor_status['name'];
-           }else{
-               $users['distributor_status'] = 0;
-               $users['distributor_mode'] = 0;
-               $users['name'] = '';
-           }
-           $assets = AssetsModel
-               ::find($users->cover_id);
-           if (count($assets)>0){
-               $users->file = $assets->file->p500;
-           }else{
-               $users->file = url('images/default/erp_product.png');
-           }
-           return $this->response->item($users, new UserTransformer())->setMeta(ApiHelper::meta());
+        $distributor_status = DistributorModel::where('user_id', $users->id)->select('name', 'status', 'mode')->first();
+        if ($distributor_status) {
+            $users['distributor_status'] = $distributor_status['status'];
+            $users['distributor_mode'] = $distributor_status['mode'];
+            $users['name'] = $distributor_status['name'];
+        } else {
+            $users['distributor_status'] = 0;
+            $users['distributor_mode'] = 0;
+            $users['name'] = '';
+        }
+        $assets = AssetsModel
+            ::find($users->cover_id);
+        if (count($assets) > 0) {
+            $users->file = $assets->file->p500;
+        } else {
+            $users->file = url('images/default/erp_product.png');
+        }
+        return $this->response->item($users, new UserTransformer())->setMeta(ApiHelper::meta());
 
-       }
+    }
 
-        /**
-         * @api {post} /DealerApi/auth/updateUser 更新用户信息
-         * @apiVersion 1.0.0
-         * @apiName DealerApi updateUser
-         * @apiGroup DealerApi
-         *
-         * @apiParam {string} token
-         * @apiParam {string} random random
-         * @apiParam {integer} id id
-         * @apiParam {string} phone 门店联系人手机号
-         * @apiParam {string} name 门店联系人姓名
-         * @apiParam {integer} cover_id 头像id
-         * @apiParam {string} email email
-         * @apiParam {integer} sex 性别
-         *
-         *
-         * @apiSuccessExample 成功响应:
-         * {
-         * "meta": {
-         * "message": "Success.",
-         * "status_code": 200
-         * }
-         * }
-         */
+    /**
+     * @api {post} /DealerApi/auth/updateUser 更新用户信息
+     * @apiVersion 1.0.0
+     * @apiName DealerApi updateUser
+     * @apiGroup DealerApi
+     *
+     * @apiParam {string} token
+     * @apiParam {string} random random
+     * @apiParam {integer} id id
+     * @apiParam {string} phone 门店联系人手机号
+     * @apiParam {string} name 门店联系人姓名
+     * @apiParam {integer} cover_id 头像id
+     * @apiParam {string} email email
+     * @apiParam {integer} sex 性别
+     *
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "meta": {
+     * "message": "Success.",
+     * "status_code": 200
+     * }
+     * }
+     */
 
-        public function updateUser(Request $request)
-        {
-            $all = $request->all();
-            $all['id'] = $request->input('id');
-            $rules = [
+    public function updateUser(Request $request)
+    {
+        $all = $request->all();
+        $all['id'] = $request->input('id');
+        $rules = [
 //                'phone' => 'required',
 //                'name' => 'required',
-                'cover_id' => 'required',
-                ];
+            'cover_id' => 'required',
+        ];
 
-            $validator = Validator::make($all, $rules);
-            if ($validator->fails()) {
-                throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
-            }
-            $users = UserModel::where('id', $this->auth_user_id)->first();
-            if ($users){
-                $user = $users->update(['cover_id'=>$request['cover_id'],'verify_status'=>1,'supplier_distributor_type'=>3]);
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
+        }
+        $users = UserModel::where('id', $this->auth_user_id)->first();
+        if ($users) {
+            $user = $users->update(['cover_id' => $request['cover_id'], 'verify_status' => 1, 'supplier_distributor_type' => 3]);
 //                if ($user){
 //                    $distributors = new DistributorModel();
 //                    $distributor =DB::table('distributor')
 //                        ->where('user_id','=',$this->auth_user_id)
 //                        ->update(['name'=>$request['name'],'phone'=>$request['phone']]);
 //                }
-            }else{
-                return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
-            }
-            return $this->response->array(ApiHelper::success());
+        } else {
+            return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
         }
+        return $this->response->array(ApiHelper::success());
+    }
 }
