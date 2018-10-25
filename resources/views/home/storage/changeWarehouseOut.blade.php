@@ -107,19 +107,19 @@
                         </thead>
                         <tbody>
 
-                        @foreach ($out_sku as $enter_sku)
+                        @foreach ($out_skus as $out_sku)
                             <tr>
                                 <td class="magenta-color">
-                                    {{ $enter_sku->number }}
+                                    {{ $out_sku->number }}
                                 </td>
-                                <td>{{ $enter_sku->name }}</td>
-                                <td>{{ $enter_sku->mode }}</td>
-                                <td class="counts">{{ $enter_sku->count }}</td>
-                                <td class="incounts">{{ $enter_sku->out_count }}</td>
+                                <td>{{ $out_sku->name }}</td>
+                                <td>{{ $out_sku->mode }}</td>
+                                <td class="counts">{{ $out_sku->count }}</td>
+                                <td class="incounts">{{ $out_sku->out_count }}</td>
                                 <td>
-                                    <input type="hidden" name="out_sku_id[]" value="{{$enter_sku->id}}">
-                                    <input type="hidden" name="sku_id[]" value="{{$enter_sku->sku_id}}">
-                                    <input type="text" onkeyup="onlyNum(this)" maxlength="{{$enter_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$enter_sku->not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可入库数量" required>
+                                    <input type="hidden" name="out_sku_id[]" value="{{$out_sku->id}}">
+                                    <input type="hidden" name="sku_id[]" value="{{$out_sku->sku_id}}">
+                                    <input type="text" onkeyup="onlyNum(this)" maxlength="{{$out_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$out_sku->not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可入库数量" required>
                                 </td>
                             </tr>
                         @endforeach
