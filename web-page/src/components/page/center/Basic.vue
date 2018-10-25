@@ -178,7 +178,7 @@ export default {
       itemList: [],
       orderHead: [
         {
-          title: '>',
+          title: '查看详情',
           key: 'options',
           type: 'expand',
           width: 120,
