@@ -176,6 +176,12 @@ class OrderModel extends BaseModel
         return $this->belongsTo('App\Models\OrderModel', 'prove_id');
     }
 
+    //一对多关联订单出库单明细
+    public function orderOut()
+    {
+        return $this->hasMany('App\Models\OrderOutModel','order_id');
+    }
+
 
     /**
      *  获取经销商银行转账凭证图片
