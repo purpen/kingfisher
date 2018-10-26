@@ -245,17 +245,17 @@ class OrderController extends BaseController{
                 }
             }
             if (!empty($orderSku)) {
-                $order_sku = $orderSku->toArray();
-                foreach ($order_sku as $k => $v) {
-                    $sku_id = $v['sku_id'];
+//                $order_sku = $orderSku->toArray();
+                foreach ($orderSku as $k => $val) {
+                    $sku_id = $val->sku_id;
                     $sku = ProductsSkuModel::where('id', (int)$sku_id)->first();
 
-                    if ($sku->assets) {
-                        $sku->path = $sku->assets->file->small;
-                    } else {
-                        $sku->path = url('images/default/erp_product.png');
-                    }
-                    $order_sku[$k]['path'] = $sku->path;
+//                    if ($sku->assets) {
+//                        $sku->path = $sku->assets->file->small;
+//                    } else {
+//                        $sku->path = url('images/default/erp_product.png');
+//                    }
+                    $order_sku[$k]['path'] = $val->productsSku ? $val->productsSku->getFirstProductsImgAttribute() : '';
                     $order_sku[$k]['product_title'] = $sku->product ? $sku->product->title : '';
                     $orders->order_skus = $order_sku;
                 }
