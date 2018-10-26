@@ -215,7 +215,6 @@ class OutWarehouseController extends Controller
         $out_warehouse->storage_id = $out_warehouse->storage ? $out_warehouse->storage->id : '';
 
         $out_warehouse->outWarehouse_sku = $out_warehouse->created_at;//出库单创建时间
-        $out_warehouse->storage_name = $out_warehouse->storage->name;
         $out_warehouse->not_count = $out_warehouse->count - $out_warehouse->out_count;
         $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $id)->get();
 
@@ -253,7 +252,7 @@ class OutWarehouseController extends Controller
         $out_warehouse->changeWarehouse_department = $out_warehouse->changeWarehouse ? $out_warehouse->changeWarehouse->out_department : '';//调出部门
         $out_warehouse->storage_id = $out_warehouse->storage ? $out_warehouse->storage->id : '';
 
-        $out_warehouse->storage_name = $out_warehouse->storage->name;
+        $out_warehouse->storage_name = $out_warehouse->storage?$out_warehouse->storage->name : '';
         $out_warehouse->not_count = $out_warehouse->count - $out_warehouse->out_count;
         $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $id)->get();
 
@@ -397,32 +396,32 @@ class OutWarehouseController extends Controller
 
                         $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
 
-                        if ($out_warehouse_model->type == 2){//订单出库
-                            $order_out = new OrderOutModel();
-                            $order_out->user_id = Auth::user()->id;
-                            $order_out->sku_id = $sku_id_arr[$i];
-                            $order_out->order_id = $order_id;
-                            $order_out->storage_id = $storage_id;
-                            $order_out->department = $order_department;
-                            $order_out->number = $count_arr[$i];
-                            $order_out->outage_time = date("Y-m-d H:i:s");
-                            if (!$order_out->save()) {
+                        if ($out_warehouse_model->type == 3){//调拨出库
+                            $allocation_out = new AllocationOutModel();
+                            $allocation_out->user_id = Auth::user()->id;
+                            $allocation_out->sku_id = $sku_id_arr[$i];
+                            $allocation_out->storage_id = $storage_id;
+                            $allocation_out->allocation_id = $changeWarehouse_id;
+                            $allocation_out->number = $count_arr[$i];
+                            $allocation_out->department = $changeWarehouse_department;
+                            $allocation_out->type = 2;
+                            $allocation_out->outorin_time = date("Y-m-d H:i:s");
+                            if (!$allocation_out->save()) {
                                 DB::rollBack();
                                 return view('errors.503');
                             }
-                            $this->ajaxSendOut($request);
+
                         }
-                        }elseif ($out_warehouse_model->type == 3){//调拨出库
-                        $allocation_out = new AllocationOutModel();
-                        $allocation_out->user_id = Auth::user()->id;
-                        $allocation_out->sku_id = $sku_id_arr[$i];
-                        $allocation_out->storage_id = $storage_id;
-                        $allocation_out->allocation_id = $changeWarehouse_id;
-                        $allocation_out->number = $count_arr[$i];
-                        $allocation_out->department = $changeWarehouse_department;
-                        $allocation_out->type = 2;
-                        $allocation_out->outorin_time = date("Y-m-d H:i:s");
-                        if (!$allocation_out->save()) {
+                        }elseif ($out_warehouse_model->type == 2){//订单出库
+                        $order_out = new OrderOutModel();
+                        $order_out->user_id = Auth::user()->id;
+                        $order_out->sku_id = $sku_id_arr[$i];
+                        $order_out->order_id = $order_id;
+                        $order_out->storage_id = $storage_id;
+                        $order_out->department = $order_department;
+                        $order_out->number = $count_arr[$i];
+                        $order_out->outage_time = date("Y-m-d H:i:s");
+                        if (!$order_out->save()) {
                             DB::rollBack();
                             return view('errors.503');
                         }
@@ -446,6 +445,10 @@ class OutWarehouseController extends Controller
                 if (!$storage_sku_count->out($storage_id, $department, $sku_arr)) {
                     DB::roolBack();
                     return view('errors.503');
+                }
+
+                if ($out_warehouse_model->type == 2){
+                    $this->ajaxSendOut($request);
                 }
 
                 DB::commit();
