@@ -136,6 +136,9 @@ class ProductsSkuModel extends BaseModel
             $result = AssetsModel::where(['target_id' => $this->product_id, 'type' => 1])
                 ->orderBy('id', 'desc')
                 ->first();
+            if (empty($result)){
+                return url('images/default/erp_product1.png');
+            }
 
             return $result->file->p500;
         }
