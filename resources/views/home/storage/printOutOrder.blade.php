@@ -186,9 +186,9 @@
         <table class="table table-bordered">
             <tr>
                 <td>商品编号</td>
-                <td>商品型号</td>
+                <td>sku编号</td>
                 <td>商品名称</td>
-                <td>商品型号</td>
+                <td>商品属性</td>
                 <td>数量</td>
             </tr>
             @{{ #order_sku }}
