@@ -528,13 +528,13 @@ class ReturnedPurchaseController extends Controller
                     
                     DB::commit();
                 } else {
-                    DB::roolBack();
+                    DB::rollBack();
                     return ajax_json(0, '此退货单不存在!');
                 }
             }
         }
         catch(\Exception $e){
-            DB::roolBack();
+            DB::rollBack();
             Log::error($e);
             return ajax_json(0, '此操作失败，请重试!');
         }

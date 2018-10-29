@@ -422,7 +422,7 @@ class OrderModel extends BaseModel
 
             $StoreStorageLogisticModel = StoreStorageLogisticModel::where('store_id', $storeId)->first();
             if (!$StoreStorageLogisticModel) {
-                DB::roolBack();
+                DB::rollBack();
                 return false;
             }
 
@@ -447,7 +447,7 @@ class OrderModel extends BaseModel
             $order_model->status = 5;
 
             if (!$order_model->save()) {
-                DB::roolBack();
+                DB::rollBack();
                 return false;
             }
 
