@@ -110,7 +110,7 @@ class OutWarehouseController extends Controller
             } else {
                 $out_warehouse->order_send_time = '';
             }
-            $out_warehouse->storage_name = $out_warehouse->storage->name;
+            $out_warehouse->storage_name = $out_warehouse->storage?$out_warehouse->storage->name:'';
             if ($out_warehouse->user) {
                 $out_warehouse->user_name = $out_warehouse->user->realname;
             } else {
@@ -354,6 +354,7 @@ class OutWarehouseController extends Controller
             $sum = $sum + $count;
         }
         $out_warehouse_model = OutWarehousesModel::find($out_warehouse_id);
+        $target_id = $out_warehouse_model->target_id;
         if ($out_warehouse_model) {
             if ($sum > ($out_warehouse_model->count - $out_warehouse_model->out_count)) {
                 return view('errors.503');
@@ -368,20 +369,20 @@ class OutWarehouseController extends Controller
                     if ($out_sku = OutWarehouseSkuRelationModel::find($out_sku_id_arr[$i])) {
 
                         if ($count_arr[$i] > $out_sku->count - $out_sku->out_count) {
-                            DB::roolBack();
+                            DB::rollBack();
                             return view('errors.503');
                         }
 
                         $out_sku->out_count = $out_sku->out_count + $count_arr[$i];
                         if (!$out_sku->save()) {
-                            DB::roolBack();
+                            DB::rollBack();
                             return view('errors.503');
                         }
 
                         //减少商品/SKU 总库存
                         $skuModel = new ProductsSkuModel();
                         if (!$skuModel->reduceInventory($sku_id_arr[$i], $count_arr[$i])) {
-                            DB::roolBack();
+                            DB::rollBack();
                             return view('errors.503');
                         }
 
@@ -411,30 +412,30 @@ class OutWarehouseController extends Controller
                                 return view('errors.503');
                             }
 
-                        }
-                        }elseif ($out_warehouse_model->type == 2){//订单出库
-                        $order_out = new OrderOutModel();
-                        $order_out->user_id = Auth::user()->id;
-                        $order_out->sku_id = $sku_id_arr[$i];
-                        $order_out->order_id = $order_id;
-                        $order_out->storage_id = $storage_id;
-                        $order_out->department = $order_department;
-                        $order_out->number = $count_arr[$i];
-                        $order_out->outage_time = date("Y-m-d H:i:s");
-                        if (!$order_out->save()) {
-                            DB::rollBack();
-                            return view('errors.503');
+                        }elseif ($out_warehouse_model->type == 2) {//订单出库
+                            $order_out = new OrderOutModel();
+                            $order_out->user_id = Auth::user()->id;
+                            $order_out->sku_id = $sku_id_arr[$i];
+                            $order_out->order_id = $order_id;
+                            $order_out->storage_id = $storage_id;
+                            $order_out->department = $order_department;
+                            $order_out->number = $count_arr[$i];
+                            $order_out->outage_time = date("Y-m-d H:i:s");
+                            if (!$order_out->save()) {
+                                DB::rollBack();
+                                return view('errors.503');
+                            }
                         }
 
                     } else {
-                        DB::roolBack();
+                        DB::rollBack();
                         return view('errors.503');
                     }
                 }
 
                 //修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
                 if (!$out_warehouse_model->setStorageStatus($sku_arr)) {
-                    DB::roolBack();
+                    DB::rollBack();
                     return view('errors.503');
                 }
 
@@ -443,19 +444,26 @@ class OutWarehouseController extends Controller
                 $department = $out_warehouse_model->department;
                 $storage_sku_count = new StorageSkuCountModel();
                 if (!$storage_sku_count->out($storage_id, $department, $sku_arr)) {
-                    DB::roolBack();
+                    DB::rollBack();
                     return view('errors.503');
                 }
 
-                if ($out_warehouse_model->type == 2){
-                    $this->ajaxSendOut($request);
+                if ($out_warehouse_model->type == 2) {
+                    $ajax_res = json_decode($this->ajaxSendOut($request), true);
+                    if ($ajax_res['status'] == 0) {
+                        var_dump($ajax_res);die;
+                        DB::rollBack();
+                        return view('errors.503');
+                    }
                 }
 
-                DB::commit();
-                return redirect('/outWarehouse/orderOut');
+                    DB::commit();
+                    return redirect('/outWarehouse/orderOut');
 //                return back()->withInput();
+
+
             } else {
-                DB::roolBack();
+                DB::rollBack();
                 return view('errors.503');
             }
         }
@@ -465,29 +473,35 @@ class OutWarehouseController extends Controller
     public function ajaxSendOut(Request $request)
     {
         try {
+            $out_warehouse_id = (int)$request->input('out_warehouse_id');
+            $summary = $request->input('summary');
+            $storage_id = $request->input('storage_id');
+            $changeWarehouse_id = $request->input('changeWarehouse_id','');
+            $changeWarehouse_department = $request->input('changeWarehouse_department','');
+
+            $order_department = $request->input('order_department','');
+            $order_id = $request->input('order_id','');
+            //获取快递公司ID  快递单号
+            $logistics_id = $request->input('logistics_id','');
+            $logistics_no = $request->input('logistics_no','');
+
+            $out_sku_id_arr = $request->input('out_sku_id');
+            $sku_id_arr = $request->input('sku_id');
+            $count_arr = $request->input('count');
+
             $order_id = (int)$request->input('order_id');
             $order_model = OrderModel::find($order_id);
 
             // 1、验证订单状态，仅待发货订单，才继续
-            if ($order_model->status != 8 || $order_model->suspend == 1) {
-                return ajax_json(0, 'error', '该订单不是待发货订单');
+//            if ($order_model->status != 8 || $order_model->suspend == 1) {
+            if ($order_model->suspend == 1) {
+                return ajax_json(0, 'error', '该订单不属于正常订单');
             }
 
             DB::beginTransaction();
 
             $order_model->send_user_id = Auth::user()->id;
             $order_model->order_send_time = date("Y-m-d H:i:s");
-
-            if (!$order_model->changeStatus($order_id, 10)) {
-                DB::rollBack();
-                Log::error('Send Order ID:' . $order_id . '订单发货修改状态错误');
-                return ajax_json(0, 'error', '订单发货修改状态错误');
-            }
-
-
-            //手动发货，获取快递公司ID  快递单号
-            $logistics_id = $request->input('logistics_id');
-            $logistics_no = $request->input('logistics_no');
 
             if ($LogisticsModel = LogisticsModel::find($logistics_id)) {
                 $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
@@ -496,7 +510,6 @@ class OutWarehouseController extends Controller
                 return ajax_json(0, 'error', '物流不存在');
             }
 
-            $out_warehouse_id = (int)$request->input('out_warehouse_id');
             $out_warehouse_model = OutWarehousesModel::find($out_warehouse_id);
             if ($out_warehouse_model->storage_status == 5){
                 $order_model->express_id = $logistics_id;
@@ -508,6 +521,13 @@ class OutWarehouseController extends Controller
                     Log::error('ID:' . $order_id . '订单运单号保存失败');
                     return ajax_json(0, 'error', '订单运单号保存失败');
                 }
+                //-- 2018年10月29日16:17:22
+                if (!$order_model->changeStatus($order_id, 10)) {
+                    DB::rollBack();
+                    Log::error('Send Order ID:' . $order_id . '订单发货修改状态错误');
+                    return ajax_json(0, 'error', '订单发货修改状态错误');
+                }
+
             }
             $outgoing_logistics = new OutgoingLogisticsModel();
             $outgoing_logistics->order_id = $order_id;
@@ -523,41 +543,131 @@ class OutWarehouseController extends Controller
             $KdnOrderTracesSub = new KdnOrderTracesSub();
             $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
 
+            $sum = 0;
+            foreach ($count_arr as $count) {
+                $sum = $sum + $count;
+            }
+            $out_warehouse_model = OutWarehousesModel::find($out_warehouse_id);
+            $target_id = $out_warehouse_model->target_id;
+            if ($out_warehouse_model) {
+                if ($sum > ($out_warehouse_model->count - $out_warehouse_model->out_count)) {
+                    return view('errors.503');
+                }
+                $out_warehouse_model->out_count = $out_warehouse_model->out_count + $sum;
+                $out_warehouse_model->summary = $summary;
 
-            // 编辑出库处理
-            $out_warehouse_model = OutWarehousesModel::query()->where(['target_id' => $order_id, 'type' => 2])->first();
-            $out_warehouse_model->out_count = $out_warehouse_model->count;
-            $out_warehouse_model->storage_status = 5;
-            $out_warehouse_model->summary = '';
-            if ($out_warehouse_model->save()) {
-                $sku_arr = [];
-                $out_sku_s = $out_warehouse_model->outWarehouseSkuRelation;
-                foreach ($out_sku_s as $out_sku) {
 
-                    $out_sku->out_count = $out_sku->count;
-                    if (!$out_sku->save()) {
-                        DB::roolBack();
-                        return view('errors.503');
-                    }
+                if ($out_warehouse_model->save()) {
+                    $sku_arr = [];
+                    for ($i = 0; $i < count($out_sku_id_arr); $i++) {
+                        if ($out_sku = OutWarehouseSkuRelationModel::find($out_sku_id_arr[$i])) {
 
-                    //减少商品/SKU 总库存
-                    $skuModel = new ProductsSkuModel();
-                    if (!$skuModel->reduceInventory($out_sku->sku_id, $out_sku->count)) {
-                        DB::roolBack();
-                        return view('errors.503');
-                    }
+                            if ($count_arr[$i] > $out_sku->count - $out_sku->out_count) {
+                                DB::rollBack();
+                                return view('errors.503');
+                            }
 
-                    //如果为订单出库，修改付款占货
-                    if ($out_warehouse_model->type == 2) {
-                        if (!$skuModel->decreasePayCount($out_sku->sku_id, $out_sku->count)) {
+                            $out_sku->out_count = $out_sku->out_count + $count_arr[$i];
+                            if (!$out_sku->save()) {
+                                DB::rollBack();
+                                return view('errors.503');
+                            }
+
+                            //减少商品/SKU 总库存
+                            $skuModel = new ProductsSkuModel();
+                            if (!$skuModel->reduceInventory($sku_id_arr[$i], $count_arr[$i])) {
+                                DB::rollBack();
+                                return view('errors.503');
+                            }
+
+                            //如果为订单出库，修改付款占货
+                            if ($out_warehouse_model->type == 2) {
+                                if (!$skuModel->decreasePayCount($sku_id_arr[$i], $count_arr[$i])) {
+                                    DB::rollBack();
+                                    Log::error('订单发货修改付款占货比错误');
+                                    return view('errors.503');
+                                }
+                            }
+
+                            $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
+
+                            if ($out_warehouse_model->type == 3){//调拨出库
+                                $allocation_out = new AllocationOutModel();
+                                $allocation_out->user_id = Auth::user()->id;
+                                $allocation_out->sku_id = $sku_id_arr[$i];
+                                $allocation_out->storage_id = $storage_id;
+                                $allocation_out->allocation_id = $changeWarehouse_id;
+                                $allocation_out->number = $count_arr[$i];
+                                $allocation_out->department = $changeWarehouse_department;
+                                $allocation_out->type = 2;
+                                $allocation_out->outorin_time = date("Y-m-d H:i:s");
+                                if (!$allocation_out->save()) {
+                                    DB::rollBack();
+                                    return view('errors.503');
+                                }
+
+                            }elseif ($out_warehouse_model->type == 2) {//订单出库
+                                $order_out = new OrderOutModel();
+                                $order_out->user_id = Auth::user()->id;
+                                $order_out->sku_id = $sku_id_arr[$i];
+                                $order_out->order_id = $order_id;
+                                $order_out->storage_id = $storage_id;
+                                $order_out->department = $order_department;
+                                $order_out->number = $count_arr[$i];
+                                $order_out->outage_time = date("Y-m-d H:i:s");
+                                if (!$order_out->save()) {
+                                    DB::rollBack();
+                                    return view('errors.503');
+                                }
+                            }
+
+                        } else {
                             DB::rollBack();
-                            Log::error('订单发货修改付款占货比错误');
                             return view('errors.503');
                         }
                     }
 
-                    $sku_arr[$out_sku->sku_id] = $out_sku->count;
-                }
+                    //修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
+                    if (!$out_warehouse_model->setStorageStatus($sku_arr)) {
+                        DB::rollBack();
+                        return view('errors.503');
+                    }
+            }
+
+            // 编辑出库处理
+//            $out_warehouse_model = OutWarehousesModel::query()->where(['target_id' => $order_id, 'type' => 2])->first();
+//            $out_warehouse_model->out_count = $out_warehouse_model->count;
+//            $out_warehouse_model->storage_status = 5;
+//            $out_warehouse_model->summary = '';
+//            if ($out_warehouse_model->save()) {
+//                $sku_arr = [];
+//                $out_sku_s = $out_warehouse_model->outWarehouseSkuRelation;
+//                foreach ($out_sku_s as $out_sku) {
+//
+//                    $out_sku->out_count = $out_sku->count;
+//                    if (!$out_sku->save()) {
+//                        DB::rollBack();
+//                        return view('errors.503');
+//                    }
+//
+//                    //减少商品/SKU 总库存
+//                    $skuModel = new ProductsSkuModel();
+//                    if (!$skuModel->reduceInventory($out_sku->sku_id, $out_sku->count)) {
+//                        DB::rollBack();
+//                        return view('errors.503');
+//                    }
+//
+//                    //如果为订单出库，修改付款占货
+//                    if ($out_warehouse_model->type == 2) {
+//                        if (!$skuModel->decreasePayCount($out_sku->sku_id, $out_sku->count)) {
+//                            DB::rollBack();
+//                            Log::error('订单发货修改付款占货比错误');
+//                            return view('errors.503');
+//                        }
+//                    }
+//
+//                    $sku_arr[$out_sku->sku_id] = $out_sku->count;
+//                }
 
 
                 //减少对应仓库/部门 SKU库存
@@ -565,12 +675,12 @@ class OutWarehouseController extends Controller
                 $department = $out_warehouse_model->department;
                 $storage_sku_count = new StorageSkuCountModel();
                 if (!$storage_sku_count->out($storage_id, $department, $sku_arr)) {
-                    DB::roolBack();
+                    DB::rollBack();
                     return view('errors.503');
                 }
 
             } else {
-                DB::roolBack();
+                DB::rollBack();
                 return view('errors.503');
             }
 
