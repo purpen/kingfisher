@@ -480,7 +480,6 @@ class OutWarehouseController extends Controller
             $changeWarehouse_department = $request->input('changeWarehouse_department','');
 
             $order_department = $request->input('order_department','');
-            $order_id = $request->input('order_id','');
             //获取快递公司ID  快递单号
             $logistics_id = $request->input('logistics_id','');
             $logistics_no = $request->input('logistics_no','');
@@ -591,7 +590,7 @@ class OutWarehouseController extends Controller
 
                             $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
 
-                            if ($out_warehouse_model->type == 3){//调拨出库
+                            if ($out_warehouse_model->type == 3) {//调拨出库
                                 $allocation_out = new AllocationOutModel();
                                 $allocation_out->user_id = Auth::user()->id;
                                 $allocation_out->sku_id = $sku_id_arr[$i];
@@ -606,7 +605,7 @@ class OutWarehouseController extends Controller
                                     return view('errors.503');
                                 }
 
-                            }elseif ($out_warehouse_model->type == 2) {//订单出库
+                            } elseif ($out_warehouse_model->type == 2) {//订单出库
                                 $order_out = new OrderOutModel();
                                 $order_out->user_id = Auth::user()->id;
                                 $order_out->sku_id = $sku_id_arr[$i];
@@ -632,9 +631,9 @@ class OutWarehouseController extends Controller
                         DB::rollBack();
                         return view('errors.503');
                     }
-            }
 
-            // 编辑出库处理
+
+                    // 编辑出库处理
 //            $out_warehouse_model = OutWarehousesModel::query()->where(['target_id' => $order_id, 'type' => 2])->first();
 //            $out_warehouse_model->out_count = $out_warehouse_model->count;
 //            $out_warehouse_model->storage_status = 5;
@@ -669,24 +668,25 @@ class OutWarehouseController extends Controller
 //                    $sku_arr[$out_sku->sku_id] = $out_sku->count;
 //                }
 
+                    //减少对应仓库/部门 SKU库存
+                    $storage_id = $out_warehouse_model->storage_id;
+                    $department = $out_warehouse_model->department;
+                    $storage_sku_count = new StorageSkuCountModel();
+                    if (!$storage_sku_count->out($storage_id, $department, $sku_arr)) {
+                        DB::rollBack();
+                        return view('errors.503');
+                    }
 
-                //减少对应仓库/部门 SKU库存
-                $storage_id = $out_warehouse_model->storage_id;
-                $department = $out_warehouse_model->department;
-                $storage_sku_count = new StorageSkuCountModel();
-                if (!$storage_sku_count->out($storage_id, $department, $sku_arr)) {
+                } else {
                     DB::rollBack();
                     return view('errors.503');
                 }
 
-            } else {
-                DB::rollBack();
-                return view('errors.503');
+                DB::commit();
+//            return ajax_json(1, 'ok');
+                return redirect('/outWarehouse/orderOut');
+//           return back()->withInput();
             }
-
-            DB::commit();
-
-            return ajax_json(1, 'ok');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
