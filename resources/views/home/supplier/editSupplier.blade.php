@@ -118,9 +118,9 @@
 					{{--@endif--}}
 					{{--</div>--}}
 					<div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
-					<label for="inputBank_address" class="col-sm-2 control-label">开户行地址</label>
+					<label for="inputBank_address" class="col-sm-2 control-label">开户行名称</label>
 					<div class="col-sm-7">
-					<input type="text" class="form-control" value="{{$supplier->bank_address}}" id="inputBank_address" name="bank_address" placeholder="开户行地址">
+					<input type="text" class="form-control" value="{{$supplier->bank_address}}" id="inputBank_address" name="bank_address" placeholder="开户行名称">
 					@if ($errors->has('bank_address'))
 					<span class="help-block">
 					<strong>{{ $errors->first('bank_address') }}</strong>
