@@ -157,25 +157,28 @@
                                   {{--</script>--}}
                                 {{--</div>--}}
 
-                                <div class="form-group">
-                                    <h5>商品详情介绍图片</h5>
-                                    @if(!$assetsProductDetails->isEmpty())
-                                        @foreach($assetsProductDetails as $v)
-                                            <div class="form-group col-sm-6">
-                                                <img src="{{$v->file->p800}}" class="img-bignail" style="text-align: center">
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <div class="form-group col-sm-6">
-                                            <img src="{{url('/images/default/erp_product1.png')}}" class="img-thumbnail">
-                                        </div>
-                                    @endif
+                                {{--<div class="form-group">--}}
+                                    {{--<h5>商品详情介绍图片</h5>--}}
+                                    {{--@if(!$assetsProductDetails->isEmpty())--}}
+                                        {{--@foreach($assetsProductDetails as $v)--}}
+                                            {{--<div class="form-group col-sm-6">--}}
+                                                {{--<img src="{{$v->file->p800}}" class="img-bignail" style="text-align: center">--}}
+                                            {{--</div>--}}
+                                        {{--@endforeach--}}
+                                    {{--@else--}}
+                                        {{--<div class="form-group col-sm-6">--}}
+                                            {{--<img src="{{url('/images/default/erp_product1.png')}}" class="img-thumbnail">--}}
+                                        {{--</div>--}}
+                                    {{--@endif--}}
+                                {{--</div>--}}
+
+                            <div class="form-group">
+                                <div class="editor col-sm-6">
+                                    <textarea id='myEditor' name="content" class="control-label">{{$product->content}}</textarea>
                                 </div>
+                            </div>
 
                         </div>
-                    
-
-
                 </div>
             </div>
         </div>
