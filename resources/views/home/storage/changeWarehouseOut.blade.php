@@ -69,7 +69,7 @@
     <div class="container mainwrap">
 
         <div class="modal-body">
-            <form id="addsku" class="form-horizontal" method="post" action="{{ url('/outWarehouse/update') }}">
+            <form id="addsku" class="form-horizontal" method="post" action="{{ url('/outWarehouse/ajaxSendOut') }}">
 
                 <input type="hidden" name="out_warehouse_id" value="{{$out_warehouse->id}}">
                 <input type="hidden" name="storage_id" value="{{$out_warehouse->storage_id}}">
