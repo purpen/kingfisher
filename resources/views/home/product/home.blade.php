@@ -194,7 +194,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 text-center">{!! $products->appends(['search' => $name, 'per_page' => $per_page , 'supplier_id' => $supplier_id])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $products->appends(['search' => $name, 'per_page' => $per_page ])->render() !!}</div>
         </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
