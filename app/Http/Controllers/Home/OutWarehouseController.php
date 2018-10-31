@@ -815,8 +815,7 @@ class OutWarehouseController extends Controller
      * 完成出库搜索
      *
      */
-    public
-    function search(Request $request)
+    public function search(Request $request)
     {
         $where = $request->input('where');
         $out_warehouses = OutWarehousesModel::where('number', 'like', '%' . $where . '%')->paginate(20);
@@ -866,8 +865,7 @@ class OutWarehouseController extends Controller
     }
 
 //采购退货货单出库审核
-    public
-    function verifyReturned(Request $request)
+    public function verifyReturned(Request $request)
     {
         $id = (int)$request->input('id');
         if (!$model = OutWarehousesModel::find($id)) {
@@ -888,8 +886,7 @@ class OutWarehouseController extends Controller
     }
 
 //订单出库审核
-    public
-    function verifyOrder(Request $request)
+    public function verifyOrder(Request $request)
     {
         $id = (int)$request->input('id');
         if (!$model = OutWarehousesModel::find($id)) {
@@ -910,8 +907,7 @@ class OutWarehouseController extends Controller
     }
 
 //调拨库存审核
-    public
-    function verifyChange(Request $request)
+    public function verifyChange(Request $request)
     {
         $id = (int)$request->input('id');
         if (!$model = OutWarehousesModel::find($id)) {
@@ -937,8 +933,7 @@ class OutWarehouseController extends Controller
      * @param Request $request
      * @return string
      */
-    public
-    function ajaxDelete(Request $request)
+    public function ajaxDelete(Request $request)
     {
         if (!Auth::user()->hasRole('admin')) {
             return ajax_json(0, 'error');
@@ -950,6 +945,43 @@ class OutWarehouseController extends Controller
         $out_order = OutWarehousesModel::find($id);
         $out_order->deleteOutWarehouse();
         return ajax_json(1, 'ok');
+    }
+
+    /**
+     * 查看订单出库单明细
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function showorder(Request $request)
+    {
+
+        echo '111';die;
+        return view('home.storage.showOrder', [
+            'out_warehouse' => $out_warehouse,
+            'out_skus' => $out_skus,
+            'tab_menu' => $this->tab_menu,
+            'logistics_list' => $logistics_list
+        ]);
+    }
+
+  /**
+     * 查看调拨单出库单明细
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function showChangeWare(Request $request)
+    {
+
+        echo '222';die;
+        return view('home.storage.showChangeWare', [
+            'out_warehouse' => $out_warehouse,
+            'out_skus' => $out_skus,
+            'consignor' => $consignor,
+            'change' => $change,
+            'tab_menu' => $this->tab_menu,
+        ]);
     }
 
 }
