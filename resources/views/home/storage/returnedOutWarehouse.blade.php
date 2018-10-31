@@ -137,9 +137,12 @@
 
                                 @if($tab_menu == 'saled')
                                     <a href="{{ url('/outWarehouse/showOut/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">编辑出库</a>
+                                    <a href="{{ url('/outWarehouse/showorder/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">查看明细</a>
 
                                     @elseif($tab_menu == 'exchanged')
                                     <a href="{{ url('/outWarehouse/showOutWare/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">编辑出库</a>
+                                    <a href="{{ url('/outWarehouse/showChangeWare/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">查看明细</a>
+
                                 @endif
 
                                     <button type="button" id="print-enter" value="{{$out_warehouse->id}}"
