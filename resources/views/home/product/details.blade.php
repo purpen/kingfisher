@@ -186,6 +186,7 @@
 	</div>
 @endsection
 {{--@include('UEditor::head');--}}
+@include('editor::head')
 @section('partial_js')
 	@parent
 	{{--<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>--}}
