@@ -37,7 +37,7 @@ class StorageSkuCountController extends Controller
     }
 
     /**
-     * 按商品货号搜索
+     * 按商品编码、sku编码、商品名称搜索
      */
     public function search(Request $request){
         $product_number = $request->input('product_number');//商品编码
