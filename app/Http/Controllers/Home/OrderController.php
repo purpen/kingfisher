@@ -20,6 +20,7 @@ use App\Models\FileRecordsModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
+use App\Models\OutWarehouseSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
@@ -453,10 +454,17 @@ class OrderController extends Controller
             $order->payment_time = '';
         }
 
-        $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
+//        $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
+        $out_ware = $order->outWarehouses;
+        $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $out_ware->id)->get();
 
         $product_sku_model = new ProductsSkuModel();
-        $order_sku = $product_sku_model->detailedSku($order_sku); //订单明细
+//        $order_sku = $product_sku_model->detailedSku($order_sku); //订单明细
+        $order_sku = $product_sku_model->detailedSku($out_sku); //出库单明细
+
+        foreach ($order_sku as $sku) {
+            $sku->quantity = (int)($sku->count - $sku->out_count);
+        }
 
         // 仓库信息
         $storage_list = StorageModel::OfStatus(1)->select(['id', 'name'])->get();
