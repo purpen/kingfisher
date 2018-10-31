@@ -180,13 +180,8 @@ class OutWarehouseController extends Controller
         ]);
     }
 
-    /**
-     * 订单出库单编辑出库明细展示
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function showOut(Request $request, $id)
+
+    function getOutWarehousesData($id,$detail=false)
     {
         $out_warehouse = OutWarehousesModel::find($id);
         //判断是否审核通过
@@ -227,23 +222,38 @@ class OutWarehouseController extends Controller
         }
 
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
-        return view('home.storage.orderOutWarehouses', [
-            'out_warehouse' => $out_warehouse,
-            'out_skus' => $out_skus,
-            'tab_menu' => $this->tab_menu,
-            'logistics_list' => $logistics_list
-        ]);
 
+            $returnData=['out_warehouse' => $out_warehouse,
+                'out_skus' => $out_skus,
+                'tab_menu' => $this->tab_menu,
+                'logistics_list' => $logistics_list
+            ];
+
+
+        if($detail && $out_warehouse->order_id){//返回历史记录
+            //$DATA=MODEL::GET($ID);
+                $order_out = OrderOutModel::where('order_id',$out_warehouse->order_id)->select('id','user_id','outage_time')->get();
+                $outgoing_logistics = OutgoingLogisticsModel::where('order_id',$out_warehouse->order_id)->select('id','logistics_company','logistics_company')->get();
+                $returnData['order_out']=$order_out;
+                $returnData['outgoing_logistics']=$outgoing_logistics;
+        }
+        return $returnData;
     }
 
     /**
-     * 调拨出库单编辑出库明细展示
+     * 订单出库单编辑出库明细展示
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showOutWare(Request $request, $id)
-    {
+    public function showOut(Request $request, $id){
+
+        $data = $this->getOutWarehousesData($id);
+        return view('home.storage.orderOutWarehouses', $data );
+    }
+
+
+    function getOutWare($id,$detail=false){
         $out_warehouse = OutWarehousesModel::find($id);
         //判断是否审核通过
         if ($out_warehouse->status == 0) {
@@ -272,15 +282,34 @@ class OutWarehouseController extends Controller
             $consignor = ConsignorModel::where(['storage_id' => $change->in_storage_id])->first();
         }
 
-        return view('home.storage.changeWarehouseOut', [
+        $returnData = [
             'out_warehouse' => $out_warehouse,
             'out_skus' => $out_skus,
             'consignor' => $consignor,
             'change' => $change,
             'tab_menu' => $this->tab_menu,
-        ]);
+        ];
 
+        if($detail && $out_warehouse->changeWarehouse_id){//返回历史记录
+            //$DATA=MODEL::GET($ID);
+            $allocation_out = AllocationOutModel::where('allocation_id',$out_warehouse->changeWarehouse_id)->where('type',2)->select('id','user_id','outorin_time')->get();
+            $returnData['allocation_out']=$allocation_out;
+        }
+        return $returnData;
     }
+
+    /**
+     * 调拨出库单编辑出库明细展示
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showOutWare(Request $request, $id)
+    {
+        $data = $this->getOutWare($id);
+        return view('home.storage.changeWarehouseOut', $data );
+    }
+
 
     /**
      * 获取出库单详细信息
@@ -953,16 +982,10 @@ class OutWarehouseController extends Controller
      * @param Request $request
      * @return string
      */
-    public function showorder(Request $request)
+    public function showorder(Request $request,$id)
     {
-
-        echo '111';die;
-        return view('home.storage.showOrder', [
-            'out_warehouse' => $out_warehouse,
-            'out_skus' => $out_skus,
-            'tab_menu' => $this->tab_menu,
-            'logistics_list' => $logistics_list
-        ]);
+        $data = $this->getOutWarehousesData($id,true);
+        return view('home.storage.showOrder', $data );
     }
 
   /**
@@ -971,17 +994,10 @@ class OutWarehouseController extends Controller
      * @param Request $request
      * @return string
      */
-    public function showChangeWare(Request $request)
+    public function showChangeWare(Request $request,$id)
     {
-
-        echo '222';die;
-        return view('home.storage.showChangeWare', [
-            'out_warehouse' => $out_warehouse,
-            'out_skus' => $out_skus,
-            'consignor' => $consignor,
-            'change' => $change,
-            'tab_menu' => $this->tab_menu,
-        ]);
+        $data = $this->getOutWare($id,true);
+        return view('home.storage.showChangeWare', $data );
     }
 
 }
