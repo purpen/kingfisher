@@ -665,6 +665,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
         Route::get('/outWarehouse/ajaxPrint', [
             'as' => 'admin.out.warehouse.ajaxPrint', 'acl' => 'admin.warehouse.store', 'uses' => 'OutWarehouseController@ajaxPrint'
         ]);
+        //查看明细
+        Route::get('/outWarehouse/showorder/{id}', [
+            'as' => 'admin.out.warehouse.showorder', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@showorder'
+        ]);
+        Route::get('/outWarehouse/showChangeWare/{id}', [
+            'as' => 'admin.out.warehouse.showChangeWare', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@showChangeWare'
+        ]);
 
         /**
          * 调拨单
