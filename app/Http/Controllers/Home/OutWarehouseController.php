@@ -11,10 +11,12 @@ use App\Models\ConsignorModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderOutModel;
+use App\Models\OrderSkuRelationModel;
 use App\Models\OutgoingLogisticsModel;
 use App\Models\OutWarehouseSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
+use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use Illuminate\Http\Request;
 
@@ -491,10 +493,13 @@ class OutWarehouseController extends Controller
 
             $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $out_warehouse_id)->get();
             $sku_model = new ProductsSkuModel();
-            $out_sku = $sku_model->detailedSku($out_sku);
-//            foreach ($out_sku as $sku) {
-//                $sku->counts = ($sku->out_count - $count_arr);
-//            }
+            $out_skus = $sku_model->detailedSku($out_sku);
+            $out_skus->new_count = implode(',',$count_arr);
+
+            foreach ($count_arr as $k=>$v){
+                $out_skus[$k]['counts'] = $v;
+            }
+
             $order_id = (int)$request->input('order_id');
             $order_model = OrderModel::find($order_id);
 
@@ -681,6 +686,7 @@ class OutWarehouseController extends Controller
                     if ($out_warehouse_model->type == 2) {
                     return view('home.storage.printOrder', [
                             'order_warehouse' => $order_warehouse,
+                            'out_skus' => $out_skus,
                         ]);
                     }else{
                         //return ajax_json(1, 'ok');
@@ -699,6 +705,110 @@ class OutWarehouseController extends Controller
             Log::error($e);
         }
 
+    }
+
+    /**
+     * 获取订单及订单明细的详细信息
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxPrint(Request $request)
+    {
+        $order_id = (int)$request->input('id');
+        $out_warehouse_id = (int)$request->input('out_warehouse_id');
+        $new_count = explode(',',$request->input('new_count'));
+        if (empty($order_id) || empty($new_count) || empty($out_warehouse_id)) {
+            return ajax_json(0, 'error');
+        }
+        $order = OrderModel::find($order_id); //订单
+        if (!$order) {
+            return ajax_json(0, '参数错误');
+        }
+        $order->logistic_name = $order->logistics ? $order->logistics->name : '';
+        /*$order->storage_name = $order->storage->name;*/
+        $order->outWarehousesTime = $order->outWarehouses ? $order->outWarehouses->created_at : '';
+
+        $province = ChinaCityModel::where('oid', $order->buyer_province)->select('name')->first();
+        $city = ChinaCityModel::where('oid', $order->buyer_city)->select('name')->first();
+        $county = ChinaCityModel::where('oid', $order->buyer_county)->select('name')->first();
+        $town = ChinaCityModel::where('oid', $order->buyer_township)->select('name')->first();
+        if ($province) {
+            $order->province = $province->name;
+        }
+        if ($city) {
+            $order->city = $city->name;
+        }
+        if ($county) {
+            $order->county = $county->name;
+        }
+        if ($town) {
+            $order->town = $town->name;
+        }
+        if ($order->payment_time == '0000-00-00 00:00:00') {
+            $order->payment_time = '';
+        }
+        if ($order->status == 0) {
+            $order->payment_time = '';
+        }
+
+        $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $out_warehouse_id)->get();
+        $sku_model = new ProductsSkuModel();
+        $order_sku = $sku_model->detailedSku($out_sku);
+
+        foreach ($new_count as $k=>$v){
+            $order_sku[$k]['quantity'] = $v;
+        }
+        // 仓库信息
+        $storage_list = StorageModel::OfStatus(1)->select(['id', 'name'])->get();
+        if (!empty($storage_list)) {
+            $max = count($storage_list);
+            for ($i = 0; $i < $max; $i++) {
+                if ($storage_list[$i]['id'] == $order->storage_id) {
+                    $storage_list[$i]['selected'] = 'selected';
+                } else {
+                    $storage_list[$i]['selected'] = '';
+                }
+            }
+        }
+        // 物流信息
+        $logistic_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
+        if (!empty($logistic_list)) {
+            $max = count($logistic_list);
+            for ($k = 0; $k < $max; $k++) {
+                if ($logistic_list[$k]['id'] == $order->express_id) {
+                    $logistic_list[$k]['selected'] = 'selected';
+                } else {
+                    $logistic_list[$k]['selected'] = '';
+                }
+            }
+        }
+
+        $express_content_value = [];
+        foreach ($order->express_content_value as $v) {
+            $express_content_value[] = ['key' => $v];
+        }
+
+        // 对应出库单
+        if ($out_warehouse = OutWarehousesModel::where(['type' => 2, 'target_id' => $order_id])->first()) {
+            $out_warehouse_number = $out_warehouse->number;
+        } else {
+            $out_warehouse_number = null;
+        }
+
+        return ajax_json(1, 'ok', [
+            'order' => $order,
+            'order_sku' => $order_sku,
+            'storage_list' => $storage_list,
+            'logistic_list' => $logistic_list,
+            'name' => '',
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+            'sSearch' => false,
+            'express_state_value' => $order->express_state_value,
+            'express_content_value' => $express_content_value,
+            'out_warehouse_number' => $out_warehouse_number,
+        ]);
     }
 
     /*
