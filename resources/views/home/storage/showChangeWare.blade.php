@@ -96,39 +96,29 @@
                                 <td>
                                     <input type="hidden" name="out_sku_id[]" value="{{$out_sku->id}}">
                                     <input type="hidden" name="sku_id[]" value="{{$out_sku->sku_id}}">
-                                    <input type="text" onkeyup="onlyNum(this)" maxlength="{{$out_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$out_sku->not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可入库数量" required>
+                                    <input type="text" onkeyup="onlyNum(this)" maxlength="{{$out_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$out_sku->not_count}}" data-toggle="popover" data-placement="top" readonly>
                                 </td>
                             </tr>
                         @endforeach
 
                         </tbody>
-                        <tfoot>
-                        <tr class="active">
-                            <td colspan="3">合计</td>
-{{--                            @{{#enter_warehouse}}--}}
-                            <td><span id="total" class="magenta-color">{{ $out_warehouse->count }}</span></td>
-                            <td><span id="changetotal" spantotal="0" class="magenta-color">{{ $out_warehouse->out_count }}</span></td>
-                            <td>未出库：<span id="changetotal" spantotal="0" class="magenta-color">{{$out_warehouse->not_count}}</span></td>
-                            {{--@{{/enter_warehouse}}--}}
-                        </tr>
-                        </tfoot>
                     </table>
 
                     <input type="hidden" name="changeWarehouse_department" value="{{$out_warehouse->changeWarehouse_department}}">
                     <input type="hidden" name="changeWarehouse_id" value="{{$out_warehouse->changeWarehouse_id}}">
-                    <div class="form-group">
-                        <label for="summary" class="col-sm-2 control-label">出库备注</label>
-                        <div class="col-sm-8">
-                            <textarea rows="2" class="form-control" name="summary">{{ $out_warehouse->summary }}</textarea>
-                        </div>
-                    </div>
+                    {{--<div class="form-group">--}}
+                        {{--<label for="summary" class="col-sm-2 control-label">出库备注</label>--}}
+                        {{--<div class="col-sm-8">--}}
+                            {{--<textarea rows="2" class="form-control" name="summary">{{ $out_warehouse->summary }}</textarea>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
                 </div>
 
-                <div class="modal-footer" style="text-align: center">
-                    <button type="submit" class="btn btn-magenta makesure">确认提交</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>
-                </div>
+                {{--<div class="modal-footer" style="text-align: center">--}}
+                    {{--<button type="submit" class="btn btn-magenta makesure">确认提交</button>--}}
+                    {{--<button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>--}}
+                {{--</div>--}}
             </form>
         </div>
 
