@@ -662,6 +662,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
         Route::get('/outWarehouse/showOutWare/{id}', [
             'as' => 'admin.out.warehouse.showOutWare', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@showOutWare'
         ]);
+        Route::get('/outWarehouse/ajaxPrint', [
+            'as' => 'admin.out.warehouse.ajaxPrint', 'acl' => 'admin.warehouse.store', 'uses' => 'OutWarehouseController@ajaxPrint'
+        ]);
 
         /**
          * 调拨单
