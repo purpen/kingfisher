@@ -185,7 +185,7 @@
     <br>
     <table class="table table-bordered">
         <tr>
-            <td>ID</td>
+            {{--<td>ID</td>--}}
             <td>商品编号</td>
             <td>商品型号</td>
             <td>商品名称</td>
@@ -194,7 +194,7 @@
         </tr>
         @{{ #out_sku }}
     <tr>
-        <td></td>
+        {{--<td></td>--}}
         <td>@{{ product_number }}</td>
             <td>@{{ number }}</td>
             <td>@{{ name }}</td>
