@@ -351,10 +351,21 @@ class ProductsController extends BaseController
         $user_id = $this->auth_user_id;
         $categories_id = $request->input('categories_id');
 
-        $status = DistributorModel::where('user_id', $this->auth_user_id)->select('status')->first();
-        if ($status['status'] != 2) {
+        $message = DistributorModel::where('user_id', $this->auth_user_id)->select('status','full_name','enter_phone','category_id','authorization_id')->first();
+        $status = $message['status'];
+        $full_name = $message['full_name'];
+        $enter_phone = $message['enter_phone'];
+
+        if ($full_name == '' || $enter_phone == ''){
+            return $this->response->array(ApiHelper::error('您还没有填写企业资料，无法查看商品', 403));
+        }
+        if (($full_name != '' || $enter_phone != '') && $status == 1){
+            return $this->response->array(ApiHelper::error('资料正在审核中,暂时无法查看', 403));
+        }
+        if ($message['status'] != 2) {
             return $this->response->array(ApiHelper::error('审核未通过暂时无法查看商品', 403));
         }
+
         $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
         $province = DistributorModel::where('user_id', $this->auth_user_id)->select('province_id')->first();
         $authorization = DistributorModel::where('user_id', $this->auth_user_id)->select('authorization_id')->first();
