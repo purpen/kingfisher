@@ -172,6 +172,8 @@
                                     {{--@endif--}}
                                 {{--</div>--}}
 
+                            <h5>商品详情介绍图片</h5>
+                            <hr>
                             <div class="form-group">
                                 <div class="editor col-sm-6">
                                     <textarea id='myEditor' name="content" class="control-label">{{$product->content}}</textarea>
@@ -186,9 +188,13 @@
 	</div>
 @endsection
 {{--@include('UEditor::head');--}}
-@include('editor::head')
 @section('partial_js')
 	@parent
+
+    <script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+    {{--<script language="javascript" src="{{url('assets/Lodop/layer.js')}}"></script>--}}
+    @include('editor::head')
+
 	{{--<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>--}}
     {{--<script>--}}
         {{--var ue = UE.getEditor('container');--}}
