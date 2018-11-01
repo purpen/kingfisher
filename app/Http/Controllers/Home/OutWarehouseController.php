@@ -18,6 +18,7 @@ use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\OutWarehouseRequest;
@@ -232,10 +233,46 @@ class OutWarehouseController extends Controller
 
         if($detail && $out_warehouse->order_id){//返回历史记录
             //$DATA=MODEL::GET($ID);
-                $order_out = OrderOutModel::where('order_id',$out_warehouse->order_id)->select('id','user_id','outage_time')->get();
-                $outgoing_logistics = OutgoingLogisticsModel::where('order_id',$out_warehouse->order_id)->select('id','logistics_company','logistics_company')->get();
-                $returnData['order_out']=$order_out;
-                $returnData['outgoing_logistics']=$outgoing_logistics;
+                $order_out = OrderOutModel::where('order_id',$out_warehouse->order_id)->select('id as orderOut_id','order_id','sku_id','number as num','user_id','outage_time')->get();
+                $outgoing_logistic = OutgoingLogisticsModel::where('order_id',$out_warehouse->order_id)->select('id as logistics_id','logistics_company','odd_numbers')->get();
+                foreach ($outgoing_logistic as $kk=>$vv){
+                    $logistics = LogisticsModel::where('id',$vv['logistics_company'])->select('area')->first();
+                    $vv['company'] = $logistics->area;
+                }
+//                $arr = count($order_outs);
+//                for ($i=0;$i<$arr;$i++){
+//                    $all[$i] = array_merge($order_outs[$i],$outgoing_logistics[$i]);
+//                }
+            $sku_model = new ProductsSkuModel();
+            $orders_sku = $sku_model->detailedSku($order_out);
+            $res = [];
+            foreach ($order_out->toArray() as $key=>$val) {
+                $res[$val['outage_time']][] = $val;
+            }
+             foreach ($res as $k=>$v){
+                foreach ($v as $key=>$value){
+                    $name = UserModel::where('id',$value['user_id'])->select('realname')->first();
+                    $value[$key]['realname'] = $name->realname;
+                }
+//                var_dump($value);
+            } var_dump($res);die;
+//            $arr = array();
+//                foreach ($order_outs as $k=>$v){
+//                    $arr[] = array_merge($v,$outgoing_logistics[$k]);
+//                }
+//                foreach ($arr as $key=>$val){
+//
+//                    $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
+//                    $arr[$key]['logistics'] = $logistics->area;
+//                    $arr[$key]['name'] = $name->realname;
+//                }
+
+//            var_dump($orders_sku->toArray());die;
+//            var_dump($arr);die;
+
+//                $returnData['arr']=$arr;
+                $returnData['orders_sku']=$orders_sku;
+                $returnData['res']=$res;
         }
         return $returnData;
     }

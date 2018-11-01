@@ -104,9 +104,7 @@
                                 <td>{{ $out_sku->mode }}</td>
                                 <td class="counts">{{ $out_sku->count }}</td>
                                 <td class="incounts">{{ $out_sku->out_count }}</td>
-                                <td>
-                                    <input type="text" onkeyup="onlyNum(this)" maxlength="{{$out_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$out_sku->not_count}}" data-toggle="popover" data-placement="top" readonly>
-                                </td>
+                                <td>{{$out_sku->not_count}}</td>
                             </tr>
                         @endforeach
 
@@ -116,33 +114,36 @@
 
                     <hr>
                     <div class="form-group">
-                        <h3 style="width:100%;text-align: center">历史记录</h3>
+                        <h4 style="width:100%;margin-left: 37%">历史记录</h4>
                     </div>
+                    {{--@foreach($arr as $value)--}}
+                        {{--<div>--}}
+                    {{--<div class="form-group">--}}
+                        {{--<label for="name" class="col-sm-2 control-label {{ $errors->has('name') ? ' has-error' : '' }}">操作人:</label>--}}
+                        {{--<div class="col-sm-2">--}}
+                            {{--<input type="text" id="name" name="name" class="form-control" readonly value="{{ $value['name'] }}">--}}
+                        {{--</div>--}}
+                        {{--<label for="outage_time" class="col-sm-2 control-label {{ $errors->has('outage_time') ? ' has-error' : '' }}">操作时间:</label>--}}
+                        {{--<div class="col-sm-2">--}}
+                            {{--<input type="text" id="outage_time" name="outage_time" class="form-control" readonly value="{{ $value['outage_time'] }}">--}}
+                        {{--</div>--}}
 
-                    <div class="form-group">
-                        <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">操作人:</label>
-                        <div class="col-sm-2">
-                            <input type="text" id="number" name="number" class="form-control" readonly value="{{ $out_warehouse->num }}">
-                        </div>
-                        <label for="outWarehouse_sku" class="col-sm-2 control-label {{ $errors->has('outWarehouse_sku') ? ' has-error' : '' }}">操作时间:</label>
-                        <div class="col-sm-2">
-                            <input type="text" id="outWarehouse_sku" name="outWarehouse_sku" class="form-control" readonly value="{{ $out_warehouse->outWarehouse_sku }}">
-                        </div>
+                    {{--</div>--}}
 
-                    </div>
+                    {{--<div class="form-group">--}}
+                        {{--<label for="logistics" class="col-sm-2 control-label {{ $errors->has('logistics') ? ' has-error' : '' }}">快递公司:</label>--}}
+                        {{--<div class="col-sm-2">--}}
+                            {{--<input type="text" id="logistics" name="logistics" class="form-control" readonly value="{{ $value['logistics'] }}">--}}
+                        {{--</div>--}}
+                        {{--<label for="odd_numbers" class="col-sm-2 control-label {{ $errors->has('odd_numbers') ? ' has-error' : '' }}">快递单号:</label>--}}
+                        {{--<div class="col-sm-2">--}}
+                            {{--<input type="text" id="odd_numbers" name="odd_numbers" class="form-control" readonly value="{{ $value['odd_numbers'] }}">--}}
+                        {{--</div>--}}
 
-                    <div class="form-group">
-                        <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">快递公司:</label>
-                        <div class="col-sm-2">
-                            <input type="text" id="number" name="number" class="form-control" readonly value="{{ $out_warehouse->num }}">
-                        </div>
-                        <label for="outWarehouse_sku" class="col-sm-2 control-label {{ $errors->has('outWarehouse_sku') ? ' has-error' : '' }}">快递单号:</label>
-                        <div class="col-sm-2">
-                            <input type="text" id="outWarehouse_sku" name="outWarehouse_sku" class="form-control" readonly value="{{ $out_warehouse->outWarehouse_sku }}">
-                        </div>
+                    {{--</div>--}}
+                            {{--@endforeach--}}
 
-                    </div>
-
+                @foreach($res as $val)
                     <table class="table table-hover table-bordered">
                         <thead>
                         <tr class="active">
@@ -153,21 +154,20 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($out_skus as $out_sku)
+                        @foreach ($val as $order_out)
                             <tr>
                                 <td class="magenta-color">
-                                    {{ $out_sku->number }}
+                                    {{ $order_out['number'] }}
                                 </td>
-                                <td>{{ $out_sku->name }}</td>
-                                <td>{{ $out_sku->mode }}</td>
-                                <td>
-                                    <input type="text" onkeyup="onlyNum(this)" maxlength="{{$out_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$out_sku->not_count}}" data-toggle="popover" data-placement="top" readonly>
-                                </td>
+                                <td>{{ $order_out['name'] }}</td>
+                                <td>{{ $order_out['mode'] }}</td>
+                                <td>{{ $order_out['realname'] }}</td>
                             </tr>
-                        @endforeach
+                @endforeach
                         </tbody>
                     </table>
-
+                            @endforeach
+                        </div>
                 </div>
 
             </form>
