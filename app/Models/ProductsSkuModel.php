@@ -190,16 +190,17 @@ class ProductsSkuModel extends BaseModel
      * @param $supplier_id <供应商id>
      * @return mixed
      */
-    public function listOf($where = null, $supplier_id = null)
+    public function listOf($where = null)
     {
-        if ($where && $supplier_id) {
-            $id_array = ProductsModel
-//                ::where('supplier_id', '=', $supplier_id)
-                ::where('status', '!=', 3)->select('id')
-                ->get()
-                ->pluck('id')->all();
-            $skus = ProductsSkuModel::whereIn('product_id', $id_array)->where('number', 'like', "%$where%")->get();
-        } else if ($where) {
+//        if ($where && $supplier_id) {
+//            $id_array = ProductsModel
+////                ::where('supplier_id', '=', $supplier_id)
+//                ::where('status', '!=', 3)->select('id')
+//                ->get()
+//                ->pluck('id')->all();
+//            $skus = ProductsSkuModel::whereIn('product_id', $id_array)->where('number', 'like', "%$where%")->get();
+//        } else
+            if ($where) {
             $skus = self
                 ::where('number', 'like', "%$where%")
                 ->where('status', '!=', 3)
