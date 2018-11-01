@@ -51,8 +51,8 @@ class StorageSkuCountController extends Controller
             ->select('storage_sku_count.*')
             ->orderBy('storage_sku_count.id' , 'desc')
             ->where('storage_sku_count.product_number' , 'like','%'.$product_number.'%')
-            ->orWhere('products_sku.number' , 'like','%'.$number.'%')
-            ->orWhere('products.title' , 'like','%'.$title.'%')
+            ->where('products_sku.number' , 'like','%'.$number.'%')
+            ->where('products.title' , 'like','%'.$title.'%')
             ->paginate(20);
 
         if($storageSkuCounts){
