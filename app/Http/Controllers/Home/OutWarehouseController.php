@@ -233,11 +233,12 @@ class OutWarehouseController extends Controller
 
         if($detail && $out_warehouse->order_id){//返回历史记录
             //$DATA=MODEL::GET($ID);
-                $order_out = OrderOutModel::where('order_id',$out_warehouse->order_id)->select('id as orderOut_id','order_id','sku_id','number as num','user_id','outage_time')->get();
+                $order_out = OrderOutModel::where('order_id',$out_warehouse->order_id)->select('id as orderOut_id','order_id','sku_id','number as num','user_id','outage_time','odd_numbers')->get();
                 $outgoing_logistic = OutgoingLogisticsModel::where('order_id',$out_warehouse->order_id)->select('id as logistics_id','logistics_company','odd_numbers')->get();
-                foreach ($outgoing_logistic as $kk=>$vv){
+                $outgoing = $outgoing_logistic->toArray();
+                foreach ($outgoing as $kk=>$vv){
                     $logistics = LogisticsModel::where('id',$vv['logistics_company'])->select('area')->first();
-                    $vv['company'] = $logistics->area;
+                    $outgoing[$kk]['company'] = $logistics->area;
                 }
 //                $arr = count($order_outs);
 //                for ($i=0;$i<$arr;$i++){
@@ -246,32 +247,31 @@ class OutWarehouseController extends Controller
             $sku_model = new ProductsSkuModel();
             $orders_sku = $sku_model->detailedSku($order_out);
             $res = [];
-            foreach ($order_out->toArray() as $key=>$val) {
-                $res[$val['outage_time']][] = $val;
+            $are= $order_out->toArray();
+            foreach ($are as $key=>&$val) {
+                $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
+                $outgoings = OutgoingLogisticsModel::where('odd_numbers',$val['odd_numbers'])->first();
+                $compoy = $outgoings->logistics->area;
+//
+                $data=array_merge($val,['realname'=>$name->realname,'company'=>$compoy,'odd_numbers'=>$outgoings->odd_numbers]);
+
+                $res[$val['outage_time']]['data_base']= [$data];
+                $res[$val['outage_time']]['data'][] = $data;
+
             }
-             foreach ($res as $k=>$v){
-                foreach ($v as $key=>$value){
-                    $name = UserModel::where('id',$value['user_id'])->select('realname')->first();
-                    $value[$key]['realname'] = $name->realname;
-                }
-//                var_dump($value);
-            } var_dump($res);die;
+
 //            $arr = array();
 //                foreach ($order_outs as $k=>$v){
 //                    $arr[] = array_merge($v,$outgoing_logistics[$k]);
 //                }
 //                foreach ($arr as $key=>$val){
-//
 //                    $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
 //                    $arr[$key]['logistics'] = $logistics->area;
 //                    $arr[$key]['name'] = $name->realname;
 //                }
 
-//            var_dump($orders_sku->toArray());die;
-//            var_dump($arr);die;
-
-//                $returnData['arr']=$arr;
                 $returnData['orders_sku']=$orders_sku;
+                $returnData['outgoing']=$outgoing;
                 $returnData['res']=$res;
         }
         return $returnData;
@@ -660,6 +660,7 @@ class OutWarehouseController extends Controller
                                 $order_out->department = $order_department;
                                 $order_out->number = $count_arr[$i];
                                 $order_out->outage_time = date("Y-m-d H:i:s");
+                                $order_out->odd_numbers = $logistics_no;
                                 if (!$order_out->save()) {
                                     DB::rollBack();
                                     return view('errors.503');
