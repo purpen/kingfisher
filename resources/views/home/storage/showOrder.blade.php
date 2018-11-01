@@ -112,38 +112,40 @@
 
                    </table>
 
+                    @if($res)
                     <hr>
                     <div class="form-group">
                         <h4 style="width:100%;margin-left: 37%">历史记录</h4>
                     </div>
-                    {{--@foreach($arr as $value)--}}
-                        {{--<div>--}}
-                    {{--<div class="form-group">--}}
-                        {{--<label for="name" class="col-sm-2 control-label {{ $errors->has('name') ? ' has-error' : '' }}">操作人:</label>--}}
-                        {{--<div class="col-sm-2">--}}
-                            {{--<input type="text" id="name" name="name" class="form-control" readonly value="{{ $value['name'] }}">--}}
-                        {{--</div>--}}
-                        {{--<label for="outage_time" class="col-sm-2 control-label {{ $errors->has('outage_time') ? ' has-error' : '' }}">操作时间:</label>--}}
-                        {{--<div class="col-sm-2">--}}
-                            {{--<input type="text" id="outage_time" name="outage_time" class="form-control" readonly value="{{ $value['outage_time'] }}">--}}
-                        {{--</div>--}}
+                    @endif
 
-                    {{--</div>--}}
+                    @foreach($res as $val)
+                    <div>
+                        @foreach ($val['data_base'] as $order)
+                        <div class="form-group">
+                        <label for="realname" class="col-sm-2 control-label {{ $errors->has('realname') ? ' has-error' : '' }}">操作人:</label>
+                        <div class="col-sm-2">
+                            <input type="text" id="realname" name="realname" class="form-control" readonly value="{{ $order['realname'] }}">
+                        </div>
+                        <label for="outage_time" class="col-sm-2 control-label {{ $errors->has('outage_time') ? ' has-error' : '' }}">操作时间:</label>
+                        <div class="col-sm-2">
+                            <input type="text" id="outage_time" name="outage_time" class="form-control" readonly value="{{ $order['outage_time'] }}">
+                        </div>
+                            <br><br>
+                        <div class="form-group">
+                            <label for="company" class="col-sm-2 control-label {{ $errors->has('company') ? ' has-error' : '' }}">快递公司:</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="company" name="company" class="form-control" readonly value="{{ $order['company'] }}">
+                            </div>
+                            <label for="odd_numbers" class="col-sm-2 control-label {{ $errors->has('odd_numbers') ? ' has-error' : '' }}">快递单号:</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="odd_numbers" name="odd_numbers" class="form-control" readonly value="{{ $order['odd_numbers'] }}">
+                            </div>
+                        </div>
+                    </div>
 
-                    {{--<div class="form-group">--}}
-                        {{--<label for="logistics" class="col-sm-2 control-label {{ $errors->has('logistics') ? ' has-error' : '' }}">快递公司:</label>--}}
-                        {{--<div class="col-sm-2">--}}
-                            {{--<input type="text" id="logistics" name="logistics" class="form-control" readonly value="{{ $value['logistics'] }}">--}}
-                        {{--</div>--}}
-                        {{--<label for="odd_numbers" class="col-sm-2 control-label {{ $errors->has('odd_numbers') ? ' has-error' : '' }}">快递单号:</label>--}}
-                        {{--<div class="col-sm-2">--}}
-                            {{--<input type="text" id="odd_numbers" name="odd_numbers" class="form-control" readonly value="{{ $value['odd_numbers'] }}">--}}
-                        {{--</div>--}}
+                            @endforeach
 
-                    {{--</div>--}}
-                            {{--@endforeach--}}
-
-                @foreach($res as $val)
                     <table class="table table-hover table-bordered">
                         <thead>
                         <tr class="active">
@@ -154,20 +156,20 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($val as $order_out)
+                        @foreach ($val['data'] as $order_out)
                             <tr>
                                 <td class="magenta-color">
                                     {{ $order_out['number'] }}
                                 </td>
                                 <td>{{ $order_out['name'] }}</td>
                                 <td>{{ $order_out['mode'] }}</td>
-                                <td>{{ $order_out['realname'] }}</td>
+                                <td>{{ $order_out['num'] }}</td>
                             </tr>
                 @endforeach
                         </tbody>
                     </table>
-                            @endforeach
-                        </div>
+                    </div>
+                    @endforeach
                 </div>
 
             </form>
