@@ -306,7 +306,7 @@ class ProductsSkuController extends Controller
         $where = $request->input('where');
         $supplier_id = $request->input('supplier_id');
         $productsSku = new ProductsSkuModel();
-        $skus = $productsSku->lists($where,$supplier_id);
+        $skus = $productsSku->listOf($where,'');
         if(empty($skus)){
             return ajax_json(0,'error','未查询到相关商品');
         }
