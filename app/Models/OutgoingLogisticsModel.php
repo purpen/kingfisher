@@ -27,6 +27,21 @@ class OutgoingLogisticsModel extends BaseModel
     public function order(){
         return $this->belongsTo('App\Models\OrderModel', 'order_id');
     }
+    /**
+     * 相对关联到物流表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function logistics(){
+        return $this->belongsTo('App\Models\LogisticsModel', 'logistics_company');
+    }
+
+    /**
+     * 一对多到订单出库明细表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function orderOut(){
+        return $this->hasMany('App\Models\OrderOutModel', 'odd_numbers');
+    }
 
 //    /**
 //     * 相对关联到sku表

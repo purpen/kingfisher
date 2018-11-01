@@ -18,7 +18,7 @@ class OrderOutModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['number','sku_id','storage_id','user_id','order_id','department','outage_time'];
+    protected $fillable = ['number','sku_id','storage_id','user_id','order_id','department','outage_time','odd_numbers'];
 
     /**
      * 相对关联到订单表
@@ -26,6 +26,13 @@ class OrderOutModel extends BaseModel
      */
     public function order(){
         return $this->belongsTo('App\Models\OrderModel', 'order_id');
+    }
+    /**
+     * 相对关联到物流明细记录表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function outgoingLogistics(){
+        return $this->belongsTo('App\Models\OutgoingLogisticsModel', 'odd_numbers');
     }
 
 //    /**

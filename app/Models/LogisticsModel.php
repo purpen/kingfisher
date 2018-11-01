@@ -48,6 +48,13 @@ class LogisticsModel extends BaseModel
     }
 
     /**
+     * 一对多关联订单出库物流明细表
+     */
+    public function outgoingLogistics(){
+        return $this->hasMany('App\Models\OutgoingLogisticsModel','logistics_company');
+    }
+
+    /**
      * 一对多关联storeStorageLogistic表
      */
     public function storeStorageLogistic(){
