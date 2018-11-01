@@ -2,6 +2,7 @@
 /**
  * 采购单
  */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ class PurchaseModel extends BaseModel
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['department_val','type_val'];
+    protected $appends = ['department_val', 'type_val'];
 
     /**
      * 关联模型到数据表
@@ -23,40 +24,40 @@ class PurchaseModel extends BaseModel
     protected $table = 'purchases';
 
 
-
     //相对关联供应商表
     public function supplier()
     {
-        return $this->belongsTo('App\Models\SupplierModel','supplier_id');
+        return $this->belongsTo('App\Models\SupplierModel', 'supplier_id');
     }
 
     //相对关联仓库表
     public function storage()
     {
-        return $this->belongsTo('App\Models\StorageModel','storage_id');
+        return $this->belongsTo('App\Models\StorageModel', 'storage_id');
     }
 
     //相对关联用户表
     public function user()
     {
-        return $this->belongsTo('App\Models\UserModel','user_id');
+        return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
 
     //一对一关联入库表
     public function enterWarehouses()
     {
-        return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
+        return $this->hasOne('App\Models\EnterWarehousesModel', 'target_id');
     }
 
     //一对一关联付款单
-    public function paymentOrder(){
-        return $this->hasOne('App\Models\PaymentOrderModel','target_id');
+    public function paymentOrder()
+    {
+        return $this->hasOne('App\Models\PaymentOrderModel', 'target_id');
     }
 
     //一对多关联采购单明细
     public function purchaseSku()
     {
-        return $this->hasMany('App\Models\PurchaseSkuRelationModel','purchase_id');
+        return $this->hasMany('App\Models\PurchaseSkuRelationModel', 'purchase_id');
     }
 
     /**
@@ -65,7 +66,7 @@ class PurchaseModel extends BaseModel
      */
     public function getVerifiedValAttribute()
     {
-        switch ($this->verified){
+        switch ($this->verified) {
             case 0:
                 $value = '未审核';
                 break;
@@ -88,7 +89,7 @@ class PurchaseModel extends BaseModel
      */
     public function getStorageStatusValAttribute()
     {
-        switch ($this->storage_status){
+        switch ($this->storage_status) {
             case 0:
                 $value = '未入库';
                 break;
@@ -110,7 +111,7 @@ class PurchaseModel extends BaseModel
 
         /*类型：1.采购 2.代销 3.代发*/
         $type_val = '采购';
-        switch ($type){
+        switch ($type) {
             case 1:
                 $type_val = '采购';
                 break;
@@ -128,7 +129,7 @@ class PurchaseModel extends BaseModel
     public function getDepartmentValAttribute()
     {
         $val = '';
-        switch ($this->department){
+        switch ($this->department) {
             case 0:
                 break;
             case 1:
@@ -163,7 +164,7 @@ class PurchaseModel extends BaseModel
      */
     public function getTypeValAttribute($key)
     {
-        switch ($this->type){
+        switch ($this->type) {
             case 1:
                 $value = '老款补货';
                 break;
@@ -181,7 +182,7 @@ class PurchaseModel extends BaseModel
      */
     public function lists($lists)
     {
-        foreach ($lists as $list){
+        foreach ($lists as $list) {
             $list->supplier_name = $list->supplier ? $list->supplier->name : '';
             $list->storage = $list->storage->name;
             $list->user = $list->user->realname;
@@ -191,18 +192,23 @@ class PurchaseModel extends BaseModel
 
     /**
      * 采购订单审核通过状态修改
-     * @param int $id  '采购订单id'
-     * @param int $verified  ‘审核状态’
+     * @param int $id '采购订单id'
+     * @param int $verified ‘审核状态’
      * @return null|string
      */
-    public function changeStatus($id,$verified)
+    public function changeStatus($id, $verified)
     {
-        $id = (int) $id;
+        $id = (int)$id;
         $respond = 0;
-        if (empty($id)){
+        if (empty($id)) {
             return $respond;
-        }else{
-            switch ($verified){
+        } else {
+            $purchase = PurchaseModel::find($id);
+            if ($verified != $purchase->verified) {
+                return $respond;
+            }
+
+            switch ($verified) {
                 case 0:
                     $verified = 1;
                     break;
@@ -215,9 +221,9 @@ class PurchaseModel extends BaseModel
                 default:
                     return $respond;
             }
-            $purchase = PurchaseModel::find($id);
+
             $purchase->verified = $verified;
-            if($purchase->save()){
+            if ($purchase->save()) {
                 $respond = 1;
             }
         }
@@ -232,13 +238,13 @@ class PurchaseModel extends BaseModel
     public function returnedChangeStatus($id)
     {
         $id = (int)$id;
-        if(empty($id)){
+        if (empty($id)) {
             return false;
         }
 
         $purchase = PurchaseModel::find($id);
         $purchase->verified = 0;
-        if(!$purchase->save()){
+        if (!$purchase->save()) {
             return false;
         }
 
@@ -248,17 +254,17 @@ class PurchaseModel extends BaseModel
     /**
      * 更改采购单 采购明细 的入库数量；
      * @param $purchase_id (采购单ID)
-     * @param array $sku   (sku_id =>入库数量 键值对)
+     * @param array $sku (sku_id =>入库数量 键值对)
      * @return bool
      */
-    public function changeInCount($purchase_id,array $sku)
+    public function changeInCount($purchase_id, array $sku)
     {
         $purchase_model = $this::find($purchase_id);
-        $purchase_sku_s = PurchaseSkuRelationModel::where('purchase_id',$purchase_id)->get();
-        foreach ($purchase_sku_s as $purchase_sku){
+        $purchase_sku_s = PurchaseSkuRelationModel::where('purchase_id', $purchase_id)->get();
+        foreach ($purchase_sku_s as $purchase_sku) {
             $purchase_sku->in_count = (int)$purchase_sku->in_count + (int)$sku[$purchase_sku->sku_id];
             $purchase_model->in_count = (int)$purchase_model->in_count + (int)$sku[$purchase_sku->sku_id];
-            if(!$purchase_sku->save() || !$purchase_model->save()){
+            if (!$purchase_sku->save() || !$purchase_model->save()) {
                 return false;
             }
         }
@@ -270,40 +276,37 @@ class PurchaseModel extends BaseModel
      */
     public static function verifyCount()
     {
-        return self::where('verified','!=',9)->count();
+        return self::where('verified', '!=', 9)->count();
     }
 
     public static function boot()
     {
         parent::boot();
-        self::created(function ($obj)
-        {
+        self::created(function ($obj) {
             $remark = $obj->number;
-            RecordsModel::addRecord($obj, 1, 7,$remark);
+            RecordsModel::addRecord($obj, 1, 7, $remark);
         });
 
-        self::updated(function ($obj)
-        {
+        self::updated(function ($obj) {
             $remark = $obj->getDirty();
-            if (array_key_exists('verified', $remark)){
+            if (array_key_exists('verified', $remark)) {
                 $verified = $remark['verified'];
-                switch ($verified){
+                switch ($verified) {
                     case 0:
                         RecordsModel::addRecord($obj, 5, 7);
                         break;
                     default:
                         RecordsModel::addRecord($obj, 4, 7);
                 }
-            } else{
-                RecordsModel::addRecord($obj, 2, 7,$remark);
+            } else {
+                RecordsModel::addRecord($obj, 2, 7, $remark);
             }
 
         });
 
-        self::deleted(function ($obj)
-        {
+        self::deleted(function ($obj) {
             $remark = $obj->number;
-            RecordsModel::addRecord($obj, 3, 7,$remark);
+            RecordsModel::addRecord($obj, 3, 7, $remark);
         });
     }
 
@@ -317,22 +320,22 @@ class PurchaseModel extends BaseModel
         $purchase_sku_relations = $purchase->purchaseSku;
 
         $supplier_id = $purchase->supplier_id;
-        $supplier = SupplierModel::where('id' , $supplier_id)->first();
-        if(!$supplier){
+        $supplier = SupplierModel::where('id', $supplier_id)->first();
+        if (!$supplier) {
             return [false, '没有供应商'];
         }
         //供应商名称
         $purchase->supplier_name = $supplier->name;
         //供应商编号
         $purchase->sup_random_id = $supplier->random_id;
-        foreach ($purchase_sku_relations as $purchase_sku_relation){
+        foreach ($purchase_sku_relations as $purchase_sku_relation) {
             $sku_id = $purchase_sku_relation->sku_id;
             //采购单价
             $purchase->unit_price = $purchase_sku_relation->price;
             //采购数量
             $purchase->count = $purchase_sku_relation->count;
-            $sku = ProductsSkuModel::where('id' , $sku_id)->first();
-            if(!$sku){
+            $sku = ProductsSkuModel::where('id', $sku_id)->first();
+            if (!$sku) {
                 return [false, '没有商品规格'];
             }
             //型号规格
@@ -340,8 +343,8 @@ class PurchaseModel extends BaseModel
             //单位
             $purchase->weight = $sku->weight;
             $product_id = $sku->product_id;
-            $product = ProductsModel::where('id' , $product_id)->first();
-            if(!$product){
+            $product = ProductsModel::where('id', $product_id)->first();
+            if (!$product) {
                 return [false, '没有商品名称'];
             }
 
@@ -359,7 +362,7 @@ class PurchaseModel extends BaseModel
         //供应商名称
         $purchase->supplier_name = $supplier->name;
         $purchase_sku_relations = $purchase->purchaseSku;
-        foreach ($purchase_sku_relations as $purchase_sku_relation){
+        foreach ($purchase_sku_relations as $purchase_sku_relation) {
 //            $purchase->supplier_name = $purchase_sku_relation->productsSku->product->supplier->name;
 //            $purchase->sup_random_id = $purchase_sku_relation->productsSku->product->supplier->random_id;
             $sku_id = $purchase_sku_relation->sku_id;
@@ -367,8 +370,8 @@ class PurchaseModel extends BaseModel
             $purchase->unit_price = $purchase_sku_relation->price;
             //采购数量
             $purchase->count = $purchase_sku_relation->count;
-            $sku = ProductsSkuModel::where('id' , $sku_id)->first();
-            if(!$sku){
+            $sku = ProductsSkuModel::where('id', $sku_id)->first();
+            if (!$sku) {
                 return [false, '没有商品规格'];
             }
             //型号规格
@@ -376,7 +379,7 @@ class PurchaseModel extends BaseModel
             //单位
             $purchase->weight = $sku->weight;
             $product_id = $sku->product_id;
-            $product = ProductsModel::where('id' , $product_id)->first();
+            $product = ProductsModel::where('id', $product_id)->first();
             //商品名称
             $purchase->product_name = $product->title;
 

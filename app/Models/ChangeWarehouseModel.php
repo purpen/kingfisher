@@ -2,6 +2,7 @@
 /**
  * 调拨单
  */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -22,19 +23,19 @@ class ChangeWarehouseModel extends BaseModel
     // 相对关联仓库表
     public function storage()
     {
-        return $this->belongsTo('App\Models\StorageModel','storage_id');
+        return $this->belongsTo('App\Models\StorageModel', 'storage_id');
     }
 
     // 相对关联用户表
     public function user()
     {
-        return $this->belongsTo('App\Models\UserModel','user_id');
+        return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
 
     // 一对一关联入库表
     public function enterWarehouses()
     {
-        return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
+        return $this->hasOne('App\Models\EnterWarehousesModel', 'target_id');
     }
 
     /**
@@ -44,7 +45,7 @@ class ChangeWarehouseModel extends BaseModel
      */
     public function getStorageStatusAttribute($value)
     {
-        switch ($value){
+        switch ($value) {
             case 0:
                 $value = '未开始';
                 break;
@@ -64,7 +65,7 @@ class ChangeWarehouseModel extends BaseModel
     public function getOutDepartmentValAttribute()
     {
         $val = '';
-        switch ($this->out_department){
+        switch ($this->out_department) {
             case 0:
                 break;
             case 1:
@@ -90,7 +91,7 @@ class ChangeWarehouseModel extends BaseModel
     public function getInDepartmentValAttribute()
     {
         $val = '';
-        switch ($this->in_department){
+        switch ($this->in_department) {
             case 0:
                 break;
             case 1:
@@ -116,14 +117,18 @@ class ChangeWarehouseModel extends BaseModel
      * @param int $verified (状态码)
      * @return bool
      */
-    public function changeStatus($id,$verified)
+    public function changeStatus($id, $verified)
     {
-        $id = (int) $id;
+        $id = (int)$id;
         $respond = 0;
-        if (empty($id)){
+        if (empty($id)) {
             return $respond;
-        }else{
-            switch ($verified){
+        } else {
+            $change_warehouse = ChangeWarehouseModel::find($id);
+            if ($verified != $change_warehouse->verified) {
+                return $respond;
+            }
+            switch ($verified) {
                 case 0:
                     $verified = 1;
                     break;
@@ -133,9 +138,8 @@ class ChangeWarehouseModel extends BaseModel
                 default:
                     return $respond;
             }
-            $change_warehouse = ChangeWarehouseModel::find($id);
             $change_warehouse->verified = $verified;
-            if($change_warehouse->save()){
+            if ($change_warehouse->save()) {
                 $respond = 1;
             }
         }
@@ -144,15 +148,15 @@ class ChangeWarehouseModel extends BaseModel
 
     /**
      * 调拨单总价
-     * 
+     *
      * @param $id
      * @return int
      */
     public function totalMoney($id)
     {
-        $models = ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$id)->get();
+        $models = ChangeWarehouseSkuRelationModel::where('change_warehouse_id', $id)->get();
         $totalMoney = 0;
-        foreach ($models as $model){
+        foreach ($models as $model) {
             $totalMoney += $model->count * $model->productSku->cost_price;
         }
         return $totalMoney;
@@ -161,30 +165,30 @@ class ChangeWarehouseModel extends BaseModel
     public static function boot()
     {
         parent::boot();
-        
+
         self::created(function ($obj) {
             RecordsModel::addRecord($obj, 1, 11);
         });
-        
+
         self::deleted(function ($obj) {
             RecordsModel::addRecord($obj, 3, 11);
         });
-        
+
         self::updated(function ($obj) {
             $remark = $obj->getDirty();
-            if(array_key_exists('verified', $remark)){
+            if (array_key_exists('verified', $remark)) {
                 $verified = $remark['verified'];
-                switch ($verified){
+                switch ($verified) {
                     case 0:
                         RecordsModel::addRecord($obj, 5, 11);
                         break;
                     default:
                         RecordsModel::addRecord($obj, 4, 11);
                 }
-            }else{
-                RecordsModel::addRecord($obj, 2, 11,$remark);
+            } else {
+                RecordsModel::addRecord($obj, 2, 11, $remark);
             }
         });
     }
-    
+
 }
