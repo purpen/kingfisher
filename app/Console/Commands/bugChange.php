@@ -41,7 +41,12 @@ class bugChange extends Command
     public function handle()
     {
 
-        $d = [];
+        $d = [
+            "RKCG2018110100014",
+            "RKCG2018110100013",
+            "RKCG2018110100011",
+            "RKCG2018110100008",
+        ];
         try {
             foreach ($d as $v) {
                 $ew = EnterWarehousesModel::query()->where("number", $v)->first();
