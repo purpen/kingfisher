@@ -6,6 +6,7 @@ use App\Models\EnterWarehousesModel;
 use App\Models\ProductsSkuModel;
 use App\Models\StorageSkuCountModel;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class bugChange extends Command
 {
@@ -48,6 +49,7 @@ class bugChange extends Command
             "RKCG2018110100008",
         ];
         try {
+            DB::beginTransaction();
             foreach ($d as $v) {
                 $ew = EnterWarehousesModel::query()->where("number", $v)->first();
                 if (!$ew) {
@@ -91,9 +93,10 @@ class bugChange extends Command
                 $ew->delete();
             }
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->info($e->getCode() . $e->getMessage());
         }
-
+        DB::commit();
         $this->info("ok");
     }
 
