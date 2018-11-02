@@ -199,7 +199,8 @@
             <td>@{{ number }}</td>
             <td>@{{ name }}</td>
             <td>@{{ mode }}</td>
-            <td>@{{ count }}</td>
+{{--            <td>@{{ count }}</td>--}}
+            <td>@{{ not_count }}</td>
         </tr>
         @{{ /enter_sku }}
     </table>
