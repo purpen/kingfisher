@@ -13,6 +13,7 @@ use App\Models\ProductsSkuModel;
 use App\Models\PurchaseModel;
 use App\Models\PurchasingWarehousingModel;
 use App\Models\StorageSkuCountModel;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\EnterWarehouseRequest;
@@ -107,13 +108,8 @@ class EnterWarehouseController extends Controller
         ]);
     }
 
-    /**
-     * 采购入库单编辑入库明细展示
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function showPurchase(Request $request, $id)
+
+     function getOutWarehousesData($id,$detail=false)
     {
         $enter_warehouse = EnterWarehousesModel::find($id);
         //如果是调拨单入库，检测调拨单是否已出库
@@ -138,17 +134,61 @@ class EnterWarehouseController extends Controller
         $enter_warehouse->not_count = $enter_warehouse->count - $enter_warehouse->in_count;
         // 获取明细
         $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
-
         $sku_model = new ProductsSkuModel();
         $enter_skus = $sku_model->detailedSku($enter_sku);
         foreach ($enter_sku as $sku){
             $sku->not_count = $sku->count - $sku->in_count;
         }
-        return view('home.storage.purchasingWarehousing', [
-            'enter_warehouse' => $enter_warehouse,
+
+        $returnData = [ 'enter_warehouse' => $enter_warehouse,
             'enter_skus' => $enter_skus,
             'tab_menu' => $this->tab_menu,
-        ]);
+            'number' => ''
+        ];
+        $res = [];
+        if ($detail && $enter_warehouse->purchase_id){//返回采购单历史记录
+            $purchasing = PurchasingWarehousingModel::where('purchases_id',$enter_warehouse->purchase_id)->select('id','sku_id','user_id','storage_time','purchases_id','number as num')->get();
+            $sku_model = new ProductsSkuModel();
+            $orders_sku = $sku_model->detailedSku($purchasing);
+            $are = $purchasing->toArray();
+            foreach ($are as $key=>&$val) {
+                $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
+                $data=array_merge($val,['realname' => $name->realname]);
+
+                $res[$val['storage_time']]['data_base'] = [$data];
+                $res[$val['storage_time']]['data'][] = $data;
+            }
+
+        }elseif($detail && $enter_warehouse->changeWarehouse_id){//返回调拨单历史记录
+            $allocation_out = AllocationOutModel::where('allocation_id',$enter_warehouse->changeWarehouse_id)->where('type',1)->select('id','user_id','outorin_time','sku_id','allocation_id','number as num')->get();
+            $sku_model = new ProductsSkuModel();
+            $orders_sku = $sku_model->detailedSku($allocation_out);
+            $are = $allocation_out->toArray();
+            foreach ($are as $key=>&$val) {
+                $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
+                $data=array_merge($val,['realname' => $name->realname]);
+
+                $res[$val['outorin_time']]['data_base'] = [$data];
+                $res[$val['outorin_time']]['data'][] = $data;
+            }
+        }
+
+        $returnData['orders_sku'] = $orders_sku;
+        $returnData['res'] = $res;
+
+        return $returnData;
+    }
+
+    /**
+     * 采购/调拨入库单编辑入库明细展示
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showPurchase(Request $request, $id)
+    {
+        $data = $this->getOutWarehousesData($id);
+        return view('home.storage.purchasingWarehousing', $data );
     }
 
     /**
@@ -402,19 +442,22 @@ class EnterWarehouseController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $enter_warehouse = EnterWarehousesModel::find($id);
-        // 获取明细
-        $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
+//        $enter_warehouse = EnterWarehousesModel::find($id);
+//        // 获取明细
+//        $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
+//
+//        $sku_model = new ProductsSkuModel();
+//        $enter_skus = $sku_model->detailedSku($enter_sku);
+//
+//        return view('home.storage.enter_warehouse_show', [
+//            'enter_warehouse' => $enter_warehouse,
+//            'enter_skus' => $enter_skus,
+//            'tab_menu' => $this->tab_menu,
+//            'number' => ''
+//        ]);
 
-        $sku_model = new ProductsSkuModel();
-        $enter_skus = $sku_model->detailedSku($enter_sku);
-        
-        return view('home.storage.enter_warehouse_show', [
-            'enter_warehouse' => $enter_warehouse,
-            'enter_skus' => $enter_skus,
-            'tab_menu' => $this->tab_menu,
-            'number' => ''
-        ]);
+        $data = $this->getOutWarehousesData($id,true);
+        return view('home.storage.enter_warehouse_show', $data );
     }
     
     

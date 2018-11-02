@@ -187,7 +187,7 @@ class OutWarehouseController extends Controller
         $out_warehouse = OutWarehousesModel::find($id);
         //判断是否审核通过
         if ($out_warehouse->status == 0) {
-            return '尚未审核';
+            return '尚未审核！';
         }
         $province_id = $out_warehouse->order ? $out_warehouse->order->buyer_province : '';
         $city_id = $out_warehouse->order ? $out_warehouse->order->buyer_city : '';
@@ -233,13 +233,7 @@ class OutWarehouseController extends Controller
 
         if($detail && $out_warehouse->order_id){//返回历史记录
             //$DATA=MODEL::GET($ID);
-                $order_out = OrderOutModel::where('order_id',$out_warehouse->order_id)->select('id as orderOut_id','order_id','sku_id','number as num','user_id','outage_time','odd_numbers')->get();
-                $outgoing_logistic = OutgoingLogisticsModel::where('order_id',$out_warehouse->order_id)->select('id as logistics_id','logistics_company','odd_numbers')->get();
-                $outgoing = $outgoing_logistic->toArray();
-                foreach ($outgoing as $kk=>$vv){
-                    $logistics = LogisticsModel::where('id',$vv['logistics_company'])->select('area')->first();
-                    $outgoing[$kk]['company'] = $logistics->area;
-                }
+            $order_out = OrderOutModel::where('order_id',$out_warehouse->order_id)->select('id as orderOut_id','order_id','sku_id','number as num','user_id','outage_time','odd_numbers')->get();
 //                $arr = count($order_outs);
 //                for ($i=0;$i<$arr;$i++){
 //                    $all[$i] = array_merge($order_outs[$i],$outgoing_logistics[$i]);
@@ -247,32 +241,31 @@ class OutWarehouseController extends Controller
             $sku_model = new ProductsSkuModel();
             $orders_sku = $sku_model->detailedSku($order_out);
             $res = [];
-            $are= $order_out->toArray();
+            $are = $order_out->toArray();
             foreach ($are as $key=>&$val) {
                 $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
                 $outgoings = OutgoingLogisticsModel::where('odd_numbers',$val['odd_numbers'])->first();
-                $compoy = $outgoings->logistics->area;
+                if ($outgoings){
+                    $compoy = $outgoings->logistics ? $outgoings->logistics->area : '';
+                    $number =  $outgoings->odd_numbers;
+                }else{
+                    $compoy = '';
+                    $number = '';
+                }
 //
-                $data=array_merge($val,['realname'=>$name->realname,'company'=>$compoy,'odd_numbers'=>$outgoings->odd_numbers]);
+                $data=array_merge($val,['realname' => $name->realname,'company' => $compoy,'odd_numbers' =>$number]);
 
-                $res[$val['outage_time']]['data_base']= [$data];
+                $res[$val['outage_time']]['data_base'] = [$data];
                 $res[$val['outage_time']]['data'][] = $data;
-
             }
 
-//            $arr = array();
+//              $arr = array();
 //                foreach ($order_outs as $k=>$v){
 //                    $arr[] = array_merge($v,$outgoing_logistics[$k]);
 //                }
-//                foreach ($arr as $key=>$val){
-//                    $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
-//                    $arr[$key]['logistics'] = $logistics->area;
-//                    $arr[$key]['name'] = $name->realname;
-//                }
 
-                $returnData['orders_sku']=$orders_sku;
-                $returnData['outgoing']=$outgoing;
-                $returnData['res']=$res;
+                $returnData['orders_sku'] = $orders_sku;
+                $returnData['res'] = $res;
         }
         return $returnData;
     }
@@ -294,7 +287,7 @@ class OutWarehouseController extends Controller
         $out_warehouse = OutWarehousesModel::find($id);
         //判断是否审核通过
         if ($out_warehouse->status == 0) {
-            return '尚未审核';
+            return '尚未审核！';
         }
 
         $out_warehouse->changeWarehouse_id = $out_warehouse->changeWarehouse ? $out_warehouse->changeWarehouse->id : '';
@@ -329,8 +322,21 @@ class OutWarehouseController extends Controller
 
         if($detail && $out_warehouse->changeWarehouse_id){//返回历史记录
             //$DATA=MODEL::GET($ID);
-            $allocation_out = AllocationOutModel::where('allocation_id',$out_warehouse->changeWarehouse_id)->where('type',2)->select('id','user_id','outorin_time')->get();
-            $returnData['allocation_out']=$allocation_out;
+            $allocation_out = AllocationOutModel::where('allocation_id',$out_warehouse->changeWarehouse_id)->where('type',2)->select('id','user_id','outorin_time','sku_id','allocation_id','number as num')->get();
+            $sku_model = new ProductsSkuModel();
+            $orders_sku = $sku_model->detailedSku($allocation_out);
+            $res = [];
+            $are = $allocation_out->toArray();
+            foreach ($are as $key=>&$val) {
+                $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
+                $data=array_merge($val,['realname' => $name->realname]);
+
+                $res[$val['outorin_time']]['data_base'] = [$data];
+                $res[$val['outorin_time']]['data'][] = $data;
+            }
+
+            $returnData['orders_sku'] = $orders_sku;
+            $returnData['res'] = $res;
         }
         return $returnData;
     }
@@ -550,7 +556,7 @@ class OutWarehouseController extends Controller
             $order_department = $request->input('order_department','');
             //获取快递公司ID  快递单号
             $logistics_id = $request->input('logistics_id','');
-            $logistics_no = $request->input('logistics_no','');
+            $logistics_no = trim($request->input('logistics_no',''));
             $order_warehouse = $request->all();
 
             $out_sku_id_arr = $request->input('out_sku_id');
@@ -570,20 +576,27 @@ class OutWarehouseController extends Controller
             $order_model = OrderModel::find($order_id);
 
             $out_warehouse_model = OutWarehousesModel::find($out_warehouse_id);
+            $outgoing_logistics = OutgoingLogisticsModel::where('order_id',$order_id)->select('odd_numbers')->get();
             DB::beginTransaction();
             // 1、验证订单状态，仅待发货订单，才继续
             if ($out_warehouse_model->type == 2){
                 if ($order_model->status != 8 || $order_model->suspend == 1) {
-                    return '该订单不属于待发货订单';
+                    return back()->withErrors(['此订单不属于待发货订单！']);
 //                return ajax_json(0, 'error', '该订单不属于待发货订单');
                 }
+                foreach ($outgoing_logistics as $vv){
+                    if ($logistics_no == $vv->odd_numbers){
+                        return back()->withErrors(['同一笔订单物流单号不允许重复！']);
+                    }
+                }
+
                 $order_model->send_user_id = Auth::user()->id;
                 $order_model->order_send_time = date("Y-m-d H:i:s");
                 if ($LogisticsModel = LogisticsModel::find($logistics_id)) {
                     $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
                 } else {
                     DB::rollBack();
-                    return '物流不存在';
+                    return back()->withErrors(['物流不存在！']);
                 }
                 //订阅订单物流
                 $KdnOrderTracesSub = new KdnOrderTracesSub();
@@ -686,12 +699,12 @@ class OutWarehouseController extends Controller
                             if (!$order_model->save()) {
                                 DB::rollBack();
                                 Log::error('ID:' . $order_id . '订单运单号保存失败');
-                                return '订单运单号保存失败';
+                                return back()->withErrors(['订单运单号保存失败！']);
                             }
                             if (!$order_model->changeStatus($order_id, 10)) {
                                 DB::rollBack();
                                 Log::error('Send Order ID:' . $order_id . '订单发货修改状态错误');
-                                return '订单发货修改状态错误';
+                                return back()->withErrors(['订单发货修改状态错误！']);
                             }
 
                         }
@@ -702,7 +715,7 @@ class OutWarehouseController extends Controller
                         if (!$outgoing_logistics->save()) {
                             DB::rollBack();
                             Log::error('ID:' . $order_id . '订单出库快递信息保存失败');
-                            return '订单出库快递信息保存失败';
+                            return back()->withErrors(['订单出库快递信息保存失败！']);
                         }
                     }
 
