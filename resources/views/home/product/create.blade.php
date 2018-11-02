@@ -47,7 +47,7 @@
             <div class="col-md-12">
                 <div class="formwrapper">
                     <form id="add-product" role="form" class="form-horizontal" method="post" action="{{ url('/product/store') }}">
-                        <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+                        <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随    机数--}}
                         {{ csrf_field() }}{{--token--}}
         				{{--<input type="hidden" name="cover_id" id="cover_id">--}}
                         <h5>商品分类</h5>
@@ -100,24 +100,26 @@
                                         {{--</select>--}}
                                 </div>
                                     <input type="hidden" name="diyu" id="diyu" value="@Model.diyu" />
+                                    <input type="hidden" name="supplier_id" value="22" />
+
                             </div>
 
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="supplier_id" class="col-sm-2 control-label">选择供应商<em>*</em></label>
-                            <div class="col-sm-3">
-                                <div class="input-group col-md-11">
-                                    <select class="chosen-select" name="supplier_id">
-                                        <option value="">请选择供应商</option>
-                                        @foreach($suppliers as $supplier)
-                                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
+                        {{--<div class="form-group">--}}
+                            {{--<label for="supplier_id" class="col-sm-2 control-label">选择供应商<em>*</em></label>--}}
+                            {{--<div class="col-sm-3">--}}
+                                {{--<div class="input-group col-md-11">--}}
+                                    {{--<select class="chosen-select" name="supplier_id">--}}
+                                        {{--<option value="">请选择供应商</option>--}}
+                                        {{--@foreach($suppliers as $supplier)--}}
+                                            {{--<option value="{{ $supplier->id }}">{{ $supplier->name }}</option>--}}
+                                        {{--@endforeach--}}
+                                    {{--</select>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                        {{--<div class="form-group">--}}
                             {{--<label for="supplier_id" class="col-sm-2 control-label">商品类别</label>--}}
                             {{--<div class="col-sm-3">--}}
                                 {{--<div class="input-group">--}}
@@ -127,7 +129,7 @@
                                     {{--</select>--}}
                                 {{--</div>--}}
                             {{--</div>--}}
-                        </div>
+                        {{--</div>--}}
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
@@ -163,7 +165,7 @@
                               @endif
                             </div>
                         </div>
-                    
+
                         <div class="form-group">
                             <label for="market_price" class="col-sm-2 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
@@ -208,7 +210,7 @@
                             </div>
                         </div>
 
-                    
+
                         <div class="form-group">
                             <label for="weight" class="col-sm-2 control-label {{ $errors->has('weight') ? ' has-error' : '' }}">重量(kg)</label>
                             <div class="col-sm-2">
@@ -220,7 +222,7 @@
                               @endif
                             </div>
                         </div>
-                    
+
                         <div class="form-group">
                             <label for="summary" class="col-sm-2 control-label {{ $errors->has('summary') ? ' has-error' : '' }}">备注说明</label>
                             <div class="col-sm-10">
@@ -307,11 +309,11 @@
                                 <button type="button" class="btn btn-white cancel btn-lg once"  onclick="window.history.back()">取消</button>
                             </div>
                         </div>
-                    
+
                     </form>
                 </div>
             </div>
-        </div>	
+        </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @endsection
@@ -463,9 +465,9 @@
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
 					$("#cover_id").val(responseJSON.asset_id);
-                    
+
 					$('.sku-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-                    
+
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);

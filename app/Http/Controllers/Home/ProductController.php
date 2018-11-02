@@ -122,8 +122,8 @@ class ProductController extends Controller
         $category = new CategoriesModel();
         $lists = $category->lists();
         $random = uniqid();  //获取唯一字符串
-        $suppliersModel = new SupplierModel();
-        $suppliers = $suppliersModel->supplierList();
+//        $suppliersModel = new SupplierModel();
+//        $suppliers = $suppliersModel->supplierList();
         $user_id = Auth::user()->id;
 
         //获取七牛上传token
@@ -137,8 +137,7 @@ class ProductController extends Controller
         $province = new ChinaCityModel();
         $provinces = $province->fetchCity();//所有省
 
-        return view('home/product.create', ['number' => $number, 'lists' => $lists, 'random' => $random, 'suppliers' => $suppliers, 'user_id' => $user_id, 'token' => $token, 'tab_menu' => $this->tab_menu, 'name' => '', 'supplier_id' => 0,
-            'provinces' => $provinces]);
+        return view('home/product.create', ['number' => $number, 'lists' => $lists, 'random' => $random,  'user_id' => $user_id, 'token' => $token, 'tab_menu' => $this->tab_menu, 'name' => '', 'provinces' => $provinces]);
     }
 
     /**
@@ -158,8 +157,8 @@ class ProductController extends Controller
         $product->region_id = $request->input('diyu');//地域分类
 
         $product->authorization_id = $request->input('Jszzdm');//授权条件
-        $product->supplier_id = $request->input('supplier_id', '');
-        $product->supplier_name = SupplierModel::find($product->supplier_id)->nam;
+//        $product->supplier_id = $request->input('supplier_id', '');
+//        $product->supplier_name = SupplierModel::find($product->supplier_id)->nam;
         $product->market_price = $request->input('market_price', '');
         $product->sale_price = $request->input('sale_price');
         $product->cost_price = $request->input('cost_price');
@@ -245,8 +244,8 @@ class ProductController extends Controller
         $lists = $category->lists();  // 分类列表
 
         // 供应商列表
-        $suppliersModel = new SupplierModel();
-        $suppliers = $suppliersModel->supplierList();
+//        $suppliersModel = new SupplierModel();
+//        $suppliers = $suppliersModel->supplierList();
 
         $product = ProductsModel::find($id);
 
@@ -291,7 +290,7 @@ class ProductController extends Controller
         return view('home/product.edit', [
             'product' => $product,
             'lists' => $lists,
-            'suppliers' => $suppliers,
+//            'suppliers' => $suppliers,
             'authorization' => $authorization_id,
             'region' => $region,
             'provinces' => $provinces,
@@ -346,9 +345,9 @@ class ProductController extends Controller
         $product->authorization_id = implode(',', $authorization);
         $region = $request->input('region_id');
         $product->region_id = implode(',', $region);
-        $product->supplier_id = $request->input('supplier_id', '');
-        $nam = SupplierModel::find($product->supplier_id)->nam;
-        $product->supplier_name = $nam?$nam:'';
+//        $product->supplier_id = $request->input('supplier_id', '');
+//        $nam = SupplierModel::find($product->supplier_id)->nam;
+//        $product->supplier_name = $nam?$nam:'';
         $product->market_price = $request->input('market_price', '');
         $product->sale_price = $request->input('sale_price');
         $product->cost_price = $request->input('cost_price');
@@ -506,8 +505,8 @@ class ProductController extends Controller
         $lists = $category->lists();  // 分类列表
 
         // 供应商列表
-        $suppliersModel = new SupplierModel();
-        $suppliers = $suppliersModel->supplierList();
+//        $suppliersModel = new SupplierModel();
+//        $suppliers = $suppliersModel->supplierList();
 
         $product = ProductsModel::find($id);
 
@@ -533,7 +532,7 @@ class ProductController extends Controller
         return view('home/product.details', [
             'product' => $product,
             'lists' => $lists,
-            'suppliers' => $suppliers,
+//            'suppliers' => $suppliers,
             'token' => $token,
             'user_id' => $user_id,
             'assets' => $assets,
