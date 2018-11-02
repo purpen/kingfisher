@@ -179,6 +179,7 @@ class DistributorsController extends Controller
         $category_id = implode(',',$request->input('diyu'));
         $authorization_id = implode(',',$request->input('Jszzdm'));
         $mode = $request->input('mode')?$request->input('mode'):'';
+        $business_contacts = $request->input('business_contacts')?$request->input('business_contacts'):'';
         $contract_id = $request->input('contract_id')?$request->input('contract_id'):0;
         $distributorsModel = DistributorModel::find($id);
         if($distributorsModel !='') {
@@ -191,7 +192,7 @@ class DistributorsController extends Controller
                 }
             }
             if ($category_id != '' && $authorization_id != '') {
-                $distributors = DB::update("update distributor set category_id='$category_id',authorization_id='$authorization_id',mode='$mode',contract_id='$contract_id' where id=$id");
+                $distributors = DB::update("update distributor set category_id='$category_id',authorization_id='$authorization_id',mode='$mode',contract_id='$contract_id',business_contacts='$business_contacts' where id=$id");
                 if (!$distributors) {
                     return ajax_json(1, '警告：没有检测到任何改动');
                 }

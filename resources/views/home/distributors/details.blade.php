@@ -194,7 +194,7 @@
                                 </div>
                             </div>
                             <br><br>
-                                <div class="form-group" style="padding-top: 100px;width: 100%">
+                                <div class="form-group" style="padding-top: 150px;width: 100%">
                                 <h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
                                 <hr>
                                 <div class="row mb-2r sku-pic">
@@ -237,6 +237,17 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                    <label for="business_contacts" class="col-sm-2 control-label {{ $errors->has('business_contacts') ? ' has-error' : '' }}">业务联系人</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="business_contacts" class="form-control" value="{{ $distributors->business_contacts }}">
+                                        @if ($errors->has('business_contacts'))
+                                            <span class="help-block">
+                                        <strong>{{ $errors->first('business_contacts') }}</strong>
+                                    </span>
+                                        @endif
+                                    </div>
+                                </div>
                                     <input type="hidden" name="random" value="{{ $random }}">
                                     <input type="hidden" id="id" name="id" value="{{ $distributors->id }}">
                                     <input type="hidden" id="user_id" name="user_id" value="{{ $user_id }}">
@@ -250,7 +261,8 @@
                                 </button>
 
                                 </div>
-                        </div>
+
+
 
 
                 </div>
@@ -325,8 +337,8 @@
                 {{--var diyu = $("input[name='diyu']").val();--}}
                 var mode = $("select[name='mode']").val();
                 var contract_id = $("input[name='contract_id']").val();
-
-    $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu,'mode':mode,'contract_id':contract_id}, function (data) {
+                var business_contacts = $("input[name='business_contacts']").val();
+    $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'id': id,'Jszzdm':Jszzdm,'diyu':diyu,'mode':mode,'contract_id':contract_id,'business_contacts':business_contacts}, function (data) {
     if(data.status == 0){
     layer.msg('操作成功！');
     {{--window.location.go(-1);--}}
