@@ -44,11 +44,16 @@
         </div>
     </div>
     <div class="container mainwrap">
-
+        @if (count($errors) > 0)
+            @foreach ($errors->all() as $error)
+                <h3 style="color: #9c0033">{{ $error }}</h3>
+            @endforeach
+        @endif
         <div class="modal-body">
             <form id="addsku" class="form-horizontal" method="post" action="">
 
                 <input type="hidden" name="out_warehouse_id" value="{{$out_warehouse->id}}">
+                <input type="hidden" name="order_id" value="{{$out_warehouse->order_id}}">
                 <div id="append-sku">
                     {{ csrf_field() }}
 
@@ -115,13 +120,13 @@
                     @if($res)
                     <hr>
                     <div class="form-group">
-                        <h4 style="width:100%;margin-left: 37%">历史记录</h4>
-                    </div>
+                        <h3 style="width:100%;margin-left: 37%">历史记录</h3>
+                    </div><br>
                     @endif
 
                     @foreach($res as $val)
                     <div>
-                        @foreach ($val['data_base'] as $order)
+                         @foreach ($val['data_base'] as $order)
                         <div class="form-group">
                         <label for="realname" class="col-sm-2 control-label {{ $errors->has('realname') ? ' has-error' : '' }}">操作人:</label>
                         <div class="col-sm-2">
@@ -146,33 +151,36 @@
 
                             @endforeach
 
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                        <tr class="active">
-                            <th>SKU编码</th>
-                            <th>商品名称</th>
-                            <th>商品属性</th>
-                            <th>出库数量</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($val['data'] as $order_out)
-                            <tr>
-                                <td class="magenta-color">
-                                    {{ $order_out['number'] }}
-                                </td>
-                                <td>{{ $order_out['name'] }}</td>
-                                <td>{{ $order_out['mode'] }}</td>
-                                <td>{{ $order_out['num'] }}</td>
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                            <tr class="active">
+                                <th>SKU编码</th>
+                                <th>商品名称</th>
+                                <th>商品属性</th>
+                                <th>出库数量</th>
                             </tr>
-                @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            @foreach ($val['data'] as $order_out)
+                                <tr>
+                                    <td class="magenta-color">
+                                        {{ $order_out['number'] }}
+                                    </td>
+                                    <td>{{ $order_out['name'] }}</td>
+                                    <td>{{ $order_out['mode'] }}</td>
+                                    <td>{{ $order_out['num'] }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                            <br>
                     </div>
                     @endforeach
-                </div>
+                </div> </form>
+            <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">
+                <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
+            </button>
 
-            </form>
         </div>
 
             </div>

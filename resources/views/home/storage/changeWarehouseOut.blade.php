@@ -67,7 +67,11 @@
         </div>
     </div>
     <div class="container mainwrap">
-
+        @if (count($errors) > 0)
+            @foreach ($errors->all() as $error)
+                <h3 style="color: #9c0033">{{ $error }}</h3>
+            @endforeach
+        @endif
         <div class="modal-body">
             <form id="addsku" class="form-horizontal" method="post" action="{{ url('/outWarehouse/ajaxSendOut') }}">
 

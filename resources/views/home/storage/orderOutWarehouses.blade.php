@@ -67,7 +67,11 @@
         </div>
     </div>
     <div class="container mainwrap">
-
+        @if (count($errors) > 0)
+            @foreach ($errors->all() as $error)
+                <h3 style="color: #9c0033">{{ $error }}</h3>
+            @endforeach
+        @endif
         <div class="modal-body">
             <form id="addsku" class="form-horizontal" method="post" action="{{ url('/outWarehouse/ajaxSendOut') }}">
 
@@ -175,9 +179,9 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56">快递单号</label>
+                                <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56">快递单号<em>*</em></label>
                                 <div class="col-sm-8">
-                                    <input type="text" name="logistics_no" class="form-control float" id="logistics_no" placeholder="快递单号" required>
+                                    <input type="text" name="logistics_no" class="form-control float" placeholder="请填写快递单号 不可重复" id="logistics_no" placeholder="快递单号" required >
                                 </div>
                             </div>
                 </div>
