@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncEnterWarehouse::class,
         \App\Console\Commands\SyncUserType::class,
         \App\Console\Commands\SyncVirtualSkuCount::class,
+        \App\Console\Commands\bugChange::class,
     ];
 
     /**
