@@ -22,30 +22,45 @@ class StorageSkuCountController extends Controller
     public function index()
     {
         $number = '';
+        $product_number = '';
+        $title = '';
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
             ->paginate(10);
 
         return view('home/storage.storageSkuCount' , [
             'storageSkuCounts' => $storageSkuCounts,
-            'number' => $number
+            'number' => $number,
+            'product_number' => $product_number,
+            'title' => $title
         ]);
     }
 
     /**
-     * 按商品货号搜索
+     * 按商品编码、sku编码、商品名称搜索
      */
     public function search(Request $request){
-        $number = $request->input('product_number');
-        $storages = StorageModel::orderBy('id' , 'desc')->get();
+        $product_number = $request->input('product_number');//商品编码
+        $number = $request->input('number');//sku编码
+        $title = $request->input('title');//商品名称
+//        $storages = StorageModel::orderBy('id' , 'desc')->get();
+
         $storageSkuCounts = StorageSkuCountModel
-            ::orderBy('id' , 'desc')
-            ->where('product_number' , 'like','%'.$number.'%')
+            ::leftjoin('products','storage_sku_count.product_id','=','products.id')
+            ->leftjoin('products_sku','storage_sku_count.sku_id','=','products_sku.id')
+            ->select('storage_sku_count.*')
+            ->orderBy('storage_sku_count.id' , 'desc')
+            ->where('storage_sku_count.product_number' , 'like','%'.$product_number.'%')
+            ->where('products_sku.number' , 'like','%'.$number.'%')
+            ->where('products.title' , 'like','%'.$title.'%')
             ->paginate(20);
+
         if($storageSkuCounts){
             return view('home/storage.storageSkuCount' , [
                 'storageSkuCounts' => $storageSkuCounts,
-                'number' => $number
+                'number' => $number,
+                'title' => $title,
+                'product_number' => $product_number
             ]);
         }else{
             return ;
