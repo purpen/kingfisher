@@ -307,6 +307,7 @@ class ProductsSkuController extends Controller
         $supplier_id = $request->input('supplier_id');
         $productsSku = new ProductsSkuModel();
         $skus = $productsSku->listOf($where);
+        //判断是否查询到商品
         if(empty($skus)){
             return ajax_json(0,'error','未查询到相关商品');
         }

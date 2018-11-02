@@ -453,17 +453,13 @@ class ProductController extends Controller
     {
         $this->per_page = $request->input('per_page', $this->per_page);
         $name = trim($request->input('search'));
-//        $supplier_id = $request->input('supplier_id') ? $request->input('supplier_id') : 0;
-//        if ($supplier_id !== 0) {
-//            $products = ProductsModel::where('supplier_id', $supplier_id)->paginate($this->per_page);
-//        } else {
+
             $sku = ProductsSkuModel::where('number', 'like', '%' . $name . '%')->first();
             if ($sku) {
                 $products = ProductsModel::where('id', $sku->product_id)->orWhere('title', 'like', '%' . $name . '%')->orWhere('tit', 'like', '%' . $name . '%')->paginate($this->per_page);
             } else {
                 $products = ProductsModel::where('number', 'like', '%' . $name . '%')->orWhere('title', 'like', '%' . $name . '%')->orWhere('tit', 'like', '%' . $name . '%')->paginate($this->per_page);
 
-//            }
         }
         $skus = ProductsSkuModel::orderBy('id', 'desc')->get();
         $skuId = [];
@@ -480,7 +476,6 @@ class ProductController extends Controller
                 'name' => $name,
                 'per_page' => $this->per_page,
                 'suppliers' => $suppliers,
-//                'supplier_id' => $supplier_id,
             ]);
         }
     }

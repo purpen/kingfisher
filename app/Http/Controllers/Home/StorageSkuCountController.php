@@ -43,7 +43,7 @@ class StorageSkuCountController extends Controller
         $product_number = $request->input('product_number');//商品编码
         $number = $request->input('number');//sku编码
         $title = $request->input('title');//商品名称
-        $storages = StorageModel::orderBy('id' , 'desc')->get();
+//        $storages = StorageModel::orderBy('id' , 'desc')->get();
 
         $storageSkuCounts = StorageSkuCountModel
             ::leftjoin('products','storage_sku_count.product_id','=','products.id')
