@@ -158,6 +158,7 @@ class EnterWarehouseController extends Controller
                 $res[$val['storage_time']]['data_base'] = [$data];
                 $res[$val['storage_time']]['data'][] = $data;
             }
+            $returnData['orders_sku'] = $orders_sku;
 
         }elseif($detail && $enter_warehouse->changeWarehouse_id){//返回调拨单历史记录
             $allocation_out = AllocationOutModel::where('allocation_id',$enter_warehouse->changeWarehouse_id)->where('type',1)->select('id','user_id','outorin_time','sku_id','allocation_id','number as num')->get();
@@ -171,9 +172,9 @@ class EnterWarehouseController extends Controller
                 $res[$val['outorin_time']]['data_base'] = [$data];
                 $res[$val['outorin_time']]['data'][] = $data;
             }
+            $returnData['orders_sku'] = $orders_sku;
         }
 
-        $returnData['orders_sku'] = $orders_sku;
         $returnData['res'] = $res;
 
         return $returnData;
