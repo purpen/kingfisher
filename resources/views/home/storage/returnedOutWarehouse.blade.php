@@ -120,7 +120,7 @@
                             <td>{{$out_warehouse->order_send_time}}</td>
                             @endif
                             <td>{{$out_warehouse->user_name}}</td>
-                            <td>
+                            <td data-state="{{$out_warehouse->status}}" data-ides="{{$out_warehouse->id}}">
 
 {{--                                @if($tab_menu == 'exchanged')--}}
                                     {{--<button type="button" id="edit-enter" value="{{$out_warehouse->id}}"--}}
@@ -136,12 +136,12 @@
                                 {{--@endif--}}
 
                                 @if($tab_menu == 'saled')
-                                    <a href="{{ url('/outWarehouse/showOut/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">编辑出库</a>
-                                    <a href="{{ url('/outWarehouse/showorder/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">查看明细</a>
+                                    <a href="javascript:void(0);" type="1" class="btn btn-white btn-sm showout">编辑出库</a>
+                                    <a href="javascript:void(0);" type="2" class="btn btn-white btn-sm showout">查看明细</a>
 
-                                    @elseif($tab_menu == 'exchanged')
-                                    <a href="{{ url('/outWarehouse/showOutWare/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">编辑出库</a>
-                                    <a href="{{ url('/outWarehouse/showChangeWare/') }}/{{ $out_warehouse->id }}" class="btn btn-white btn-sm">查看明细</a>
+                                @elseif($tab_menu == 'exchanged')
+                                    <a href="javascript:void(0);" type="3" class="btn btn-white btn-sm showout">编辑出库</a>
+                                    <a href="javascript:void(0);" type="4" class="btn btn-white btn-sm showout">查看明细</a>
 
                                 @endif
 
@@ -250,6 +250,7 @@
     @parent
     {{--<script>--}}
 
+
         {{--打印订单出库单--}}
         $("#printOrder").click(function () {
             {{--加载本地lodop打印控件--}}
@@ -272,9 +273,8 @@
                     {{--采购退货--}}
                     if (out_type == 1) {
 
-                    }
-                            {{-- 订单 --}}
-                    else if (out_type == 2) {
+                    }else if (out_type == 2) {
+                        {{-- 订单 --}}
                         $.get('{{url('/order/ajaxEdit')}}', {'id': target_id}, function (e) {
                             if (e.status == 1) {
                                 var n = 7;
@@ -733,4 +733,32 @@
                 }
             }, 'json');
         });
+
+    $(".showout").click(function(){
+        var status = $(this).parent().attr("data-state");
+        var ids = $(this).parent().attr("data-ides");
+        var type = $(this).attr("type");
+        if(status == 0){
+            layer.msg("尚未审核!");
+            return false;
+        }else{
+            window.location.href = geturl(type)+'/'+ids;
+        }
+    })
+
+    {{--获取路径--}}
+    function geturl(type)
+    {
+        let url = '';
+        if(type == 1){
+            url = '{{ url('/outWarehouse/showOut') }}';
+        }else if(type == 2){
+            url = '{{ url('/outWarehouse/showorder') }}';
+        }else if(type == 3){
+            url = '{{ url('/outWarehouse/showOutWare') }}';
+        }else if(type == 4){
+            url = '{{ url('/outWarehouse/showChangeWare') }}';
+        }
+        return url;
+    }
 @endsection
