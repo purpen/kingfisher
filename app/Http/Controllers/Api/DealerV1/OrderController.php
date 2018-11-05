@@ -88,10 +88,13 @@ class OrderController extends BaseController{
      */
     public function orders(Request $request)
     {
-        $types = (int)$request->input('types', 0);
+        $types =1;
+        $status =1;
+//        $types = (int)$request->input('types', 0);
         $BeginDates=date('Y-m-01 00:00:00', strtotime(date("Y-m-d")));
         $now = date("Y-m-d 23:59:59",time());
-        $status = (int)$request->input('status', 0);
+        $mon = date('Y-m');
+//        $status = (int)$request->input('status', 0);
         $per_page = (int)$request->input('per_page', 10);
         $user_id = $this->auth_user_id;
         $query = array();
@@ -104,22 +107,23 @@ class OrderController extends BaseController{
         if ($types == 1) {//当月订单
             if($status != 0) {
                 if ($status === -1) {
-                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+//                    $orders = OrderModel::orderBy('id', 'desc')->where('status',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->where('order.order_start_time','like',$mon.'%')->where('status',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 1) {
                     $where['is_voucher'] = 1;
                     $where['status'] = 5;
-                    $orders = OrderModel::orderBy('id', 'desc')->where('status',1) ->orWhere($where)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
-                    }
+                    $orders = OrderModel::orderBy('id', 'desc')->where('order.order_start_time','like',$mon.'%')->where('status',1)->where('user_id',$user_id)->where('type',8)->orWhere($where)->paginate($per_page);
+                }
                 if ($status == 10){
-                    $orders = OrderModel::orderBy('id', 'desc')->whereIn('status',[5,6,8,10])->where('is_voucher',0)->where('user_id',$user_id)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->where('order.order_start_time','like',$mon.'%')->whereIn('status',[5,6,8,10])->where('is_voucher',0)->where('user_id',$user_id)->where('type',8)->paginate($per_page);
                 }
                 if ($status == 20){
                     $query['status'] = $status;
-                    $orders = OrderModel::orderBy('id', 'desc')->where($query)->where('type',8)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                    $orders = OrderModel::orderBy('id', 'desc')->where('order.order_start_time','like',$mon.'%')->where($query)->where('type',8)->paginate($per_page);
                 }
             }else{
-                $orders = OrderModel::orderBy('id', 'desc')->where('type',8)->where('user_id',$user_id)->whereBetween('order.order_start_time',[$BeginDates,$now])->paginate($per_page);
+                $orders = OrderModel::orderBy('id', 'desc')->where('order.order_start_time','like',$mon.'%')->where('type',8)->where('user_id',$user_id)->paginate($per_page);
             }
 
         }else{//全部订单
