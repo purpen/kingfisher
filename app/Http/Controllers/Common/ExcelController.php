@@ -63,6 +63,33 @@ class ExcelController extends Controller
         $this->createExcel($data, '订单');
     }
 
+    /**
+     * 使用库存盘点ID 导出库存盘点（excel格式）
+     */
+    public function stockList(Request $request)
+    {
+        //需要下载的订单 id数组
+        $all = $request->all();
+        $id_array = [];
+        foreach ($all as $k => $v) {
+            if (is_int($k)) {
+                $id_array[] = $v;
+            }
+        }
+        if ($id_array){
+            //查询订单数据集合
+            $data = $this->stockSelect()->whereIn('id', $id_array)->get();
+        }else{
+            //查询订单数据集合
+            $data = $this->stockSelect()->get();
+        }
+
+        //构造数据
+        $data = $this->createStockData($data);
+        //导出Excel表单
+        $this->createExcel($data, '库存盘点');
+    }
+
 //    //    导出采购单
 //    public function purchaseList(Request $request){
 //        $all=$request->all();
@@ -78,7 +105,61 @@ class ExcelController extends Controller
 //        $this->createExcel($data,'采购单');
 //
 //    }
+    /**
+     * 导出库存盘点条件
+     */
+    public function stockSelect()
+    {
+        $orderObj = OrderModel::select([
+            'log as 记录',
+            'summary as 盘点备注',
+            'storage_id',
+            'created_at as 时间',
+            'status',
+            'user_id',
+            'id',
+        ]);
+        return $orderObj;
+    }
 
+
+    /**
+     * 根据库存盘点查询的数据对象 构造Excel数据
+     *
+     * @param OrderModel $option 查询where条件
+     */
+    protected function createStockData($data)
+    {
+        //组织Excel数据
+        foreach ($data as $v) {
+            if ($v->status == 0) {
+                $v->状态 = '未确认';
+            } else {
+                $v->状态 = '已确认';
+            }
+            if ($v->store) {
+                $v->店铺名称 = $v->store->name;
+            } else {
+                $v->店铺名称 = '';
+            }
+            if ($v->storage_id){
+                $v->仓库 = $v->storage->name ;
+            }else {
+                $v->仓库 = '';
+            }
+
+            if ($v->user_id){
+                $v->操作人 = $v->user->realname;
+            }else {
+                $v->操作人 = '';
+            }
+
+            unset($v->storage_id, $v->user_id, $v->id, $v->status);
+
+        }
+
+        return $data;
+    }
 
     /**
      * 导出订单查询条件
