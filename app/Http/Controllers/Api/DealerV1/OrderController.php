@@ -88,13 +88,11 @@ class OrderController extends BaseController{
      */
     public function orders(Request $request)
     {
-        $types =1;
-        $status =1;
-//        $types = (int)$request->input('types', 0);
+        $types = (int)$request->input('types', 0);
         $BeginDates=date('Y-m-01 00:00:00', strtotime(date("Y-m-d")));
         $now = date("Y-m-d 23:59:59",time());
         $mon = date('Y-m');
-//        $status = (int)$request->input('status', 0);
+        $status = (int)$request->input('status', 0);
         $per_page = (int)$request->input('per_page', 10);
         $user_id = $this->auth_user_id;
         $query = array();
