@@ -402,7 +402,7 @@
 	alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
 	allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
 	}
-	$('#skuTotalFee').html(alltotal);
+	$('#skuTotalFee').html(alltotal.toFixed(2));
 	$('#skuTotalQuantity').html(allquantity);
 	})
 	});
@@ -435,11 +435,11 @@
 	alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
 	allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
 	}
-	$('#skuTotalFee').html(alltotal);
+	{{--$('#skuTotalFee').html(alltotal);--}}
+	$('#skuTotalFee').html(alltotal.toFixed(2));
 	$('#skuTotalQuantity').html(allquantity);
 	})
-	});
-
+	});return false;
 	$("input[name='freight[]']").livequery(function(){
 	$(this)
 	.css("ime-mode", "disabled")
@@ -469,7 +469,8 @@
 	alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
 	allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
 	}
-	$('#skuTotalFee').html(alltotal);
+	{{--$('#skuTotalFee').html(alltotal);--}}
+	$('#skuTotalFee').html(alltotal.toFixed(2));
 	$('#skuTotalQuantity').html(allquantity);
 	})
 	});
@@ -494,7 +495,8 @@
 	alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
 	allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
 	}
-	$('#skuTotalFee').html(alltotal);
+	{{--$('#skuTotalFee').html(alltotal);--}}
+	$('#skuTotalFee').html(alltotal.toFixed(2));
 	$('#skuTotalQuantity').html(allquantity);
 	})
 	});
