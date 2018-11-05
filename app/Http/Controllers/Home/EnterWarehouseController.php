@@ -326,8 +326,8 @@ class EnterWarehouseController extends Controller
         $changeWarehouse_department = $request->input('changeWarehouse_department');
         // 入库单明细ID
         $enter_sku_id_arr = $request->input('enter_sku_id');
-        $sku_id_arr = $request->input('sku_id');
-        $count_arr = $request->input('count');
+        $sku_id_arr = array_values($request->input('sku_id'));
+        $count_arr = array_values($request->input('count'));
         
         $sum = 0;
         foreach ($count_arr as $count){
@@ -384,33 +384,40 @@ class EnterWarehouseController extends Controller
 
             $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
 
-            if ($enter_warehouse_model->type == 1){
+        }
+
+        for ($i=0;$i< count($sku_id_arr);$i++){
+            $sku_num = [
+                'sku_id' =>$sku_id_arr[$i],
+                'number' => $count_arr[$i],
+            ];
+            $arr[] = $sku_num;
+        }
+
+        if ($enter_warehouse_model->type == 1){//采购入库
             $purchasing_warehousing = new PurchasingWarehousingModel();
             $purchasing_warehousing->user_id = Auth::user()->id;
-            $purchasing_warehousing->sku_id = $sku_id_arr[$i];
             $purchasing_warehousing->storage_id = $storage_id;
             $purchasing_warehousing->purchases_id = $purchase_id;
             $purchasing_warehousing->department = $purchase_department;
-            $purchasing_warehousing->number = $count_arr[$i];
             $purchasing_warehousing->storage_time = date("Y-m-d H:i:s");
-                if (!$purchasing_warehousing->save()) {
-                    DB::rollBack();
-                    return view('errors.503');
-                }
-            }elseif ($enter_warehouse_model->type == 3){
+            $purchasing_warehousing->number = json_encode($arr);
+            if (!$purchasing_warehousing->save()) {
+                DB::rollBack();
+                return view('errors.503');
+            }
+        }elseif ($enter_warehouse_model->type == 3){//调拨入库
             $allocation_out = new AllocationOutModel();
             $allocation_out->user_id = Auth::user()->id;
-            $allocation_out->sku_id = $sku_id_arr[$i];
             $allocation_out->storage_id = $storage_id;
             $allocation_out->allocation_id = $changeWarehouse_id;
-            $allocation_out->number = $count_arr[$i];
             $allocation_out->department = $changeWarehouse_department;
             $allocation_out->type = 1;
             $allocation_out->outorin_time = date("Y-m-d H:i:s");
-                if (!$allocation_out->save()) {
-                    DB::rollBack();
-                    return view('errors.503');
-                }
+            $allocation_out->number = json_encode($arr);
+            if (!$allocation_out->save()) {
+                DB::rollBack();
+                return view('errors.503');
             }
         }
         
