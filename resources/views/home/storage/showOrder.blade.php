@@ -126,30 +126,30 @@
 
                     @foreach($res as $val)
                     <div>
-                         @foreach ($val['data_base'] as $order)
+                         {{--@foreach ($val['data'] as $order)--}}
                         <div class="form-group">
                         <label for="realname" class="col-sm-2 control-label {{ $errors->has('realname') ? ' has-error' : '' }}">操作人:</label>
                         <div class="col-sm-2">
-                            <input type="text" id="realname" name="realname" class="form-control" readonly value="{{ $order['realname'] }}">
+                            <input type="text" id="realname" name="realname" class="form-control" readonly value="{{ $val['realname'] }}">
                         </div>
                         <label for="outage_time" class="col-sm-2 control-label {{ $errors->has('outage_time') ? ' has-error' : '' }}">操作时间:</label>
                         <div class="col-sm-2">
-                            <input type="text" id="outage_time" name="outage_time" class="form-control" readonly value="{{ $order['outage_time'] }}">
+                            <input type="text" id="outage_time" name="outage_time" class="form-control" readonly value="{{ $val['outage_time'] }}">
                         </div>
                             <br><br>
                         <div class="form-group">
                             <label for="company" class="col-sm-2 control-label {{ $errors->has('company') ? ' has-error' : '' }}">快递公司:</label>
                             <div class="col-sm-2">
-                                <input type="text" id="company" name="company" class="form-control" readonly value="{{ $order['company'] }}">
+                                <input type="text" id="company" name="company" class="form-control" readonly value="{{ $val['company'] }}">
                             </div>
                             <label for="odd_numbers" class="col-sm-2 control-label {{ $errors->has('odd_numbers') ? ' has-error' : '' }}">快递单号:</label>
                             <div class="col-sm-2">
-                                <input type="text" id="odd_numbers" name="odd_numbers" class="form-control" readonly value="{{ $order['odd_numbers'] }}">
+                                <input type="text" id="odd_numbers" name="odd_numbers" class="form-control" readonly value="{{ $val['odd_numbers'] }}">
                             </div>
                         </div>
                     </div>
 
-                            @endforeach
+                            {{--@endforeach--}}
 
                         <table class="table table-hover table-bordered">
                             <thead>
@@ -160,18 +160,23 @@
                                 <th>出库数量</th>
                             </tr>
                             </thead>
+                            @foreach ($orders_sku as $order_out)
                             <tbody>
-                            @foreach ($val['data'] as $order_out)
+{{--                                @foreach($val['sku_num'] as $sku_num)--}}
                                 <tr>
                                     <td class="magenta-color">
-                                        {{ $order_out['number'] }}
+                                        {{ $order_out->number }}
                                     </td>
-                                    <td>{{ $order_out['name'] }}</td>
-                                    <td>{{ $order_out['mode'] }}</td>
-                                    <td>{{ $order_out['num'] }}</td>
+                                    <td>{{ $order_out->name }}</td>
+                                    <td>{{ $order_out->mode }}</td>
+
+{{--                                    <td>{{ $sku_num['number'] }}</td>--}}
+
                                 </tr>
-                            @endforeach
+                            {{--@endforeach--}}
+
                             </tbody>
+                            @endforeach
                         </table>
                             <br>
                     </div>

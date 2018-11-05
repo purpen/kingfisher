@@ -231,41 +231,44 @@ class OutWarehouseController extends Controller
             ];
 
 
-        if($detail && $out_warehouse->order_id){//返回历史记录
+        if($detail && $out_warehouse->order_id) {//返回历史记录
             //$DATA=MODEL::GET($ID);
-            $order_out = OrderOutModel::where('order_id',$out_warehouse->order_id)->select('id as orderOut_id','order_id','sku_id','number as num','user_id','outage_time','odd_numbers')->get();
+            $order_out = OrderOutModel::where('order_id', $out_warehouse->order_id)->select('id as orderOut_id', 'order_id', 'user_id', 'outage_time', 'number as num')->orderBy('id', 'ASC')->get();
 //                $arr = count($order_outs);
 //                for ($i=0;$i<$arr;$i++){
 //                    $all[$i] = array_merge($order_outs[$i],$outgoing_logistics[$i]);
 //                }
+
+            $nums = array_column($order_out->toArray(), 'num');;
+            $pop = array_pop($nums);
+            $sku_arr = json_decode($pop);
+
             $sku_model = new ProductsSkuModel();
-            $orders_sku = $sku_model->detailedSku($order_out);
+            $orders_sku = $sku_model->detailedSku($sku_arr);
+
             $res = [];
             $are = $order_out->toArray();
-            foreach ($are as $key=>&$val) {
-                $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
-                $outgoings = OutgoingLogisticsModel::where('odd_numbers',$val['odd_numbers'])->first();
-                if ($outgoings){
+            foreach ($are as $key => &$val) {
+                $sku_num = json_decode($val['num'], true);
+
+                $name = UserModel::where('id', $val['user_id'])->select('realname')->first();
+                $outgoings = OutgoingLogisticsModel::where('orderout_id', $val['orderOut_id'])->first();
+
+                if ($outgoings) {
                     $compoy = $outgoings->logistics ? $outgoings->logistics->area : '';
-                    $number =  $outgoings->odd_numbers;
-                }else{
+                    $number = $outgoings->odd_numbers;
+                } else {
                     $compoy = '';
                     $number = '';
                 }
-//
-                $data=array_merge($val,['realname' => $name->realname,'company' => $compoy,'odd_numbers' =>$number]);
 
-                $res[$val['outage_time']]['data_base'] = [$data];
-                $res[$val['outage_time']]['data'][] = $data;
+                $res['data'] = array_merge($val, ['realname' => $name->realname, 'company' => $compoy, 'odd_numbers' => $number,'sku_num'=>$sku_num]);
+//                $res[$val['outage_time']]['data_base'] = [$data];
+//                $res[$val['outage_time']]['data'][] = $data;
             }
 
-//              $arr = array();
-//                foreach ($order_outs as $k=>$v){
-//                    $arr[] = array_merge($v,$outgoing_logistics[$k]);
-//                }
-
-                $returnData['orders_sku'] = $orders_sku;
-                $returnData['res'] = $res;
+            $returnData['orders_sku'] = $orders_sku;
+            $returnData['res'] = $res;
         }
         return $returnData;
     }
@@ -560,8 +563,8 @@ class OutWarehouseController extends Controller
             $order_warehouse = $request->all();
 
             $out_sku_id_arr = $request->input('out_sku_id');
-            $sku_id_arr = $request->input('sku_id');
-            $count_arr = $request->input('count');
+            $sku_id_arr = array_values($request->input('sku_id'));
+            $count_arr = array_values($request->input('count'));
 
             $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id', $out_warehouse_id)->get();
             $sku_model = new ProductsSkuModel();
@@ -576,18 +579,12 @@ class OutWarehouseController extends Controller
             $order_model = OrderModel::find($order_id);
 
             $out_warehouse_model = OutWarehousesModel::find($out_warehouse_id);
-            $outgoing_logistics = OutgoingLogisticsModel::where('order_id',$order_id)->select('odd_numbers')->get();
             DB::beginTransaction();
             // 1、验证订单状态，仅待发货订单，才继续
             if ($out_warehouse_model->type == 2){
                 if ($order_model->status != 8 || $order_model->suspend == 1) {
                     return back()->withErrors(['此订单不属于待发货订单！']);
 //                return ajax_json(0, 'error', '该订单不属于待发货订单');
-                }
-                foreach ($outgoing_logistics as $vv){
-                    if ($logistics_no == $vv->odd_numbers){
-                        return back()->withErrors(['同一笔订单物流单号不允许重复！']);
-                    }
                 }
 
                 $order_model->send_user_id = Auth::user()->id;
@@ -648,39 +645,42 @@ class OutWarehouseController extends Controller
                             }
 
                             $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
-
-                            if ($out_warehouse_model->type == 3) {//调拨出库
-                                $allocation_out = new AllocationOutModel();
-                                $allocation_out->user_id = Auth::user()->id;
-                                $allocation_out->sku_id = $sku_id_arr[$i];
-                                $allocation_out->storage_id = $storage_id;
-                                $allocation_out->allocation_id = $changeWarehouse_id;
-                                $allocation_out->number = $count_arr[$i];
-                                $allocation_out->department = $changeWarehouse_department;
-                                $allocation_out->type = 2;
-                                $allocation_out->outorin_time = date("Y-m-d H:i:s");
-                                if (!$allocation_out->save()) {
-                                    DB::rollBack();
-                                    return view('errors.503');
-                                }
-
-                            } elseif ($out_warehouse_model->type == 2) {//订单出库
-                                $order_out = new OrderOutModel();
-                                $order_out->user_id = Auth::user()->id;
-                                $order_out->sku_id = $sku_id_arr[$i];
-                                $order_out->order_id = $order_id;
-                                $order_out->storage_id = $storage_id;
-                                $order_out->department = $order_department;
-                                $order_out->number = $count_arr[$i];
-                                $order_out->outage_time = date("Y-m-d H:i:s");
-                                $order_out->odd_numbers = $logistics_no;
-                                if (!$order_out->save()) {
-                                    DB::rollBack();
-                                    return view('errors.503');
-                                }
-                            }
-
                         } else {
+                            DB::rollBack();
+                            return view('errors.503');
+                        }
+                    }
+
+                    for ($i=0;$i< count($sku_id_arr);$i++){
+                        $sku_num = [
+                            'sku_id' =>$sku_id_arr[$i],
+                            'number' => $count_arr[$i],
+                        ];
+                        $arr[] = $sku_num;
+                    }
+                    if ($out_warehouse_model->type == 2) {//订单出库
+                        $order_out = new OrderOutModel();
+                        $order_out->user_id = Auth::user()->id;
+                        $order_out->order_id = $order_id;
+                        $order_out->storage_id = $storage_id;
+                        $order_out->department = $order_department;
+                        $order_out->outage_time = date("Y-m-d H:i:s");
+                        $order_out->number = json_encode($arr);
+
+                        if (!$order_out->save()) {
+                            DB::rollBack();
+                            return view('errors.503');
+                        }
+                    }elseif ($out_warehouse_model->type == 3) {//调拨出库
+                        $allocation_out = new AllocationOutModel();
+                        $allocation_out->user_id = Auth::user()->id;
+                        $allocation_out->storage_id = $storage_id;
+                        $allocation_out->allocation_id = $changeWarehouse_id;
+                        $allocation_out->department = $changeWarehouse_department;
+                        $allocation_out->type = 2;
+                        $allocation_out->outorin_time = date("Y-m-d H:i:s");
+                        $allocation_out->number = json_encode($arr);
+                        if (!$allocation_out->save()) {
                             DB::rollBack();
                             return view('errors.503');
                         }
@@ -712,6 +712,7 @@ class OutWarehouseController extends Controller
                         $outgoing_logistics->order_id = $order_id;
                         $outgoing_logistics->logistics_company = $logistics_id;
                         $outgoing_logistics->odd_numbers = $logistics_no;
+                        $outgoing_logistics->orderout_id = $order_out->id;
                         if (!$outgoing_logistics->save()) {
                             DB::rollBack();
                             Log::error('ID:' . $order_id . '订单出库快递信息保存失败');
@@ -780,7 +781,7 @@ class OutWarehouseController extends Controller
                 }
 
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $e) {echo '失败!';die;
             DB::rollBack();
             Log::error($e);
         }
