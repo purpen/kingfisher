@@ -229,7 +229,7 @@ class ChangeWarehouseController extends Controller
             return ajax_json(0, '参数错误');
         }
         $storage_sku_model  = new StorageSkuCountModel();
-        $sku_list = $storage_sku_model->skuList($storage_id,$out_department);
+        $sku_list = $storage_sku_model->wareSkuList($storage_id,$out_department);
         
         if ($sku_list) {
             return ajax_json(1, 'ok', $sku_list);
