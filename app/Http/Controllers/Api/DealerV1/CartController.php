@@ -74,8 +74,6 @@ class CartController extends BaseController
 
         $count = $this->fetch_count();
         $data = array();
-
-
         if($status == 1){
 
             foreach($carts as $k=>$v) {
@@ -92,20 +90,14 @@ class CartController extends BaseController
                 } else {
                     $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
                     if (count($asset)>0){
-                        $aset = '';
-//                        foreach ($asset as $val){
                             $aset = $asset->file->small;
-//                        }
+
                         $v->cover = $aset;
                     }
                 }
-                //
-//                $v->cover = $mode->first_img;
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
-
-
 
                 if($collection){
                     $focus = 1;
