@@ -240,6 +240,8 @@ class OutWarehouseController extends Controller
 //                }
 
             $res = [];
+            if (count($order_out)>0){
+
             $are = $order_out->toArray();
             foreach ($are as $key => &$val) {
                 $sku_num = json_decode($val['num'], true);
@@ -276,6 +278,19 @@ class OutWarehouseController extends Controller
                     }
                 }
             }
+//            foreach ($arr as &$item) {
+//                foreach  ($item['sku_num'] as $item1) {
+//                    foreach ($item['orders_sku'] as &$item2) {
+//                        if ($item1['sku_id'] == $item2['sku_id']) {
+//                            $item2['nums'] = $item1['number'];
+//                        }
+//                    }
+//                }
+//                /*echo "<pre>";
+//                    print_r($item2);*/
+//            }
+            }
+
             $returnData['res'] = $res;
         }
         return $returnData;
@@ -336,31 +351,33 @@ class OutWarehouseController extends Controller
             $allocation_out = AllocationOutModel::where('allocation_id',$out_warehouse->changeWarehouse_id)->where('type',2)->select('id','user_id','outorin_time','allocation_id','number as num')->orderBy('id','ASC')->get();
 
             $res = [];
-            $are = $allocation_out->toArray();
-            foreach ($are as $key=>&$val) {
-                $sku_num = json_decode($val['num'], true);
+            if (count($allocation_out)>0) {
+                $are = $allocation_out->toArray();
+                foreach ($are as $key => &$val) {
+                    $sku_num = json_decode($val['num'], true);
 
-                $name = UserModel::where('id',$val['user_id'])->select('realname')->first();
+                    $name = UserModel::where('id', $val['user_id'])->select('realname')->first();
 
-                $res[] = array_merge($val, ['realname' => $name->realname,'sku_num'=>$sku_num]);
+                    $res[] = array_merge($val, ['realname' => $name->realname, 'sku_num' => $sku_num]);
 
 //                $res[$val['outorin_time']]['data_base'] = [$data];
 //                $res[$val['outorin_time']]['data'][] = $data;
-            }
+                }
 
-            $nums = array_column($are, 'num');
-            $pop = array_pop($nums);
-            $sku_arr = json_decode($pop);
+                $nums = array_column($are, 'num');
+                $pop = array_pop($nums);
+                $sku_arr = json_decode($pop);
 
-            $sku_model = new ProductsSkuModel();
-            $orders_sku = $sku_model->detailedSku($sku_arr);
-            $ordersSku = objectToArray($orders_sku);
+                $sku_model = new ProductsSkuModel();
+                $orders_sku = $sku_model->detailedSku($sku_arr);
+                $ordersSku = objectToArray($orders_sku);
 
-            foreach ($res as $k=>$v){
-                $res[$k]['orders_sku'] = $ordersSku;
-                for ($i=0;$i<count($res[$k]['sku_num']);$i++){
-                    if ($v['sku_num'][$i]['sku_id'] == $res[$k]['orders_sku'][$i]['sku_id']){
-                        $res[$k]['orders_sku'][$i]['nums'] = $v['sku_num'][$i]['number'];
+                foreach ($res as $k => $v) {
+                    $res[$k]['orders_sku'] = $ordersSku;
+                    for ($i = 0; $i < count($res[$k]['sku_num']); $i++) {
+                        if ($v['sku_num'][$i]['sku_id'] == $res[$k]['orders_sku'][$i]['sku_id']) {
+                            $res[$k]['orders_sku'][$i]['nums'] = $v['sku_num'][$i]['number'];
+                        }
                     }
                 }
             }
