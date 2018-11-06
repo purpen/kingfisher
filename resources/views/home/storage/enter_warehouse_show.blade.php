@@ -84,25 +84,25 @@
 
                         @foreach($res as $val)
                             <div>
-                                @foreach ($val['data_base'] as $value)
+{{--                                @foreach ($val['data_base'] as $value)--}}
                                     <div class="form-group">
                                         <label for="realname" class="col-sm-2 control-label {{ $errors->has('realname') ? ' has-error' : '' }}">操作人:</label>
                                         <div class="col-sm-2">
-                                            <input type="text" id="realname" name="realname" class="form-control" readonly value="{{ $value['realname'] }}">
+                                            <input type="text" id="realname" name="realname" class="form-control" readonly value="{{ $val['realname'] }}">
                                         </div>
                                         @if($enter_warehouse->changeWarehouse_id)
                                         <label for="outorin_time" class="col-sm-2 control-label {{ $errors->has('outorin_time') ? ' has-error' : '' }}">操作时间:</label>
                                         <div class="col-sm-2">
-                                            <input type="text" id="outorin_time" name="outorin_time" class="form-control" readonly value="{{ $value['outorin_time'] }}">
+                                            <input type="text" id="outorin_time" name="outorin_time" class="form-control" readonly value="{{ $val['outorin_time'] }}">
                                         </div>
                                             @elseif($enter_warehouse->purchase_id)
                                             <label for="storage_time" class="col-sm-2 control-label {{ $errors->has('storage_time') ? ' has-error' : '' }}">操作时间:</label>
                                             <div class="col-sm-2">
-                                                <input type="text" id="storage_time" name="storage_time" class="form-control" readonly value="{{ $value['storage_time'] }}">
+                                                <input type="text" id="storage_time" name="storage_time" class="form-control" readonly value="{{ $val['storage_time'] }}">
                                             </div>
                                             @endif
                                     </div>
-                                @endforeach
+                                {{--@endforeach--}}
 
                                 <table class="table table-hover table-bordered">
                                     <thead>
@@ -114,14 +114,14 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($val['data'] as $allocation_out)
+                                    @foreach ($val['orders_sku'] as $allocation_out)
                                         <tr>
                                             <td class="magenta-color">
                                                 {{ $allocation_out['number'] }}
                                             </td>
                                             <td>{{ $allocation_out['name'] }}</td>
                                             <td>{{ $allocation_out['mode'] }}</td>
-                                            <td>{{ $allocation_out['num'] }}</td>
+                                            <td>{{ $allocation_out['nums'] }}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
