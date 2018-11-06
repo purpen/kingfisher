@@ -94,7 +94,7 @@
             </div>
             <div class="row">
                 @if ($storageSkuCounts)
-                    <div class="col-md-12 text-center">{!! $storageSkuCounts->appends(['number' => $number])->render() !!}</div>
+                    <div class="col-md-12 text-center">{!! $storageSkuCounts->appends(['number' => $number,'product_number'=>$product_number,'title'=>$title])->render() !!}</div>
                 @endif
             </div>
         </div>
