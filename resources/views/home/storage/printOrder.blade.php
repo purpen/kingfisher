@@ -125,8 +125,9 @@
                 </div>
 
                 <div class="modal-footer" style="text-align: center">
-                    <button type="submit" class="btn btn-white btn-sm mr-r print-enter" id="true-print">确认打印</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>
+                    <button type="submit" class="btn btn-white btn-sm mr-r print-enter" id="true-print" style="font-size: 14px">确认打印</button>
+                    {{--<button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>--}}
+                    <a href="{{ url('/outWarehouse/orderOut') }}" class="btn btn-default">取消</a>
                 </div>
             </form>
         </div>
