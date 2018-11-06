@@ -55,10 +55,10 @@
                         打印出库单
                     </button>
                 @endif
-                <button type="button" class="btn btn-success mr-2r" id="stockAll">
+                <button type="button" class="btn  mr-2r" id="stockAll">
                     全部导出
                 </button>
-                <button type="button" class="btn btn-success mr-2r" id="stockPart">
+                <button type="button" class="btn mr-2r" id="stockPart">
                     选择导出
                 </button>
             </div>
