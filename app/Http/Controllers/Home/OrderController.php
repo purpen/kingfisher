@@ -11,8 +11,11 @@ use App\Http\Requests\UpdateOrderRequest;
 
 use App\Jobs\PushExpressInfo;
 
+use App\Libraries\YunPianSdk\Yunpian;
+use App\Models\AuditingModel;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
+use App\Models\DistributorModel;
 use App\Models\FileRecordsModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
@@ -64,16 +67,17 @@ class OrderController extends Controller
     /**
      * 筛选订单列表
      */
-    protected function display_tab_list($status='all')
+    protected function display_tab_list($status = 'all')
     {
-        $store_list = StoreModel::select('id','name')->get();
-        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
+        $store_list = StoreModel::select('id', 'name')->get();
+        $products = ProductsModel::whereIn('product_type', [1, 2, 3])->get();
 
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
-        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+        $distributors = UserModel::where('supplier_distributor_type', 1)->get();
 
         //当前用户所在部门创建的订单 查询条件
+        /*
         $department = Auth::user()->department;
         if($department){
             $id_arr = UserModel
@@ -85,23 +89,28 @@ class OrderController extends Controller
         }else{
             $query = OrderModel::query();
         }
-
+         */
+        $query = OrderModel::query();
         $number = '';
         if ($status === 'all') {
             $order_list = $query
-                ->orderBy('id','desc')
+                ->orderBy('id', 'desc')
                 ->paginate($this->per_page);
         } else {
             $order_list = $query
                 ->where(['status' => $status, 'suspend' => 0])
-                ->orderBy('id','desc')
+                ->orderBy('id', 'desc')
                 ->paginate($this->per_page);
         }
 
         $logistics_list = $logistic_list = LogisticsModel
             ::OfStatus(1)
-            ->select(['id','name'])
+            ->select(['id', 'name'])
             ->get();
+
+        foreach ($order_list as $list) {
+            $list->store_name = $list->distributor ? $list->distributor->store_name : '';
+        }
 
         return view('home/order.order', [
             'order_list' => $order_list,
@@ -192,15 +201,15 @@ class OrderController extends Controller
      */
     public function servicingOrderList(Request $request)
     {
-        $this->per_page = $request->input('per_page',$this->per_page);
-        $order_list = OrderModel::where(['suspend' => 1])->orderBy('id','desc')->paginate($this->per_page);
-        $store_list = StoreModel::select('id','name')->get();
-        $products = ProductsModel::where('product_type' , 1)->get();
+        $this->per_page = $request->input('per_page', $this->per_page);
+        $order_list = OrderModel::where(['suspend' => 1])->orderBy('id', 'desc')->paginate($this->per_page);
+        $store_list = StoreModel::select('id', 'name')->get();
+        $products = ProductsModel::where('product_type', 1)->get();
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
-        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+        $distributors = UserModel::where('supplier_distributor_type', 1)->get();
 
-        $logistics_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        $logistics_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => 'servicing',
@@ -254,15 +263,15 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $storage_list = StorageModel::ofStatus(1)->select('id','name')->get();
+        $storage_list = StorageModel::ofStatus(1)->select('id', 'name')->get();
 
-        $store_list = StoreModel::select('id','name')->get();
+        $store_list = StoreModel::select('id', 'name')->get();
 
-        $logistic_list = LogisticsModel::ofstatus(1)->select('id','name')->get();
+        $logistic_list = LogisticsModel::ofstatus(1)->select('id', 'name')->get();
 
-        $china_city = ChinaCityModel::where('layer',1)->get();
+        $china_city = ChinaCityModel::where('layer', 1)->get();
 
-        $user_list = UserModel::ofStatus(1)->select('id','realname','phone')->get();
+        $user_list = UserModel::ofStatus(1)->select('id', 'realname', 'phone')->get();
 
         return view('home/order.createOrder', [
             'storage_list' => $storage_list,
@@ -280,8 +289,9 @@ class OrderController extends Controller
         ]);
     }
 
-    public function ajaxOrder(Request $request){
-        return ajax_json(1,'ok');
+    public function ajaxOrder(Request $request)
+    {
+        return ajax_json(1, 'ok');
     }
 
     /**
@@ -289,46 +299,47 @@ class OrderController extends Controller
      * @param Request $request
      * @return string
      */
-    public function ajaxSkuList(Request $request){
+    public function ajaxSkuList(Request $request)
+    {
         $storage_id = (int)$request->input('id');
         $user_id_sales = Auth::user()->id;
-        if(empty($storage_id) || empty($user_id_sales)){
-            return ajax_json(0,'参数错误');
+        if (empty($storage_id) || empty($user_id_sales)) {
+            return ajax_json(0, '参数错误');
         }
         $user = UserModel::find($user_id_sales);
         $department = $user->department;
         $storage_sku_model = new StorageSkuCountModel();
-        $sku_list = $storage_sku_model->skuList($storage_id,$department);
-        return ajax_json(1,'ok',$sku_list);
+        $sku_list = $storage_sku_model->skuList($storage_id, $department);
+        return ajax_json(1, 'ok', $sku_list);
     }
 
     /**
      * 创建一个新的订单.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreOrderRequest $request)
     {
-        try{
+        try {
             $all = $request->all();
             $user = UserModel::find(Auth::user()->id);
             $storage_sku = new StorageSkuCountModel();
-            if(!$storage_sku->isCount($all['sku_storage_id'][0], $user->department,$all['sku_id'], $all['quantity'])){
+            if (!$storage_sku->isCount($all['sku_storage_id'][0], $user->department, $all['sku_id'], $all['quantity'])) {
                 return "仓库/部门库存不足";
             }
 
             $total_money = 0.00;
             $discount_money = 0.00;
             $count = 0;
-            for($i=0;$i<count($all['quantity']);$i++){
+            for ($i = 0; $i < count($all['quantity']); $i++) {
                 $total_money += $all['quantity'][$i] * $all['price'][$i];
                 $discount_money += $all['discount'][$i] * $all['quantity'][$i];
                 $count += $all['quantity'][$i];
             }
 
 
-            $all = $request->except(['sku_id','sku_storage_id','price','quantity','discount']);
+            $all = $request->except(['sku_id', 'sku_storage_id', 'price', 'quantity', 'discount']);
             $all['user_id'] = Auth::user()->id;
             $all['status'] = 5;
             $all['total_money'] = $total_money;
@@ -340,30 +351,30 @@ class OrderController extends Controller
             $all['number'] = $number;
 
             $all['user_id_sales'] = Auth::user()->id;
-            $all['order_user_id'] = $request->input('order_user_id',0);
-            $all['buyer_province'] = $request->input('province_id','');
-            $all['buyer_city'] = $request->input('city_id','');
-            $all['buyer_county'] = $request->input('county_id','');
+            $all['order_user_id'] = $request->input('order_user_id', 0);
+            $all['buyer_province'] = $request->input('province_id', '');
+            $all['buyer_city'] = $request->input('city_id', '');
+            $all['buyer_county'] = $request->input('county_id', '');
             //判断是否存在四级城市
-            $all['buyer_township'] = $request->input('township_id','');
+            $all['buyer_township'] = $request->input('township_id', '');
 
             //添加创建订单时间
             $all['order_start_time'] = date("Y-m-d H:i:s");
 
             DB::beginTransaction();
-            if(!$order_model = OrderModel::create($all)){
+            if (!$order_model = OrderModel::create($all)) {
                 DB::rollBack();
                 return '参数错误';
             }
 
             $all = $request->all();
             $order_id = $order_model->id;
-            for($i=0;$i<count($all['sku_id']);$i++){
+            for ($i = 0; $i < count($all['sku_id']); $i++) {
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
                 $order_sku_model->sku_id = $all['sku_id'][$i];
                 $product_sku_id = $all['sku_id'][$i];
-                if(!$product_sku_model = ProductsSkuModel::find($product_sku_id)){
+                if (!$product_sku_model = ProductsSkuModel::find($product_sku_id)) {
                     DB::rollBack();
                     return '参数错误';
                 }
@@ -373,13 +384,13 @@ class OrderController extends Controller
                 $order_sku_model->quantity = $all['quantity'][$i];
                 $order_sku_model->price = $all['price'][$i];
                 $order_sku_model->discount = $all['discount'][$i];
-                if(!$order_sku_model->save()){
+                if (!$order_sku_model->save()) {
                     DB::rollBack();
                     return '参数错误';
                 }
 
                 //订单付款占货
-                if(!$product_sku_model->increasePayCount($order_sku_model->sku_id,$order_sku_model->quantity)){
+                if (!$product_sku_model->increasePayCount($order_sku_model->sku_id, $order_sku_model->quantity)) {
                     DB::rollBack();
                     return '付款占货关联操作失败';
                 }
@@ -389,14 +400,13 @@ class OrderController extends Controller
             $model = new ReceiveOrderModel();
             if (!$model->orderCreateReceiveOrder($order_id)) {
                 DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货创建订单收款单错误');
-                return 'ID:'. $order_id .'订单发货创建订单收款单错误';
+                Log::error('ID:' . $order_id . '订单发货创建订单收款单错误');
+                return 'ID:' . $order_id . '订单发货创建订单收款单错误';
             }
 
             DB::commit();
             return redirect('/order/verifyOrderList');
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return '内部错误';
@@ -411,13 +421,37 @@ class OrderController extends Controller
     public function ajaxEdit(Request $request)
     {
         $order_id = (int)$request->input('id');
-        if(empty('id')){
-            return ajax_json(0,'error');
+        if (empty('id')) {
+            return ajax_json(0, 'error');
         }
         $order = OrderModel::find($order_id); //订单
 
         $order->logistic_name = $order->logistics ? $order->logistics->name : '';
         /*$order->storage_name = $order->storage->name;*/
+        $order->outWarehousesTime = $order->outWarehouses ? $order->outWarehouses->created_at : '';
+
+        $province = ChinaCityModel::where('oid', $order->buyer_province)->select('name')->first();
+        $city = ChinaCityModel::where('oid', $order->buyer_city)->select('name')->first();
+        $county = ChinaCityModel::where('oid', $order->buyer_county)->select('name')->first();
+        $town = ChinaCityModel::where('oid', $order->buyer_township)->select('name')->first();
+        if ($province) {
+            $order->province = $province->name;
+        }
+        if ($city) {
+            $order->city = $city->name;
+        }
+        if ($county) {
+            $order->county = $county->name;
+        }
+        if ($town) {
+            $order->town = $town->name;
+        }
+        if ($order->payment_time == '0000-00-00 00:00:00') {
+            $order->payment_time = '';
+        }
+        if ($order->status == 0) {
+            $order->payment_time = '';
+        }
 
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 
@@ -425,10 +459,10 @@ class OrderController extends Controller
         $order_sku = $product_sku_model->detailedSku($order_sku); //订单明细
 
         // 仓库信息
-        $storage_list = StorageModel::OfStatus(1)->select(['id','name'])->get();
+        $storage_list = StorageModel::OfStatus(1)->select(['id', 'name'])->get();
         if (!empty($storage_list)) {
             $max = count($storage_list);
-            for ($i=0; $i<$max; $i++) {
+            for ($i = 0; $i < $max; $i++) {
                 if ($storage_list[$i]['id'] == $order->storage_id) {
                     $storage_list[$i]['selected'] = 'selected';
                 } else {
@@ -437,10 +471,10 @@ class OrderController extends Controller
             }
         }
         // 物流信息
-        $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        $logistic_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
         if (!empty($logistic_list)) {
             $max = count($logistic_list);
-            for ($k=0; $k<$max; $k++) {
+            for ($k = 0; $k < $max; $k++) {
                 if ($logistic_list[$k]['id'] == $order->express_id) {
                     $logistic_list[$k]['selected'] = 'selected';
                 } else {
@@ -450,14 +484,14 @@ class OrderController extends Controller
         }
 
         $express_content_value = [];
-        foreach ($order->express_content_value as $v){
+        foreach ($order->express_content_value as $v) {
             $express_content_value[] = ['key' => $v];
         }
 
         // 对应出库单
-        if ($out_warehouse = OutWarehousesModel::where(['type' => 2, 'target_id' => $order_id])->first()){
+        if ($out_warehouse = OutWarehousesModel::where(['type' => 2, 'target_id' => $order_id])->first()) {
             $out_warehouse_number = $out_warehouse->number;
-        }else{
+        } else {
             $out_warehouse_number = null;
         }
 
@@ -492,21 +526,21 @@ class OrderController extends Controller
         $order_model = OrderModel::find($order_id);
 
         //判断该订单是否允许修改
-        if(!$order_model->change_status){
-            return ajax_json(0,'禁止修改！！！');
+        if (!$order_model->change_status) {
+            return ajax_json(0, '禁止修改！！！');
         }
 
-        if(!$order_model){
-            return ajax_json(0,'参数错误');
+        if (!$order_model) {
+            return ajax_json(0, '参数错误');
         }
         DB::beginTransaction();
-        if(!$order_model->update($all)){
+        if (!$order_model->update($all)) {
             DB::rollBack();
-            return ajax_json(0,'error');
+            return ajax_json(0, 'error');
         }
 
-        if(!empty($skus = $request->input('skus'))){
-            foreach ($skus as $sku){
+        if (!empty($skus = $request->input('skus'))) {
+            foreach ($skus as $sku) {
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order_id;
                 $order_sku->sku_id = $sku['sku_id'];
@@ -515,15 +549,15 @@ class OrderController extends Controller
                 $order_sku->price = 0;
                 $order_sku->discount = $sku['price'];
                 $order_sku->status = 1;
-                if(!$order_sku->save()){
+                if (!$order_sku->save()) {
                     DB::rollBack();
-                    return ajax_json(0,'error');
+                    return ajax_json(0, 'error');
                 }
             }
 
         }
         DB::commit();
-        return ajax_json(1,'ok');
+        return ajax_json(1, 'ok');
     }
 
     /**
@@ -535,75 +569,85 @@ class OrderController extends Controller
     public function ajaxDestroy(Request $request)
     {
         //判断角色是否有权删除
-        if(!Auth::user()->hasRole(['admin','director','shopkeeper'])){
-            return ajax_json(0,'参数错误');
+        if (!Auth::user()->hasRole(['admin', 'director', 'shopkeeper'])) {
+            return ajax_json(0, '参数错误');
         }
 
         $order_id = (int)$request->input('order_id');
-        if(empty($order_id)){
-            return ajax_json(0,'参数错误');
+        if (empty($order_id)) {
+            return ajax_json(0, '参数错误');
         }
 
-        try{
+        try {
             $order_model = OrderModel::find($order_id);
-            if(!$order_model){
-                return ajax_json(0,'订单不存在');
+            if (!$order_model) {
+                return ajax_json(0, '订单不存在');
             }
 
-            if($order_model->type == 3){
-                return ajax_json(0,'error');
+            if ($order_model->type == 3) {
+                return ajax_json(0, 'error');
             }
 
             DB::beginTransaction();
-            //判断订单属于待付款还是付款，进行相应取消占货操作(1.待付款 5.待审核；8.待发货；10.已发货；20.完成)
-            switch ($order_model->status){
-                case 1:
-                    $productsSkuModel = new ProductsSkuModel();
-                    if(!$productsSkuModel->orderDecreaseReserveCount($order_id)){
-                        DB::rollBack();
-                        return ajax_json(0,"内部错误1");
-                    }
-                    break;
-                case 5:
-                case 8:
-                case 10:
-                case 20:
-                    $productsSkuModel = new ProductsSkuModel();
-                    if(!$productsSkuModel->orderDecreasePayCount($order_id)){
-                        DB::rollBack();
-                        return ajax_json(0,"内部错误2");
-                    }
-                    break;
-                default:
+
+            if ($order_model->payment_type == 4) {  // 当为月结算时订单始终为付款占货
+                $productsSkuModel = new ProductsSkuModel();
+                if (!$productsSkuModel->orderDecreasePayCount($order_id)) {
                     DB::rollBack();
-                    return "内部错误3";
+                    return ajax_json(0, "内部错误2");
+                }
+            } else {
+                //判断订单属于待付款还是付款，进行相应取消占货操作(1.待付款 5.待审核；6.财务审核；8.待发货；10.已发货；20.完成)
+                switch ($order_model->status) {
+                    case 1:
+                    case 5:
+                    case 6:
+                        $productsSkuModel = new ProductsSkuModel();
+                        if (!$productsSkuModel->orderDecreaseReserveCount($order_id)) {
+                            DB::rollBack();
+                            return ajax_json(0, "内部错误1");
+                        }
+                        break;
+                    case 8:
+                        $productsSkuModel = new ProductsSkuModel();
+                        if (!$productsSkuModel->orderDecreasePayCount($order_id)) {
+                            DB::rollBack();
+                            return ajax_json(0, "内部错误2");
+                        }
+                        break;
+                    case 10:
+                    case 20:
+                        break;
+                    default:
+                        DB::rollBack();
+                        return "内部错误3";
+                }
             }
 
             //完全删除对应收款单
             $receiveOrder = $order_model->receiveOrder;
-            if($receiveOrder){
+            if ($receiveOrder) {
                 $receiveOrder->forceDelete();
             }
 
             //完全删除对应出库单及明细
             $out_warehouse = OutWarehousesModel::where(['type' => 2, 'target_id' => $order_model->id])->first();
-            if($out_warehouse){
-                if(!$out_warehouse->deleteOutWarehouse()){
+            if ($out_warehouse) {
+                if (!$out_warehouse->deleteOutWarehouse()) {
                     DB::rollBack();
                     return "内部错误5";
                 }
             }
 
             //完全删除订单及明细
-            if(!$order_model->deleteOrder()){
+            if (!$order_model->deleteOrder()) {
                 DB::rollBack();
                 return "内部错误6";
             }
 
             DB::commit();
-            return ajax_json(1,'ok');
-        }
-        catch (\Exception $e){
+            return ajax_json(1, 'ok');
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return $e->getMessage();
@@ -619,12 +663,15 @@ class OrderController extends Controller
     public function ajaxVerifyOrder(Request $request)
     {
         $order_id_array = $request->input('order');
+        if (empty($order_id_array)) {
+            return ajax_json(0, '请先勾选订单');
+        }
 
         foreach ($order_id_array as $order_id) {
 
             $order_model = OrderModel::find($order_id);
-            if($order_model->status != 5 || $order_model->suspend == 1){
-                return ajax_json(0,'该订单不属待审核状态');
+            if ($order_model->status != 5 || $order_model->suspend == 1) {
+                return ajax_json(0, '该订单不属待审核状态');
             }
 
             //判断仓库库存是否满足订单
@@ -632,39 +679,55 @@ class OrderController extends Controller
             $storage_id = $order_model->storage_id;
             $sku_id_arr = [];
             $sku_count_arr = [];
-            foreach ($order_sku as $sku){
+            foreach ($order_sku as $sku) {
                 $sku_id_arr[] = $sku->sku_id;
                 $sku_count_arr[] = $sku->quantity;
             }
 
-            if(empty($order_model->user_id_sales)){
+            if (empty($order_model->user_id_sales)) {
                 DB::rollBack();
-                return ajax_json(0,'参数错误，not department');
+                return ajax_json(0, '参数错误，not department');
             }
             $department = UserModel::find($order_model->user_id_sales) ? UserModel::find($order_model->user_id_sales)->department : '';
             $storage_sku = new StorageSkuCountModel();
-            if(!$storage_sku->isCount($storage_id, $department, $sku_id_arr, $sku_count_arr)){
+            if (!$storage_id) {
+                return ajax_json(0, '请先选择发货仓库,再审核');
+            }
+            if (!$storage_sku->isCount($storage_id, $department, $sku_id_arr, $sku_count_arr)) {
                 DB::rollBack();
-                return ajax_json(0,'发货商品所选仓库/部门库存不足');
+                return ajax_json(0, '发货商品所选仓库/部门库存不足');
             }
 
             DB::beginTransaction();
             $order_model->verified_user_id = Auth::user()->id;
             $order_model->order_verified_time = date("Y-m-d H:i:s");
 
-            if (!$order_model->save()){
+            if (!$order_model->save()) {
                 DB::rollBack();
-                return ajax_json(0,'内部错误');
+                return ajax_json(0, '内部错误');
             }
 
-            if (!$order_model->changeStatus($order_id, 8)) {
-                DB::rollBack();
-                return ajax_json(0,'审核失败');
+
+            if ($order_model->type == 8) {
+                $order_model->changeStatus($order_id, 6);//财务审核
+
+                $ids = AuditingModel::where('type', 2)->select('user_id')->first();
+                if ($ids) {
+                    //发送审核短信通知
+                    $dataes = new AuditingModel();
+                    $dataes->datas(2);
+                }
+
+            } else {
+                if (!$order_model->changeStatus($order_id, 8)) {
+                    DB::rollBack();
+                    return ajax_json(0, '审核失败');
+                }
             }
 
-            if (!$order_model->daifaSplit($order_model)){
+            if (!$order_model->daifaSplit($order_model)) {
                 DB::rollBack();
-                return ajax_json(0,'代发拆单失败');
+                return ajax_json(0, '代发拆单失败');
             }
 
             DB::commit();
@@ -682,17 +745,17 @@ class OrderController extends Controller
     public function ajaxReversedOrder(Request $request)
     {
         $order_id_array = $request->input('order');
-        foreach ($order_id_array as $order_id){
+        foreach ($order_id_array as $order_id) {
             $order_model = OrderModel::find($order_id);
-            if($order_model->status != 8 || $order_model->suspend == 1){
-                return ajax_json(0,'该订单不能反审');
+            if ($order_model->status != 8 || $order_model->suspend == 1) {
+                return ajax_json(0, '该订单不能反审');
             }
-            if(!$order_model->changeStatus($order_id, 5)){
-                return ajax_json(0,'反审失败');
+            if (!$order_model->changeStatus($order_id, 5)) {
+                return ajax_json(0, '反审失败');
             }
         }
 
-        return ajax_json(1,'ok');
+        return ajax_json(1, 'ok');
     }
 
     /**
@@ -818,9 +881,10 @@ class OrderController extends Controller
      * @param Request $request
      * @return string
      */
-    public function ajaxSkuSearch(Request $request){
+    public function ajaxSkuSearch(Request $request)
+    {
         $storage_id = (int)$request->input('storage_id');
-        $user_id_sales =  Auth::user()->id;
+        $user_id_sales = Auth::user()->id;
         $where = $request->input('where');
 
         $user = UserModel::find($user_id_sales);
@@ -828,12 +892,12 @@ class OrderController extends Controller
 
         $storage_sku_count = new StorageSkuCountModel();
         $sku_list = $storage_sku_count->search($storage_id, $department, $where);
-        if(!$sku_list){
-            ajax_json(0,'null');
+        if (!$sku_list) {
+            ajax_json(0, 'null');
         }
         $product_sku = new ProductsSkuModel();
         $product_sku = $product_sku->detailedSku($sku_list);
-        return ajax_json(1,'ok',$product_sku);
+        return ajax_json(1, 'ok', $product_sku);
     }
 
     /**
@@ -844,26 +908,25 @@ class OrderController extends Controller
      */
     public function pushOrderSend($order_id, $logistics_id, $waybill)
     {
-        if(!$orderModel = OrderModel::find($order_id)){
+        if (!$orderModel = OrderModel::find($order_id)) {
             return false;
         }
         $platform = $orderModel->store->platform;
-        switch ($platform){
+        switch ($platform) {
             case 1:
                 //淘宝平台
                 break;
             case 2:
                 $api = new JdApi();
-                return $api->outStorage($order_id,$logistics_id,$waybill);
+                return $api->outStorage($order_id, $logistics_id, $waybill);
                 break;
             case 3:
                 //自营平台
                 $shopApi = new ShopApi();
-                return $shopApi->send_goods($order_id,$logistics_id,$waybill);
+                return $shopApi->send_goods($order_id, $logistics_id, $waybill);
                 break;
         }
     }
-
 
 
     /**
@@ -877,31 +940,31 @@ class OrderController extends Controller
         $data = $request->input('data');
         $orderModel = new OrderModel();
         $result = $orderModel->splitOrder($data);
-        if(!$result[0]){
-            return ajax_json(0,$result[1]);
+        if (!$result[0]) {
+            return ajax_json(0, $result[1]);
         }
 
-        return ajax_json(1,'ok');
+        return ajax_json(1, 'ok');
     }
 
     /*
      * 搜索
      */
-    public function search(Request $request,$status='')
+    public function search(Request $request, $status = '')
     {
-        $store_list = StoreModel::select('id','name')->get();
-        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
-        $this->per_page = $request->input('per_page',$this->per_page);
+        $store_list = StoreModel::select('id', 'name')->get();
+        $products = ProductsModel::whereIn('product_type', [1, 2, 3])->get();
+        $this->per_page = $request->input('per_page', $this->per_page);
         $number = $request->input('number');
         $order_list = OrderModel
-            ::where('number','like','%'.$number.'%')
+            ::where('number', 'like', '%' . $number . '%')
             ->paginate($this->per_page);
-        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
 
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
 
-        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+        $distributors = UserModel::where('supplier_distributor_type', 1)->get();
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
@@ -921,7 +984,7 @@ class OrderController extends Controller
 
             'supplier_id' => '',
             'supplier_list' => $supplier_list,
-            'distributors'=> $distributors
+            'distributors' => $distributors
         ]);
     }
 
@@ -930,63 +993,63 @@ class OrderController extends Controller
      */
     public function seniorSearch(Request $request)
     {
-        $store_list = StoreModel::select('id','name')->get();
-        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
+        $store_list = StoreModel::select('id', 'name')->get();
+        $products = ProductsModel::whereIn('product_type', [1, 2, 3])->get();
         $order_status = $request->input('order_status');
         $product_name = $request->input('product_name');
         $order_number = $request->input('order_number');
         $buyer_name = $request->input('buyer_name');
         $buyer_phone = $request->input('buyer_phone');
         $from_type = $request->input('from_type');
-        $this->per_page = $request->input('per_page',$this->per_page);
+        $this->per_page = $request->input('per_page', $this->per_page);
         $supplier_id = $request->input('supplier_id');
-        if($supplier_id){
+        if ($supplier_id) {
             $orders_arr = DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->where('products.supplier_id', '=', $supplier_id)
                 ->select('order_sku_relation.order_id as order_id')->get();
             $order_id_s = [];
-            foreach ($orders_arr as $v){
-                if(!in_array($v->order_id, $order_id_s)){
+            foreach ($orders_arr as $v) {
+                if (!in_array($v->order_id, $order_id_s)) {
                     $order_id_s[] = $v->order_id;
                 }
             }
 //            dd(array_unique($order_id_s));
-            $orders = OrderModel::query()->whereIn('id',array_unique($order_id_s));
-        }else{
+            $orders = OrderModel::query()->whereIn('id', array_unique($order_id_s));
+        } else {
             $orders = OrderModel::query();
         }
 
-        if(!empty($order_number)){
-            $orders->where('order.number' ,'like','%'.$order_number.'%');
+        if (!empty($order_number)) {
+            $orders->where('order.number', 'like', '%' . $order_number . '%');
         }
-        if($order_status !== "no"){
-            $orders->where('order.status' ,$order_status);
+        if ($order_status !== "no") {
+            $orders->where('order.status', $order_status);
         }
-        if(!empty($buyer_name)){
-            $orders->where('order.buyer_name' ,'like','%'.$buyer_name.'%');
+        if (!empty($buyer_name)) {
+            $orders->where('order.buyer_name', 'like', '%' . $buyer_name . '%');
         }
-        if(!empty($buyer_phone)){
-            $orders->where('order.buyer_phone' ,'like','%'.$buyer_phone.'%');
+        if (!empty($buyer_phone)) {
+            $orders->where('order.buyer_phone', 'like', '%' . $buyer_phone . '%');
         }
-        if(!empty($from_type)){
-            $orders->where('order.from_type' , $from_type);
+        if (!empty($from_type)) {
+            $orders->where('order.from_type', $from_type);
         }
         $order_id = [];
-        if(!empty($product_name)){
-            $order_sku_relations = OrderSkuRelationModel::where('sku_name' , 'like','%'.$product_name.'%')->get();
+        if (!empty($product_name)) {
+            $order_sku_relations = OrderSkuRelationModel::where('sku_name', 'like', '%' . $product_name . '%')->get();
             foreach ($order_sku_relations as $order_sku_relation) {
                 $order_id[] = $order_sku_relation->order_id;
             }
-            $orders->whereIn('order.id' , $order_id);
+            $orders->whereIn('order.id', $order_id);
         }
         $order_list = $orders->paginate($this->per_page);
-        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
 
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
 
-        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
+        $distributors = UserModel::where('supplier_distributor_type', 1)->get();
 
         return view('home/order.order', [
             'order_list' => $order_list,
@@ -1006,7 +1069,7 @@ class OrderController extends Controller
             'from_type' => $from_type,
             'supplier_id' => $supplier_id,
             'supplier_list' => $supplier_list,
-            'distributors'=> $distributors
+            'distributors' => $distributors
         ]);
 
     }
@@ -1015,30 +1078,30 @@ class OrderController extends Controller
      * 渠道人员销售订单列表
      * @param bool $bool 当为true是只可查询登陆用户
      */
-    public function userSaleList(Request $request,$bool=false)
+    public function userSaleList(Request $request, $bool = false)
     {
-        if($request->isMethod('get')){
+        if ($request->isMethod('get')) {
             $time = $request->input('time');
-            if($time){
-                $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
-            }else{
+            if ($time) {
+                $start_date = date("Y-m-d H:i:s", strtotime("-" . $time . " day"));
+            } else {
                 $start_date = '2000-01-01 00:00:00';
             }
             $end_date = date("Y-m-d H:i:s");
         }
 
-        if($request->isMethod('post')){
-            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
-            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        if ($request->isMethod('post')) {
+            $start_date = date("Y-m-d H:i:s", strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s", strtotime($request->input('end_date')));
         }
 
         //判断查询当前登陆用户 或 指定用户
-        if($bool){
+        if ($bool) {
             $user_id = Auth::user()->id;
             //用户姓名
             $username = Auth::user()->realname;
             $post_url = url('/order/oneUserSaleList');
-        }else{
+        } else {
             $user_id = $request->input('user_id_sales');
             //用户姓名
             $username = UserModel::find($user_id)->realname;
@@ -1046,10 +1109,10 @@ class OrderController extends Controller
         }
 
         $order_list = OrderModel
-            ::where('user_id_sales',$user_id)
+            ::where('user_id_sales', $user_id)
             ->whereBetween('order_send_time', [$start_date, $end_date])
             ->paginate($this->per_page);
-        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
 
         //销售个人总金额
         $money_sum_obj = OrderModel
@@ -1057,9 +1120,9 @@ class OrderController extends Controller
             ->whereBetween('order_send_time', [$start_date, $end_date])
             ->where(['type' => 2, 'user_id_sales' => $user_id])
             ->where('status', '>', '8')->first();
-        if($money_sum_obj){
-            $money_sum = $money_sum_obj->money_sum?$money_sum_obj->money_sum:0;
-        }else{
+        if ($money_sum_obj) {
+            $money_sum = $money_sum_obj->money_sum ? $money_sum_obj->money_sum : 0;
+        } else {
             $money_sum = 0;
         }
 
@@ -1111,7 +1174,7 @@ class OrderController extends Controller
 
             if (!$order_model->changeStatus($order_id, 10)) {
                 DB::rollBack();
-                Log::error('Send Order ID:'. $order_id .'订单发货修改状态错误');
+                Log::error('Send Order ID:' . $order_id . '订单发货修改状态错误');
                 return ajax_json(0, 'error', '订单发货修改状态错误');
             }
 
@@ -1119,8 +1182,8 @@ class OrderController extends Controller
             $out_warehouse = new OutWarehousesModel();
             if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
                 DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
-                return ajax_json(0,'error','订单发货,创建出库单错误');
+                Log::error('ID:' . $order_id . '订单发货,创建出库单错误');
+                return ajax_json(0, 'error', '订单发货,创建出库单错误');
             }
 
             //打印信息数据
@@ -1131,57 +1194,56 @@ class OrderController extends Controller
              */
             $logistics_type = $request->input('logistics_type');
             //手动发货，获取快递公司ID  快递单号
-            if($logistics_type == true){
+            if ($logistics_type == true) {
                 $logistics_id = $request->input('logistics_id');
                 $logistics_no = $request->input('logistics_no');
 
-                if ($LogisticsModel = LogisticsModel::find($logistics_id)){
+                if ($LogisticsModel = LogisticsModel::find($logistics_id)) {
                     $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
-                }else{
+                } else {
                     DB::rollBack();
-                    return ajax_json(0,'error','物流不存在');
+                    return ajax_json(0, 'error', '物流不存在');
                 }
 
                 $order_model->express_id = $logistics_id;
 
-            }else{
+            } else {
                 // 调取菜鸟Api，获取快递单号，电子面单相关信息
                 $kdniao = new KdniaoApi();
                 $consignor_info = $kdniao->pullLogisticsNO($order_id);
 
                 //如果电子面单获取失败
-                if($consignor_info['Success'] === false){
+                if ($consignor_info['Success'] === false) {
                     DB::rollBack();
-                    Log::error('Get cainiao, order id:'. $order_id . 'code:' . $consignor_info['ResultCode'] . $consignor_info['Reason']);
-                    return ajax_json(0,'error：' . $consignor_info['ResultCode'] . $consignor_info['Reason']);
+                    Log::error('Get cainiao, order id:' . $order_id . 'code:' . $consignor_info['ResultCode'] . $consignor_info['Reason']);
+                    return ajax_json(0, 'error：' . $consignor_info['ResultCode'] . $consignor_info['Reason']);
                 }
 
                 $Order = $consignor_info['Order'];
                 $kdn_logistics_id = $Order['ShipperCode'];
-                $logistics_no  = $Order['LogisticCode'];
+                $logistics_no = $Order['LogisticCode'];
                 // 面单打印模板
                 $printData = $consignor_info['PrintTemplate'];
                 //将快递鸟物流代码转成本地物流ID
-                $logisticsModel = LogisticsModel::where('kdn_logistics_id',$kdn_logistics_id)->first();
-                if(!$logisticsModel){
+                $logisticsModel = LogisticsModel::where('kdn_logistics_id', $kdn_logistics_id)->first();
+                if (!$logisticsModel) {
                     DB::rollBack();
-                    return ajax_json(0,'error','物流不存在');
+                    return ajax_json(0, 'error', '物流不存在');
                 }
                 $logistics_id = $logisticsModel->id;
             }
 
 
-
             //快递单号保存
             $order_model->express_no = $logistics_no;
-            if(!$order_model->save()){
+            if (!$order_model->save()) {
                 DB::rollBack();
-                Log::error('ID:'. $order_id .'订单运单号保存失败');
-                return ajax_json(0,'error','订单运单号保存失败');
+                Log::error('ID:' . $order_id . '订单运单号保存失败');
+                return ajax_json(0, 'error', '订单运单号保存失败');
             }
 
             //判断是否是平台同步的订单
-            if($order_model->type == 3){
+            if ($order_model->type == 3) {
                 // 订单发货同步到平台
                 $job = (new PushExpressInfo($order_id, $logistics_id, $logistics_no))->onQueue('syncExpress');
                 $this->dispatch($job);
@@ -1191,17 +1253,24 @@ class OrderController extends Controller
             $KdnOrderTracesSub = new KdnOrderTracesSub();
             $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
 
+            $ids = AuditingModel::where('type', 5)->select('user_id')->first();
+            if ($ids) {
+                //发送审核短信通知
+                $dataes = new AuditingModel();
+                $dataes->datas(5);
+            }
             DB::commit();
 
-            return ajax_json(1,'ok',[
+            return ajax_json(1, 'ok', [
                 'printData' => $printData,
                 'waybillNO' => $logistics_no,
             ]);
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
         }
+
+
     }
 
     /**
@@ -1211,11 +1280,10 @@ class OrderController extends Controller
     {
         $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
-        $lists->where('type' , 2);
+        $lists->where('type', 2);
         $salesOrders = $lists->paginate($per_page);
 
-        foreach ($salesOrders as $salesOrder)
-        {
+        foreach ($salesOrders as $salesOrder) {
             $salesOrder->OrderLists($salesOrder);
 
         }
@@ -1224,13 +1292,14 @@ class OrderController extends Controller
             'salesOrders' => $salesOrders,
         ]);
     }
+
     /**
      * 销售订单详情
      */
     public function showSalesOrders(Request $request)
     {
         $id = $request->input('id');
-        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
+        $salesOrder = OrderModel::where('id', $id)->where('type', 2)->first();
         $orderSkuRelations = $salesOrder->orderSkuRelation;
         return view('home/monitorDetails.salesOrder', [
             'salesOrder' => $salesOrder,
@@ -1245,11 +1314,10 @@ class OrderController extends Controller
     {
         $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
-        $lists->whereIn('type' , [3,5]);
+        $lists->whereIn('type', [3, 5]);
         $ESSalesOrders = $lists->paginate($per_page);
 
-        foreach ($ESSalesOrders as $ESSalesOrder)
-        {
+        foreach ($ESSalesOrders as $ESSalesOrder) {
             $ESSalesOrder->OrderLists($ESSalesOrder);
 
         }
@@ -1265,8 +1333,8 @@ class OrderController extends Controller
     public function showESSalesOrders(Request $request)
     {
         $id = $request->input('id');
-        $salesOrders = OrderModel::where('id' , $id)->first();
-        $orderSkuRelations = OrderSkuRelationModel::where('order_id' , $id)->get();
+        $salesOrders = OrderModel::where('id', $id)->first();
+        $orderSkuRelations = OrderSkuRelationModel::where('order_id', $id)->get();
         return view('home/monitorDetails.ESSalesOrder', [
             'salesOrder' => $salesOrders,
             'orderSkuRelations' => $orderSkuRelations,
@@ -1280,11 +1348,10 @@ class OrderController extends Controller
     {
         $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
-        $lists->where('type' , 2);
+        $lists->where('type', 2);
         $salesInvoices = $lists->paginate($per_page);
 
-        foreach ($salesInvoices as $salesInvoice)
-        {
+        foreach ($salesInvoices as $salesInvoice) {
             $salesInvoice->OrderLists($salesInvoice);
 
         }
@@ -1300,7 +1367,7 @@ class OrderController extends Controller
     public function showSalesInvoices(Request $request)
     {
         $id = $request->input('id');
-        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
+        $salesOrder = OrderModel::where('id', $id)->where('type', 2)->first();
         $orderSkuRelations = $salesOrder->orderSkuRelation;
 
         return view('home/monitorDetails.salesInvoice', [
@@ -1317,8 +1384,7 @@ class OrderController extends Controller
         $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
         $deliveries = $lists->paginate($per_page);
-        foreach ($deliveries as $delivery)
-        {
+        foreach ($deliveries as $delivery) {
             $delivery->OrderLists($delivery);
 
         }
@@ -1333,7 +1399,7 @@ class OrderController extends Controller
     public function showDeliveries(Request $request)
     {
         $id = $request->input('id');
-        $delivery = OrderModel::where('id' , $id)->first();
+        $delivery = OrderModel::where('id', $id)->first();
         $orderSkuRelations = $delivery->orderSkuRelation;
         return view('home/monitorDetails.delivery', [
             'delivery' => $delivery,
@@ -1344,7 +1410,7 @@ class OrderController extends Controller
     // 获取代发供应商订单列表
     public function daifaSupplierOrderList(Request $request)
     {
-        return OrderModel::supplierOrderList(5,'2017-10-10','2018-10-10');
+        return OrderModel::supplierOrderList(5, '2017-10-10', '2018-10-10');
 
     }
 
@@ -1353,7 +1419,7 @@ class OrderController extends Controller
      */
     public function fileRecords()
     {
-        $fileRecords = FileRecordsModel::orderBy('id' , 'desc')->paginate(15);
+        $fileRecords = FileRecordsModel::orderBy('id', 'desc')->paginate(15);
         return view('home/order.fileRecords', [
             'fileRecords' => $fileRecords,
         ]);

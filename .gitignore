@@ -8,6 +8,7 @@
 .idea/
 bootstrap/cache
 /storage/
+/storage/framework/
 composer.lock
 composer.phar
 /vendor/
@@ -17,6 +18,9 @@ public/apidoc
 /npm-debug.log
 /public/SaasApi/
 /public/MicroApi/
+/public/DealerApi/
+/public/uploads/
+/public/laravel-u-editor/
 apidoc.json
 *package-lock.json
 web-page/node-modules
@@ -26,3 +30,5 @@ wap-page/config/dev.env.js
 wap-page/config/prod.env.js
 wap-page/node-modules
 wap-page/dist
+dump.rdb
+web-page/src

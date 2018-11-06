@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Models\AssetsModel;
+use App\Models\AuditingModel;
 use App\Models\CountersModel;
 use App\Models\EnterWarehousesModel;
 use App\Models\ProductsModel;
@@ -105,7 +106,6 @@ class PurchaseController extends Controller
     public function ajaxVerified(Request $request)
     {
         $id_arr = $request->input('id')?$request->input('id'):'';
-//        var_dump($id_arr);die;
         if ($id_arr != '') {
             foreach ($id_arr as $id) {
                 $purchase = new PurchaseModel();
@@ -129,15 +129,21 @@ class PurchaseController extends Controller
     public function ajaxDirectorVerified(Request $request)
     {
         $id_arr = $request->input('id')?$request->input('id'):'';
-//        var_dump($id_arr);die;
-        if ($id_arr != '') {
+        if (count($id_arr)>0) {
+            if (is_array($id_arr)){
             foreach ($id_arr as $id) {
-
                 try {
                     DB::beginTransaction();
                     $purchase = new PurchaseModel();
                     $status = $purchase->changeStatus($id, 1);
-                    if (!$status) {
+                    if ($status) {
+                        $ids = AuditingModel::where('type',4)->select('user_id')->first();
+                        if ($ids){
+                            //发送审核短信通知
+                            $dataes = new AuditingModel();
+                            $dataes->datas(4);
+                        }
+                    }else{
                         DB::rollBack();
                         return ajax_json(0, '审核失败');
                     }
@@ -154,10 +160,40 @@ class PurchaseController extends Controller
                     Log::error($e);
                     return ajax_json(0, '审核成功');
                 }
+            }
 
+            }else{
+                try {
+                    DB::beginTransaction();
+                    $purchase = new PurchaseModel();
+                    $status = $purchase->changeStatus($id_arr, 1);
+                    if ($status) {
+                        $ids = AuditingModel::where('type',4)->select('user_id')->first();
+                        if ($ids){
+                            //发送审核短信通知
+                            $dataes = new AuditingModel();
+                            $dataes->datas(4);
+                        }
+                    }else{
+                        DB::rollBack();
+                        return ajax_json(0, '审核失败');
+                    }
+
+                    $enter_warehouse_model = new EnterWarehousesModel();
+                    if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id_arr)) {
+                        DB::rollBack();
+                        return ajax_json(0, '审核成功');
+                    }
+
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error($e);
+                    return ajax_json(0, '审核成功');
+                }
             }
         }else{
-            return ajax_json(0,'请还没有选择采购单！');
+            return ajax_json(0,'您还没有选择采购单！');
 
         }
 
@@ -171,22 +207,30 @@ class PurchaseController extends Controller
      */
     public function ajaxDirectorReject(Request $request)
     {
-        $id_arr = $request->input('id');
-        $msg=$request->input('msg');
-//        var_dump($id_arr);die;
-        if(empty($id_arr)){
+        $id_arr = $request->input('id')?$request->input('id'):'';
+        $msg = $request->input('msg');
+        $purchaseModel = new PurchaseModel();
+        if (count($id_arr)>0) {
+            if (is_array($id_arr)) {
+                foreach ($id_arr as $id) {
+                    if (!$purchaseModel->returnedChangeStatus($id)) {
+                        return ajax_json(0, '驳回失败');
+                    }
+                }
+
+                $ins = str_repeat('?,', count($id_arr) - 1) . '?';
+                $bind_values = array_merge([$msg], $id_arr);
+                $arr = DB::update("update purchases set msg=? where id IN ($ins)", $bind_values);
+            } else {
+                if (!$purchaseModel->returnedChangeStatus($id_arr)) {
+                    return ajax_json(0, '您还没有勾选采购单！');
+                }
+                $arr = DB::update("update purchases set msg=? where id = $id_arr", [$msg]);
+
+            }
+        }else{
             return ajax_json(0,'参数错误');
         }
-
-        $purchaseModel = new PurchaseModel();
-        foreach ($id_arr as $id) {
-            if (!$purchaseModel->returnedChangeStatus($id)) {
-                return ajax_json(0, '驳回失败');
-            }
-        }
-        $ins = str_repeat('?,', count($id_arr) - 1) . '?';
-        $bind_values=array_merge([$msg],$id_arr);
-        $arr=DB::update("update purchases set msg=? where id IN ($ins)",$bind_values);
 
         return ajax_json(1,'操作成功!');
 
@@ -226,7 +270,7 @@ class PurchaseController extends Controller
             $prices = $request->input('price');
             $summary = $request->input('summary');
             $type = $request->input('type');
-            $paymentcondition = $request->input('paymentcondition');//采购条件
+//            $paymentcondition = $request->input('paymentcondition');//采购条件
 
 
             $tax_rates = $request->input('tax_rate');
@@ -254,7 +298,9 @@ class PurchaseController extends Controller
             $purchase->price = $sum_price / 100 + $surcharge;
             $purchase->summary = $summary;
             $purchase->type = $type;
-            $purchase->paymentcondition = $paymentcondition;
+
+            $purchase->verified = 1;
+//            $purchase->paymentcondition = $paymentcondition;
 
             $purchase->predict_time = $predict_time;
             $purchase->surcharge = $surcharge;
@@ -277,6 +323,14 @@ class PurchaseController extends Controller
                     $purchaseSku->freight = $freights[$i];
                     $purchaseSku->save();
                 }
+                $ids = AuditingModel::where('type',3)->select('user_id')->first();
+                if ($ids){
+                    //发送审核短信通知
+                    $dataes = new AuditingModel();
+                    $dataes->datas(3);
+                }
+
+
                 DB::commit();
                 return redirect('/purchase');
             } else {
@@ -299,6 +353,12 @@ class PurchaseController extends Controller
         $id = $request->input('id');
         $purchase = PurchaseModel::find($id);
         $purchase->supplier = $purchase->supplier->name;
+        $suppliers = SupplierModel::where('id',$purchase->supplier_id)->select('ein','tax_rate','bank_number','bank_address')->first();
+        $purchase->ein = $suppliers->ein;
+        $purchase->tax_rate = $suppliers->tax_rate;
+        $purchase->bank_number = $suppliers->bank_number;
+        $purchase->bank_address = $suppliers->bank_address;
+
         $purchase->storage = $purchase->storage->name;
         $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id', $purchase->id)->get();
         $productsSku = new ProductsSkuModel;
@@ -382,7 +442,7 @@ class PurchaseController extends Controller
             $surcharge = $request->input('surcharge');
             $invoice_info = $request->input('invoice_info');
 
-            $paymentcondition=$request->input('paymentcondition');
+//            $paymentcondition=$request->input('paymentcondition');
 
             $sum_count = '';
             $sum_price = '';
@@ -406,7 +466,9 @@ class PurchaseController extends Controller
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             $purchase->invoice_info = $invoice_info;
-            $purchase->paymentcondition = $paymentcondition;
+
+            $purchase->verified = 1;
+//            $purchase->paymentcondition = $paymentcondition;
 
             if ($purchase->save()) {
                 DB::table('purchase_sku_relation')->where('purchase_id', $purchase_id)->delete();
@@ -420,6 +482,14 @@ class PurchaseController extends Controller
                     $purchaseSku->freight = $freights[$i];
                     $purchaseSku->save();
                 }
+
+                $ids = AuditingModel::where('type',3)->select('user_id')->first();
+                if ($ids){
+                    //发送审核短信通知
+                    $dataes = new AuditingModel();
+                    $dataes->datas(3);
+                }
+
                 DB::commit();//完成
                 $url = Cookie::get('purchase_back_url');
                 Cookie::forget('purchase_back_url');

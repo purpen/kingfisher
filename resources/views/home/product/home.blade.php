@@ -101,7 +101,7 @@
 						<th>成本价</th>
 						@endrole
 						<th>市场售价</th>
-						<th>建议售价</th>
+						<th>供货价</th>
 						<th class="text-center">库存总量</th>
 						<th>备注</th>
 						<th>操作</th>
@@ -127,12 +127,12 @@
 								@endif
 							</td>
 							<td>
-								<img src="{{$product->first_img}}" class="img-thumbnail" style="width: 80px;">
+								<img src="@if($product->surface_id){{$product->getFirstImgAttrbute() }}@else{{$product->first_img}}@endif" class="img-thumbnail" style="width: 80px;">
 							</td>
 							<td class="magenta-color">
 								{{ $product->number }}
 							</td>
-							<td class="table-name" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->title }}">
+								<td class="table-name" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->title }}">
 								<span class="proname">{{ $product->tit }}</span>
 							</td>
 							<td>
@@ -184,7 +184,7 @@
         							<td>{{ $sku->summary }}</td>
         							<td>
 										<a class="btn btn-danger btn-sm" onclick="destroySku({{ $sku->id }})">删除</a>
-										<button class="btn btn-default btn-sm" onclick="addVirtualInventory({{$sku->id}})"  value="{{ $sku->id }}">虚拟库存</button>
+										{{--<button class="btn btn-default btn-sm" onclick="addVirtualInventory({{$sku->id}})"  value="{{ $sku->id }}">虚拟库存</button>--}}
 									</td>
         						</tr>
         					@endforeach

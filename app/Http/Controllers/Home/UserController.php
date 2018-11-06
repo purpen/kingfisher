@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\DistributorModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -57,7 +58,7 @@ class UserController extends Controller
                 $data = UserModel::where('type' , $type)->orderBy('created_at','desc')->paginate($this->per_page);
             }
         }
-        if (in_array($supplier_distributor_type , [1,2])){
+        if (in_array($supplier_distributor_type , [1,2,3])){
             $data = UserModel::where('supplier_distributor_type' , $supplier_distributor_type)->orderBy('created_at','desc')->paginate($this->per_page);
         }
         $role = Role::orderBy('created_at','desc')->get();
@@ -308,6 +309,10 @@ class UserController extends Controller
     {
         $id = $request->input('id');
         $id = intval($id);
+        $distridutor = DistributorModel::where('user_id','=',$id)->first();
+        if ($distridutor){
+            $distridutor->destroy($distridutor->id);
+        }
         if(UserModel::destroy($id)){
             return ajax_json(0,'删除失败 ');
         }else{
@@ -344,7 +349,7 @@ class UserController extends Controller
         if(in_array($type,[0,1,2])){
             $result->where('type' , $type);
         }
-        if(in_array($supplier_distributor_type,[1,2])){
+        if(in_array($supplier_distributor_type,[1,2,3])){
             $result->where('supplier_distributor_type' , $supplier_distributor_type);
         }
         $data = $result->paginate($this->per_page);

@@ -53,6 +53,7 @@
 
 					<li @if($supplier_distributor_type == 1) class="active"@endif><a href="{{url('/user?supplier_distributor_type=1')}}">分销商</a></li>
 					<li @if($supplier_distributor_type == 2) class="active"@endif><a href="{{url('/user?supplier_distributor_type=2')}}">供应商</a></li>
+					<li @if($supplier_distributor_type == 3) class="active"@endif><a href="{{url('/user?supplier_distributor_type=3')}}">经销商</a></li>
 				</ul>
     			<ul class="nav navbar-nav navbar-right">
     				<li>
@@ -77,13 +78,13 @@
 								<span>部门</span>
 								<div class="input-group">
 									<select class="form-control selectpicker" name="department" style="display: none;">
-										<option @if($department == 10) selected @endif value="10">选择</option>
-										<option @if($department == 0) selected @endif value="0">默认</option>
-										<option @if($department == 1) selected @endif value="1">Fiu</option>
+										{{--<option @if($department == 10) selected @endif value="10">选择</option>--}}
+										{{--<option @if($department == 0) selected @endif value="0">默认</option>--}}
+										{{--<option @if($department == 1) selected @endif value="1">Fiu</option>--}}
 										<option @if($department == 2) selected @endif value="2">D3IN</option>
-										<option @if($department == 3) selected @endif value="3">海外</option>
-										<option @if($department == 4) selected @endif value="4">电商</option>
-										<option @if($department == 5) selected @endif value="5">支持</option>
+										{{--<option @if($department == 3) selected @endif value="3">海外</option>--}}
+										{{--<option @if($department == 4) selected @endif value="4">电商</option>--}}
+										{{--<option @if($department == 5) selected @endif value="5">支持</option>--}}
 									</select>
 								</div>
 
@@ -166,6 +167,8 @@
 											<span>分销商</span>
 										@elseif($val->supplier_distributor_type == 2)
 											<span>供应商</span>
+										@elseif($val->supplier_distributor_type == 3)
+											<span>经销商</span>
 										@endif
 									</td>
 									<td>
@@ -236,7 +239,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销</label>
+									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销经销</label>
 									<div class="col-sm-10">
 										<div class="radio-inline">
 											<label class="ml-3r">
@@ -244,6 +247,9 @@
 											</label>
 											<label class="ml-3r">
 												<input name="supplier_distributor_type" value="2" type="radio">供应商
+											</label>
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="3" type="radio">经销商
 											</label>
 
 										</div>
@@ -266,31 +272,31 @@
                                     <label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">部门</label>
                                     <div class="col-sm-10">
                                         <div class="radio-inline">
-                                            <label class="mr-3r">
-                                                <input name="department" value="0" type="radio">默认
-                                            </label>
-                                            <label class="ml-3r">
-                                                <input name="department" value="1" type="radio">Fiu店&nbsp&nbsp&nbsp&nbsp
-                                            </label>
+                                            {{--<label class="mr-3r">--}}
+                                                {{--<input name="department" value="0" type="radio">默认--}}
+                                            {{--</label>--}}
+                                            {{--<label class="ml-3r">--}}
+                                                {{--<input name="department" value="1" type="radio">Fiu店&nbsp&nbsp&nbsp&nbsp--}}
+                                            {{--</label>--}}
                                             <label class="ml-3r">
                                                 <input name="department" value="2" type="radio">D3IN&nbsp&nbsp&nbsp&nbsp
                                             </label>
-                                            <label class="ml-3r">
-                                                <input name="department" value="3" type="radio">海外
-                                            </label>
+                                            {{--<label class="ml-3r">--}}
+                                                {{--<input name="department" value="3" type="radio">海外--}}
+                                            {{--</label>--}}
 
                                         </div>
                                     </div>
-									<div class="col-sm-10">
-										<div class="radio-inline">
-											<label class="mr-3r">
-												<input name="department" value="4" type="radio">电商
-											</label>
-											<label class="ml-3r">
-												<input name="department" value="5" type="radio">支持
-											</label>
-										</div>
-									</div>
+									{{--<div class="col-sm-10">--}}
+										{{--<div class="radio-inline">--}}
+											{{--<label class="mr-3r">--}}
+												{{--<input name="department" value="4" type="radio">电商--}}
+											{{--</label>--}}
+											{{--<label class="ml-3r">--}}
+												{{--<input name="department" value="5" type="radio">支持--}}
+											{{--</label>--}}
+										{{--</div>--}}
+									{{--</div>--}}
                                 </div>
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
@@ -369,7 +375,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销</label>
+									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销经销</label>
 									<div class="col-sm-10">
 										<div class="radio-inline">
 											<label class="ml-3r">
@@ -377,6 +383,9 @@
 											</label>
 											<label class="ml-3r">
 												<input name="supplier_distributor_type" value="2" type="radio" id="supplier_distributor_type2">供应商
+											</label>
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="3" type="radio" id="supplier_distributor_type3">经销商
 											</label>
 
 										</div>
@@ -399,18 +408,18 @@
                                     <label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">部门</label>
                                     <div class="col-sm-10">
                                         <div class="radio-inline">
-                                            <label class="mr-3r">
-                                                <input name="department" value="0" type="radio" id="department0">默认
-                                            </label>
-                                            <label class="ml-3r">
-                                                <input name="department" value="1" type="radio" id="department1">Fiu店&nbsp&nbsp&nbsp&nbsp
-                                            </label>
+                                            {{--<label class="mr-3r">--}}
+                                                {{--<input name="department" value="0" type="radio" id="department0">默认--}}
+                                            {{--</label>--}}
+                                            {{--<label class="ml-3r">--}}
+                                                {{--<input name="department" value="1" type="radio" id="department1">Fiu店&nbsp&nbsp&nbsp&nbsp--}}
+                                            {{--</label>--}}
                                             <label class="ml-3r">
                                                 <input name="department" value="2" type="radio" id="department2">D3IN&nbsp&nbsp&nbsp&nbsp
                                             </label>
-                                            <label class="ml-3r">
-                                                <input name="department" value="3" type="radio" id="department3">海外
-                                            </label>
+                                            {{--<label class="ml-3r">--}}
+                                                {{--<input name="department" value="3" type="radio" id="department3">海外--}}
+                                            {{--</label>--}}
                                         </div>
                                     </div>
                                     <div class="col-sm-10">
@@ -573,6 +582,8 @@
 				$("#supplier_distributor_type1").prop('checked','true');
 			}else if(e.data.supplier_distributor_type==2){
 				$("#supplier_distributor_type2").prop('checked','true');
+			}else if(e.data.supplier_distributor_type==3){
+				$("#supplier_distributor_type3").prop('checked','true');
 			}
 
 			$('#updateuser2').modal('show');

@@ -15,6 +15,75 @@
     }
 @endsection
 
+@section('customize_js')
+    @parent
+    {{--主管领导通过审核--}}
+    $('#approved').click(function () {
+    var id = $("input[name='ids']").val();
+    var _token = $("input[name='_token']").val();
+    layer.confirm('确认要通过审核吗？',function(index){
+
+    $.post('{{url('/purchase/ajaxDirectorVerified')}}',{'_token': _token,'id': id}, function (data) {
+    layer.msg(data.message);
+    if(data.status == 1){
+    layer.msg('操作成功！');
+    location.href = '{{url('/purchase')}}';
+    }else{
+    location.reload();
+    }
+    },'json');
+    });
+
+    });
+
+    $('#charges').click(function () {
+    layer.confirm('确认要通过审核吗？',function(index){
+    var arr_id = $("input[name='ids']").val();
+    var _token = $("input[name='_token']").val();
+    {{--var arr_id = [];--}}
+    {{--$("input[name='Order']").each(function () {--}}
+    {{--if ($(this).is(':checked')) {--}}
+    {{--arr_id.push($(this).val());--}}
+    {{--}--}}
+    {{--});--}}
+    $.post('/payment/ajaxCharge',{'_token':_token,'id':arr_id},function (e) {
+    if(e.status){
+    layer.msg('操作成功！');
+    location.href = '{{url('/purchase')}}';
+    {{--location.reload();--}}
+    }else if(e.status == 0){
+    alert(e.message);
+    }
+    },'json');
+    });
+    });
+
+    {{--主管领导驳回审核--}}
+    {{--$('#rejected').click(function () {--}}
+
+    {{--layer.open({--}}
+    {{--type: 1,--}}
+    {{--skin: 'layui-layer-rim',--}}
+    {{--area: ['420px', '240px'],--}}
+    {{--content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="javascript:location.reload();" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'--}}
+    {{--});--}}
+
+    $(document).on("click","#sure",function(obj){
+    var msg=$("#invoiceTextarea").val();
+    var _token = $("input[name='_token']").val();
+    var id =  $("input[name='ids']").val();
+    $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id,'msg':msg}, function (e) {
+    if(e.status){
+    layer.msg('操作成功！');
+    location.href = '{{url('/purchase')}}';
+    }else{
+    alert(e.message);
+    }
+    },'json');
+    });
+    {{--});--}}
+    @endsection
+
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -33,12 +102,18 @@
             <div class="col-md-12">
                 <h5>基本信息</h5>
                 <hr>
+                <p><strong>单据编号：</strong> <span>{{$purchase->number}}</span></p>
                 <p><strong>采购类型：</strong> <span>{{$purchase->type_val}}</span></p>
                 <p><strong>来源供应商：</strong> <span>{{$purchase->supplier}}</span></p>
                 <p><strong>预计到货时间：</strong> <span>@if($purchase->predict_time != '0000-00-00') {{$purchase->predict_time}} @endif</span></p>
                 <p><strong>入库仓库：</strong> <span>{{$purchase->storage}}</span></p>
                 <p><strong>备注说明：</strong> {{$purchase->summary}}</p>
-                <p><strong>付款条件：</strong> {{$purchase->paymentcondition}}</p>
+                <p><strong>发票信息：</strong> {{$purchase->invoice_info}}</p>
+                <p><strong>供应商税号：</strong> {{$purchase->ein}}</p>
+                <p><strong>供应商开票税率：</strong> {{$purchase->tax_rate}}</p>
+                <p><strong>供应商开户行号：</strong> {{$purchase->bank_number}}</p>
+                <p><strong>供应商开户行地址：</strong> {{$purchase->bank_address}}</p>
+
             </div>
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">
@@ -83,11 +158,54 @@
                 </table>
             </div>
         </div>
-        
+        <div style="text-align: center">
+{{--        @if(in_array($purchase->verified,[1,2]))--}}
+        @if ($purchase->verified == 1)
+            <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
+        <button type="button" class="btn btn-success mr-2r" id="approved">
+            <i class="glyphicon glyphicon-ok"></i> 通过审批
+        </button>
+        <button type="button" class="btn btn-warning mr-2r" id="rejected" data-toggle="modal" data-target="#myModal">
+            <i class="glyphicon glyphicon-remove"></i> 驳回审批
+        </button>
+
+            @elseif($purchase->verified == 2)
+                    <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
+                    <button type="button" class="btn btn-success mr-2r" id="charges">
+                        <i class="glyphicon glyphicon-ok"></i> 通过审批
+                    </button>
+
+        @endif
+
         <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">
             <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
         </button>
     </div>
+            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+    </div>
+    <form method="post"  class="form-ho rizontal" role="form" id="myForm" onsubmit="return ">
+        <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="btn-info modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4>请填写驳回原因：</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group" style="margin-left:40px;">
+                            <textarea id='invoiceTextarea' rows='8' cols='60' name='msg'></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"  id="sure" class="btn btn-info">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
 @endsection
 
 @section('customize_js')

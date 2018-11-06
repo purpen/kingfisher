@@ -87,18 +87,70 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/supplier/create')}}">
-                        <i class="glyphicon glyphicon-edit"></i> 添加供应商
-                    </a>
-                    <button type="button" id="batch-verify" class="btn btn-success mr-2r">
-                        <i class="glyphicon glyphicon-ok"></i> 通过审核
-                    </button>
-                    <button type="button" id="batch-close" class="btn btn-danger mr-2r">
-                        <i class="glyphicon glyphicon-remove"></i> 驳回
-                    </button>
-                    <button type="submit" id="batch-excel" class="btn btn-white mr-2r">
-                        导出
-                    </button>
+
+                    {{--<button type="button" id="batch-verify" class="btn btn-success mr-2r">--}}
+                        {{--<i class="glyphicon glyphicon-ok"></i> 通过审核--}}
+                    {{--</button>--}}
+                    {{--<button type="button" id="batch-close" class="btn btn-danger mr-2r">--}}
+                        {{--<i class="glyphicon glyphicon-remove"></i> 驳回--}}
+                    {{--</button>--}}
+                    <div class="container">
+                        <a type="button" class="btn btn-white mr-2r" href="{{url('/supplier/create')}}">
+                            <i class="glyphicon glyphicon-edit"></i> 添加供应商
+                        </a>
+                        <button type="button"  data-toggle="modal" data-target="#myModal" class="btn btn-success mr-2r">
+                            <i class="glyphicon glyphicon-ok"></i> 通过审核
+                        </button>
+                        <button type="button"  data-toggle="modal" data-target="#myorderOut" class="btn btn-danger mr-2r">
+                            <i class="glyphicon glyphicon-remove"></i> 驳回
+                        </button>
+                        <button type="submit" id="batch-excel" class="btn btn-white mr-2r">
+                            导出
+                        </button>
+                        <form method="post"  class="form-horizontal" role="form" id="myForm" onsubmit="return ">
+                            <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="btn-info modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4>请填写通过原因</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group" style="margin-left:40px;">
+                                                <textarea id="suresTextarea"  rows='8' cols='60' name='msg'></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button"  id='sures' class="btn btn-info">确定</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <form method="post"  class="form-horizontal" role="form" id="myForm" onsubmit="return ">
+                            <div class="modal fade" id="myorderOut"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="btn-info modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4>请填写驳回原因</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group" style="margin-left:40px;">
+                                                <textarea id='supplierTextarea' rows='8' cols='60' name='msg'></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" id="sure" class="btn btn-info">确定</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
 
                 </div>
             </div>
@@ -115,7 +167,7 @@
                         <tr class="gblack">
                             <th class="text-center"><input type="checkbox" id="checkAll"></th>
                             <th>ID</th>
-                            <th>品牌/公司全称</th>
+                            <th>简称/公司全称</th>
                             <th>是否签订协议</th>
                             <th>供应商类型</th>
                             {{--<th>折扣</th>--}}
@@ -139,10 +191,9 @@
                                     <td>简称:{{ $supplier->nam }}<br>全称:{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
-                                        {{--                                        @if($supplier->type == 1)--}}
-                                        {{--<span class="label label-danger">采销</span>--}}
-                                        {{--@elseif($supplier->type == 2)--}}
-                                        @if($supplier->type == 2)
+                                        @if($supplier->type == 1)
+                                        <span class="label label-danger">采销</span>
+                                        @elseif($supplier->type == 2)
                                             <span class="label label-warning">代销</span>
                                         @elseif($supplier->type == 3)
                                             <span class="label label-success">代发</span>
@@ -421,16 +472,16 @@
     @parent
 
     {{--供应商审核--}}
-    $('#batch-verify').click(function () {
+    {{--$('#batch-verify').click(function () {--}}
     {{--layer.confirm('确认要通过审核吗？',function(index){--}}
 
-    layer.open({
-    type: 1,
-    skin: 'layui-layer-rim',
-    area: ['420px', '240px'],
-    content: '<h5 style="text-align: center">请填写通过原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sures">确定</button>'
-    });
-    });
+    {{--layer.open({--}}
+    {{--type: 1,--}}
+    {{--skin: 'layui-layer-rim',--}}
+    {{--area: ['420px', '240px'],--}}
+    {{--content: '<h5 style="text-align: center">请填写通过原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sures">确定</button>'--}}
+    {{--});--}}
+    {{--});--}}
 
     {{--});--}}
 
@@ -444,7 +495,7 @@
     }
     });
 
-    var msg=$("#msg").val();
+    var msg=$("#suresTextarea").val();
 
     $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier,'msg': msg}, function (data) {
 
@@ -463,15 +514,15 @@
 
 
     {{--供应商关闭--}}
-    $('#batch-close').click(function () {
+    {{--$('#batch-close').click(function () {--}}
     {{--layer.confirm('确认要驳回审核吗？',function(index){--}}
 
-    layer.open({
-    type: 1,
-    skin: 'layui-layer-rim',
-    area: ['420px', '240px'],
-    content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sure">确定</button>'
-    });
+    {{--layer.open({--}}
+    {{--type: 1,--}}
+    {{--skin: 'layui-layer-rim',--}}
+    {{--area: ['420px', '240px'],--}}
+    {{--content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sure">确定</button>'--}}
+    {{--});--}}
     {{--});--}}
 
     $(document).on("click","#sure",function(obj){
@@ -481,8 +532,7 @@
     supplier.push($(this).attr('value'));
     }
     });
-    var msg=$("#msg").val();
-
+    var msg=$("#supplierTextarea").val();
 
     $.post('{{url('/supplier/ajaxClose')}}',{'_token': _token,'supplier': supplier,'msg':msg}, function (e) {
 
@@ -499,7 +549,7 @@
     },'json');
 
     });
-    });
+    {{--});--}}
 
     {{--供应商导出--}}
     $('#batch-excel').click(function () {

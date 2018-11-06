@@ -8,43 +8,10 @@
 
 @section('load_private')
     @parent
-    {{--<script>--}}
     $("#checkAll").click(function () {
     $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
 
-    $('#confirm-pay').click(function () {
-    var arr_id = [];
-    $("input[name='Order']").each(function () {
-    if ($(this).is(':checked')) {
-    arr_id.push($(this).val());
-    }
-    });
-    $.post('/payment/ajaxConfirmPay', {'_token': _token, 'arr_id': arr_id}, function (e) {
-    if (e.status) {
-    location.reload();
-    } else if (e.status == 0) {
-    alert(e.message);
-    }
-    }, 'json');
-    });
-
-    $("#payment").click(function () {
-    var arr_id = [];
-    $("input[name='Order']").each(function () {
-    if ($(this).is(':checked')) {
-    arr_id.push($(this).val());
-    }
-    });
-
-    $.post('/payment/ajaxConfirmPay', {'_token': _token, 'arr_id': arr_id}, function (e) {
-    if (e.status) {
-    location.reload();
-    } else if (e.status == 0) {
-    alert(e.message);
-    }
-    }, 'json');
-    });
 
     $('#charge').click(function () {
     layer.confirm('确认要通过审核吗？',function(index){
@@ -64,52 +31,18 @@
     },'json');
     });
     });
-    {{--导出execl--}}
-    $("#payment-excel").click(function () {
-    var id_array = [];
-    $("input[name='Order']").each(function() {
-    if($(this).is(':checked')){
-    id_array.push($(this).attr('value'));
-    }
-    });
-    post('{{url('/paymentExcel')}}',id_array);
-    });
 
-    {{--按时时间、类型导出--}}
-    $("#payment-excel-1").click(function () {
-    var payment_type = $("#payment_type").val();
-    var start_date = $("#start_date").val();
-    var end_date = $("#end_date").val();
-    var subnav = $("#subnav").val();
-    if(start_date == '' || end_date == ''){
-    alert('请选择时间');
-    }else{
-    post('{{url('/dateGetPaymentExcel')}}',{'payment_type':payment_type,'start_date':start_date,'end_date':end_date,'subnav':subnav});
+    $('.reject').click(function () {
+    var id = $(this).attr('value');
+    $.post('/payment/ajaxReject',{'_token':_token,'id':id},function (e) {
+    if(e.status){
+    location.reload();
+    }else if(e.status == 0){
+    alert(e.message);
     }
-
+    },'json');
     });
 
-    {{--post请求--}}
-    function post(URL, PARAMS) {
-    var temp = document.createElement("form");
-    temp.action = URL;
-    temp.method = "post";
-    temp.style.display = "none";
-    var opt = document.createElement("textarea");
-    opt.name = '_token';
-    opt.value = _token;
-    temp.appendChild(opt);
-    for (var x in PARAMS) {
-    var opt = document.createElement("textarea");
-    opt.name = x;
-    opt.value = PARAMS[x];
-    // alert(opt.name)
-    temp.appendChild(opt);
-    }
-    document.body.appendChild(temp);
-    temp.submit();
-    return temp;
-    };
 
 @endsection
 
@@ -126,11 +59,11 @@
             <div class="navbar-collapse collapse">
                 @include('home.payment.subnav')
 
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        <a href="{{ url('/payment/brandlist') }}">品牌付款单列表</a>
-                    </div>
-                </div>
+                {{--<div class="navbar-header">--}}
+                    {{--<div class="navbar-brand">--}}
+                        {{--<a href="{{ url('/payment/brandlist') }}">品牌付款单列表</a>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
             </div>
 
         </div>
@@ -145,42 +78,42 @@
                 </button>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-8">
-                <div class="form-inline">
-                    <div class="form-group">
-                        <a href="{{ url('/payment/create') }}" class="btn btn-white mr-2r">
-                            <i class="glyphicon glyphicon-edit"></i> 创建付款单
-                        </a>
-                    </div>
+        {{--<div class="row">--}}
+            {{--<div class="col-md-8">--}}
+                {{--<div class="form-inline">--}}
+                    {{--<div class="form-group">--}}
+                        {{--<a href="{{ url('/payment/create') }}" class="btn btn-white mr-2r">--}}
+                            {{--<i class="glyphicon glyphicon-edit"></i> 创建付款单--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
                     {{--<div class="form-group">--}}
                         {{--<a href="{{ url('/payment/brand') }}" class="btn btn-white mr-2r">--}}
                             {{--<i class="glyphicon glyphicon-edit"></i> 创建品牌付款单--}}
                         {{--</a>--}}
                     {{--</div>--}}
-                    <div class="form-group">
-                        <button type="button" id="payment-excel" class="btn btn-white mr-2r">
-                            <i class="glyphicon glyphicon-arrow-up"></i> 导出选中
-                        </button>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" id="payment-excel-1" class="btn btn-white mr-2r">
-                            <i class="glyphicon glyphicon-arrow-up"></i> 条件导出
-                        </button>
-                    </div>
-                    @if($subnav == 'waitpay')
-                        <div class="form-group">
-                            <button type="button" class="btn btn-success mr-2r" id="payment">
-                                <i class="glyphicon glyphicon-check"></i>付款
-                            </button>
-                        </div>
-                    @endif
-                </div>
-            </div>
-            <div class="col-md-4 text-right">
-                <span>付款金额：<span class="text-danger">{{ $money or 0 }}</span> 元</span>
-            </div>
-        </div>
+                    {{--<div class="form-group">--}}
+                        {{--<button type="button" id="payment-excel" class="btn btn-white mr-2r">--}}
+                            {{--<i class="glyphicon glyphicon-arrow-up"></i> 导出选中--}}
+                        {{--</button>--}}
+                    {{--</div>--}}
+                    {{--<div class="form-group">--}}
+                        {{--<button type="button" id="payment-excel-1" class="btn btn-white mr-2r">--}}
+                            {{--<i class="glyphicon glyphicon-arrow-up"></i> 条件导出--}}
+                        {{--</button>--}}
+                    {{--</div>--}}
+                    {{--@if($subnav == 'waitpay')--}}
+                        {{--<div class="form-group">--}}
+                            {{--<button type="button" class="btn btn-success mr-2r" id="payment">--}}
+                                {{--<i class="glyphicon glyphicon-check"></i>付款--}}
+                            {{--</button>--}}
+                        {{--</div>--}}
+                    {{--@endif--}}
+                {{--</div>--}}
+            {{--</div>--}}
+            {{--<div class="col-md-4 text-right">--}}
+                {{--<span>付款金额：<span class="text-danger">{{ $money or 0 }}</span> 元</span>--}}
+            {{--</div>--}}
+        {{--</div>--}}
         <div class="row scroll">
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">

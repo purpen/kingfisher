@@ -36,4 +36,32 @@ class CartModel extends BaseModel
         return $this->belongsTo('App\Models\ProductsSkuModel', 'sku_id');
     }
 
+    /**
+     * 购物车商品添加至订单中，将选中的商品在购物车中清空
+     *
+     * $user_id    用户id
+     * 数组array   $data  cart  id
+     *
+     * @return bool
+     */
+
+    public function reduceNum(array $data,$user_id)
+    {
+        if(empty($user_id)){
+            return false;
+        }
+
+        $id_arr = explode(',', $data);
+        for ($i=0;$i<count($id_arr);$i++) {
+            $id = (int)$id_arr[$i];
+            $cart = CartModel::find($id);
+            if (!$cart) continue;
+            if ($cart->user_id != $user_id) continue;
+            $cart->delete();
+        }
+        return true;
+
+
+    }
+
 }

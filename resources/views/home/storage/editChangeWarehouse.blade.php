@@ -54,10 +54,10 @@
 
                             <div class="col-sm-2">
                                 <select class="selectpicker" id="out_department" name="out_department" style="display: none;">
-                                    <option @if($change_warehouse->out_department == 1) selected @endif value="1">fiu</option>
+                                    {{--<option @if($change_warehouse->out_department == 1) selected @endif value="1">fiu</option>--}}
                                     <option @if($change_warehouse->out_department == 2) selected @endif value="2">D3IN</option>
-                                    <option @if($change_warehouse->out_department == 3) selected @endif value="3">海外</option>
-                                    <option @if($change_warehouse->out_department == 4) selected @endif value="4">电商</option>
+                                    {{--<option @if($change_warehouse->out_department == 3) selected @endif value="3">海外</option>--}}
+                                    {{--<option @if($change_warehouse->out_department == 4) selected @endif value="4">电商</option>--}}
                                 </select>
                             </div>
 
@@ -71,10 +71,10 @@
                             </div>
                             <div class="col-sm-2">
                                 <select class="selectpicker" id="in_department" name="in_department" style="display: none;">
-                                    <option @if($change_warehouse->in_department == 1) selected @endif value="1">fiu</option>
+                                    {{--<option @if($change_warehouse->in_department == 1) selected @endif value="1">fiu</option>--}}
                                     <option @if($change_warehouse->in_department == 2) selected @endif value="2">D3IN</option>
-                                    <option @if($change_warehouse->in_department == 3) selected @endif value="3">海外</option>
-                                    <option @if($change_warehouse->in_department == 4) selected @endif value="4">电商</option>
+                                    {{--<option @if($change_warehouse->in_department == 3) selected @endif value="3">海外</option>--}}
+                                    {{--<option @if($change_warehouse->in_department == 4) selected @endif value="4">电商</option>--}}
                                 </select>
                             </div>
                         </div>

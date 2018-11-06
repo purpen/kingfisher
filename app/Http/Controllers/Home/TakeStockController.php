@@ -133,6 +133,10 @@ class TakeStockController extends Controller
             return ajax_json(0, 'not found');
         }
 
+        if ($take_stock->status == 1) {
+            ajax_json(1, 'ok');
+        }
+
         $take_stock_detailed = TakeStockDetailed::where('take_stock_id', $id)->get();
         $log = '';
         try {
@@ -159,7 +163,7 @@ class TakeStockController extends Controller
 
             $take_stock->log = $log;
             $take_stock->status = 1;
-            if(!$take_stock->save()){
+            if (!$take_stock->save()) {
                 throw new \Exception("盘点日志保存失败");
             }
 
@@ -167,10 +171,10 @@ class TakeStockController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('确认盘点库存:' . $e->getMessage());
-            return ajax_json(0,$e->getMessage());
+            return ajax_json(0, $e->getMessage());
         }
 
-        return ajax_json(1,'ok');
+        return ajax_json(1, 'ok');
     }
 
     /**
@@ -218,12 +222,18 @@ class TakeStockController extends Controller
         $id = $request->input('id');
         $storage_number = $request->input('storage_number');
 
-        if (!$take_stock = TakeStockDetailed::find($id)) {
+        if (!$take_stock_detailed = TakeStockDetailed::find($id)) {
             return ajax_json(0, 'not found');
         }
 
-        $take_stock->storage_number = $storage_number;
-        $take_stock->save();
+        $take_stock = TakeStock::find($take_stock_detailed->take_stock_id);
+        if (!$take_stock || $take_stock->status == 1) {
+            return ajax_json(0, '盘点已完成，不可修改');
+        }
+
+
+        $take_stock_detailed->storage_number = $storage_number;
+        $take_stock_detailed->save();
 
         return ajax_json(1, 'ok');
     }

@@ -187,6 +187,7 @@
                         alert(e.msg);
                     }else{
                         alert('盘点调整完成');
+                        location.reload();
                     }
                 }, 'json');
             }

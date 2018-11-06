@@ -7,6 +7,7 @@ use App\Models\AssetsModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseSkuRelationModel;
+use App\Models\SkuRegionModel;
 use App\Models\StorageSkuCountModel;
 use Illuminate\Http\Request;
 
@@ -68,6 +69,50 @@ class ProductsSkuController extends Controller
                 $asset->type = 4;
                 $asset->save();
             }
+
+            $min=array_values($request->input('min'));
+            $max=array_values($request->input('max'));
+            $sell_price=array_values($request->input('sell_price'));
+            $sku_id = $productSku->id;
+            $length = $request->input('length');
+
+//          把一维数组转化成二维数组以便验证表单
+            $mins = array('min'=>$min);
+            $maxs = array('max'=>$max);
+            $sell_prices = array('sell_price'=>$sell_price);
+            $arrs = array("mins"=>'min',"maxs"=>'max',"sell_prices"=>'sell_price');
+            $res = array();
+            $result = count($mins['min']);
+
+            for ($i=0;$i<$result;$i++){
+                foreach ($arrs as $k=>$v){
+                    $res[$i][$v]=${$k}[$v][$i];
+                }
+            }
+//          判断第一行下限数量是否为1以及第二行开始下限数量是否为上一行上限数量+1
+            foreach ($res as $k => $v){
+                if ($k == 0) {
+                    if ($v['min'] != 1) {
+                        return back()->withErrors(['价格区间第一行下限数量必须从1开始！']);
+                    }
+
+                } else {
+                if ($v['min'] - $res[$k - 1]['max'] != 1) {
+                    return back()->withErrors(['价格区间从第二行开始每一行的下限数量需是上一行上限数量+1！']);
+                }
+                }
+             }
+
+            $num = intval($length);
+            for ($i = 0;$i < $num;$i++){
+                $sku_region = new SkuRegionModel();
+                $sku_region->sku_id = $sku_id;
+                $sku_region->min = $min[$i];
+                $sku_region->max = $max[$i];
+                $sku_region->sell_price = $sell_price[$i];
+                $sku_region->user_id = Auth::user()->id;
+                $sku_region->save();
+            }
             return back()->withInput();
         }else{
             return '添加失败';
@@ -91,6 +136,10 @@ class ProductsSkuController extends Controller
             $asset->path = $asset->file->small;
         }
         $sku->assets = $assets;
+
+        $region = SkuRegionModel::where('sku_id',$id)->orderBy('id','asc')->get();
+        $sku_region = $region->toArray();
+        $sku->sku_region = $sku_region;
         return ajax_json(1,'ok',$sku);
     }
 
@@ -109,7 +158,16 @@ class ProductsSkuController extends Controller
             return ajax_json(0,'该SKU已使用 不能删除');
         }
 
+        $sku_region = SkuRegionModel::where('sku_id',$id)->get();//价格区间
+
         if(ProductsSkuModel::destroy((int)$id)){
+
+            if (count($sku_region)>0) {
+                foreach ($sku_region as $v) {
+                    $v->forceDelete();
+                }
+            }
+
             return ajax_json(1,'ok');
         }else{
             return ajax_json(0,'删除失败');
@@ -132,7 +190,11 @@ class ProductsSkuController extends Controller
             'bid_price' => 'required',
             'cost_price' => 'required',
             'price' => 'required',
-            'unique_number' => 'required|unique:products_sku,unique_number,'.$sku->id,
+            'unique_number' => 'required',
+            'mins' => 'required',
+            'maxs' => 'required',
+            'sell_prices' => 'required',
+//            'unique_number' => 'required|unique:products_sku,unique_number,'.$sku->id,
         ];
         $messages = [
             'mode.required' => '颜色或型号不能为空',
@@ -140,7 +202,10 @@ class ProductsSkuController extends Controller
             'price.required' => '价格不能为空',
             'bid_price.required' => '标准进价不能为空',
             'cost_price.required' => '成本价不能为空',
-            'unique_number.unique' => '品牌编号已存在',
+            'unique_number.required' => '69码必填',
+            'mins.required' => '价格区间没填完整',
+            'maxs.required' => '价格区间没填完整',
+            'sell_prices.required' => '价格区间没填完整',
         ];
         $this->validate($request, $rules,$messages);
 
@@ -151,7 +216,7 @@ class ProductsSkuController extends Controller
         $sku->weight = $request->input('weight');
         $sku->summary = $request->input('summary');
         $sku->cover_id = $request->input('cover_id');
-        $sku->unique_number = $request->input('unique_number');
+        $sku->unique_number = $request->input('unique_number','');
         $sku->zc_quantity = $request->input('zc_quantity') ? $request->input('zc_quantity') : 0;
         if($sku->save()){
             $sku_id = $sku->id;
@@ -168,6 +233,52 @@ class ProductsSkuController extends Controller
                 $asset->type = 4;
                 $asset->save();
             }
+            DB::table('sku_region')->where('sku_id', $sku->id)->delete();
+            $min=array_values($request->input('mins'));
+            $max=array_values($request->input('maxs'));
+            $sell_price=array_values($request->input('sell_prices'));
+
+            $sku_id = $sku->id;
+            $length = $request->input('lengths');
+
+            //把一维数组转化成二维数组以便验证表单
+            $mins = array('min'=>$min);
+            $maxs = array('max'=>$max);
+            $sell_prices = array('sell_price'=>$sell_price);
+            $arrs = array("mins"=>'min',"maxs"=>'max',"sell_prices"=>'sell_price');
+            $res = array();
+            $result = count($mins['min']);
+
+            for ($i=0;$i<$result;$i++){
+                foreach ($arrs as $k=>$v){
+                    $res[$i][$v]=${$k}[$v][$i];
+                }
+            }
+//          判断第一行下限数量是否为1以及第二行开始下限数量是否为上一行上限数量+1
+            foreach ($res as $k => $v){
+                if ($k == 0) {
+                    if ($v['min'] != 1) {
+                        return back()->withErrors(['价格区间第一行下限数量必须从1开始！']);
+                    }
+
+                } else {
+                    if ($v['min'] - $res[$k - 1]['max'] != 1) {
+                        return back()->withErrors(['价格区间从第二行开始每一行的下限数量需是上一行上限数量+1！']);
+                    }
+                }
+            }
+
+            $num = intval($length);
+            for ($i = 0;$i < $num;$i++){
+                $sku_region = new SkuRegionModel();
+                $sku_region->sku_id = $sku_id;
+                $sku_region->min = $min[$i];
+                $sku_region->max = $max[$i];
+                $sku_region->sell_price = $sell_price[$i];
+                $sku_region->user_id = Auth::user()->id;
+                $sku_region->save();
+            }
+
             return back()->withInput();
         }else{
             return 'sku更改失败';
@@ -181,10 +292,8 @@ class ProductsSkuController extends Controller
      */
     public function ajaxSkus(Request $request){
         $supplier_id = $request->input('supplier_id');
-//        var_dump($supplier_id);die;
         $productsSku = new ProductsSkuModel();
         $skus = $productsSku->lists(null,$supplier_id);
-//var_dump($skus);die;
         return ajax_json(1,'ok',$skus);
     }
 

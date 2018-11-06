@@ -67,11 +67,19 @@ class IndexController extends Controller
          */
         $prompt = $this->prompt();
 
-        return view('home.index', [
-            'content' => $content,
-            'messages' => $messages,
-            'prompt' => $prompt,
-        ]);
+        $user_id = Auth::user()->id;
+        $names = UserModel::where('id',$user_id)->select('realname')->first();
+        if ($names->realname == ''){
+            return redirect('/user/edit');
+        }else{
+            return view('home.index', [
+                'content' => $content,
+                'messages' => $messages,
+                'prompt' => $prompt,
+            ]);
+        }
+
+
     }
 
     /**

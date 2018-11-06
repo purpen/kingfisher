@@ -91,14 +91,14 @@
     });
 
     {{--主管领导驳回审核--}}
-    $('#rejected').click(function () {
+    {{--$('#rejected').click(function () {--}}
 
-    layer.open({
-    type: 1,
-    skin: 'layui-layer-rim',
-    area: ['420px', '240px'],
-    content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'
-    });
+    {{--layer.open({--}}
+    {{--type: 1,--}}
+    {{--skin: 'layui-layer-rim',--}}
+    {{--area: ['420px', '240px'],--}}
+    {{--content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'--}}
+    {{--});--}}
 
     $(document).on("click","#sure",function(obj){
     var supplier = [];
@@ -107,7 +107,7 @@
     supplier.push($(this).attr('value'));
     }
     });
-    var msg=$("#msg").val();
+    var msg=$("#purchaseStatusTextarea").val();
 
     var id = getOnInput();
     $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id,'msg':msg}, function (e) {
@@ -119,7 +119,7 @@
     }
     },'json');
     });
-    });
+    {{--});--}}
 
     {{--主管领导通过审核--}}
     $('#approved').click(function () {
@@ -348,19 +348,28 @@
                 <a href="{{ url('/purchase/create') }}" class="btn btn-white mr-2r">
                     <i class="glyphicon glyphicon-edit"></i> 新增采购单
                 </a>
-                @if (!$verified)
-                    <button type="button" class="btn btn-success mr-2r" id="verified">
-                        <i class="glyphicon glyphicon-check"></i> 审核
-                    </button>
-                @endif
+                {{--@if (!$verified)--}}
+                    {{--<button type="button" class="btn btn-success mr-2r" id="verified">--}}
+                        {{--<i class="glyphicon glyphicon-check"></i> 审核--}}
+                    {{--</button>--}}
+                {{--@endif--}}
 
                 @if ($verified == 1)
-                    <button type="button" class="btn btn-success mr-2r" id="approved">
-                        <i class="glyphicon glyphicon-ok"></i> 通过审批
-                    </button>
-                    <button type="button" class="btn btn-warning mr-2r" id="rejected">
-                        <i class="glyphicon glyphicon-remove"></i> 驳回审批
-                    </button>
+                    {{--<button type="button" class="btn btn-success mr-2r" id="approved">--}}
+                        {{--<i class="glyphicon glyphicon-ok"></i> 通过审批--}}
+                    {{--</button>--}}
+                    {{--<button type="button" class="btn btn-warning mr-2r" id="rejected">--}}
+                        {{--<i class="glyphicon glyphicon-remove"></i> 驳回审批--}}
+                    {{--</button>--}}
+
+
+                        <button type="button" class="btn btn-success mr-2r" id="approved">
+                            <i class="glyphicon glyphicon-ok"></i> 通过审批
+                        </button>
+                        <button class="btn btn-magenta btn-sm mr-3r" data-toggle="modal"  data-target="#myModal" >
+                            <i class="glyphicon glyphicon-remove"></i> 驳回
+                        </button>
+
                 @endif
                 @if ($verified == 9)
                     <button type="button" class="btn btn-danger mr-2r" id="returned">
@@ -377,6 +386,29 @@
 
             </div>
         </div>
+        <form method="post"  class="form-horizontal" role="form" id="myForm" onsubmit="return ">
+            <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="btn-info modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4>驳回原因</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="form-group" style="margin-left:40px;">
+                                <textarea id='purchaseStatusTextarea' rows='8' cols='60' name='msg'></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="sure" class="btn btn-info">确定</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
         <div id="loading" class="loading" style="display: none;">Loading...</div>
 
         <div class="row scroll">

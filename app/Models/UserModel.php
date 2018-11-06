@@ -40,7 +40,7 @@ class UserModel extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $fillable = [
-        'account', 'phone', 'email', 'realname', 'position', 'status', 'sex' ,'cover_id' , 'mould_id'
+        'account', 'phone', 'realname', 'position', 'status', 'sex' ,'cover_id' , 'mould_id'
     ];
 
     /**
@@ -165,6 +165,14 @@ class UserModel extends Model implements AuthenticatableContract,
     public function distribution()
     {
         return $this->hasOne('App\Models\Distribution', 'user_id');
+    }
+
+    /**
+     * 一对一关联经销商表
+     */
+    public function distributors()
+    {
+        return $this->hasOne('App\Models\DistributorModel', 'user_id');
     }
 
     /**

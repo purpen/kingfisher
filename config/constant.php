@@ -11,6 +11,13 @@ return [
 //    'user_id_sales' => 34,
     'store_id' => env('STORE_ID'),
     'storage_id' => env('STORAGE_ID'),
+
+//    为经销商订单接口加的：
+    'D3IN_user_id_sales' => env('D3IN_USER_ID_SALES'),
+    'D3IN_store_id' => env('D3IN_STORE_ID'),
+    'D3IN_storage_id' => env('D3IN_STORAGE_ID'),
+    'D3IN_over_time' => env('D3IN_OVER_TIME',24*60*60),
+
     'sku_count' => 10000,
     // 城市列表
     'city' => [

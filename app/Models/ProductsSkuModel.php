@@ -116,6 +116,34 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     * 一对多关联sku_region 商品价格区间表
+     */
+    public function SkuRegion()
+    {
+        return $this->hasMany('App\Models\SkuRegionModel', 'sku_id');
+    }
+
+    /**
+     * SKU封面图为空时,获取商品图
+     */
+    public function getFirstProductsImgAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 4])
+            ->orderBy('id', 'desc')
+            ->first();
+        if (empty($asset)) {
+            $result = AssetsModel::where(['target_id' => $this->product_id, 'type' => 1])
+                ->orderBy('id', 'desc')
+                ->first();
+
+            return $result->file->p500;
+        }
+
+        return $asset->file->small;
+    }
+
+    /**
      * 获取SKU封面图
      */
     public function getFirstImgAttribute()
@@ -145,6 +173,14 @@ class ProductsSkuModel extends BaseModel
         }
 
         return $asset->file->p500;
+    }
+
+    //获取sku可售库存
+    public function getCountNumAttribute()
+    {
+        $sell_count = $this->quantity - $this->reserve_count - $this->pay_count;
+
+        return $sell_count;
     }
 
     /**
@@ -200,6 +236,33 @@ class ProductsSkuModel extends BaseModel
 
         }
         return $skus;
+    }
+
+    /**
+     * 为含有sku_id的数组对象添加该sku的详细信息2
+     * @param  $purchase_sku_relation
+     * @return array
+     */
+    public function detailedSuks($purchase_sku_relation)
+    {
+        foreach ($purchase_sku_relation as $k => $purchase_sku) {
+            if (!$sku = ProductsSkuModel::find($purchase_sku->sku_id)) {
+                return $purchase_sku_relation;
+            };
+            $purchase_sku_relation[$k]['product_number'] = $sku->product['number'];
+            $purchase_sku_relation[$k]->number = $sku->number;
+            $purchase_sku_relation[$k]->name = $sku->product['title'];
+            $purchase_sku_relation[$k]->mode = $sku->mode;
+            $purchase_sku_relation[$k]->sku_price = $sku->price;
+            $purchase_sku_relation[$k]->sale_price = $sku->product['sale_price'];
+
+            if ($sku->assets) {
+                $purchase_sku_relation[$k]->path = $sku->assets->file->small;
+            } else {
+                $purchase_sku_relation[$k]->path = url('images/default/erp_product.png');
+            }
+        }
+        return $purchase_sku_relation;
     }
 
     /**
@@ -409,6 +472,26 @@ class ProductsSkuModel extends BaseModel
         }
         foreach ($order_sku as $sku) {
             if (!$this->decreaseReserveCount($sku->sku_id, $sku->quantity)) {
+                return false;
+            };
+        }
+        return true;
+    }
+
+    /**
+     * 订单付款时，增加仓库付款占货数量
+     * @param $order_id
+     * @return bool
+     */
+    public function orderIncreasePayCount($order_id)
+    {
+        $order_id = (int)$order_id;
+        $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
+        if (!$order_sku) {
+            return false;
+        }
+        foreach ($order_sku as $sku) {
+            if (!$this->increasePayCount($sku->sku_id, $sku->quantity)) {
                 return false;
             };
         }

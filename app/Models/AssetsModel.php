@@ -34,6 +34,23 @@ class AssetsModel extends BaseModel
     {
         return $this->hasOne('App\Models\ProductsModel', 'cover_id');
     }
+    /**
+     * 一对一关联products表商品详情
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productProductDetails()
+    {
+        return $this->hasOne('App\Models\ProductsModel', 'product_details');
+    }
+
+//    /**
+//     * 一对一关联distributor表
+//     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+//     */
+//    public function distributor()
+//    {
+//        return $this->hasOne('App\Models\DistributorModel', 'license_id');
+//    }
 
     /**
      * 一对一关联productSku表
@@ -86,6 +103,60 @@ class AssetsModel extends BaseModel
     }
 
     /**
+     * 一对一关联供应商电子版合同
+     */
+    public function supplierElectronicContractReport()
+    {
+        return $this->hasOne('App\Models\SupplierModel', 'electronic_contract_report_id');
+    }
+
+    //一对一关联经销商表门店正面照片
+    public function distributorFront()
+    {
+        return $this->hasOne('App\Models\DistributorModel','front_id');
+    }
+    //一对一关联经销商表门店内部照片
+    public function distributorInside()
+    {
+        return $this->hasOne('App\Models\DistributorModel','Inside_id');
+    }
+    //一对一关联经销商表身份证人像面照片
+    public function distributorPortrait()
+    {
+        return $this->hasOne('App\Models\DistributorModel','portrait_id');
+    }
+    //一对一关联经销商表身份证国徽面照片
+    public function distributorNationalEmblem()
+    {
+        return $this->hasOne('App\Models\DistributorModel','national_emblem_id');
+    }
+    //一对一关联订单表经销商银行转账凭证图片
+    public function order()
+    {
+        return $this->hasOne('App\Models\OrderModel','voucher_id');
+    }
+    //一对一关联订单表经销商电子版合同照片
+    public function distributorContract()
+    {
+        return $this->hasOne('App\Models\DistributorModel','contract_id');
+    }
+
+
+    //一对一关联发票表一般纳税人证明照片
+    public function invoice()
+    {
+        return $this->hasOne('App\Models\InvoiceModel', 'prove_id');
+    }
+
+    //一对一关联历史发票表一般纳税人证明照片
+    public function historyInvoice()
+    {
+        return $this->hasOne('App\Models\HistoryInvoiceModel', 'prove_id');
+    }
+
+
+
+    /**
      * 获取原文件及缩略图/头像
      */
     public function getFileAttribute()
@@ -99,6 +170,7 @@ class AssetsModel extends BaseModel
             'avatar' => config('qiniu.url') . $this->path . '-ava',
             'p500' => config('qiniu.url') . $this->path . '-p500',
             'p800' => config('qiniu.url') . $this->path . '-p800',
+            'p1080' => config('qiniu.url') . $this->path . '-p1080',
         ];
     }
 

@@ -93,9 +93,9 @@
                 <div class="col-md-8">
                     <div class="form-inline">
                         <div class="form-group">
-                            <a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
+                            {{--<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
                                 <i class="glyphicon glyphicon-edit"></i> 创建订单
-                            </a>
+                            </a>--}}
                             @if ($status == 5)
                                 <button type="button" id="batch-verify" class="btn btn-success mr-2r">
                                     <i class="glyphicon glyphicon-ok"></i> 审批
@@ -109,9 +109,9 @@
                                 <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
                                     <i class="glyphicon glyphicon-backward"></i> 反审
                                 </button>
-                                <button type="button" class="btn btn-success mr-2r" id="send-order">
+                               {{-- <button type="button" class="btn btn-success mr-2r" id="send-order">
                                     <i class="glyphicon glyphicon-print"></i> 打印发货
-                                </button>
+                                </button>--}}
                             @endif
 
                         </div>
@@ -124,37 +124,37 @@
                                 <li>
                                     <a href="#" id="order-excel">导出</a>
                                 </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel">代发品牌订单导出</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel">分销渠道订单导出</a>
-                                </li>
+                                {{--<li>--}}
+                                    {{--<a href="#" id="supplier-order-excel">代发品牌订单导出</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="distributor-order-excel">分销渠道订单导出</a>--}}
+                                {{--</li>--}}
                             </ul>
                         </div>
 
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                导入 <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#" id="in_order">导入</a>
-                                </li>
+                        {{--<div class="btn-group">--}}
+                            {{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                {{--导入 <span class="caret"></span>--}}
+                            {{--</button>--}}
+                            {{--<ul class="dropdown-menu">--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="in_order">导入</a>--}}
+                                {{--</li>--}}
                                 {{--<li>--}}
                                 {{--<a href="#" id="zc_order">众筹订单导入</a>--}}
                                 {{--</li>--}}
-                                <li>
-                                    <a href="#" id="logistics_order">物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="distributor-order-excel-input">分销渠道订单信息导入</a>
-                                </li>
-                            </ul>
-                        </div>
+                                {{--<li>--}}
+                                    {{--<a href="#" id="logistics_order">物流信息导入</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>--}}
+                                {{--</li>--}}
+                                {{--<li>--}}
+                                    {{--<a href="#" id="distributor-order-excel-input">分销渠道订单信息导入</a>--}}
+                                {{--</li>--}}
+                            {{--</ul>--}}
+                        {{--</div>--}}
 
                         {{--<div class="form-group">--}}
                         {{--<button type="button" id="order-excel" class="btn btn-white mr-2r">--}}
@@ -183,6 +183,7 @@
                                         @if($tab_menu == 'servicing')<form id="per_page_from" action="{{ url('/order/servicingOrderList') }}" method="POST">@endif
                                             @if($tab_menu == 'finished')<form id="per_page_from" action="{{ url('/order/finishedOrderList') }}" method="POST">@endif
                                                 @if($tab_menu == 'closed')<form id="per_page_from" action="{{ url('/order/closedOrderList') }}" method="POST">@endif
+                                                @if($tab_menu == 'invoice')<form id="per_page_from" action="{{ url('/invoice/lists') }}" method="POST">@endif
                                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                                                     <div class="datatable-length">
                                                         <select class="form-control selectpicker input-sm per_page" name="per_page">
@@ -237,7 +238,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-12" style="    margin-left: -16px;margin-top: 20px;">
 
                                 <label for="order_number_search" class="col-sm-1 control-label">订单编号</label>
                                 <div class="col-sm-2">
@@ -248,19 +249,23 @@
                                     <input type="text" id="product_name_search" name="product_name" value="{{ $product_name }}" class="form-control">
                                 </div>
 
-                                <label for="buyer_name_search" class="col-sm-1 control-label">收货人</label>
+                                <label for="buyer_name_search"  style="margin-left:20px;" class="col-sm-1 control-label">收货人</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="buyer_name_search" name="buyer_name" value="{{ $buyer_name }}"  class="form-control">
                                 </div>
+                                <br>
+                                <br>
+                                <br>
                                 <label for="buyer_phone" class="col-sm-1 control-label">手机号</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="buyer_phone_search" name="buyer_phone" value="{{ $buyer_phone }}" class="form-control">
                                 </div>
+                                <div class="form-group mb-2  text-right">
+                                    <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
+                                </div>
                             </div>
 
-                            <div class="form-group mb-2  text-right">
-                                <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
-                            </div>
+
                         </div>
 
                     </form>
@@ -276,82 +281,52 @@
                         <thead>
                         <tr class="gblack">
                             <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                            <th>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">提醒</span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">提醒</a>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">退款</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">锁单</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无法送达</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">货到付款</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">预售</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </th>
+                            {{--<th>--}}
+                                {{--<div class="dropdown">--}}
+                                    {{--<button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">--}}
+                                        {{--<span class="title">提醒</span>--}}
+                                        {{--<span class="caret"></span>--}}
+                                    {{--</button>--}}
+                                    {{--<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">--}}
+                                        {{--<li role="lichoose">--}}
+                                            {{--<a role="menuitem" tabindex="-1" href="javascript:void(0);">提醒</a>--}}
+                                        {{--</li>--}}
+                                        {{--<li class="divider"></li>--}}
+                                        {{--<li role="lichoose">--}}
+                                            {{--<a role="menuitem" tabindex="-1" href="javascript:void(0);">退款</a>--}}
+                                        {{--</li>--}}
+                                        {{--<li role="lichoose">--}}
+                                            {{--<a role="menuitem" tabindex="-1" href="javascript:void(0);">锁单</a>--}}
+                                        {{--</li>--}}
+                                        {{--<li role="lichoose">--}}
+                                            {{--<a role="menuitem" tabindex="-1" href="javascript:void(0);">无法送达</a>--}}
+                                        {{--</li>--}}
+                                        {{--<li role="lichoose">--}}
+                                            {{--<a role="menuitem" tabindex="-1" href="javascript:void(0);">货到付款</a>--}}
+                                        {{--</li>--}}
+                                        {{--<li role="lichoose">--}}
+                                            {{--<a role="menuitem" tabindex="-1" href="javascript:void(0);">预售</a>--}}
+                                        {{--</li>--}}
+                                    {{--</ul>--}}
+                                {{--</div>--}}
+                            {{--</th>--}}
                             <th>
                                 状态
                             </th>
                             <th>
-                                店铺名
+                                门店名称
                             </th>
-                            <th>订单号/下单时间</th>
-                            <th>买家</th>
-                            <th>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">买家备注</span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </th>
-                            <th>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">卖家备注</span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">有卖家备注</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无卖家备注</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </th>
+                            <th>订单号</th>
+                            <th>下单时间</th>
+                            <th>付款方式</th>
+                            <th>收货人</th>
                             <th>
                                 物流/运单号
                             </th>
                             <th>
-                                数量
+                                商品数量
                             </th>
-                            <th>实付/运费</th>
+                            <th>总金额</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -361,13 +336,12 @@
                                 <td class="text-center">
                                     <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $order->id }}">
                                 </td>
-                                <td></td>
                                 <td>
                                     @if (in_array($order->status, array(0)))
                                         <span class="label label-default">{{$order->status_val}}</span>
                                     @endif
 
-                                    @if (in_array($order->status, array(1,5,8)))
+                                    @if (in_array($order->status, array(1,5,6,8)))
                                         <span class="label label-danger">{{$order->status_val}}</span>
                                     @endif
 
@@ -375,20 +349,19 @@
                                         <span class="label label-success">{{$order->status_val}}</span>
                                     @endif
                                 </td>
-                                <td>{{$order->store ? $order->store->name : ''}}</td>
-                                <td class="magenta-color">
-                                    <span>{{$order->number}}</span><br>
-                                    <small class="text-muted">{{$order->order_start_time}}</small>
+                                <td>{{$order->store_name ? $order->store_name : ''}}</td>
+                                <td>
+                                    {{$order->number}}
                                 </td>
+                                <td>{{$order->order_start_time}}</td>
+                                <td>{{$order->payment_type}}</td>
                                 <td>{{$order->buyer_name}}</td>
-                                <td>{{$order->buyer_summary}}</td>
-                                <td>{{$order->seller_summary}}</td>
                                 <td>
                                     <span>{{$order->logistics ? $order->logistics->name : ''}}</span><br>
                                     <small class="text-muted">{{$order->express_no}}</small>
                                 </td>
                                 <td>{{$order->count}}</td>
-                                <td>{{$order->total_money}} / {{$order->freight}}</td>
+                                <td>{{$order->total_money}}</td>
                                 <td tdr="nochect">
                                     <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}}" active="1">
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
@@ -402,9 +375,9 @@
                                     @endrole
 
                                     @if ($status == 8)
-                                        <button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
+                                        {{--<button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
                                             <i class="glyphicon glyphicon-hand-right"></i> 手动发货
-                                        </button>
+                                        </button>--}}
                                     @endif
                                 </td>
                             </tr>
@@ -692,10 +665,10 @@
     alert('订单ID获取异常');
     return false;
     }
-    if(logistics_id == ''){
-    alert('请选择物流');
-    return false;
-    }
+    {{--if(logistics_id == ''){--}}
+    {{--alert('请选择物流');--}}
+    {{--return false;--}}
+    {{--}--}}
     var regobj = new RegExp("^[0-9]*$");
     if(logistics_no == '' || !regobj.test(logistics_no)){
     alert('物流单号格式不正确');
@@ -826,7 +799,7 @@
     var buyer_name = $("#buyer_name").val();
     var buyer_tel = $("#buyer_tel").val();
     var buyer_phone = $("#buyer_phone").val();
-    var express_id = $("#express_id").val();
+    {{--var express_id = $("#express_id").val();'express_id': express_id,--}}
     var storage_id = $("#storage_id").val();
     var buyer_address = $("#buyer_address").val();
     var buyer_zip = $("#buyer_zip").val();
@@ -838,7 +811,7 @@
     $.ajax({
     type: "POST",
     url: "{{url('/order/ajaxUpdate')}}",
-    data:{'_token': _token, 'order_id': order_id, 'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'express_id': express_id,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary,'buyer_province':buyer_province,'buyer_city':buyer_city,'buyer_county':buyer_county},
+    data:{'_token': _token, 'order_id': order_id,'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary,'buyer_province':buyer_province,'buyer_city':buyer_city,'buyer_county':buyer_county},
     dataType: "json",
     success: function (e) {
     if(!e.status){
@@ -909,6 +882,12 @@
     // 审单
     $('#batch-verify').click(function () {
     layer.confirm('确认要通过审批吗？',function(index){
+    {{--var storage_id = $("select[name='storage_id']").val();--}}
+    {{--if(storage_id == ''){--}}
+    {{--layer.msg('请点击查看选择仓库！');--}}
+    {{--return false;--}}
+    {{--}--}}
+
     var order = [];
     $("input[name='Order']").each(function() {
     if($(this).is(':checked')){

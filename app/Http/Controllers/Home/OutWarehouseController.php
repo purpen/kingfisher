@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\KdnOrderTracesSub;
+use App\Jobs\PushExpressInfo;
 use App\Models\ChangeWarehouseModel;
 use App\Models\ConsignorModel;
+use App\Models\LogisticsModel;
+use App\Models\OrderModel;
 use App\Models\OutWarehouseSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
@@ -97,6 +101,11 @@ class OutWarehouseController extends Controller
                 default:
                     return view('errors.503');
             }
+            if ($out_warehouse->order) {
+                $out_warehouse->order_send_time = $out_warehouse->order->order_send_time;
+            } else {
+                $out_warehouse->order_send_time = '';
+            }
             $out_warehouse->storage_name = $out_warehouse->storage->name;
             if ($out_warehouse->user) {
                 $out_warehouse->user_name = $out_warehouse->user->realname;
@@ -109,7 +118,8 @@ class OutWarehouseController extends Controller
         return view('home/storage.returnedOutWarehouse', [
             'out_warehouses' => $out_warehouses,
             'tab_menu' => $this->tab_menu,
-            'where' => $where
+            'where' => $where,
+            'logistics_list' => [],
         ]);
     }
 
@@ -154,10 +164,13 @@ class OutWarehouseController extends Controller
 
         }
 
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id', 'name'])->get();
+
         return view('home/storage.returnedOutWarehouse', [
             'out_warehouses' => $out_warehouses,
             'tab_menu' => $this->tab_menu,
-            'where' => $where
+            'where' => $where,
+            'logistics_list' => $logistics_list,
         ]);
     }
 
@@ -297,6 +310,118 @@ class OutWarehouseController extends Controller
         }
     }
 
+    // 仓库订单发货处理 -- 2018年09月13日16:19:02
+    public function ajaxSendOut(Request $request)
+    {
+        try {
+            $order_id = (int)$request->input('order_id');
+            $order_model = OrderModel::find($order_id);
+
+            // 1、验证订单状态，仅待发货订单，才继续
+            if ($order_model->status != 8 || $order_model->suspend == 1) {
+                return ajax_json(0, 'error', '该订单不是待发货订单');
+            }
+
+            DB::beginTransaction();
+
+            $order_model->send_user_id = Auth::user()->id;
+            $order_model->order_send_time = date("Y-m-d H:i:s");
+
+            if (!$order_model->changeStatus($order_id, 10)) {
+                DB::rollBack();
+                Log::error('Send Order ID:' . $order_id . '订单发货修改状态错误');
+                return ajax_json(0, 'error', '订单发货修改状态错误');
+            }
+
+
+            //手动发货，获取快递公司ID  快递单号
+            $logistics_id = $request->input('logistics_id');
+            $logistics_no = $request->input('logistics_no');
+
+            if ($LogisticsModel = LogisticsModel::find($logistics_id)) {
+                $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
+            } else {
+                DB::rollBack();
+                return ajax_json(0, 'error', '物流不存在');
+            }
+
+            $order_model->express_id = $logistics_id;
+
+            //快递单号保存
+            $order_model->express_no = $logistics_no;
+            if (!$order_model->save()) {
+                DB::rollBack();
+                Log::error('ID:' . $order_id . '订单运单号保存失败');
+                return ajax_json(0, 'error', '订单运单号保存失败');
+            }
+
+            //订阅订单物流
+            $KdnOrderTracesSub = new KdnOrderTracesSub();
+            $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
+
+
+            // 编辑出库处理
+            $out_warehouse_model = OutWarehousesModel::query()->where(['target_id' => $order_id, 'type' => 2])->first();
+            $out_warehouse_model->out_count = $out_warehouse_model->count;
+            $out_warehouse_model->storage_status = 5;
+            $out_warehouse_model->summary = '';
+            if ($out_warehouse_model->save()) {
+                $sku_arr = [];
+                $out_sku_s = $out_warehouse_model->outWarehouseSkuRelation;
+                foreach ($out_sku_s as $out_sku) {
+
+                    $out_sku->out_count = $out_sku->count;
+                    if (!$out_sku->save()) {
+                        DB::roolBack();
+                        return view('errors.503');
+                    }
+
+                    //减少商品/SKU 总库存
+                    $skuModel = new ProductsSkuModel();
+                    if (!$skuModel->reduceInventory($out_sku->sku_id, $out_sku->count)) {
+                        DB::roolBack();
+                        return view('errors.503');
+                    }
+
+                    //如果为订单出库，修改付款占货
+                    if ($out_warehouse_model->type == 2) {
+                        if (!$skuModel->decreasePayCount($out_sku->sku_id, $out_sku->count)) {
+                            DB::rollBack();
+                            Log::error('订单发货修改付款占货比错误');
+                            return view('errors.503');
+                        }
+                    }
+
+
+                    $sku_arr[$out_sku->sku_id] = $out_sku->count;
+                }
+
+
+                //减少对应仓库/部门 SKU库存
+                $storage_id = $out_warehouse_model->storage_id;
+                $department = $out_warehouse_model->department;
+                $storage_sku_count = new StorageSkuCountModel();
+                if (!$storage_sku_count->out($storage_id, $department, $sku_arr)) {
+                    DB::roolBack();
+                    return view('errors.503');
+                }
+
+            } else {
+                DB::roolBack();
+                return view('errors.503');
+            }
+
+
+            DB::commit();
+
+            return ajax_json(1, 'ok');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+        }
+
+    }
+
     /*
      * 完成出库搜索
      *
@@ -348,11 +473,9 @@ class OutWarehouseController extends Controller
         }
 
 
-
-
     }
 
-    //采购退货货单出库审核
+//采购退货货单出库审核
     public function verifyReturned(Request $request)
     {
         $id = (int)$request->input('id');
@@ -373,7 +496,7 @@ class OutWarehouseController extends Controller
         return ajax_json(1, 'ok');
     }
 
-    //订单出库审核
+//订单出库审核
     public function verifyOrder(Request $request)
     {
         $id = (int)$request->input('id');
@@ -394,7 +517,7 @@ class OutWarehouseController extends Controller
         return ajax_json(1, '审核成功');
     }
 
-    //调拨库存审核
+//调拨库存审核
     public function verifyChange(Request $request)
     {
         $id = (int)$request->input('id');

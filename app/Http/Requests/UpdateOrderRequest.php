@@ -24,7 +24,8 @@ class UpdateOrderRequest extends Request
     public function rules()
     {
         return [
-            'express_id' => 'required|integer',        //物流ID
+//            'express_id' => 'required|integer',        //物流ID
+            'express_id' => 'integer',        //物流ID
             'storage_id' => 'required|integer',
             'buyer_name' => 'required',	               //收货人姓名
             'buyer_tel' => 'regex:/^[0-9]+$/',          //收货人电话
@@ -39,7 +40,7 @@ class UpdateOrderRequest extends Request
     public function messages()
     {
         return [
-            'express_id.required' => '请选择物流',
+//            'express_id.required' => '请选择物流',
             'storage_id.required' => '请选择仓库',
             'buyer_name.required' => '收货人姓名不能为空',
             'buyer_phone.required' => '收货人手机不能为空',

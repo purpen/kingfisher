@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+//分销商表
 class Distribution extends BaseModel
 {
     protected $table = 'distribution';

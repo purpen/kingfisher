@@ -23,19 +23,19 @@
             <input type="hidden" id="order_id" value="@{{id}}">
             
             <div class="form-group">
-                <label class="col-sm-1 control-label">物流公司</label>
-                <div class="col-sm-3">
-                    <select class="selectpicker" id="express_id" name="logistic_id" style="display: none;">
-                        <option value="" >选择物流</option>
-                        @{{ #logistic_list }}
-                        <option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>
-                        @{{ /logistic_list }}
-                    </select>
-                </div>
+                {{--<label class="col-sm-1 control-label">物流公司</label>--}}
+                {{--<div class="col-sm-3">--}}
+                    {{--<select class="selectpicker" id="express_id" name="logistic_id" style="display: none;">--}}
+                        {{--<option value="" >选择物流</option>--}}
+                        {{--@{{ #logistic_list }}--}}
+                        {{--<option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>--}}
+                        {{--@{{ /logistic_list }}--}}
+                    {{--</select>--}}
+                {{--</div>--}}
     
                 <label class="col-sm-1 control-label">发货仓库</label>
                 <div class="col-sm-3">
-                    <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
+                    <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;" required>
                         <option value="" >选择仓库</option>
                         @{{ #storage_list }}
                         <option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>
@@ -48,46 +48,46 @@
             <div class="form-group">                
                 <label class="col-sm-1 control-label">收货人</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="收货人" type="text" class="form-control order" id="buyer_name" name="buyer_name" value="@{{buyer_name}}">
+                    <input validate="" disabled showname="收货人" type="text" class="form-control order" id="buyer_name" name="buyer_name" value="@{{buyer_name}}">
                 </div>
                 <label class="col-sm-1 control-label">手机号</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control order mobile" id="buyer_phone" name="buyer_phone" value="@{{ buyer_phone }}">
+                    <input type="text" disabled class="form-control order mobile" id="buyer_phone" name="buyer_phone" value="@{{ buyer_phone }}">
                 </div>
                 <label class="col-sm-1 control-label">电话号码</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="收货人" type="text" class="form-control order" id="buyer_tel" name="buyer_tel" value="@{{ buyer_tel }}">
+                    <input validate="" disabled showname="收货人" type="text" class="form-control order" id="buyer_tel" name="buyer_tel" value="@{{ buyer_tel }}">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-1 control-label">省份</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="省份" type="text" class="form-control order" id="buyer_province" name="buyer_province" value="@{{buyer_province}}">
+                    <input validate="" disabled  showname="省份" type="text" class="form-control order"   value="@{{province}}">
                 </div>
                 <label class="col-sm-1 control-label">市</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control order mobile" id="buyer_city" name="buyer_city" value="@{{ buyer_city }}">
+                    <input type="text" disabled  class="form-control order mobile"   value="@{{ city }}">
                 </div>
                 <label class="col-sm-1 control-label">区/县</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="" type="text" class="form-control order" id="buyer_county" name="buyer_county" value="@{{ buyer_county }}">
+                    <input validate="" disabled  showname="" type="text" class="form-control order"  value="@{{ county }}">
                 </div>
                 <label class="col-sm-1 control-label">镇</label>
                 <div class="col-sm-2">
-                    <input validate="" showname="" type="text" class="form-control order" id="buyer_township" name="buyer_township" value="@{{ buyer_township }}">
+                    <input validate="" disabled  showname="" type="text" class="form-control order"    value="@{{ town }}">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-1 control-label">详细地址</label>
                 <div class="col-sm-5">
-                    <input type="text" class="form-control order mobile" id="buyer_address" name="buyer_address" value="@{{ buyer_address }}">
+                    <input type="text" disabled class="form-control order mobile" id="buyer_address" name="buyer_address" value="@{{ buyer_address }}">
                 </div>
                 
                 <label class="col-sm-1 control-label">邮政编码</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control order mobile" id="buyer_zip" name="buyer_zip" value="@{{ buyer_zip }}">
+                    <input type="text" disabled class="form-control order mobile" id="buyer_zip" name="buyer_zip" value="@{{ buyer_zip }}">
                 </div>
                 
             </div>
@@ -97,11 +97,11 @@
         <form id="form-product" role="form" class="form-horizontal mt-2r" style="display:none;">
             <div class="form-group">
                 <div class="col-sm-2">
-                    <div class="ml-4r">
-                        <a href="#" class="btn btn-magenta" data-toggle="modal" data-target="#addproduct" id="addproduct-button">
-                            <i class="glyphicon glyphicon-plus"></i> 添加赠品
-                        </a>
-                    </div>
+                    {{--<div class="ml-4r">--}}
+                        {{--<a href=" " class="btn btn-magenta" data-toggle="modal" data-target="#addproduct" id="addproduct-button">--}}
+                            {{--<i class="glyphicon glyphicon-plus"></i> 添加赠品--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
                 </div>
                 <div class="col-sm-10 text-right">
                     <div class="mr-3r">
@@ -217,7 +217,7 @@
                 
                 <label class="col-sm-1 control-label">付款时间</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" disabled="disabled">
+                    <input type="text" class="form-control" disabled="disabled" value="@{{ payment_time }}">
                 </div>
             </div>
 

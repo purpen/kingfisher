@@ -164,54 +164,47 @@
     </style>
 </head>
 {{--打印出货单模板--}}
-@{{#order}}
-<div id="">
+    @{{#order}}
+    <div id="">
 
-    <h3 class="" style="text-align: center;">太火鸟出库单</h3>
-    <br>
-    <div class="row">
-        <div class="col-lg-4">收货人: @{{buyer_name}}</div>
-        <div class="col-lg-4">手机: @{{ buyer_phone }}</div>
-        <div class="col-lg-4">出货日期: @{{ order_send_time }}</div>
+        <h3 class="" style="text-align: center;">出库单</h3>
+        <br>
+        <div class="row">
+            <div class="col-lg-6">订单编号: @{{ out_warehouse_number }}</div>
+            <div class="col-lg-6">应出货日期: @{{ outWarehousesTime }}</div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-6">收货人: @{{buyer_name}}</div>
+            <div class="col-lg-6">手机: @{{ buyer_phone }}</div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-10">收货地址: @{{ province }} @{{ city }} @{{ buyer_address }}</div>
+        </div>
+        <br>
+        <table class="table table-bordered">
+            <tr>
+                <td>商品编号</td>
+                <td>商品型号</td>
+                <td>商品名称</td>
+                <td>商品型号</td>
+                <td>数量</td>
+            </tr>
+            @{{ #order_sku }}
+            <tr>
+                <td>@{{ product_number }}</td>
+                <td>@{{ number }}</td>
+                <td>@{{ name }}</td>
+                <td>@{{ mode }}</td>
+                <td>@{{ quantity }}</td>
+            </tr>
+            @{{ /order_sku }}
+        </table>
+
+        <br>
+
     </div>
-    <div class="row">
-        <div class="col-lg-4 col-lg-offset-4">固定电话: @{{ buyer_tel }}</div>
-        <div class="col-lg-4">订单编号: @{{ out_warehouse_number }}</div>
-    </div>
-    <div class="row">
-        <div class="col-lg-10">收货地址: @{{ buyer_province }} @{{ buyer_city }} @{{ buyer_address }}</div>
-    </div>
-    <br>
-    <table class="table table-bordered">
-        <tr>
-            <td>ID</td>
-            <td>商品编号</td>
-            <td>商品型号</td>
-            <td>商品名称</td>
-            <td>商品型号</td>
-            <td>数量</td>
-        </tr>
-        @{{ #order_sku }}
-        <tr>
-            <td></td>
-            <td>@{{ product_number }}</td>
-            <td>@{{ number }}</td>
-            <td>@{{ name }}</td>
-            <td>@{{ mode }}</td>
-            <td>@{{ quantity }}</td>
-        </tr>
-        @{{ /order_sku }}
-    </table>
-    <div class="row">
-        <div class="col-lg-10">买家备注: @{{ buyer_summary }}</div>
-        @{{ #info }}
-            <div class="col-lg-2">共@{{ total }}页 第@{{ page }}页</div>
-        @{{ /info }}
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-lg-10">卖家备注: @{{ seller_summary }}</div>
-    </div>
-</div>
-@{{ /order }}
+    @{{ /order }}
+
 </script>
