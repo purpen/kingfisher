@@ -27,6 +27,7 @@ use App\Models\receiveOrderInterimModel;
 use App\Models\ReceiveOrderModel;
 use App\Models\StorageModel;
 use App\Models\SupplierModel;
+use App\Models\TakeStock;
 use App\Models\User;
 use App\Models\UserModel;
 use Carbon\Carbon;
@@ -68,7 +69,7 @@ class ExcelController extends Controller
      */
     public function stockList(Request $request)
     {
-        //需要下载的订单 id数组
+        //需要下载的库存盘点 id数组
         $all = $request->all();
         $id_array = [];
         foreach ($all as $k => $v) {
@@ -77,10 +78,10 @@ class ExcelController extends Controller
             }
         }
         if ($id_array){
-            //查询订单数据集合
+            //查询库存盘点数据集合
             $data = $this->stockSelect()->whereIn('id', $id_array)->get();
         }else{
-            //查询订单数据集合
+            //查询库存盘点数据集合
             $data = $this->stockSelect()->get();
         }
 
@@ -110,7 +111,7 @@ class ExcelController extends Controller
      */
     public function stockSelect()
     {
-        $orderObj = OrderModel::select([
+        $orderObj = TakeStock::select([
             'log as 记录',
             'summary as 盘点备注',
             'storage_id',
@@ -126,7 +127,7 @@ class ExcelController extends Controller
     /**
      * 根据库存盘点查询的数据对象 构造Excel数据
      *
-     * @param OrderModel $option 查询where条件
+     * @param TakeStock $option 查询where条件
      */
     protected function createStockData($data)
     {
