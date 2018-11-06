@@ -72,6 +72,7 @@
     }
     });
 
+
     {{--创建者审核--}}
     $("#verified").click(function () {
     layer.confirm('确认要通过审核吗？',function(index){
@@ -100,15 +101,28 @@
     {{--content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'--}}
     {{--});--}}
 
-    $(document).on("click","#sure",function(obj){
-    var supplier = [];
-    $("input[name='Order']").each(function () {
+    $('#pruchaseBohui').click(function(){
+    var id_array = [];
+    $("input[name='Order']").each(function() {
     if($(this).is(':checked')){
-    supplier.push($(this).attr('value'));
+    id_array.push($(this).attr('id'));
     }
     });
-    var msg=$("#purchaseStatusTextarea").val();
+    if(id_array == ''){
+    layer.msg('请先勾选！');
+    return false;
+    }
+    })
 
+    $(document).on("click","#sure",function(obj){
+    var id = [];
+    $("input[name='Order']").each(function () {
+    if($(this).is(':checked')){
+    id.push($(this).attr('id'));
+    }
+    });
+
+    var msg=$("#purchaseStatusTextarea").val();
     var id = getOnInput();
     $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id,'msg':msg}, function (e) {
     if(e.status){
@@ -119,7 +133,6 @@
     }
     },'json');
     });
-    {{--});--}}
 
     {{--主管领导通过审核--}}
     $('#approved').click(function () {
@@ -349,26 +362,26 @@
                     <i class="glyphicon glyphicon-edit"></i> 新增采购单
                 </a>
                 {{--@if (!$verified)--}}
-                    {{--<button type="button" class="btn btn-success mr-2r" id="verified">--}}
-                        {{--<i class="glyphicon glyphicon-check"></i> 审核--}}
-                    {{--</button>--}}
+                {{--<button type="button" class="btn btn-success mr-2r" id="verified">--}}
+                {{--<i class="glyphicon glyphicon-check"></i> 审核--}}
+                {{--</button>--}}
                 {{--@endif--}}
 
                 @if ($verified == 1)
                     {{--<button type="button" class="btn btn-success mr-2r" id="approved">--}}
-                        {{--<i class="glyphicon glyphicon-ok"></i> 通过审批--}}
+                    {{--<i class="glyphicon glyphicon-ok"></i> 通过审批--}}
                     {{--</button>--}}
                     {{--<button type="button" class="btn btn-warning mr-2r" id="rejected">--}}
-                        {{--<i class="glyphicon glyphicon-remove"></i> 驳回审批--}}
+                    {{--<i class="glyphicon glyphicon-remove"></i> 驳回审批--}}
                     {{--</button>--}}
 
 
-                        <button type="button" class="btn btn-success mr-2r" id="approved">
-                            <i class="glyphicon glyphicon-ok"></i> 通过审批
-                        </button>
-                        <button class="btn btn-magenta btn-sm mr-3r" data-toggle="modal"  data-target="#myModal" >
-                            <i class="glyphicon glyphicon-remove"></i> 驳回
-                        </button>
+                    <button type="button" class="btn btn-success mr-2r" id="approved">
+                        <i class="glyphicon glyphicon-ok"></i> 通过审批
+                    </button>
+                    <button class="btn btn-magenta btn-sm mr-3r" data-toggle="modal" id="pruchaseBohui" data-target="#myModal" >
+                        <i class="glyphicon glyphicon-remove"></i> 驳回
+                    </button>
 
                 @endif
                 @if ($verified == 9)
@@ -379,9 +392,9 @@
                 <button type="button" class="btn btn-default mr-2r" id="in_purchase">
                     导入
                 </button>
-               {{--暂时不使用导出--}}
+                {{--暂时不使用导出--}}
                 {{--<button type="button" class="btn btn-default mr-2r" id="out_purchase">--}}
-                    {{--导出--}}
+                {{--导出--}}
                 {{--</button>--}}
 
             </div>
