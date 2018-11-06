@@ -70,7 +70,7 @@
 
         <div class="modal-body">
             <form id="addsku" class="form-horizontal" method="post" action="{{ url('/enterWarehouse/update') }}">
-                <div id="append-sku">
+                <div id="append-sku" style="margin-left: 200px">
                     <div class="form-group">
                         <label for="goodsSku" class="col-sm-2 control-label">商品扫描</label>
                         <div class="col-sm-6">
@@ -97,7 +97,7 @@
                     </div>
                     {{--@{{/enter_warehouse}}--}}
 
-                    <table class="table table-hover table-bordered">
+                    <table class="table table-hover table-bordered" style="margin-left:112px;width: 935px">
                         <thead>
                         <tr class="active">
                             <th>SKU编码</th>
@@ -142,7 +142,7 @@
 
                     <input type="hidden" name="changeWarehouse_department" value="{{$enter_warehouse->changeWarehouse_department}}">
                     <input type="hidden" name="changeWarehouse_id" value="{{$enter_warehouse->changeWarehouse_id}}">
-                    <div class="form-group">
+                    <div class="form-group" style="width: 1070px;margin-left: 57px">
                         <label for="summary" class="col-sm-2 control-label">入库备注</label>
                         <div class="col-sm-8">
                             <textarea rows="2" class="form-control" name="summary">{{ $enter_warehouse->summary }}</textarea>

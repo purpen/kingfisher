@@ -54,7 +54,7 @@
 
                 <input type="hidden" name="out_warehouse_id" value="{{$out_warehouse->id}}">
                 <input type="hidden" name="order_id" value="{{$out_warehouse->order_id}}">
-                <div id="append-sku">
+                <div id="append-sku" style="margin-left: 200px">
                     {{ csrf_field() }}
 
                             <div class="form-group">
@@ -88,7 +88,7 @@
                             </div>
 
 
-                    <table class="table table-hover table-bordered">
+                    <table class="table table-hover table-bordered" style="margin-left:112px;width: 935px">
                         <thead>
                         <tr class="active">
                             <th>SKU编码</th>
@@ -96,7 +96,7 @@
                             <th>商品属性</th>
                             <th>需出库数量</th>
                             <th>已出库数量</th>
-                            <th>本次出库数量</th>
+                            <th>未出库数量</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -126,7 +126,7 @@
 
                     @foreach($res as $val)
                     <div>
-                        <div class="form-group">
+                        <div class="form-group1">
                         <label for="realname" class="col-sm-2 control-label {{ $errors->has('realname') ? ' has-error' : '' }}">操作人:</label>
                         <div class="col-sm-2">
                             <input type="text" id="realname" name="realname" class="form-control" readonly value="{{ $val['realname'] }}">
@@ -136,7 +136,7 @@
                             <input type="text" id="outage_time" name="outage_time" class="form-control" readonly value="{{ $val['outage_time'] }}">
                         </div>
                             <br><br>
-                        <div class="form-group">
+                        <div class="form-group1" style="margin-bottom: 50px">
                             <label for="company" class="col-sm-2 control-label {{ $errors->has('company') ? ' has-error' : '' }}">快递公司:</label>
                             <div class="col-sm-2">
                                 <input type="text" id="company" name="company" class="form-control" readonly value="{{ $val['company'] }}">
@@ -148,7 +148,7 @@
                         </div>
                     </div>
 
-                        <table class="table table-hover table-bordered">
+                        <table class="table table-hover table-bordered" style="margin-left:112px;width: 935px">
                             <thead>
                             <tr class="active">
                                 <th>SKU编码</th>

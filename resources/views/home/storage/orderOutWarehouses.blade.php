@@ -77,7 +77,7 @@
 
                 <input type="hidden" name="out_warehouse_id" value="{{$out_warehouse->id}}">
                 <input type="hidden" name="storage_id" value="{{$out_warehouse->storage_id}}">
-                <div id="append-sku">
+                <div id="append-sku" style="margin-left: 200px">
                     {{ csrf_field() }}
 
                             <div class="form-group">
@@ -111,7 +111,8 @@
                             </div>
 
 
-                    <table class="table table-hover table-bordered">
+                    {{--<table class="table table-hover table-bordered" style="margin-left:112px;width: 890px">--}}
+                    <table class="table table-hover table-bordered" style="margin-left:112px;width: 935px">
                         <thead>
                         <tr class="active">
                             <th>SKU编码</th>
@@ -119,7 +120,7 @@
                             <th>商品属性</th>
                             <th>需出库数量</th>
                             <th>已出库数量</th>
-                            <th>本次出库数量</th>
+                            <th style="width: 120px">本次出库数量</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -132,7 +133,7 @@
                                 <td>{{ $out_sku->mode }}</td>
                                 <td class="counts">{{ $out_sku->count }}</td>
                                 <td class="incounts">{{ $out_sku->out_count }}</td>
-                                <td>
+                                <td style="width: 50px">
                                     <input type="hidden" name="out_sku_id[]" value="{{$out_sku->id}}">
                                     <input type="hidden" name="sku_id[]" value="{{$out_sku->sku_id}}">
                                     <input type="text" onkeyup="onlyNum(this)" maxlength="{{$out_sku->not_count}}" name="count[]" class="form-control input-operate integer count" value="{{$out_sku->not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可入库数量" required>
@@ -158,9 +159,10 @@
 
                     <input type="hidden" name="changeWarehouse_department" value="{{$out_warehouse->changeWarehouse_department}}">
                     <input type="hidden" name="changeWarehouse_id" value="{{$out_warehouse->changeWarehouse_id}}">
-                    <div class="form-group">
+                    {{--<div class="row" style="width: 1606px;margin-left: -52px">--}}
+                    <div class="row" style="width: 1466px;margin-left: -29px">
                         <label for="summary" class="col-sm-2 control-label">出库备注</label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <textarea rows="2" class="form-control" id="summary" name="summary">{{ $out_warehouse->summary }}</textarea>
                         </div>
                     </div>
@@ -168,9 +170,9 @@
                     <input type="hidden" name="buyer_name" value="{{$out_warehouse->buyer_name}}">
                     <input type="hidden" name="buyer_phone" value="{{$out_warehouse->buyer_phone}}">
                         <hr>
-                            <div class="row">
+                            <div class="row" style="width: 1635px;margin-left: -72px">
                                 <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56">快递公司</label>
-                                <div class="col-sm-8">
+                                <div class="col-sm-6">
                                     <select class="selectpicker" id="logistics_id" name="logistics_id" style="display: none;">
                                         @foreach($logistics_list as $logistics)
                                             <option value='{{$logistics->id}}'>{{$logistics->name}}</option>
@@ -178,7 +180,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" style="width: 1132px;margin-left: 10px">
                                 <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56">快递单号<em>*</em></label>
                                 <div class="col-sm-8">
                                     <input type="text" name="logistics_no" class="form-control float" id="logistics_no" placeholder="快递单号" required >
@@ -186,7 +188,7 @@
                             </div>
                 </div>
 
-                <div class="modal-footer" style="text-align: center">
+                <div class="modal-footer" style="margin-left: -58px;text-align: center">
                     <button type="submit" class="btn btn-magenta makesure">确认提交</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>
                 </div>

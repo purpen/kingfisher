@@ -50,10 +50,10 @@
 
                 <input type="hidden" name="out_warehouse_id" value="{{$out_warehouse->id}}">
                 <input type="hidden" name="changeWarehouse_id" value="{{$out_warehouse->changeWarehouse_id}}">
-                <div id="append-sku">
+                <div id="append-sku" style="margin-left: 200px">
                     <div class="form-group">
                         <label for="goodsSku" class="col-sm-2 control-label">商品扫描</label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <input type="text" id="goodsSku" class="form-control">
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                         </div>
                     </div>
 
-                    <table class="table table-hover table-bordered">
+                    <table class="table table-hover table-bordered" style="margin-left:112px;width: 935px">
                         <thead>
                         <tr class="active">
                             <th>SKU编码</th>
@@ -122,7 +122,7 @@
                         </div>
                     </div>
 
-                        <table class="table table-hover table-bordered">
+                        <table class="table table-hover table-bordered" style="margin-left:112px;width: 935px">
                             <thead>
                             <tr class="active">
                                 <th>SKU编码</th>

@@ -21,11 +21,11 @@
             <div class="col-md-12">
                 <div class="formwrapper form-horizontal">
                     <form id="addsku" class="form-horizontal" method="post" action="">
-                    <div id="append-sku">
+                    <div id="append-sku" style="margin-left: 200px">
                         <input type="hidden" name="out_warehouse_id" value="{{$enter_warehouse->id}}">
                         <input type="hidden" name="changeWarehouse_id" value="{{$enter_warehouse->changeWarehouse_id}}">
                         <input type="hidden" name="purchase_id" value="{{$enter_warehouse->purchase_id}}">
-                        <div class="form-group">
+                        <div class="form-group" style="margin-left: 200px">
                             <label for="number" class="col-sm-1 control-label">入库仓库:</label>
                             <div class="col-sm-4">
                                 <p class="form-text">{{ $enter_warehouse->storage->name }}</p>
@@ -36,14 +36,14 @@
                                 <p class="form-text">{{ $enter_warehouse->department_val }}</p>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="margin-left: 200px">
                             <label for="summary" class="col-sm-1 control-label">备注说明</label>
                             <div class="col-sm-4">
                                 <p class="form-text">{{ $enter_warehouse->summary }}</p>
                             </div>
                         </div>
                     
-                        <table class="table table-hover table-bordered">
+                        <table class="table table-hover table-bordered" style="margin-left:112px;width: 935px">
                             <thead>
                                 <tr class="active">
                                     <th>SKU编码</th>
@@ -104,7 +104,7 @@
                                     </div>
                                 {{--@endforeach--}}
 
-                                <table class="table table-hover table-bordered">
+                                <table class="table table-hover table-bordered" style="margin-left:112px;width: 935px">
                                     <thead>
                                     <tr class="active">
                                         <th>SKU编码</th>
