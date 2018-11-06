@@ -1739,6 +1739,9 @@ Route::group(['middleware' => ['auth']], function () {
     //导出库存盘点
     Route::post('/stockList', 'Common\ExcelController@stockList');
 
+    //导出库存盘点
+    Route::post('/stockDetail', 'Common\ExcelController@stockDetail');
+
     //采购到导入
     Route::post('/purchaseExcel', 'Common\ExcelController@purchaseExcel');
     Route::post('/channelExcel', 'Common\ExcelController@channelExcel');//渠道收款单导入

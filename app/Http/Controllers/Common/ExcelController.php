@@ -28,6 +28,7 @@ use App\Models\ReceiveOrderModel;
 use App\Models\StorageModel;
 use App\Models\SupplierModel;
 use App\Models\TakeStock;
+use App\Models\TakeStockDetailed;
 use App\Models\User;
 use App\Models\UserModel;
 use Carbon\Carbon;
@@ -64,6 +65,26 @@ class ExcelController extends Controller
         $this->createExcel($data, '订单');
     }
 
+
+
+//    //    导出采购单
+//    public function purchaseList(Request $request){
+//        $all=$request->all();
+//        $id_array=[];
+//        foreach ($all as $k => $v) {
+//            if (is_int($k)) {
+//                $id_array[] = $v;
+//            }
+//        }
+//        //查询采购单数据集合
+//        $data=$this->purchasesSelect()->whereIn('id',$id_array)->get();
+//        $data=$this->createData($data);
+//        $this->createExcel($data,'采购单');
+//
+//    }
+
+
+
     /**
      * 使用库存盘点ID 导出库存盘点（excel格式）
      */
@@ -91,21 +112,7 @@ class ExcelController extends Controller
         $this->createExcel($data, '库存盘点');
     }
 
-//    //    导出采购单
-//    public function purchaseList(Request $request){
-//        $all=$request->all();
-//        $id_array=[];
-//        foreach ($all as $k => $v) {
-//            if (is_int($k)) {
-//                $id_array[] = $v;
-//            }
-//        }
-//        //查询采购单数据集合
-//        $data=$this->purchasesSelect()->whereIn('id',$id_array)->get();
-//        $data=$this->createData($data);
-//        $this->createExcel($data,'采购单');
-//
-//    }
+
     /**
      * 导出库存盘点条件
      */
@@ -159,6 +166,61 @@ class ExcelController extends Controller
 
         }
 
+        return $data;
+    }
+
+
+    /**
+     * 使用库存盘点明细ID 导出库存盘点明细（excel格式）
+     */
+    public function stockDetail(Request $request)
+    {
+        //需要下载的库存盘点明细 id数组
+        $all = $request->all();
+        //查询库存盘点明细数据集合
+        $data = $this->stockDetailSelect()->get();
+        //构造数据
+        $data = $this->createStockDetailData($data);
+        //导出Excel表单
+        $this->createExcel($data, '库存盘点明细');
+    }
+
+
+    /**
+     * 导出库存盘点明细条件
+     */
+    public function stockDetailSelect()
+    {
+        $stockObj = TakeStockDetailed::select([
+            'department as 部门',
+            'product_number as 商品货号',
+            'sku_number as SKU编码',
+            'name  as 商品名称',
+            'mode as 商品属性',
+            'number as erp库存',
+            'storage_number as 实际库存',
+            'number',
+            'storage_number',
+        ]);
+        return $stockObj;
+    }
+
+
+    /**
+     * 根据库存盘点明细查询的数据对象 构造Excel数据
+     *
+     * @param TakeStock $option 查询where条件
+     */
+    protected function createStockDetailData($data)
+    {
+        //组织Excel数据
+        foreach ($data as $v) {
+           if ($v->number && $v->storage_number){
+               $v->库存变化	= $v->storage_number - $v->number;
+           }
+            unset($v->number, $v->storage_number);
+
+        }
         return $data;
     }
 

@@ -23,6 +23,9 @@
                 <div class="navbar-brand">
                     库存盘点明细
                 </div>
+                <div class="col-md-2" style="margin-top: 10px;margin-left: 30px;">
+                    <button id="stockAll"  class="btn btn-default">全部导出</button>
+                </div>
             </div>
 
         </div>
@@ -46,7 +49,7 @@
                         <tbody>
                         @foreach($take_stock_detailed as $v)
                             <tr>
-                                <th class="text-center"><input type="checkbox"></th>
+                                <th class="text-center"><input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $v->id }}"></th>
                                 <th>{{ $v->department }}</th>
                                 <th>{{$v->product_number}}</th>
                                 <th>{{$v->sku_number}}</th>
@@ -66,7 +69,7 @@
                                     <span class="proname">{{ $v->storage_number }}</span>
                                     <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title=""
                                             type="button"
-                                            style="border: none; display: inline-block; background: none;"><i
+                                            style="border: none; display: inline-block; background: none;"><i>
                                                 class="glyphicon glyphicon-pencil"></i></button>
                                     <input name="max_count" value="{{ $v->storage_number }}" action="{{$v->id}}"
                                            class="form-control" type="text" style="display: none;">
@@ -96,6 +99,44 @@
 @section('load_private')
     @parent
     {{--<script>--}}
+
+    {{--post请求--}}
+    var _token = $("#_token").val();
+    function post(URL, PARAMS) {
+
+    var temp = document.createElement("form");
+    temp.action = URL;
+    temp.method = "post";
+    temp.style.display = "none";
+    var opt = document.createElement("textarea");
+    opt.name = '_token';
+    opt.value = _token;
+    {{--alert(opt.value);return false;--}}
+    temp.appendChild(opt);
+    for (var x in PARAMS) {
+    var opt = document.createElement("textarea");
+    opt.name = x;
+    opt.value = PARAMS[x];
+    temp.appendChild(opt);
+    }
+    {{--alert(opt.name);return false;--}}
+    document.body.appendChild(temp);
+    temp.submit();
+    return temp;
+    };
+    {{--打印订单excel--}}
+    $('#stockAll').click(function () {
+    var id_array = [];
+    $("input[name='Order']").each(function() {
+    if($(this).is(':checked')){
+    id_array.push($(this).attr('value'));
+    }
+    });
+
+    post('{{url('/stockDetail')}}',id_array);
+    });
+
+
         $('.operate-update-offlineEshop').click(function () {
             $(this).siblings().css('display', 'none');
             $(this).css('display', 'none');
