@@ -239,13 +239,6 @@ class OutWarehouseController extends Controller
 //                    $all[$i] = array_merge($order_outs[$i],$outgoing_logistics[$i]);
 //                }
 
-            $nums = array_column($order_out->toArray(), 'num');;
-            $pop = array_pop($nums);
-            $sku_arr = json_decode($pop);
-
-            $sku_model = new ProductsSkuModel();
-            $orders_sku = $sku_model->detailedSku($sku_arr);
-
             $res = [];
             $are = $order_out->toArray();
             foreach ($are as $key => &$val) {
@@ -262,11 +255,27 @@ class OutWarehouseController extends Controller
                     $number = '';
                 }
 
-                $res['data'] = array_merge($val, ['realname' => $name->realname, 'company' => $compoy, 'odd_numbers' => $number,'sku_num'=>$sku_num]);
+                $res[] = array_merge($val, ['realname' => $name->realname, 'company' => $compoy, 'odd_numbers' => $number,'sku_num'=>$sku_num]);
 //                $res[$val['outage_time']]['data_base'] = [$data];
 //                $res[$val['outage_time']]['data'][] = $data;
             }
 
+            $nums = array_column($order_out->toArray(), 'num');;
+            $pop = array_pop($nums);
+            $sku_arr = json_decode($pop);
+
+            $sku_model = new ProductsSkuModel();
+            $orders_sku = $sku_model->detailedSku($sku_arr);
+            $ordersSku = objectToArray($orders_sku);
+
+            foreach ($res as $k=>$v){
+                $res[$k]['orders_sku'] = $ordersSku;
+                for ($i=0;$i<count($res[$k]['sku_num']);$i++){
+                    if ($v['sku_num'][$i]['sku_id'] == $res[$k]['orders_sku'][$i]['sku_id']){
+                        $res[$k]['orders_sku'][$i]['nums'] = $v['sku_num'][$i]['number'];
+                    }
+                }
+            }
             $returnData['orders_sku'] = $orders_sku;
             $returnData['res'] = $res;
         }

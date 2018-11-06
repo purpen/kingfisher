@@ -126,7 +126,6 @@
 
                     @foreach($res as $val)
                     <div>
-                         {{--@foreach ($val['data'] as $order)--}}
                         <div class="form-group">
                         <label for="realname" class="col-sm-2 control-label {{ $errors->has('realname') ? ' has-error' : '' }}">操作人:</label>
                         <div class="col-sm-2">
@@ -149,8 +148,6 @@
                         </div>
                     </div>
 
-                            {{--@endforeach--}}
-
                         <table class="table table-hover table-bordered">
                             <thead>
                             <tr class="active">
@@ -160,23 +157,20 @@
                                 <th>出库数量</th>
                             </tr>
                             </thead>
-                            @foreach ($orders_sku as $order_out)
                             <tbody>
-{{--                                @foreach($val['sku_num'] as $sku_num)--}}
+                            @foreach ($val['orders_sku'] as $order_out)
                                 <tr>
                                     <td class="magenta-color">
-                                        {{ $order_out->number }}
+                                        {{ $order_out['number'] }}
                                     </td>
-                                    <td>{{ $order_out->name }}</td>
-                                    <td>{{ $order_out->mode }}</td>
-
-{{--                                    <td>{{ $sku_num['number'] }}</td>--}}
+                                    <td>{{ $order_out['name'] }}</td>
+                                    <td>{{ $order_out['mode'] }}</td>
+                                    <td>{{ $order_out['nums'] }}</td>
 
                                 </tr>
-                            {{--@endforeach--}}
+                                @endforeach
 
                             </tbody>
-                            @endforeach
                         </table>
                             <br>
                     </div>
