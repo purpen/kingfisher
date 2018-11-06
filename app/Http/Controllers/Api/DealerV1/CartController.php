@@ -90,8 +90,7 @@ class CartController extends BaseController
                 } else {
                     $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
                     if (count($asset)>0){
-                            $aset = $asset->file->small;
-
+                        $aset = $asset->file->small;
                         $v->cover = $aset;
                     }
                 }
@@ -111,12 +110,19 @@ class CartController extends BaseController
                     $v->status = true;
                 }
 
+                if (intval($mode->getCountNumAttribute()) <= 0){
+                    $v->count = 0;
+                } else {
+                    $v->count = intval($mode->getCountNumAttribute());
+                }
+
 
 
                 $data['data'][$k] = array(
                     'id' => $v->id,
                     'product_name'=>$cart->title,//商品名称
-                    'inventory' =>intval($mode->getCountNumAttribute()),//商品库存数量
+//                    'inventory' =>intval($mode->getCountNumAttribute()),//商品库存数量
+                    'inventory' =>$v->count,//商品库存数量
                     'market_price'=>$cart->market_price,//商品销售价
                     'product_id' => $v->product_id,//商品id
                     'price' => 0,//购买价格
@@ -176,10 +182,17 @@ class CartController extends BaseController
 
                 $v->status = false;
 
+                if (intval($mode->getCountNumAttribute()) <= 0){
+                    $v->count = 0;
+                } else {
+                    $v->count = intval($mode->getCountNumAttribute());
+                }
+
                 $data['data'][$k] = array(
                     'id' => $v->id,
                     'product_name'=>$cart->title,//商品名称
-                    'inventory' =>intval($mode->getCountNumAttribute()),//商品库存数量
+//                    'inventory' =>intval($mode->getCountNumAttribute()),//商品库存数量
+                    'inventory' =>$v->count,//商品库存数量
                     'market_price'=>$cart->market_price,//商品销售价
                     'product_id' => $v->product_id,//商品id
                     'price' => 0,//购买价格
