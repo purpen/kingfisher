@@ -277,7 +277,7 @@
                                     <td>
                                         <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
                                         <a class="btn btn-default btn-sm" href="{{ url('/supplier/details') }}?id={{$supplier->id}}" target="_blank">详情</a>
-                                        <button class="btn btn-default btn-sm" data-toggle="modal" onclick="addMould({{$supplier->id}})"  value="{{ $supplier->id }}">模版</button>
+                                        {{--<button class="btn btn-default btn-sm" data-toggle="modal" onclick="addMould({{$supplier->id}})"  value="{{ $supplier->id }}">模版</button>--}}
                                         {{--@if($supplier->supplier_user_id == 0)--}}
                                             {{--<button class="btn btn-success btn-sm" data-toggle="modal" onclick="addSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">生成用户</button>--}}
                                         {{--@else--}}
