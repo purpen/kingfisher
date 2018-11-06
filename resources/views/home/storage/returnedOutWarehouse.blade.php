@@ -55,7 +55,12 @@
                         打印出库单
                     </button>
                 @endif
-
+                <button type="button" class="btn btn-success mr-2r" id="stockAll">
+                    全部导出
+                </button>
+                <button type="button" class="btn btn-success mr-2r" id="stockPart">
+                    选择导出
+                </button>
             </div>
         </div>
         <div class="row">
@@ -211,6 +216,7 @@
     </div>
 
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+    <input type="hidden" id="type" name="type" value="{{$type}}">
 
     @include('home/storage.printOutOrder')
     @include('home/storage.printChangeOutWarehouse')
@@ -241,6 +247,52 @@
 @section('load_private')
     @parent
     {{--<script>--}}
+    function post(URL, PARAMS) {
+
+    var temp = document.createElement("form");
+    temp.action = URL;
+    temp.method = "post";
+    temp.style.display = "none";
+    var opt = document.createElement("textarea");
+    opt.name = '_token';
+    opt.value = _token;
+    {{--alert(opt.value);return false;--}}
+    temp.appendChild(opt);
+    for (var x in PARAMS) {
+    var opt = document.createElement("textarea");
+    opt.name = x;
+    opt.value = PARAMS[x];
+    temp.appendChild(opt);
+    }
+    {{--alert(opt.name);return false;--}}
+    document.body.appendChild(temp);
+    temp.submit();
+    return temp;
+    };
+    {{--打印订单excel--}}
+    $('#stockPart').click(function () {
+    var id_array = [];
+    $("input[name='Order']").each(function() {
+    if($(this).is(':checked')){
+    id_array.push($(this).attr('value'));
+    }
+    });
+    if(id_array == ''){
+    alert('未选择导出内容');
+    return false;
+    }
+    post('{{url('/orderOutExcel')}}',id_array);
+    });
+
+    $('#stockAll').click(function () {
+    var id_array = [];
+    var type = $('#type').val();
+
+    post('{{url('/orderOutAll')}}',type);
+    });
+
+
+
 
         {{--打印订单出库单--}}
         $("#printOrder").click(function () {
