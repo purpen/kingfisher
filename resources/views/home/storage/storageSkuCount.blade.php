@@ -31,7 +31,12 @@
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="product_number" value="{{$number}}" class="form-control" placeholder="商品货号">
+                                    <input type="text" name="product_number" style="margin-right:25px;" value="{{$product_number}}" class="form-control" placeholder="商品编码">
+
+                                    <input type="text" name="number" value="{{$number}}" style="margin-right:25px;" class="form-control" placeholder="sku编码">
+
+                                    <input type="text" name="title" value="{{$title}}" style="margin-right:25px;" class="form-control" placeholder="商品名称">
+
                                     <div class="input-group-btn">
                                         <button id="search" type="submit" class="btn btn-default">搜索</button>
                                     </div><!-- /btn-group -->

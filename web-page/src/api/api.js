@@ -9,6 +9,9 @@ export default {
   retrievePassword: '/DealerApi/auth/retrievePassword',  // POST 更改新密码
   logout: '/DealerApi/auth/logout', // POST 退出登录
   register: '/DealerApi/auth/register', // POST 注册
+  captchaUrl: '/DealerApi/auth/captchaUrl',  // 获取图形验证码
+  verify: '/DealerApi/auth/verify',  // 验证短信验证码
+  updateUser: '/DealerApi/auth/updateUser',  // 账号设置更新用户信息
   // 附件操作
   // deleteAsset: '/saasApi/tools/deleteAsset', // POST 删除附件
   // 填写认证信息
@@ -53,8 +56,8 @@ export default {
   surveySourceSales: '/saasApi/survey/sourceSales', // GET 销售渠道
 
   // 订单
-  orderCity: '/DealerApi/order/city', // GET 收货地址获取省
-  orderFetchCity: '/DealerApi/order/fetchCity', // GET 收货地址获取市
+  // orderCity: '/DealerApi/order/city', // GET 收货地址获取省
+  // orderFetchCity: '/DealerApi/order/fetchCity', // GET 收货地址获取市
   orders: '/DealerApi/orders', // GET 订单列表
   order: '/DealerApi/order', // GET 订单详情
   orderStore: '/DealerApi/order/store', // POST 保存订单
@@ -65,5 +68,16 @@ export default {
 
   // 城市
 
-  test: '/'  // End
+  test: '/',  // End
+  // 商品库
+  LibraryOfGoodsIndexlist: '/DealerApi/product/recommendList', // GET 商品库列表请求
+  LibraryOfGoodsIndextitle: '/DealerApi/product/categories', // GET 商品库title能看到的列表
+  LibraryOfGoodsIndexsearch: '/DealerApi/product/search', // GET 商品库搜索
+  LibraryOfGoodsIndexfollow: '/DealerApi/product/follow', // POST 关注收藏
+  LibraryOfGoodsIndexnotFollow: '/DealerApi/product/notFollow', // POST 取消关注收藏
+  // 商品详情
+  LibraryOfGoodsIndexnotinfo: '/DealerApi/product/info', // GET 商品详情
+  LibraryOfGoodsIndexnotadd: '/DealerApi/cart/add', // POST 添加到产品进货单
+  LibraryOfGoodsIndexbuy: 'DealerApi/cart/buy', // POST 立即购买
+  LibraryOfGoodsIndexfetchcount: '/DealerApi/cart/fetch_count' // GET 获取购物车数量
 }

@@ -36,10 +36,6 @@
                   <span>{{ item.category }}</span>
                 </div>
                 <div class="mar-b-10">
-                  <span class="width-100">价格:</span>
-                  <span>{{ '¥ ' + item.price }}</span>
-                </div>
-                <div class="mar-b-10">
                   <span class="width-100">重量: </span>
                   <span>{{ item.weight }}kg</span>
                 </div>
@@ -326,7 +322,6 @@ export default {
   created: function () {
     const self = this
     let token = this.$store.state.event.token
-    console.log(token)
     const id = this.$route.params.id
     if (!id) {
       this.$Message.error('缺少请求参数!')
@@ -334,7 +329,6 @@ export default {
       return
     }
     self.itemId = id
-    console.log(id)
     // 获取商品详情
     self.isLoading = true
     self.$http.get(api.productShow, {params: {product_id: id, token: token}})
@@ -344,7 +338,11 @@ export default {
         const item = response.data.data
         self.item = item
         self.skuList = item.skus
-        console.log(self.item)
+        for (let i = 0; i < self.skuList.length; i++) {
+          if (!self.skuList[i].inventory) {   // 删除库存为0
+            self.skuList.splice(i, 1)
+          }
+        }
       }
     })
     .catch(function (error) {

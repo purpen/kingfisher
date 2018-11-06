@@ -120,7 +120,7 @@
                     </div>
                 </form>
                 
-                <div class="modal fade" id="addpurchase" tabindex="-1" role="dialog" aria-labelledby="addpurchaseLabel">
+                <div class="modal fade"  id="addpurchase" tabindex="-1" role="dialog" aria-labelledby="addpurchaseLabel">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -138,7 +138,7 @@
                                         </button>
           							</span>
                                 </div>
-                                <div class="mt-4r scrollt">
+                                <div class="mt-4r scrollt" style="overflow:auto;">
                                     <div id="sku-list"></div>
                                 </div>
                                 <div class="form-group mb-0 sublock">

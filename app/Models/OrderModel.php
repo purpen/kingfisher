@@ -64,7 +64,7 @@ class OrderModel extends BaseModel
      * @var array
      */
 
-    protected $fillable = ['type','financial_name','financial_time','payment_time','store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'buyer_summary', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money', 'number', 'count', 'storage_id', 'buyer_province', 'buyer_city', 'buyer_county', 'buyer_township', 'order_start_time', 'order_verified_time', 'order_send_time', 'order_user_id', 'user_id_sales', 'express_no', 'payment_type', 'random_id', 'invoice_info', 'excel_type', 'invoice_type', 'invoice_header', 'invoice_added_value_tax', 'invoice_ordinary_number', 'from_type' , 'distributor_id','address_id','voucher_id'];
+    protected $fillable = ['type', 'financial_name', 'financial_time', 'payment_time', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'buyer_summary', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money', 'number', 'count', 'storage_id', 'buyer_province', 'buyer_city', 'buyer_county', 'buyer_township', 'order_start_time', 'order_verified_time', 'order_send_time', 'order_user_id', 'user_id_sales', 'express_no', 'payment_type', 'random_id', 'invoice_info', 'excel_type', 'invoice_type', 'invoice_header', 'invoice_added_value_tax', 'invoice_ordinary_number', 'from_type', 'distributor_id', 'address_id', 'voucher_id'];
 
     /**
      * 相对关联到商铺表
@@ -137,6 +137,7 @@ class OrderModel extends BaseModel
     {
         return $this->hasOne('App\Models\SupplierModel', 'supplier_id');
     }
+
     /**
      * 一对一关联经销商
      */
@@ -150,7 +151,7 @@ class OrderModel extends BaseModel
      */
     public function assets()
     {
-        return $this->belongsTo('App\Models\AssetsModel','voucher_id');
+        return $this->belongsTo('App\Models\AssetsModel', 'voucher_id');
     }
 
     /**
@@ -166,8 +167,9 @@ class OrderModel extends BaseModel
      */
     public function historyInvoice()
     {
-        return $this->belongsTo('App\Models\HistoryInvoiceModel','order_id');
+        return $this->belongsTo('App\Models\HistoryInvoiceModel', 'order_id');
     }
+
     /**
      * 相对关联到发票历史表表
      */
@@ -183,11 +185,12 @@ class OrderModel extends BaseModel
     public function getProveAttribute()
     {
         $result = $this->imageFile();
-        if(is_object($result)){
+        if (is_object($result)) {
             return $result->small;
         }
         return $result;
     }
+
     /**
      * 获取商品图片信息对象
      *
@@ -204,6 +207,7 @@ class OrderModel extends BaseModel
 
         return $asset->file;
     }
+
     /**
      * 订单状态Status访问修改器
      * 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
@@ -267,8 +271,8 @@ class OrderModel extends BaseModel
                 break;
             case 6:
                 $value = '公司转账';
-            break;
-                default:
+                break;
+            default:
                 $value = '在线付款';
         }
 
@@ -326,7 +330,7 @@ class OrderModel extends BaseModel
         } else {                        # 参数order_id不是对象时
             $order_id = (int)$order_id;
 
-            $status_arr = [0, 1, 5, 6,8, 10, 20];
+            $status_arr = [0, 1, 5, 6, 8, 10, 20];
             if (!in_array($status, $status_arr)) {
                 return false;
             }
@@ -338,7 +342,9 @@ class OrderModel extends BaseModel
                 return false;
             }
         }
-
+        if ($status == $order_model->status) {
+            return false;
+        }
         $order_model->status = $status;
         if (!$order_model->save()) {
             return false;

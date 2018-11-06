@@ -127,19 +127,19 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="supplier_id" class="col-sm-2 control-label {{ $errors->has('supplier_id') ? ' has-error' : '' }}">选择供应商<em>*</em></label>
-                            <div class="col-sm-3">
-                                <div class="input-group col-md-11">
-                					<select class="chosen-select" name="supplier_id">
-                                        <option value="">请选择供应商</option>
-                                    @foreach($suppliers as $supplier)
-                						<option value="{{ $supplier->id }}" {{ $product->supplier_id == $supplier->id?'selected':'' }}>{{ $supplier->name }}</option>
-                						@endforeach
-                					</select>
-                                </div>
-                            </div>
-                        </div>
+                        {{--<div class="form-group">--}}
+                            {{--<label for="supplier_id" class="col-sm-2 control-label {{ $errors->has('supplier_id') ? ' has-error' : '' }}">选择供应商<em>*</em></label>--}}
+                            {{--<div class="col-sm-3">--}}
+                                {{--<div class="input-group col-md-11">--}}
+                					{{--<select class="chosen-select" name="supplier_id">--}}
+                                        {{--<option value="">请选择供应商</option>--}}
+                                    {{--@foreach($suppliers as $supplier)--}}
+                						{{--<option value="{{ $supplier->id }}" {{ $product->supplier_id == $supplier->id?'selected':'' }}>{{ $supplier->name }}</option>--}}
+                						{{--@endforeach--}}
+                					{{--</select>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
                         <div class="form-group">
                             {{--<label for="supplier_id" class="col-sm-2 control-label">商品类别</label>--}}
                             {{--<div class="col-sm-3">--}}

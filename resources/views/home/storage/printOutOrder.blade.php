@@ -171,7 +171,7 @@
         <br>
         <div class="row">
             <div class="col-lg-6">订单编号: @{{ out_warehouse_number }}</div>
-            <div class="col-lg-6">应出货日期: @{{ outWarehousesTime }}</div>
+            <div class="col-lg-6">制单时间: @{{ outWarehousesTime }}</div>
 
         </div>
         <div class="row">
@@ -186,7 +186,7 @@
         <table class="table table-bordered">
             <tr>
                 <td>商品编号</td>
-                <td>商品型号</td>
+                <td>sku编号</td>
                 <td>商品名称</td>
                 <td>商品型号</td>
                 <td>数量</td>

@@ -145,6 +145,24 @@ class StorageSkuCountModel extends BaseModel
         return true;
     }
 
+
+    /**
+     * 新增调拨单中指定仓库/部门 显示全部sku列表
+     * @param $storage_id
+     * @param $department
+     * @return array|bool
+     */
+    public function wareSkuList($storage_id, $department)
+    {
+        if (empty($storage_id)) {
+            return false;
+        }
+        $storage_sku = self::where(['storage_id' => (int)$storage_id, 'department' => $department])->orderBy('id', 'desc')->get();
+        $productsku = new ProductsSkuModel();
+        $storage_sku = $productsku->detailedSku($storage_sku);
+        return $storage_sku;
+    }
+
     /**
      * 指定仓库/部门 sku列表
      * @param $storage_id

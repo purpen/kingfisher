@@ -8,36 +8,142 @@
         <Breadcrumb-item>我的订单</Breadcrumb-item>
     </Breadcrumb>
     -->
+
     <Row :gutter="20">
       <Col :span="3" class="left-menu">
         <v-menu currentName="order"></v-menu>
       </Col>
-
       <Col :span="21">
-        <div class="order-box">
-          <h3>全部订单</h3>
-          <div class="center-menu-sub">
-            <div class="center-menu-sub-list">
-              <router-link :to="{name: 'centerOrder'}" active-class="false" :class="{'item': true, 'active': query.status === 0 ? true : false}">全部</router-link>
-              <router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待审核</router-link>
-              <router-link :to="{name: 'centerOrder', query: {status: 8}}" active-class="false" :class="{'item': true, 'active': query.status === 8 ? true : false}">待发货</router-link>
-              <router-link :to="{name: 'centerOrder', query: {status: 10}}" active-class="false" :class="{'item': true, 'active': query.status === 10 ? true : false}">待收货</router-link>
-              <router-link :to="{name: 'centerOrder', query: {status: 20}}" active-class="false" :class="{'item': true, 'active': query.status === 20 ? true : false}">已完成</router-link>
-              <router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已关闭</router-link>
-
+        <div class="testTable">
+          <table class="product-table">
+            <tr class="product-tr">
+              <td style="width: 40%;text-align: left;padding-left: 20px">订单详情</td>
+              <td style="width: 10%;">收货人</td>
+              <td style="width: 15%;">金额</td>
+              <td style="width: 10%;">状态</td>
+              <td style="width: 15%;">操作</td>
+            </tr>
+          </table>
+          <div class="padding-l-r-20">
+            <div class="border-b-c8">
+              <table class="forTable">
+                <tr class="sku-table-tr text-left color_999" style="margin-top: 16px;margin-bottom: 20px">2018-08-27 13：22 <span class="margin-l-30 margin-r-5">订单编号:</span> <span class="color_666">7884707442</span></tr>
+                <tr class="padd-t-20">
+                  <td class="sku-box" style="width: 40%">
+                    <table class="sku-table">
+                      <tr>
+                        <td class="text-left padding-t-20">
+                          <div class="sku-box-flex">
+                            <img class="wid-80 margin-r-15" src="../../../../assets/images/product_500.png">
+                            <div class="wid-158">
+                              <p class="color_666 margin-b-10 font-12">商品名称商品名称商品名称商品名称商品名称商品名称商品名称</p>
+                              <p class="color_666 font-12">白色</p>
+                            </div>
+                            <div style="flex: 1;text-align: right">
+                              <p>x1</p>
+                            </div>
+                          </div>
+                        </td>
+                      </tr><tr>
+                      <td class="text-left padding-t-20">
+                        <div class="sku-box-flex">
+                          <img class="wid-80 margin-r-15" src="../../../../assets/images/product_500.png">
+                          <div class="wid-158">
+                            <p class="color_666 margin-b-10 font-12">商品名称商品名称商品名称商品名称商品名称商品名称商品名称</p>
+                            <p class="color_666 font-12">白色</p>
+                          </div>
+                          <div style="flex: 1;text-align: right">
+                            <p>x1</p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    </table>
+                  </td>
+                  <td  class="wid_15 border-l text-style-p-linhei text-style-p-color" style="width: 10%">
+                    <p>张三</p>
+                  </td>
+                  <td class="wid_15 border-l text-style-p-linhei" style="width: 15%">
+                    <p class="font-14 color_333">总额:¥ <span>338.00</span></p>
+                    <p class="color_666">在线支付</p>
+                  </td>
+                  <td class="wid_15 border-l text-style-p-linhei text-style-p-color" style="width: 10%">
+                    <p>已完成</p>
+                    <!--<p>待付款</p>-->
+                    <!--<p>待收货</p>-->
+                    <!--<p>已取消</p>-->
+                    <p>订单详情</p>
+                  </td>
+                  <td class="wid_15 border-l text-style-p-linhei text-style-p-color" style="width: 15%">
+                    <Button class="back_c8">申请售后</Button>
+                  </td>
+                </tr>
+              </table>
             </div>
-            <!--<div class="center-menu-sub-list right">-->
-              <!--<router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link>-->
-            <!--</div>-->
           </div>
-          <v-sub-menu></v-sub-menu>
-          <div class="order-list">
-            <Spin size="large" fix v-if="isLoading"></Spin>
-            <Table :columns="orderHead" :data="itemList"></Table>
-            <div class="blank20"></div>
-            <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
+          <div class="padding-l-r-20">
+            <div class="border-b-c8">
+              <table>
+                <tr class="sku-table-tr text-left color_999" style="margin-top: 16px;margin-bottom: 20px">2018-08-27 13：22 <span class="margin-l-30 margin-r-5">订单编号:</span> <span class="color_666">7884707442</span></tr>
+                <tr class="padd-t-20">
+                  <td class="sku-box" style="width: 40%">
+                    <table class="sku-table">
+                      <tr>
+                        <td class="text-left">
+                          <div class="sku-box-flex">
+                            <img class="wid-80 margin-r-15" src="../../../../assets/images/product_500.png">
+                            <div class="wid-158">
+                              <p class="color_666 margin-b-10 font-12">商品名称商品名称商品名称商品名称商品名称商品名称商品名称</p>
+                              <p class="color_666 font-12">白色</p>
+                            </div>
+                            <div style="flex: 1;text-align: right">
+                              <p>x1</p>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td  class="wid_15 border-l" style="width: 10%">
+                    <p class="height-82">张三</p>
+                  </td>
+                  <td class="wid_15" style="width: 15%">
+                    <p class="height-82">金额</p>
+                  </td>
+                  <td class="wid_15" style="width: 10%">
+                    <p class="height-82">状态</p>
+                  </td>
+                  <td class="wid_15" style="width: 15%">
+                    <p class="height-82">操作</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
+        <!--<div class="order-box padd-t-10">-->
+          <!--<div class="center-menu-sub">-->
+            <!--<div class="center-menu-sub-list">-->
+              <!--<router-link :to="{name: 'centerOrder'}" active-class="false" :class="{'item': true, 'active': query.status === 0 ? true : false}">全部订单</router-link>-->
+              <!--<router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待付款</router-link>-->
+              <!--<router-link :to="{name: 'centerOrder', query: {status: 10}}" active-class="false" :class="{'item': true, 'active': query.status === 10 ? true : false}">待收货</router-link>-->
+              <!--&lt;!&ndash;<router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待审核</router-link>&ndash;&gt;-->
+              <!--<router-link :to="{name: 'centerOrder', query: {status: 8}}" active-class="false" :class="{'item': true, 'active': query.status === 8 ? true : false}">待发货</router-link>-->
+              <!--&lt;!&ndash;<router-link :to="{name: 'centerOrder', query: {status: 20}}" active-class="false" :class="{'item': true, 'active': query.status === 20 ? true : false}">已完成</router-link>&ndash;&gt;-->
+              <!--<router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已取消</router-link>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;<div class="center-menu-sub-list right">&ndash;&gt;-->
+              <!--&lt;!&ndash;<router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+          <!--</div>-->
+          <!--<v-sub-menu></v-sub-menu>-->
+          <!--<div class="order-list">-->
+            <!--<Spin size="large" fix v-if="isLoading"></Spin>-->
+            <!--<Table :columns="orderHead" :data="itemList"></Table>-->
+            <!--<div class="blank20"></div>-->
+            <!--<Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>-->
+          <!--</div>-->
+        <!--</div>-->
       </Col>
     </Row>
   </div>
@@ -62,7 +168,7 @@ export default {
       itemList: [],
       orderHead: [
         {
-          title: '>',
+          title: '查看详情',
           key: 'options',
           type: 'expand',
           width: 120,
@@ -172,7 +278,8 @@ export default {
                   src: require('@/assets/images/icon/delete.png')
                 },
                 style: {
-                  width: '15%'
+                  width: '15%',
+                  height: '15%'
                 }
               })
             ])
@@ -200,7 +307,6 @@ export default {
       self.isLoading = true
       self.$http.get(api.orders, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
       .then(function (response) {
-        console.log(response)
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
           self.query.count = parseInt(response.data.meta.pagination.total)
@@ -261,8 +367,59 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .testTable table {
+    width: 100%;
+    text-align: center;
+  }
 
-  .order-box {
+  .product-tr td {
+    height: 36px;
+    line-height: 36px;
+    background:rgba(240,240,240,1);
+  }
+
+  .sku-table-tr {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 33px;
+  }
+
+  .sku-box {
+    padding-right: 20px;
+  }
+  .padding-t-20 {
+    padding-top: 20px;
+  }
+  .sku-table tr:first-child td{
+    padding: 0;
+  }
+
+  .sku-box-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .wid-80 {
+    width: 80px;
+    height: 80px;
+  }
+
+  .wid-158 {
+    width: 158px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .height-82 {
+    height: 82px;
+    line-height: 82px;
+  }
+
+  .testTable th:first-child {
+    text-align: left;
+    width: 28%;
   }
 
   .order-box h3 {
@@ -271,8 +428,46 @@ export default {
     line-height: 2;
     margin-bottom: 15px;
   }
-  .pager {
-    float: right;
+
+  .wid_15 {
+    width: 15%;
   }
 
+  .padd-l-20 {
+    padding-left: 20px;
+  }
+
+  .border-l {
+    border-left: 1px solid rgba(240,240,240,1);
+  }
+
+
+  .text-style-p-linhei p {
+    line-height: 3;
+  }
+  .text-style-p-color p {
+    color: #666666;
+  }
+
+  .border-b-c8 :last-child {
+    /*border: none;*/
+  }
+
+  .back_c8 {
+    height: 30px;
+    background:rgba(240,240,240,1);
+    border-color: rgba(200,200,200,1);
+    color: #666666;
+    border-radius: 0;
+    font-size: 12px;
+  }
+
+  .padding-l-r-20 {
+    padding-left: 20px;
+  }
+
+  .border-b-c8 {
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(200,200,200,1);
+  }
 </style>
