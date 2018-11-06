@@ -5,13 +5,13 @@
 @section('customize_css')
     @parent
     .scrollt {
-        height:400px;
-        overflow:hidden;
+    height:400px;
+    overflow:hidden;
     }
     .sublock{
-        display: block !important;
-        margin-left: -15px;
-        margin-right: -15px;
+    display: block !important;
+    margin-left: -15px;
+    margin-right: -15px;
     }
 @endsection
 
@@ -82,7 +82,7 @@
     },'json');
     });
     {{--});--}}
-    @endsection
+@endsection
 
 @section('content')
     @parent
@@ -118,18 +118,18 @@
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">
                     <thead>
-                        <tr class="active">
-                            <th>商品图片</th>
-                            <th>SKU编码</th>
-                            <th>商品名称</th>
-                            <th>商品属性</th>
-                            <th>已入库数量</th>
-                            <th>采购价</th>
-                            <th>采购数量</th>
-                            <th>运费</th>
-                            <th>商品税率</th>
-                            <th>总价</th>
-                        </tr>
+                    <tr class="active">
+                        <th>商品图片</th>
+                        <th>SKU编码</th>
+                        <th>商品名称</th>
+                        <th>商品属性</th>
+                        <th>已入库数量</th>
+                        <th>采购价</th>
+                        <th>采购数量</th>
+                        <th>运费</th>
+                        <th>商品税率</th>
+                        <th>总价</th>
+                    </tr>
                     </thead>
                     <tbody>
                     @foreach($purchase_sku_relation as $purchase_sku)
@@ -148,40 +148,56 @@
                     @endforeach
                     </tbody>
                     <tfoot>
-                        <tr class="active" id="append-sku">
-                            <td colspan="4" class="fb">合计</td>
-                            <td colspan="1" class="fb">附加费用：<span class="red">{{$purchase->surcharge}}</span></td>
-                            <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">{{$purchase->count}}</span></td>
-                            <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">{{$purchase->price}}</span>元</td>
-                        </tr>
+                    <tr class="active" id="append-sku">
+                        <td colspan="4" class="fb">合计</td>
+                        <td colspan="1" class="fb">附加费用：<span class="red">{{$purchase->surcharge}}</span></td>
+                        <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">{{$purchase->count}}</span></td>
+                        <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">{{$purchase->price}}</span>元</td>
+                    </tr>
                     </tfoot>
                 </table>
+
+                <h5>审核状态</h5>
+                <hr>
+                <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
+                    <li for="status" class="mb-0r control-label col-md-6"><b>状态:</b>
+                        @if($purchase->status == 1)
+                            <td>待主管审核</td>
+                        @elseif($purchase->status == 2)
+                            <td>待财务审核</td>
+                        @elseif($purchase->status == 9)
+                            <td>已通过</td>
+                        @endif
+                    </li>
+                    <li for="msg" class="mb-0r control-label col-md-6"><b>原因:</b>{{ $purchase->msg}}</li>
+
+                </ul>
             </div>
         </div>
         <div style="text-align: center">
-{{--        @if(in_array($purchase->verified,[1,2]))--}}
-        @if ($purchase->verified == 1)
-            <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
-        <button type="button" class="btn btn-success mr-2r" id="approved">
-            <i class="glyphicon glyphicon-ok"></i> 通过审批
-        </button>
-        <button type="button" class="btn btn-warning mr-2r" id="rejected" data-toggle="modal" data-target="#myModal">
-            <i class="glyphicon glyphicon-remove"></i> 驳回审批
-        </button>
+            {{--        @if(in_array($purchase->verified,[1,2]))--}}
+            @if ($purchase->verified == 1)
+                <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
+                <button type="button" class="btn btn-success mr-2r" id="approved">
+                    <i class="glyphicon glyphicon-ok"></i> 通过审批
+                </button>
+                <button type="button" class="btn btn-warning mr-2r" id="rejected" data-toggle="modal" data-target="#myModal">
+                    <i class="glyphicon glyphicon-remove"></i> 驳回审批
+                </button>
 
             @elseif($purchase->verified == 2)
-                    <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
-                    <button type="button" class="btn btn-success mr-2r" id="charges">
-                        <i class="glyphicon glyphicon-ok"></i> 通过审批
-                    </button>
+                <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
+                <button type="button" class="btn btn-success mr-2r" id="charges">
+                    <i class="glyphicon glyphicon-ok"></i> 通过审批
+                </button>
 
-        @endif
+            @endif
 
-        <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">
-            <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
-        </button>
-    </div>
-            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+            <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">
+                <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
+            </button>
+        </div>
+        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     </div>
     <form method="post"  class="form-ho rizontal" role="form" id="myForm" onsubmit="return ">
         <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
