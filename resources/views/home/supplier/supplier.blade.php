@@ -89,10 +89,10 @@
                 <div class="col-sm-12">
 
                     {{--<button type="button" id="batch-verify" class="btn btn-success mr-2r">--}}
-                        {{--<i class="glyphicon glyphicon-ok"></i> 通过审核--}}
+                    {{--<i class="glyphicon glyphicon-ok"></i> 通过审核--}}
                     {{--</button>--}}
                     {{--<button type="button" id="batch-close" class="btn btn-danger mr-2r">--}}
-                        {{--<i class="glyphicon glyphicon-remove"></i> 驳回--}}
+                    {{--<i class="glyphicon glyphicon-remove"></i> 驳回--}}
                     {{--</button>--}}
                     <div class="container">
                         <a type="button" class="btn btn-white mr-2r" href="{{url('/supplier/create')}}">
@@ -101,7 +101,7 @@
                         <button type="button"  data-toggle="modal" data-target="#myModal" class="btn btn-success mr-2r">
                             <i class="glyphicon glyphicon-ok"></i> 通过审核
                         </button>
-                        <button type="button"  data-toggle="modal" data-target="#myorderOut" class="btn btn-danger mr-2r">
+                        <button type="button"  data-toggle="modal" data-target="#myorderOut" id="pruchaseBohui" class="btn btn-danger mr-2r">
                             <i class="glyphicon glyphicon-remove"></i> 驳回
                         </button>
                         <button type="submit" id="batch-excel" class="btn btn-white mr-2r">
@@ -192,7 +192,7 @@
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
                                         @if($supplier->type == 1)
-                                        <span class="label label-danger">采销</span>
+                                            <span class="label label-danger">采销</span>
                                         @elseif($supplier->type == 2)
                                             <span class="label label-warning">代销</span>
                                         @elseif($supplier->type == 3)
@@ -277,12 +277,12 @@
                                     <td>
                                         <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
                                         <a class="btn btn-default btn-sm" href="{{ url('/supplier/details') }}?id={{$supplier->id}}" target="_blank">详情</a>
-                                        {{--<button class="btn btn-default btn-sm" data-toggle="modal" onclick="addMould({{$supplier->id}})"  value="{{ $supplier->id }}">模版</button>--}}
-                                        {{--@if($supplier->supplier_user_id == 0)--}}
-                                            {{--<button class="btn btn-success btn-sm" data-toggle="modal" onclick="addSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">生成用户</button>--}}
-                                        {{--@else--}}
-                                            {{--<button class="btn btn-danger btn-sm" data-toggle="modal" onclick="deleteSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">取消用户</button>--}}
-                                        {{--@endif--}}
+                                        <button class="btn btn-default btn-sm" data-toggle="modal" onclick="addMould({{$supplier->id}})"  value="{{ $supplier->id }}">模版</button>
+                                        @if($supplier->supplier_user_id == 0)
+                                            <button class="btn btn-success btn-sm" data-toggle="modal" onclick="addSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">生成用户</button>
+                                        @else
+                                            <button class="btn btn-danger btn-sm" data-toggle="modal" onclick="deleteSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">取消用户</button>
+                                        @endif
 
                                     </td>
                                 </tr>
@@ -442,28 +442,28 @@
     }
     {{--生成用户--}}
     function addSupplierUser(id){
-        $.post('/supplier/addUser',{"_token":_token,'id':id},function (e) {
-            if (e.status == 1){
-                alert(e.message);
-                location.reload();
-            }else{
-                alert(e.message);
-                location.reload();
-            }
-        },'json');
+    $.post('/supplier/addUser',{"_token":_token,'id':id},function (e) {
+    if (e.status == 1){
+    alert(e.message);
+    location.reload();
+    }else{
+    alert(e.message);
+    location.reload();
+    }
+    },'json');
     }
 
     {{--取消关联用户--}}
     function deleteSupplierUser(id){
-        $.post('/supplier/deleteUser',{"_token":_token,'id':id},function (e) {
-            if (e.status == 1){
-                alert(e.message);
-                location.reload();
+    $.post('/supplier/deleteUser',{"_token":_token,'id':id},function (e) {
+    if (e.status == 1){
+    alert(e.message);
+    location.reload();
 
-            }else{
-                alert(e.message);
-                location.reload();
-            }
+    }else{
+    alert(e.message);
+    location.reload();
+    }
     },'json');
     }
 @endsection
@@ -485,6 +485,18 @@
 
     {{--});--}}
 
+    $('#pruchaseBohui').click(function(){
+    var id_array = [];
+    $("input[name='Order']").each(function() {
+    if($(this).is(':checked')){
+    id_array.push($(this).attr('value'));
+    }
+    });
+    if(id_array == ''){
+    layer.msg('请先勾选！');
+    return false;
+    }
+    })
 
     $(document).on("click","#sures",function(obj){
 
