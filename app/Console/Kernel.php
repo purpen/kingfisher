@@ -30,25 +30,26 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncEnterWarehouse::class,
         \App\Console\Commands\SyncUserType::class,
         \App\Console\Commands\SyncVirtualSkuCount::class,
+        \App\Console\Commands\SkuCountChange::class
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
 //        $schedule->command('inspire')
 //                 ->everyMinute();
-        
+
         /**
          * 自营商城平台订单同步任务, 每5分钟
          */
 //        $schedule->command('sync:fiuOrder')
 //                 ->everyFiveMinutes();
-        
+
         /**
          * ERP未处理订单，自动与各平台同步最新状态
          */
