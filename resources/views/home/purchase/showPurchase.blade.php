@@ -234,7 +234,7 @@
         <button type="button" class="btn btn-success mr-2r" id="approved">
             <i class="glyphicon glyphicon-ok"></i> 通过审批
         </button>
-        <button type="button" class="btn btn-warning mr-2r" id="rejected" data-toggle="modal" data-target="#myModal">
+        <button type="button" class="btn btn-magenta mr-2r" id="rejected" data-toggle="modal" data-target="#myModal">
             <i class="glyphicon glyphicon-remove"></i> 驳回审批
         </button>
 
