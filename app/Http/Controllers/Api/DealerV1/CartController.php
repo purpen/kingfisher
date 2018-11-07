@@ -110,10 +110,11 @@ class CartController extends BaseController
                     $v->status = true;
                 }
 
-                if (intval($mode->getCountNumAttribute()) <= 0){
+                $zero = intval($mode->getCountNumAttribute());
+                if ($zero <= 0){
                     $v->count = 0;
                 } else {
-                    $v->count = intval($mode->getCountNumAttribute());
+                    $v->count = $zero;
                 }
 
 
@@ -159,20 +160,14 @@ class CartController extends BaseController
                 } else {
                     $asset = AssetsModel::where(['target_id' => $v->product_id,'type' => 1])->first();//商品图
                     if (count($asset)>0){
-                        $aset = '';
-//                        foreach ($asset as $val){
-                            $aset = $asset->file->small;
-//                        }
+                        $aset = $asset->file->small;
                         $v->cover = $aset;
                     }
                 }
-                //                $v->cover = '';
-//                $v->cover = $mode->first_img;//商品封面图
+
                 if (!$cart) {
                     return $this->response->array(ApiHelper::error('该商品不存在！', 500));
                 }
-
-
 
                 if($collection){
                     $focus = 1;
@@ -181,11 +176,11 @@ class CartController extends BaseController
                 }
 
                 $v->status = false;
-
-                if (intval($mode->getCountNumAttribute()) <= 0){
+                $zero = intval($mode->getCountNumAttribute());
+                if ($zero <= 0){
                     $v->count = 0;
                 } else {
-                    $v->count = intval($mode->getCountNumAttribute());
+                    $v->count = $zero;
                 }
 
                 $data['data'][$k] = array(

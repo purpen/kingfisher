@@ -13,6 +13,75 @@
     margin-left: -15px;
     margin-right: -15px;
     }
+    .modal-header-back{
+    background: rgba(255,51,102,.8);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    }
+    .modal-header-back:hover, .modal-header-back:focus, .modal-header-back:active{
+    background: rgba(255,51,102,.8) !important;
+    border-color: rgba(255,51,102,.8) !important;
+    }
+    .modal-header-back h4{
+    margin: 0;
+    height: 36px;
+    line-height:36px;
+    }
+    .close-back{
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: .5;
+    font-size: 33px;
+    margin-top: 1px;
+    }
+    .close-back:focus, .close-back:hover{
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: .5;
+    }
+    .modal-header .close{
+    margin-top: 0;
+    }
+    .modal.in .modal-dialog{
+    width: 500px;
+    margin: 0;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    transition: transform 0s ease-out;
+    }
+    .modal-content{
+    border-radius: 8px;
+    overflow: hidden;
+    }
+    .fade{
+    transition: opacity 0s linear;
+    }
+    .modal.in .modal-dialog{
+    transition: transform 0s ease-out;
+    }
+    .form-group-back{
+    margin: 0 auto;
+    width: 450px;
+    margin-left: 10px !important;
+    }
+    .form-group-back textarea{
+    width: 446px;
+    border: 1px solid #666;
+    }
+    .btn-info{
+    color: #fff;
+    background-color: rgba(255,51,102,.8);
+    border-color: rgba(255,51,102,.8);
+    }
+    .btn-info:hover, .btn-info: active, .btn-info:focus{
+    color: #fff !important;
+    background-color: #ff0040 !important;
+    border-color: #db0037 !important;
+    }
 @endsection
 
 @section('customize_js')
@@ -175,15 +244,15 @@
             </div>
         </div>
         <div style="text-align: center">
-            {{--        @if(in_array($purchase->verified,[1,2]))--}}
-            @if ($purchase->verified == 1)
-                <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
-                <button type="button" class="btn btn-success mr-2r" id="approved">
-                    <i class="glyphicon glyphicon-ok"></i> 通过审批
-                </button>
-                <button type="button" class="btn btn-warning mr-2r" id="rejected" data-toggle="modal" data-target="#myModal">
-                    <i class="glyphicon glyphicon-remove"></i> 驳回审批
-                </button>
+{{--        @if(in_array($purchase->verified,[1,2]))--}}
+        @if ($purchase->verified == 1)
+            <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
+        <button type="button" class="btn btn-success mr-2r" id="approved">
+            <i class="glyphicon glyphicon-ok"></i> 通过审批
+        </button>
+        <button type="button" class="btn btn-magenta mr-2r" id="rejected" data-toggle="modal" data-target="#myModal">
+            <i class="glyphicon glyphicon-remove"></i> 驳回审批
+        </button>
 
             @elseif($purchase->verified == 2)
                 <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
@@ -203,18 +272,18 @@
         <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="btn-info modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="btn-info modal-header modal-header-back ">
+                        <button type="button" class="close close-back" data-dismiss="modal">&times;</button>
                         <h4>请填写驳回原因：</h4>
                     </div>
 
                     <div class="modal-body">
-                        <div class="form-group" style="margin-left:40px;">
+                        <div class="form-group form-group-back" >
                             <textarea id='invoiceTextarea' rows='8' cols='60' name='msg'></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button"  id="sure" class="btn btn-info">确定</button>
+                        <button type="button"  id="sure" class="btn btn-info btn_style">确定</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
 

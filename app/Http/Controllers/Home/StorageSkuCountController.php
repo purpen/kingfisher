@@ -23,14 +23,20 @@ class StorageSkuCountController extends Controller
     {
         $number = '';
         $product_number = '';
+        $name = '';
         $title = '';
+        $storage_id = '';
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
             ->paginate(10);
+        $storages = StorageModel::select('id','name')->where('status','=','1')->get();
 
         return view('home/storage.storageSkuCount' , [
             'storageSkuCounts' => $storageSkuCounts,
+            'storages'=>$storages,
+            'storages_id'=>$storage_id,
             'number' => $number,
+            'name'=>$name,
             'product_number' => $product_number,
             'title' => $title
         ]);
@@ -43,23 +49,43 @@ class StorageSkuCountController extends Controller
         $product_number = $request->input('product_number');//商品编码
         $number = $request->input('number');//sku编码
         $title = $request->input('title');//商品名称
-//        $storages = StorageModel::orderBy('id' , 'desc')->get();
+        $storage_id = $request->input('storage_id');//仓库id
+        $storages = StorageModel::orderBy('id' , 'desc')->get();
+        if ($storage_id != 0 && $storage_id != ''){
+            $storageSkuCounts = StorageSkuCountModel
+                ::leftjoin('products','storage_sku_count.product_id','=','products.id')
+                ->leftjoin('products_sku','storage_sku_count.sku_id','=','products_sku.id')
+                ->select('storage_sku_count.*')
+                ->orderBy('storage_sku_count.id' , 'desc')
+                ->where('storage_sku_count.storage_id','=',$storage_id)
+                ->where('storage_sku_count.product_number' , 'like','%'.$product_number.'%')
+                ->where('products_sku.number' , 'like','%'.$number.'%')
+                ->where('products.title' , 'like','%'.$title.'%')
+                ->paginate(20);
+            $first = StorageModel::select('id')->where('id','=',$storage_id)->first();
+            $name = $first['id'];
 
-        $storageSkuCounts = StorageSkuCountModel
-            ::leftjoin('products','storage_sku_count.product_id','=','products.id')
-            ->leftjoin('products_sku','storage_sku_count.sku_id','=','products_sku.id')
-            ->select('storage_sku_count.*')
-            ->orderBy('storage_sku_count.id' , 'desc')
-            ->where('storage_sku_count.product_number' , 'like','%'.$product_number.'%')
-            ->where('products_sku.number' , 'like','%'.$number.'%')
-            ->where('products.title' , 'like','%'.$title.'%')
-            ->paginate(20);
+        }else{
+            $storageSkuCounts = StorageSkuCountModel
+                ::leftjoin('products','storage_sku_count.product_id','=','products.id')
+                ->leftjoin('products_sku','storage_sku_count.sku_id','=','products_sku.id')
+                ->select('storage_sku_count.*')
+                ->orderBy('storage_sku_count.id' , 'desc')
+                ->where('storage_sku_count.product_number' , 'like','%'.$product_number.'%')
+                ->where('products_sku.number' , 'like','%'.$number.'%')
+                ->where('products.title' , 'like','%'.$title.'%')
+                ->paginate(20);
+            $name = '';
+        }
 
         if($storageSkuCounts){
             return view('home/storage.storageSkuCount' , [
                 'storageSkuCounts' => $storageSkuCounts,
+                'storages'=>$storages,
                 'number' => $number,
+                'name'=>$name,
                 'title' => $title,
+                 'storages_id'=>$storage_id,
                 'product_number' => $product_number
             ]);
         }else{
