@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\EnterWarehouseSkuRelationModel;
 use App\Models\EnterWarehousesModel;
 use App\Models\ProductsSkuModel;
-use App\Models\PurchaseModel;
 use App\Models\StorageSkuCountModel;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -45,12 +43,13 @@ class bugChange extends Command
     {
 
         $d = [
-            513,
+            'RKCG2018110500005',
         ];
+
         try {
             DB::beginTransaction();
             foreach ($d as $v) {
-                $ew = EnterWarehousesModel::withTrashed()->where("id", $v)->first();
+                $ew = EnterWarehousesModel::query()->where("number", $v)->first();
                 if (!$ew) {
                     continue;
                 }
@@ -65,7 +64,7 @@ class bugChange extends Command
                 }
 
                 $storage_id = $ew->storage_id;
-                $ewhs = EnterWarehouseSkuRelationModel::withTrashed()->where('enter_warehouse_id', $v)->get();
+                $ewhs = $ew->enterWarehouseSkus;
                 foreach ($ewhs as $ewh) {
                     $sku_id = $ewh->sku_id;
 
@@ -74,23 +73,24 @@ class bugChange extends Command
                         ->where("storage_id", $storage_id)
                         ->first();
                     if ($sscm) {  // 仓库sku
-                        $sscm->count = $sscm->count + $ewh->in_count;
+                        $sscm->count = $sscm->count - $ewh->in_count;
                         $sscm->save();
                     }
 
                     $sku = ProductsSkuModel::find($sku_id);
                     if ($sku) {
-                        $sku->quantity = $sku->quantity + $ewh->in_count;  //sku
+                        $sku->quantity = $sku->quantity - $ewh->in_count;  //sku
                         $sku->save();
 
                         $product = $sku->product;
-                        $product->inventory = $product->inventory + $ewh->in_count; // product
+                        $product->inventory = $product->inventory - $ewh->in_count; // product
                         $product->save();
                     }
-                    $ewh->restore();
+                    $ewh->forceDelete();
                 }
-                $ew->restore();
+                $ew->forceDelete();
             }
+
 
         } catch (\Exception $e) {
             DB::rollBack();
