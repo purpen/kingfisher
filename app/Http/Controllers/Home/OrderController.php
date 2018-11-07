@@ -110,7 +110,9 @@ class OrderController extends Controller
 
         foreach ($order_list as $list) {
             $list->store_name = $list->distributor ? $list->distributor->store_name : '';
+
         }
+
 
         return view('home/order.order', [
             'order_list' => $order_list,

@@ -224,7 +224,7 @@ class ExcelController extends Controller
      * 使用库存盘点ID 导出选择的出库单（excel格式）
      */
     public function orderOutExcel(Request $request)
-    { 
+    {
         //需要下载的出库单 id数组
         $all = $request->all();
         $id_array = [];
@@ -375,9 +375,11 @@ class ExcelController extends Controller
             'pay_money as 付款金额',
             'freight as 邮费',
             'id',
-            'buyer_name as 买家名',
+            'payment_type',
+            'payment_time as 支付时间',
+            'buyer_name as 收货人',
+            'distributor_id',
             'buyer_address as 收货地址',
-            'buyer_summary as 买家备注',
             'store_id',
             'express_id',
             'express_no as 快递单号',
@@ -410,9 +412,11 @@ class ExcelController extends Controller
             foreach ($v->orderSkuRelation as $s) {
                 $sku_info = $sku_info . $s->sku_name . '*' . $s->quantity . ';';
             }
+            $v->支付方式 = $v->payment_type;
             $v->明细 = $sku_info;
+            $v->门店名称 = $v->distributor ? $v->distributor->store_name : '';
 
-            unset($v->store_id, $v->express_id, $v->id, $v->change_status);
+            unset($v->store_id, $v->express_id, $v->id, $v->change_status,$v->form_app_val,$v->type_val,$v->logistics,$v->distributor_id,$v->payment_type);
 
         }
 
