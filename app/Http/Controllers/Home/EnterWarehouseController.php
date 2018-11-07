@@ -109,47 +109,47 @@ class EnterWarehouseController extends Controller
     }
 
 
-     function getOutWarehousesData($id,$detail=false)
+    function getOutWarehousesData($id, $detail = false)
     {
         $enter_warehouse = EnterWarehousesModel::find($id);
         //如果是调拨单入库，检测调拨单是否已出库
-        if($enter_warehouse->type == 3){
+        if ($enter_warehouse->type == 3) {
             //调拨单ID
             $chang_id = $enter_warehouse->target_id;
-            $out_warehouse = OutWarehousesModel::where(['type' => 3,'target_id' => $chang_id])->first();
-            if(!$out_warehouse){
+            $out_warehouse = OutWarehousesModel::where(['type' => 3, 'target_id' => $chang_id])->first();
+            if (!$out_warehouse) {
                 return '参数错误';
             }
-            if($out_warehouse->storage_status == 0){
+            if ($out_warehouse->storage_status == 0) {
                 return '调拨仓库还没有出库，不能入库操作';
             }
         }
 
-        $enter_warehouse->changeWarehouse_id = $enter_warehouse->changeWarehouse?$enter_warehouse->changeWarehouse->id:'';
-        $enter_warehouse->changeWarehouse_department = $enter_warehouse->changeWarehouse?$enter_warehouse->changeWarehouse->in_department:'';//调入部门
-        $enter_warehouse->purchase_id = $enter_warehouse->purchase?$enter_warehouse->purchase->id:'';
-        $enter_warehouse->purchase_department = $enter_warehouse->purchase?$enter_warehouse->purchase->department:'';
-        $enter_warehouse->storage_id = $enter_warehouse->storage?$enter_warehouse->storage->id:'';
-        $enter_warehouse->storage_name = $enter_warehouse->storage?$enter_warehouse->storage->name:'';
+        $enter_warehouse->changeWarehouse_id = $enter_warehouse->changeWarehouse ? $enter_warehouse->changeWarehouse->id : '';
+        $enter_warehouse->changeWarehouse_department = $enter_warehouse->changeWarehouse ? $enter_warehouse->changeWarehouse->in_department : '';//调入部门
+        $enter_warehouse->purchase_id = $enter_warehouse->purchase ? $enter_warehouse->purchase->id : '';
+        $enter_warehouse->purchase_department = $enter_warehouse->purchase ? $enter_warehouse->purchase->department : '';
+        $enter_warehouse->storage_id = $enter_warehouse->storage ? $enter_warehouse->storage->id : '';
+        $enter_warehouse->storage_name = $enter_warehouse->storage ? $enter_warehouse->storage->name : '';
         $enter_warehouse->not_count = $enter_warehouse->count - $enter_warehouse->in_count;
         // 获取明细
         $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
         $sku_model = new ProductsSkuModel();
         $enter_skus = $sku_model->detailedSku($enter_sku);
-        foreach ($enter_sku as $sku){
+        foreach ($enter_sku as $sku) {
             $sku->not_count = $sku->count - $sku->in_count;
         }
 
-        $returnData = [ 'enter_warehouse' => $enter_warehouse,
+        $returnData = ['enter_warehouse' => $enter_warehouse,
             'enter_skus' => $enter_skus,
             'tab_menu' => $this->tab_menu,
             'number' => ''
         ];
         $res = [];
-        if ($detail && $enter_warehouse->purchase_id){//返回采购单历史记录
-            $purchasing = PurchasingWarehousingModel::where('purchases_id',$enter_warehouse->purchase_id)->select('id','user_id','storage_time','purchases_id','number as num')->orderBy('id','ASC')->get();
+        if ($detail && $enter_warehouse->purchase_id) {//返回采购单历史记录
+            $purchasing = PurchasingWarehousingModel::where('purchases_id', $enter_warehouse->purchase_id)->select('id', 'user_id', 'storage_time', 'purchases_id', 'number as num')->orderBy('id', 'ASC')->get();
 
-            if (count($purchasing)>0) {
+            if (count($purchasing) > 0) {
                 $are = $purchasing->toArray();
                 foreach ($are as $key => &$val) {
                     $sku_num = json_decode($val['num'], true);
@@ -169,21 +169,26 @@ class EnterWarehouseController extends Controller
                 $orders_sku = $sku_model->detailedSku($sku_arr);
                 $ordersSku = objectToArray($orders_sku);
 
-                foreach ($res as $k => $v) {
-                    $res[$k]['orders_sku'] = $ordersSku;
-                    for ($i = 0; $i < count($res[$k]['sku_num']); $i++) {
-                        if ($v['sku_num'][$i]['sku_id'] == $res[$k]['orders_sku'][$i]['sku_id']) {
-                            $res[$k]['orders_sku'][$i]['nums'] = $v['sku_num'][$i]['number'];
+                foreach ($orders_sku as $key => $val) {
+                    $orders_sku[$key] = (array)($val);
+                }
+                foreach ($res as $key => $val) {
+                    $res[$key]['orders_sku'] = $orders_sku;
+                }
+                foreach ($res as &$item) {
+                    foreach ($item['sku_num'] as $item1) {
+                        foreach ($item['orders_sku'] as &$item2) {
+                            if ($item1['sku_id'] == $item2['sku_id']) {
+                                $item2['nums'] = $item1['number'];
+                            }
                         }
                     }
                 }
             }
-//            $returnData['orders_sku'] = $orders_sku;
+        } elseif ($detail && $enter_warehouse->changeWarehouse_id) {//返回调拨单历史记录
+            $allocation_out = AllocationOutModel::where('allocation_id', $enter_warehouse->changeWarehouse_id)->where('type', 1)->select('id', 'user_id', 'outorin_time', 'allocation_id', 'number as num')->orderBy('id', 'ASC')->get();
 
-        }elseif($detail && $enter_warehouse->changeWarehouse_id){//返回调拨单历史记录
-            $allocation_out = AllocationOutModel::where('allocation_id',$enter_warehouse->changeWarehouse_id)->where('type',1)->select('id','user_id','outorin_time','allocation_id','number as num')->orderBy('id','ASC')->get();
-
-            if (count($allocation_out)>0) {
+            if (count($allocation_out) > 0) {
                 $all_out = $allocation_out->toArray();
                 foreach ($all_out as $key => &$val) {
                     $sku_num = json_decode($val['num'], true);
@@ -202,11 +207,18 @@ class EnterWarehouseController extends Controller
                 $orders_sku = $sku_model->detailedSku($sku_arr);
                 $ordersSku = objectToArray($orders_sku);
 
-                foreach ($res as $k => $v) {
-                    $res[$k]['orders_sku'] = $ordersSku;
-                    for ($i = 0; $i < count($res[$k]['sku_num']); $i++) {
-                        if ($v['sku_num'][$i]['sku_id'] == $res[$k]['orders_sku'][$i]['sku_id']) {
-                            $res[$k]['orders_sku'][$i]['nums'] = $v['sku_num'][$i]['number'];
+                foreach ($orders_sku as $key => $val) {
+                    $orders_sku[$key] = (array)($val);
+                }
+                foreach ($res as $key => $val) {
+                    $res[$key]['orders_sku'] = $orders_sku;
+                }
+                foreach ($res as &$item) {
+                    foreach ($item['sku_num'] as $item1) {
+                        foreach ($item['orders_sku'] as &$item2) {
+                            if ($item1['sku_id'] == $item2['sku_id']) {
+                                $item2['nums'] = $item1['number'];
+                            }
                         }
                     }
                 }
@@ -238,41 +250,41 @@ class EnterWarehouseController extends Controller
     public function ajaxEdit(Request $request)
     {
         $enter_warehouse_id = (int)$request->input('enter_warehouse_id');
-        if(empty($enter_warehouse_id)){
-            return ajax_json(0,'参数错误');
+        if (empty($enter_warehouse_id)) {
+            return ajax_json(0, '参数错误');
         }
 
         $enter_warehouse = EnterWarehousesModel::find($enter_warehouse_id);
-        if(!$enter_warehouse){
+        if (!$enter_warehouse) {
             return ajax_json(0, '参数错误');
         }
 
         //如果是调拨单入库，检测调拨单是否已出库
-        if($enter_warehouse->type == 3){
+        if ($enter_warehouse->type == 3) {
             //调拨单ID
             $chang_id = $enter_warehouse->target_id;
-            $out_warehouse = OutWarehousesModel::where(['type' => 3,'target_id' => $chang_id])->first();
-            if(!$out_warehouse){
+            $out_warehouse = OutWarehousesModel::where(['type' => 3, 'target_id' => $chang_id])->first();
+            if (!$out_warehouse) {
                 return ajax_json(0, '参数错误');
             }
-            if($out_warehouse->storage_status == 0){
+            if ($out_warehouse->storage_status == 0) {
                 return ajax_json(0, '调拨仓库还没有出库，不能入库操作');
             }
 
         }
-        
+
         $enter_warehouse->storage_name = $enter_warehouse->storage->name;
         $enter_warehouse->not_count = $enter_warehouse->count - $enter_warehouse->in_count;
 
         $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
-        if(!$enter_sku){
+        if (!$enter_sku) {
             return ajax_json(0, '参数错误');
         }
 
         $sku_model = new ProductsSkuModel();
         $enter_sku = $sku_model->detailedSku($enter_sku);
-        
-        foreach ($enter_sku as $sku){
+
+        foreach ($enter_sku as $sku) {
             $sku->not_count = $sku->count - $sku->in_count;
         }
 
@@ -303,34 +315,30 @@ class EnterWarehouseController extends Controller
         $enter_warehouse->not_count = $enter_warehouse->count - $enter_warehouse->in_count;
 
         $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
-        if(!$enter_sku){
+        if (!$enter_sku) {
             return ajax_json(0, '参数错误');
         }
 
         $sku_model = new ProductsSkuModel();
         $enter_sku = $sku_model->detailedSku($enter_sku);
 
-        foreach ($enter_sku as $sku){
+        foreach ($enter_sku as $sku) {
             $sku->not_count = $sku->count - $sku->in_count;
         }
 
         $supplier = null;
         $out_warehouse = null;
         // 采购单
-        if ($enter_warehouse->type == 1){
+        if ($enter_warehouse->type == 1) {
             $purchase = PurchaseModel::find($enter_warehouse->target_id);
             $supplier = $purchase->supplier;
-        }
-//        采购退货
-        elseif ($enter_warehouse->type == 2)
-        {
+        } //        采购退货
+        elseif ($enter_warehouse->type == 2) {
 
-        }
-        // 调拨单
-        elseif ($enter_warehouse->type == 3)
-        {
+        } // 调拨单
+        elseif ($enter_warehouse->type == 3) {
             $chang_id = $enter_warehouse->target_id;
-            $out_warehouse = OutWarehousesModel::where(['type' => 3,'target_id' => $chang_id])->first();
+            $out_warehouse = OutWarehousesModel::where(['type' => 3, 'target_id' => $chang_id])->first();
             $out_warehouse->storage_name = $enter_warehouse->storage->name;
         }
 

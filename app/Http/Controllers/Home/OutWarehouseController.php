@@ -270,25 +270,31 @@ class OutWarehouseController extends Controller
             $orders_sku = $sku_model->detailedSku($sku_arr);
             $ordersSku = objectToArray($orders_sku);
 
-            foreach ($res as $k=>$v){
-                $res[$k]['orders_sku'] = $ordersSku;
-                for ($i=0;$i<count($res[$k]['sku_num']);$i++){
-                    if ($v['sku_num'][$i]['sku_id'] == $res[$k]['orders_sku'][$i]['sku_id']){
-                        $res[$k]['orders_sku'][$i]['nums'] = $v['sku_num'][$i]['number'];
-                    }
-                }
-            }
-//            foreach ($arr as &$item) {
-//                foreach  ($item['sku_num'] as $item1) {
-//                    foreach ($item['orders_sku'] as &$item2) {
-//                        if ($item1['sku_id'] == $item2['sku_id']) {
-//                            $item2['nums'] = $item1['number'];
-//                        }
+//            foreach ($res as $k=>$v){
+//                $res[$k]['orders_sku'] = $ordersSku;
+//                for ($i=0;$i<count($res[$k]['sku_num']);$i++){
+//                    if ($v['sku_num'][$i]['sku_id'] == $res[$k]['orders_sku'][$i]['sku_id']){
+//                        $res[$k]['orders_sku'][$i]['nums'] = $v['sku_num'][$i]['number'];
 //                    }
 //                }
-//                /*echo "<pre>";
-//                    print_r($item2);*/
 //            }
+                foreach ($orders_sku as $key => $val) {
+                    $orders_sku[$key] = (array)($val);
+                }
+                foreach ($res as $key => $val) {
+                    $res[$key]['orders_sku'] = $orders_sku;
+                }
+
+            foreach ($res as &$item) {
+                foreach  ($item['sku_num'] as $item1) {
+                    foreach ($item['orders_sku'] as &$item2) {
+                        if ($item1['sku_id'] == $item2['sku_id']) {
+                            $item2['nums'] = $item1['number'];
+                        }
+                    }
+                }
+
+            }
             }
 
             $returnData['res'] = $res;
@@ -372,13 +378,30 @@ class OutWarehouseController extends Controller
                 $orders_sku = $sku_model->detailedSku($sku_arr);
                 $ordersSku = objectToArray($orders_sku);
 
-                foreach ($res as $k => $v) {
-                    $res[$k]['orders_sku'] = $ordersSku;
-                    for ($i = 0; $i < count($res[$k]['sku_num']); $i++) {
-                        if ($v['sku_num'][$i]['sku_id'] == $res[$k]['orders_sku'][$i]['sku_id']) {
-                            $res[$k]['orders_sku'][$i]['nums'] = $v['sku_num'][$i]['number'];
+//                foreach ($res as $k => $v) {
+//                    $res[$k]['orders_sku'] = $ordersSku;
+//                    for ($i = 0; $i < count($res[$k]['sku_num']); $i++) {
+//                        if ($v['sku_num'][$i]['sku_id'] == $res[$k]['orders_sku'][$i]['sku_id']) {
+//                            $res[$k]['orders_sku'][$i]['nums'] = $v['sku_num'][$i]['number'];
+//                        }
+//                    }
+//                }
+                foreach ($orders_sku as $key => $val) {
+                    $orders_sku[$key] = (array)($val);
+                }
+                foreach ($res as $key => $val) {
+                    $res[$key]['orders_sku'] = $orders_sku;
+                }
+
+                foreach ($res as &$item) {
+                    foreach  ($item['sku_num'] as $item1) {
+                        foreach ($item['orders_sku'] as &$item2) {
+                            if ($item1['sku_id'] == $item2['sku_id']) {
+                                $item2['nums'] = $item1['number'];
+                            }
                         }
                     }
+
                 }
             }
             $returnData['res'] = $res;
