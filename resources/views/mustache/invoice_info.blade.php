@@ -314,18 +314,18 @@
         <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                  <div class="modal-content">
-                     <div class="btn-info modal-header">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                     <div class="btn-info modal-header modal-header-back">
+                          <button type="button" class="close close-back" data-dismiss="modal">&times;</button>
                          <h4>驳回原因</h4>
                      </div>
 
                     <div class="modal-body">
-                       <div class="form-group" style="margin-left:40px;">
+                       <div class="form-group form-group-back" style="margin-left:40px;">
                              <textarea id='invoiceTextarea' rows='8' cols='60' name='reason'></textarea>
                         </div>
                      </div>
                     <div class="modal-footer">
-                        <button type="button"  onclick="invoiceFunction()" class="btn btn-info">确定</button>
+                        <button type="button"  onclick="invoiceFunction()" class="btn btn-info btn_style">确定</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
 
