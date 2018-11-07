@@ -109,7 +109,7 @@
         overflow: hidden;
     }
     .fade{
-        transition: opacity .5s linear;
+        transition: opacity 0s linear;
     }
     .modal.in .modal-dialog{
         transition: transform 0s ease-out;
