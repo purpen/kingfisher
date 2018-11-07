@@ -48,7 +48,7 @@ class bugChange extends Command
         ];
 
         $it = [
-            511,
+            501,
         ];
         try {
             DB::beginTransaction();
@@ -130,6 +130,35 @@ class bugChange extends Command
 
 
             }
+
+            $p = PurchaseModel::find(511);
+
+            $storage_id = $p->storage_id;
+
+            $ps = $p->purchaseSku;
+            foreach ($ps as $p1) {
+
+                $sku_id = $p1->sku_id;
+                $sscm = StorageSkuCountModel::query()
+                    ->where("sku_id", $sku_id)
+                    ->where("storage_id", $storage_id)
+                    ->first();
+                if ($sscm) {  // 仓库sku
+                    $sscm->count = $sscm->count + $p1->count;
+                    $sscm->save();
+                }
+
+                $sku = ProductsSkuModel::find($sku_id);
+                if ($sku) {
+                    $sku->quantity = $sku->quantity + $p1->count;  //sku
+                    $sku->save();
+
+                    $product = $sku->product;
+                    $product->inventory = $product->inventory + $p1->count; // product
+                    $product->save();
+                }
+            }
+
 
         } catch (\Exception $e) {
             DB::rollBack();
