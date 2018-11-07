@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\EnterWarehouseSkuRelationModel;
 use App\Models\EnterWarehousesModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseModel;
@@ -44,12 +45,12 @@ class bugChange extends Command
     {
 
         $d = [
-
+            513,
         ];
         try {
             DB::beginTransaction();
             foreach ($d as $v) {
-                $ew = EnterWarehousesModel::query()->where("number", $v)->first();
+                $ew = EnterWarehousesModel::withTrashed()->where("id", $v)->first();
                 if (!$ew) {
                     continue;
                 }
@@ -64,7 +65,7 @@ class bugChange extends Command
                 }
 
                 $storage_id = $ew->storage_id;
-                $ewhs = $ew->enterWarehouseSkus;
+                $ewhs = EnterWarehouseSkuRelationModel::withTrashed()->where('enter_warehouse_id', $v)->get();
                 foreach ($ewhs as $ewh) {
                     $sku_id = $ewh->sku_id;
 
@@ -73,22 +74,22 @@ class bugChange extends Command
                         ->where("storage_id", $storage_id)
                         ->first();
                     if ($sscm) {  // 仓库sku
-                        $sscm->count = $sscm->count - $ewh->in_count;
+                        $sscm->count = $sscm->count + $ewh->in_count;
                         $sscm->save();
                     }
 
                     $sku = ProductsSkuModel::find($sku_id);
                     if ($sku) {
-                        $sku->quantity = $sku->quantity - $ewh->in_count;  //sku
+                        $sku->quantity = $sku->quantity + $ewh->in_count;  //sku
                         $sku->save();
 
                         $product = $sku->product;
-                        $product->inventory = $product->inventory - $ewh->in_count; // product
+                        $product->inventory = $product->inventory + $ewh->in_count; // product
                         $product->save();
                     }
-                    $ewh->delete();
+                    $ewh->restore();
                 }
-                $ew->delete();
+                $ew->restore();
             }
 
         } catch (\Exception $e) {
