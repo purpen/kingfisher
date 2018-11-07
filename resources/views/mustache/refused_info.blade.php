@@ -285,8 +285,8 @@
         <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="modal-dialog" style="transition: transform 0s ease-out;">
                  <div class="modal-content">
-                     <div class="modal-header-back btn-info modal-header">
-                          <button type="button" class="close-back close" data-dismiss="modal">&times;</button>
+                     <div class="btn-info modal-header modal-header-back">
+                          <button type="button" class="close close-back" data-dismiss="modal">&times;</button>
                          <h4>驳回原因</h4>
                      </div>
 
@@ -296,9 +296,9 @@
                         </div>
                      </div>
                     <div class="modal-footer">
-                        <button type="button"  onclick="invoiceFunction()" class="btn btn-info btn_style">确定</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    </div>
+                       <button type="button"  onclick="invoiceFunction()" class="btn btn-info btn_style">确定</button>
+	                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                	</div>
 
                     </div>
                 </div>

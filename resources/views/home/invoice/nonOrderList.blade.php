@@ -65,73 +65,74 @@
     filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
     }
     .modal-header-back{
-        background: rgba(255,51,102,.8);
-        padding-top: 5px;
-        padding-bottom: 5px;
+
+    background: rgba(255,51,102,.8);
+    padding-top: 5px;
+    padding-bottom: 5px;
     }
     .modal-header-back:hover, .modal-header-back:focus, .modal-header-back:active{
-        background: rgba(255,51,102,.8) !important;
-        border-color: rgba(255,51,102,.8) !important;
+    background: rgba(255,51,102,.8) !important;
+    border-color: rgba(255,51,102,.8) !important;
     }
     .modal-header-back h4{
-        margin: 0;
-        height: 36px;
-        line-height:36px;
+    margin: 0;
+    height: 36px;
+    line-height:36px;
     }
     .close-back{
-        color: #fff;
-        text-decoration: none;
-        cursor: pointer;
-        opacity: .5;
-        font-size: 33px;
-        margin-top: 1px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: .5;
+    font-size: 25px;
+    margin-top: 1px;
     }
     .close-back:focus, .close-back:hover{
-        color: #fff;
-        text-decoration: none;
-        cursor: pointer;
-        opacity: .5;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: .5;
     }
     .modal-header .close{
-        margin-top: 0;
+    margin-top: 0;
     }
     .modal.in .modal-dialog{
-        width: 500px;
-        margin: 0;
-        position: absolute;
-        transform: translate(-50%,-50%);
-        top: 50%;
-        left: 50%;
-        transition: transform 0s ease-out;
+    width: 500px;
+    margin: 0;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    transition: transform 0s ease-out;
     }
     .modal-content{
-        border-radius: 8px;
-        overflow: hidden;
+    border-radius: 8px;
+    overflow: hidden;
     }
     .fade{
-        transition: opacity 0s linear;
+    transition: opacity 0s linear;
     }
     .modal.in .modal-dialog{
-        transition: transform 0s ease-out;
+    transition: transform 0s ease-out;
     }
     .form-group-back{
-        margin: 0 auto;
-        width: 450px;
-        margin-left: 10px !important;
+    margin: 0 auto;
+    width: 450px;
+    margin-left: 10px !important;
     }
     .form-group-back textarea{
-        width: 446px;
-        border: 1px solid #666;
+    width: 446px;
+    border: 1px solid #666;
     }
     .btn-info{
-        color: #fff;
-        background-color: rgba(255,51,102,.8);
-        border-color: rgba(255,51,102,.8);
+    color: #fff;
+    background-color: rgba(255,51,102,.8);
+    border-color: rgba(255,51,102,.8);
     }
     .btn-info:hover, .btn-info: active, .btn-info:focus{
-        color: #fff !important;
-        background-color: #ff0040 !important;
-        border-color: #db0037 !important;
+    color: #fff !important;
+    background-color: #ff0040 !important;
+    border-color: #db0037 !important;
     }
 @endsection
 
