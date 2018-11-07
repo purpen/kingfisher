@@ -224,7 +224,7 @@ class ExcelController extends Controller
      * 使用库存盘点ID 导出选择的出库单（excel格式）
      */
     public function orderOutExcel(Request $request)
-    {
+    { 
         //需要下载的出库单 id数组
         $all = $request->all();
         $id_array = [];
