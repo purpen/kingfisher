@@ -2,6 +2,7 @@
 /**
  * 入库单
  */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -29,11 +30,11 @@ class EnterWarehousesModel extends BaseModel
      *   storage_status // 入库状态：0：未入库；1：入库中；5：已入库
      *   status
      *   summary
-     *   created_at,updated_at 
+     *   created_at,updated_at
      * @var string
      */
     protected $table = 'enter_warehouses';
-    
+
     // 相对关联用户表
     public function user()
     {
@@ -45,9 +46,9 @@ class EnterWarehousesModel extends BaseModel
     {
         return $this->belongsTo('App\Models\StorageModel', 'storage_id');
     }
-    
+
     // 相对关联采购订单表
-    public function purchase() 
+    public function purchase()
     {
         return $this->belongsTo('App\Models\PurchaseModel', 'target_id');
     }
@@ -57,7 +58,7 @@ class EnterWarehousesModel extends BaseModel
     {
         return $this->belongsTo('App\Models\ChangeWarehouseModel', 'target_id');
     }
-    
+
     /**
      * 入库单明细表
      */
@@ -65,7 +66,7 @@ class EnterWarehousesModel extends BaseModel
     {
         return $this->hasMany('App\Models\EnterWarehouseSkuRelationModel', 'enter_warehouse_id');
     }
-    
+
     /**
      * 范围约束：获取不同状态下列表结果集
      */
@@ -73,7 +74,7 @@ class EnterWarehousesModel extends BaseModel
     {
         return $query->where('type', $type);
     }
-    
+
     /**
      * 获取相关采购单属性
      */
@@ -81,18 +82,18 @@ class EnterWarehousesModel extends BaseModel
     {
         switch ($this->type) {
             case 1:
-                $purchase_number = '采购单：'.($this->purchase ? $this->purchase->number : '');
+                $purchase_number = '采购单：' . ($this->purchase ? $this->purchase->number : '');
                 break;
             case 2:
                 $purchase_number = '订单退货';
                 break;
             case 3:
-                $purchase_number = '调拨单：'.($this->changeWarehouse ? $this->changeWarehouse->number :  '');
+                $purchase_number = '调拨单：' . ($this->changeWarehouse ? $this->changeWarehouse->number : '');
                 break;
         }
         return $purchase_number;
     }
-    
+
     /**
      * 获取入库单状态标签
      */
@@ -118,7 +119,7 @@ class EnterWarehousesModel extends BaseModel
     public function getDepartmentValAttribute()
     {
         $val = '';
-        switch ($this->department){
+        switch ($this->department) {
             case 0:
                 break;
             case 1:
@@ -162,7 +163,7 @@ class EnterWarehousesModel extends BaseModel
             }
             switch ($this->type) {
                 case 1:
-                    if(!$this->changeRelationPurchase($sku)){
+                    if (!$this->changeRelationPurchase($sku)) {
                         return false;
                     }
                     break;
@@ -170,13 +171,13 @@ class EnterWarehousesModel extends BaseModel
                     $model = '';    //订单
                     break;
                 case 3:
-                   if(!$this->relationChangeWarehouse()){
-                       return false;
-                   }
+                    if (!$this->relationChangeWarehouse()) {
+                        return false;
+                    }
                     break;
             }
         }
-        
+
         return true;
     }
 
@@ -190,7 +191,7 @@ class EnterWarehousesModel extends BaseModel
     {
         $model = PurchaseModel::find($this->target_id);
         $model_sku_s = PurchaseSkuRelationModel::where('purchase_id', $this->target_id)->get();
-        
+
         foreach ($model_sku_s as $model_sku) {
             $model_sku->in_count = (int)$model_sku->in_count + (int)$sku[$model_sku->sku_id];
             if (!$model_sku->save()) {
@@ -203,7 +204,7 @@ class EnterWarehousesModel extends BaseModel
         if (!$model->save()) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -221,7 +222,7 @@ class EnterWarehousesModel extends BaseModel
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -237,7 +238,16 @@ class EnterWarehousesModel extends BaseModel
         if (!$purchase = PurchaseModel::find($purchase_id)) {
             return $status;
         }
-        
+
+        $re = self::query()
+            ->where('target_id', $purchase_id)
+            ->where('type', 1)
+            ->first();
+        if ($re) {
+            return $status;
+        }
+
+
         $number = CountersModel::get_number('RKCG');
         $this->number = $number;
         $this->target_id = $purchase_id;
@@ -247,19 +257,19 @@ class EnterWarehousesModel extends BaseModel
         $this->count = $purchase->count;
         $this->user_id = $purchase->user_id;
         if ($this->save()) {
-            $purchase_sku_s = PurchaseSkuRelationModel::where('purchase_id',$purchase_id)->get();
+            $purchase_sku_s = PurchaseSkuRelationModel::where('purchase_id', $purchase_id)->get();
             foreach ($purchase_sku_s as $purchase_sku) {
                 $enter_warehouse_sku = new EnterWarehouseSkuRelationModel();
                 $enter_warehouse_sku->enter_warehouse_id = $this->id;
                 $enter_warehouse_sku->sku_id = $purchase_sku->sku_id;
                 $enter_warehouse_sku->count = $purchase_sku->count;
-                if(!$enter_warehouse_sku->save()){
+                if (!$enter_warehouse_sku->save()) {
                     return $status;
                 }
             }
             $status = true;
         }
-        
+
         return $status;
     }
 
@@ -275,7 +285,7 @@ class EnterWarehousesModel extends BaseModel
         if (!$change_warehouse = ChangeWarehouseModel::find($change_warehouse_id)) {
             return $status;
         }
-        
+
         $number = CountersModel::get_number('RKDB');
         $this->number = $number;
         $this->target_id = $change_warehouse_id;
@@ -284,20 +294,20 @@ class EnterWarehousesModel extends BaseModel
         $this->department = $change_warehouse->in_department;
         $this->count = $change_warehouse->count;
         $this->user_id = Auth::user()->id;
-        if($this->save()){
-            $change_warehouse_sku_s = ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$change_warehouse_id)->get();
-            foreach ($change_warehouse_sku_s as $change_warehouse_sku){
+        if ($this->save()) {
+            $change_warehouse_sku_s = ChangeWarehouseSkuRelationModel::where('change_warehouse_id', $change_warehouse_id)->get();
+            foreach ($change_warehouse_sku_s as $change_warehouse_sku) {
                 $enter_warehouse_sku = new EnterWarehouseSkuRelationModel();
                 $enter_warehouse_sku->enter_warehouse_id = $this->id;
                 $enter_warehouse_sku->sku_id = $change_warehouse_sku->sku_id;
                 $enter_warehouse_sku->count = $change_warehouse_sku->count;
-                if(!$enter_warehouse_sku->save()){
+                if (!$enter_warehouse_sku->save()) {
                     return $status;
                 }
             }
             $status = true;
         }
-        
+
         return $status;
     }
 
@@ -306,18 +316,18 @@ class EnterWarehousesModel extends BaseModel
      */
     public static function enterWarehouseCount()
     {
-        return self::where('storage_status','!=',5)->count();
+        return self::where('storage_status', '!=', 5)->count();
     }
 
     public static function boot()
     {
         parent::boot();
-        
+
         // 添加操作日志
-        self::updated(function($obj) {
+        self::updated(function ($obj) {
             $remark = $obj->getDirty();
             RecordsModel::addRecord($obj, 2, 9, $remark);
         });
     }
-    
+
 }
