@@ -14,9 +14,9 @@
 
 @section('content')
     @parent
-    
+
     @include('block.errors')
-    
+
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="navbar-header">
@@ -30,7 +30,14 @@
                         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/search')}}" method="post">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             <div class="form-group">
+                                <select name="storage_id" style="width:100px;height:33px;margin-right:15px;">
+                                    <option value ="0">请选择仓库</option>
+                                    @foreach($storages as $v)
+                                        <option value ={{$v->id}} @if($name == $v->id) selected @endif>{{$v->name}}</option>
+                                    @endforeach
+                                </select>
                                 <div class="input-group">
+
                                     <input type="text" name="product_number" style="margin-right:25px;" value="{{$product_number}}" class="form-control" placeholder="商品编码">
 
                                     <input type="text" name="number" value="{{$number}}" style="margin-right:25px;" class="form-control" placeholder="sku编码">
@@ -94,7 +101,7 @@
             </div>
             <div class="row">
                 @if ($storageSkuCounts)
-                    <div class="col-md-12 text-center">{!! $storageSkuCounts->appends(['number' => $number,'product_number'=>$product_number,'title'=>$title])->render() !!}</div>
+                    <div class="col-md-12 text-center">{!! $storageSkuCounts->appends(['number' => $number,'storage_id'=>$storages_id, 'product_number'=>$product_number,'title'=>$title])->render() !!}</div>
                 @endif
             </div>
         </div>

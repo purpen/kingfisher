@@ -81,7 +81,7 @@
             </div>
             <div class="row">
                 @if ($take_stock_detailed)
-                    <div class="col-md-12 text-center">{!! $take_stock_detailed->render() !!}</div>
+                    <div class="col-md-12 text-center">{!! $take_stock_detailed->appends(['id' => $id])->render() !!}</div>
                 @endif
             </div>
         </div>

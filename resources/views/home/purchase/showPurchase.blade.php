@@ -230,16 +230,17 @@
                 <hr>
                 <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                     <li for="status" class="mb-0r control-label col-md-6"><b>状态:</b>
-                        @if($purchase->status == 1)
+                        @if($purchase->verified == 1)
                             <td>待主管审核</td>
-                        @elseif($purchase->status == 2)
+                        @elseif($purchase->verified == 2)
                             <td>待财务审核</td>
-                        @elseif($purchase->status == 9)
+                        @elseif($purchase->verified == 9)
                             <td>已通过</td>
                         @endif
                     </li>
+                    @if($purchase->verified !=9)
                     <li for="msg" class="mb-0r control-label col-md-6"><b>原因:</b>{{ $purchase->msg}}</li>
-
+                    @endif
                 </ul>
             </div>
         </div>

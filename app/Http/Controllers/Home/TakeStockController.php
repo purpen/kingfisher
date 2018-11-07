@@ -212,6 +212,7 @@ class TakeStockController extends Controller
 
         return view('home/storage.takeStockDetailed', [
             'take_stock_detailed' => $take_stock_detailed,
+            'id' => $id,
         ]);
 
     }
