@@ -5,6 +5,7 @@
     <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
+
     <li>
         <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/product/search') }}" method="POST">
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

@@ -1162,10 +1162,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
         Route::get('/takeStock/index', [
             'as' => 'admin.takeStock.index', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@index'
         ]);
+
         // createTakeStock 创建盘点
         Route::post('/createTakeStock', [
             'as' => 'admin.createTakeStock', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@createTakeStock'
         ]);
+
         //  盘点备注
         Route::post('/takeStock/addSummary', [
             'as' => 'admin.takeStock.addSummary', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@addSummary'
@@ -1693,6 +1695,7 @@ Route::group(['middleware' => ['auth']], function () {
      */
     Route::post('/excel', 'Common\ExcelController@orderList');
 
+
     Route::post('/purchaseList', 'Common\ExcelController@purchaseList');//采购订单导出
     Route::post('/channelLists', 'Common\ExcelController@channelLists');//渠道收款订单导出
 
@@ -1732,6 +1735,16 @@ Route::group(['middleware' => ['auth']], function () {
 
     // 导出渠道分销商订单
     Route::post('/supplierExcel', 'Common\ExcelController@supplierExcel');
+
+    //导出库存盘点
+    Route::post('/stockList', 'Common\ExcelController@stockList');
+
+    //导出库存盘点明细
+    Route::post('/stockDetail', 'Common\ExcelController@stockDetail');
+
+    //导出出库单
+    Route::post('/orderOutExcel', 'Common\ExcelController@orderOutExcel');
+    Route::post('/orderOutAll', 'Common\ExcelController@orderOutAll');
 
     //采购到导入
     Route::post('/purchaseExcel', 'Common\ExcelController@purchaseExcel');

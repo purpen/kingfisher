@@ -55,6 +55,12 @@
                             <button id="" type="submit" class="btn btn-default">开始盘点</button>
                         </div>
                     </form>
+
+                        <div class="col-md-2">
+                            <button id="stockAll"  class="btn btn-default">全部导出</button>
+                            <button id="stockPart"  class="btn btn-default">选择导出</button>
+                        </div>
+
                 </div>
 
             </div>
@@ -76,7 +82,7 @@
                         <tbody>
                         @foreach($take_stock as $v)
                             <tr>
-                                <th class="text-center"><input type="checkbox"></th>
+                                <th class="text-center"><input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $v->id }}"></th>
                                 <th>{{$v->storage->name}}</th>
                                 <th>{{$v->log? $v->log : '无'}}</th>
                                 <th>{{$v->summary? $v->summary : '无'}}</th>
@@ -93,7 +99,7 @@
                                 @endif
 
                                 <th>
-                                    <a class="btn btn-default" target="_blank" href="{{ url('/takeStockDetailed') }}?id={{$v->id}}" role="button">明细</a>
+                                    <a class="btn btn-default" target="_blank" href="{{ url('/takeStockDetailed') }}?id={{$v->id}}" role="button">编辑</a>
                                     <button type="button" class="btn btn-primary addSummary" value="{{ $v->id }}"
                                             summary="{{ $v->summary }}">备注
                                     </button>
@@ -155,6 +161,55 @@
 
 @section('load_private')
     @parent
+    {{--post请求--}}
+    var _token = $("#_token").val();
+    function post(URL, PARAMS) {
+
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "post";
+        temp.style.display = "none";
+        var opt = document.createElement("textarea");
+        opt.name = '_token';
+        opt.value = _token;
+    {{--alert(opt.value);return false;--}}
+        temp.appendChild(opt);
+        for (var x in PARAMS) {
+        var opt = document.createElement("textarea");
+        opt.name = x;
+        opt.value = PARAMS[x];
+        temp.appendChild(opt);
+        }
+{{--alert(opt.name);return false;--}}
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    };
+    {{--打印订单excel--}}
+    $('#stockPart').click(function () {
+    var id_array = [];
+    $("input[name='Order']").each(function() {
+    if($(this).is(':checked')){
+    id_array.push($(this).attr('value'));
+    }
+    });
+    if(id_array == ''){
+       alert('未选择导出内容');
+    return false;
+    }
+    post('{{url('/stockList')}}',id_array);
+    });
+
+    $('#stockAll').click(function () {
+    var id_array = [];
+    $("input[name='Order']").each(function() {
+    if($(this).is(':checked')){
+    id_array.push($(this).attr('value'));
+    }
+    });
+
+    post('{{url('/stockList')}}',id_array);
+    });
     {{--<script>--}}
         {{--添加备注--}}
         $(".addSummary").click(function () {
