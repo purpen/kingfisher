@@ -283,7 +283,7 @@
                                         {{--@else--}}
                                             {{--<button class="btn btn-danger btn-sm" data-toggle="modal" onclick="deleteSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">取消用户</button>--}}
                                         {{--@endif--}}
-
+                                        
                                     </td>
                                 </tr>
                             @endforeach
