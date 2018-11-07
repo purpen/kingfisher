@@ -43,10 +43,7 @@ class bugChange extends Command
     {
 
         $d = [
-            "RKCG2018110100014",
-            "RKCG2018110100013",
-            "RKCG2018110100011",
-            "RKCG2018110100008",
+            'RKCG2018110200006',
         ];
         try {
             DB::beginTransaction();
