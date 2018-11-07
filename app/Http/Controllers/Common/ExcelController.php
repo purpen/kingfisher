@@ -265,6 +265,7 @@ class ExcelController extends Controller
       }
 
 
+
         //构造数据
         $data = $this->createOrderOutData($data);
 
@@ -304,6 +305,7 @@ class ExcelController extends Controller
     {
         //组织Excel数据
         foreach ($data as $v) {
+            $v->OutEmpty();
             switch ($v->type) {
                 case 1:
                     if ($v->returnedPurchase) {
@@ -334,11 +336,8 @@ class ExcelController extends Controller
             }else{
                 $v->出库仓库 = '';
             }
-            if ($v->department){
-                $v->部门 = $v->department_val;
-            }else{
-                $v->部门 = $v->department_val;
-            }
+            $v->部门 = $v->department_val;
+
             if ($v->user) {
                 $v->制单人 = $v->user->realname;
             } else {
@@ -355,10 +354,10 @@ class ExcelController extends Controller
                 $v->出库状态 = '';
             }
 
-            unset($v->type,$v->target_id, $v->storage_id, $v->id, $v->user_id,$v->department,$v->status,$v->storage_status);
+
+            unset($v->type,$v->target_id, $v->storage_id, $v->id, $v->user_id,$v->department,$v->status,$v->storage_status,$v->user,$v->order,$v->storage,$v->appends);
 
         }
-
         return $data;
     }
 
