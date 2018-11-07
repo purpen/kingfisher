@@ -652,9 +652,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function () {
         Route::post('/outWarehouse/ajaxDelete', [
             'as' => 'admin.out.warehouse.delete', 'acl' => 'admin.warehouse.verified', 'uses' => 'OutWarehouseController@ajaxDelete'
         ]);
-        // 出库单手动发货
+        // 订单/采购退货出库
         Route::post('/outWarehouse/ajaxSendOut', [
             'as' => 'admin.out.warehouse.update', 'acl' => 'admin.warehouse.store', 'uses' => 'OutWarehouseController@ajaxSendOut'
+        ]);
+        // 调拨单出库
+        Route::post('/outWarehouse/allocationOut', [
+            'as' => 'admin.out.warehouse.allocationOut', 'acl' => 'admin.warehouse.store', 'uses' => 'OutWarehouseController@allocationOut'
         ]);
         Route::get('/outWarehouse/showOut/{id}', [
             'as' => 'admin.out.warehouse.showOut', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@showOut'

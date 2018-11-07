@@ -157,8 +157,6 @@
                         </tfoot>
                     </table>
 
-                    <input type="hidden" name="changeWarehouse_department" value="{{$out_warehouse->changeWarehouse_department}}">
-                    <input type="hidden" name="changeWarehouse_id" value="{{$out_warehouse->changeWarehouse_id}}">
                     {{--<div class="row" style="width: 1606px;margin-left: -52px">--}}
                     <div class="row" style="width: 1466px;margin-left: -29px">
                         <label for="summary" class="col-sm-2 control-label">出库备注</label>
