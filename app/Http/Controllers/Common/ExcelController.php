@@ -176,7 +176,7 @@ class ExcelController extends Controller
         //查询库存盘点明细数据集合
         $data = $this->stockDetailSelect()->get();
         //构造数据
-        $data = $this->createStockDetailData($data);Log::info($data);
+        $data = $this->createStockDetailData($data);
         //导出Excel表单
         $this->createExcel($data, '库存盘点明细');
     }

@@ -69,8 +69,7 @@
                                     <span class="proname">{{ $v->storage_number }}</span>
                                     <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title=""
                                             type="button"
-                                            style="border: none; display: inline-block; background: none;"><i>
-                                                class="glyphicon glyphicon-pencil"></i></button>
+                                            style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
                                     <input name="max_count" value="{{ $v->storage_number }}" action="{{$v->id}}"
                                            class="form-control" type="text" style="display: none;">
                                 </th>
