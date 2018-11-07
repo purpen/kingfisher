@@ -44,11 +44,7 @@ class bugChange extends Command
     {
 
         $d = [
-            'RKCG2018110200006',
-        ];
 
-        $it = [
-            501,
         ];
         try {
             DB::beginTransaction();
@@ -94,71 +90,6 @@ class bugChange extends Command
                 }
                 $ew->delete();
             }
-
-            foreach ($it as $t) {
-                $p = PurchaseModel::find($t);
-                $p->in_count = $p->count; // 减少对应采购单入库数量
-                $p->save();
-
-                $storage_id = $p->storage_id;
-
-                $ps = $p->purchaseSku;
-                foreach ($ps as $p1) {
-                    $p1->in_count = $p1->count;  // 采购单明细
-                    $p1->save();
-
-                    $sku_id = $p1->sku_id;
-                    $sscm = StorageSkuCountModel::query()
-                        ->where("sku_id", $sku_id)
-                        ->where("storage_id", $storage_id)
-                        ->first();
-                    if ($sscm) {  // 仓库sku
-                        $sscm->count = $sscm->count - $p1->count;
-                        $sscm->save();
-                    }
-
-                    $sku = ProductsSkuModel::find($sku_id);
-                    if ($sku) {
-                        $sku->quantity = $sku->quantity - $p1->count;  //sku
-                        $sku->save();
-
-                        $product = $sku->product;
-                        $product->inventory = $product->inventory - $p1->count; // product
-                        $product->save();
-                    }
-                }
-
-
-            }
-
-            $p = PurchaseModel::find(511);
-
-            $storage_id = $p->storage_id;
-
-            $ps = $p->purchaseSku;
-            foreach ($ps as $p1) {
-
-                $sku_id = $p1->sku_id;
-                $sscm = StorageSkuCountModel::query()
-                    ->where("sku_id", $sku_id)
-                    ->where("storage_id", $storage_id)
-                    ->first();
-                if ($sscm) {  // 仓库sku
-                    $sscm->count = $sscm->count + $p1->count;
-                    $sscm->save();
-                }
-
-                $sku = ProductsSkuModel::find($sku_id);
-                if ($sku) {
-                    $sku->quantity = $sku->quantity + $p1->count;  //sku
-                    $sku->save();
-
-                    $product = $sku->product;
-                    $product->inventory = $product->inventory + $p1->count; // product
-                    $product->save();
-                }
-            }
-
 
         } catch (\Exception $e) {
             DB::rollBack();
