@@ -419,7 +419,6 @@ class ExcelController extends Controller
             unset($v->store_id, $v->express_id, $v->id,$v->logistics,$v->distributor_id,$v->payment_type,$v->store,$v->distributor);
 
         }
-
         return $data;
     }
 
