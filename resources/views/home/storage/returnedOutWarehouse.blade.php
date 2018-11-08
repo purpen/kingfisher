@@ -137,13 +137,14 @@
 
                                 @if($tab_menu == 'saled')
                                     <a href="javascript:void(0);" type="1" class="btn btn-white btn-sm showout">编辑出库</a>
-                                    <a href="javascript:void(0);" type="2" class="btn btn-white btn-sm showout">查看明细</a>
-
                                 @elseif($tab_menu == 'exchanged')
                                     <a href="javascript:void(0);" type="3" class="btn btn-white btn-sm showout">编辑出库</a>
-                                    <a href="javascript:void(0);" type="4" class="btn btn-white btn-sm showout">查看明细</a>
-
                                 @endif
+                                @if($out_warehouse->type == 2)
+                                    <a href="javascript:void(0);" type="2" class="btn btn-white btn-sm showout">查看明细</a>
+                                    @elseif($out_warehouse->type == 3)
+                                    <a href="javascript:void(0);" type="4" class="btn btn-white btn-sm showout">查看明细</a>
+                                    @endif
 
                                     <button type="button" id="print-enter" value="{{$out_warehouse->id}}"
                                             target_id="{{ $out_warehouse->target_id }}"
