@@ -445,6 +445,7 @@ class EnterWarehouseController extends Controller
             $purchasing_warehousing->storage_id = $storage_id;
             $purchasing_warehousing->purchases_id = $purchase_id;
             $purchasing_warehousing->department = $purchase_department;
+            $purchasing_warehousing->remark = $summary;
             $purchasing_warehousing->storage_time = date("Y-m-d H:i:s");
             $purchasing_warehousing->number = json_encode($arr);
             if (!$purchasing_warehousing->save()) {
@@ -457,6 +458,7 @@ class EnterWarehouseController extends Controller
             $allocation_out->storage_id = $storage_id;
             $allocation_out->allocation_id = $changeWarehouse_id;
             $allocation_out->department = $changeWarehouse_department;
+            $allocation_out->remark = $summary;
             $allocation_out->type = 1;
             $allocation_out->outorin_time = date("Y-m-d H:i:s");
             $allocation_out->number = json_encode($arr);

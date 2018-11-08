@@ -717,6 +717,7 @@ class OutWarehouseController extends Controller
                         $order_out->user_id = Auth::user()->id;
                         $order_out->order_id = $order_id;
                         $order_out->storage_id = $storage_id;
+                        $order_out->remark = $summary;
                         $order_out->department = $order_department;
                         $order_out->outage_time = date("Y-m-d H:i:s");
                         $order_out->number = json_encode($arr);
@@ -932,6 +933,7 @@ class OutWarehouseController extends Controller
                         $allocation_out->allocation_id = $changeWarehouse_id;
                         $allocation_out->department = $changeWarehouse_department;
                         $allocation_out->type = 2;
+                        $allocation_out->remark = $summary;
                         $allocation_out->outorin_time = date("Y-m-d H:i:s");
                         $allocation_out->number = json_encode($arr);
                         if (!$allocation_out->save()) {
