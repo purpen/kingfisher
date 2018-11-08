@@ -396,6 +396,7 @@ class ExcelController extends Controller
     {
         //组织Excel数据
         foreach ($data as $v) {
+            $v->orderEmpty();
             if ($v->logistics) {
                 $v->物流 = $v->logistics->name;
             } else {
@@ -415,7 +416,7 @@ class ExcelController extends Controller
             $v->明细 = $sku_info;
             $v->门店名称 = $v->distributor ? $v->distributor->store_name : '';
 
-            unset($v->store_id, $v->express_id, $v->id, $v->change_status,$v->form_app_val,$v->type_val,$v->logistics,$v->distributor_id,$v->payment_type);
+            unset($v->store_id, $v->express_id, $v->id,$v->logistics,$v->distributor_id,$v->payment_type,$v->store,$v->distributor);
 
         }
 
