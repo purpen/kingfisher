@@ -24,7 +24,7 @@ class RegisterRequest extends Request
     public function rules()
     {
         return [
-            'phone' => 'required|digits:11|unique:users|regex:/^1[34578][0-9]{9}$/',
+            'phone' => 'required|digits:11|unique:users|regex:/^1[3456789][0-9]{9}$/',
             'account' => 'required|unique:users',
             'password' => 'required|between:6,16',
             'phone_verify' => 'required|size:6',
