@@ -659,7 +659,8 @@ class OutWarehouseController extends Controller
             }
             if ($out_warehouse_model) {
                 if ($sum > ($out_warehouse_model->count - $out_warehouse_model->out_count)) {
-                    return view('errors.503');
+                    return back()->withErrors(['需出库总数量超过了总未出库数量！']);
+//                    return view('errors.503');
                 }
                 $out_warehouse_model->out_count = $out_warehouse_model->out_count + $sum;
                 $out_warehouse_model->summary = $summary;
@@ -671,7 +672,8 @@ class OutWarehouseController extends Controller
 
                             if ($count_arr[$i] > $out_sku->count - $out_sku->out_count) {
                                 DB::rollBack();
-                                return view('errors.503');
+                                return back()->withErrors(['出库数量超过了未出库数量！']);
+//                                return view('errors.503');
                             }
 
                             $out_sku->out_count = $out_sku->out_count + $count_arr[$i];
@@ -745,15 +747,15 @@ class OutWarehouseController extends Controller
                                 return back()->withErrors(['订单发货修改状态错误！']);
                             }
 
-//                            if ($LogisticsModel = LogisticsModel::find($logistics_id)) {
-//                                $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
-//                            } else {
-//                                DB::rollBack();
-//                                return back()->withErrors(['物流不存在！']);
-//                            }
-                            //订阅订单物流
-//                            $KdnOrderTracesSub = new KdnOrderTracesSub();
-//                            $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
+                            if ($LogisticsModel = LogisticsModel::find($logistics_id)) {
+                                $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
+                            } else {
+                                DB::rollBack();
+                                return back()->withErrors(['物流不存在！']);
+                            }
+//                            订阅订单物流
+                            $KdnOrderTracesSub = new KdnOrderTracesSub();
+                            $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
                         }
                         $outgoing_logistics = new OutgoingLogisticsModel();
                         $outgoing_logistics->order_id = $order_id;
@@ -808,7 +810,8 @@ class OutWarehouseController extends Controller
                     $storage_sku_count = new StorageSkuCountModel();
                     if (!$storage_sku_count->out($storage_id, $department, $sku_arr)) {
                         DB::rollBack();
-                        return view('errors.503');
+                        return back()->withErrors(['减少对应仓库库存失败！']);
+//                        return view('errors.503');
                     }
                     DB::commit();
                     if ($out_warehouse_model->type == 2) {
@@ -869,7 +872,8 @@ class OutWarehouseController extends Controller
             }
             if ($out_warehouse_model) {
                 if ($sum > ($out_warehouse_model->count - $out_warehouse_model->out_count)) {
-                    return view('errors.503');
+                    return back()->withErrors(['需出库总数量超过了总未出库数量！']);
+//                    return view('errors.503');
                 }
                 $out_warehouse_model->out_count = $out_warehouse_model->out_count + $sum;
                 $out_warehouse_model->summary = $summary;
@@ -881,7 +885,8 @@ class OutWarehouseController extends Controller
 
                             if ($count_arr[$i] > $out_sku->count - $out_sku->out_count) {
                                 DB::rollBack();
-                                return view('errors.503');
+                                return back()->withErrors(['出库数量超过了未出库数量！']);
+//                                return view('errors.503');
                             }
 
                             $out_sku->out_count = $out_sku->out_count + $count_arr[$i];
@@ -946,7 +951,8 @@ class OutWarehouseController extends Controller
                     $storage_sku_count = new StorageSkuCountModel();
                     if (!$storage_sku_count->out($storage_id, $department, $sku_arr)) {
                         DB::rollBack();
-                        return view('errors.503');
+                        return back()->withErrors(['减少对应仓库库存失败！']);
+//                        return view('errors.503');
                     }
                     DB::commit();
 
