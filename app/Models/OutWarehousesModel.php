@@ -386,4 +386,13 @@ class OutWarehousesModel extends BaseModel
         return true;
     }
 
+    /**
+     * @return string 删除追加字段
+     */
+    public function OutEmpty()
+    {
+//        unset($this->appends);
+          $this->appends = null;
+    }
+
 }

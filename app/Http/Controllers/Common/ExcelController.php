@@ -27,6 +27,8 @@ use App\Models\receiveOrderInterimModel;
 use App\Models\ReceiveOrderModel;
 use App\Models\StorageModel;
 use App\Models\SupplierModel;
+use App\Models\TakeStock;
+use App\Models\TakeStockDetailed;
 use App\Models\User;
 use App\Models\UserModel;
 use Carbon\Carbon;
@@ -63,6 +65,8 @@ class ExcelController extends Controller
         $this->createExcel($data, '订单');
     }
 
+
+
 //    //    导出采购单
 //    public function purchaseList(Request $request){
 //        $all=$request->all();
@@ -80,6 +84,284 @@ class ExcelController extends Controller
 //    }
 
 
+
+    /**
+     * 使用库存盘点ID 导出库存盘点（excel格式）
+     */
+    public function stockList(Request $request)
+    {
+        //需要下载的库存盘点 id数组
+        $all = $request->all();
+        $id_array = [];
+        foreach ($all as $k => $v) {
+            if (is_int($k)) {
+                $id_array[] = $v;
+            }
+        }
+        if ($id_array){
+            //查询库存盘点数据集合
+            $data = $this->stockSelect()->whereIn('id', $id_array)->get();
+        }else{
+            //查询库存盘点数据集合
+            $data = $this->stockSelect()->get();
+        }
+
+        //构造数据
+        $data = $this->createStockData($data);
+        //导出Excel表单
+        $this->createExcel($data, '库存盘点');
+    }
+
+
+    /**
+     * 导出库存盘点条件
+     */
+    public function stockSelect()
+    {
+        $orderObj = TakeStock::select([
+            'log as 盘点记录',
+            'summary as 备注',
+            'storage_id',
+            'created_at as 时间',
+            'status',
+            'user_id',
+            'id',
+        ]);
+        return $orderObj;
+    }
+
+
+    /**
+     * 根据库存盘点查询的数据对象 构造Excel数据
+     *
+     * @param TakeStock $option 查询where条件
+     */
+    protected function createStockData($data)
+    {
+        //组织Excel数据
+        foreach ($data as $v) {
+            if ($v->status == 0) {
+                $v->状态 = '未确认';
+            } else {
+                $v->状态 = '已确认';
+            }
+
+            if ($v->storage_id){
+                $v->仓库 = $v->storage->name ;
+            }else {
+                $v->仓库 = '';
+            }
+
+            if ($v->user_id){
+                $v->操作人 = $v->user->realname;
+            }else {
+                $v->操作人 = '';
+            }
+
+            unset($v->storage_id, $v->user_id, $v->id, $v->status);
+
+        }
+
+        return $data;
+    }
+
+
+    /**
+     * 使用库存盘点明细ID 导出库存盘点明细（excel格式）
+     */
+    public function stockDetail(Request $request)
+    {
+        //需要下载的库存盘点明细 id数组
+        $all = $request->all();
+        //查询库存盘点明细数据集合
+        $data = $this->stockDetailSelect()->get();
+        //构造数据
+        $data = $this->createStockDetailData($data);
+        //导出Excel表单
+        $this->createExcel($data, '库存盘点明细');
+    }
+
+
+    /**
+     * 导出库存盘点明细条件
+     */
+    public function stockDetailSelect()
+    {
+        $stockObj = TakeStockDetailed::select([
+            'department as 部门',
+            'product_number as 商品货号',
+            'sku_number as SKU编码',
+            'name as 商品名称',
+            'mode as 商品属性',
+            'number as erp库存',
+            'storage_number as 实际库存',
+            'number',
+            'storage_number',
+        ]);
+        return $stockObj;
+    }
+
+
+    /**
+     * 根据库存盘点明细查询的数据对象 构造Excel数据
+     *
+     * @param TakeStock $option 查询where条件
+     */
+    protected function createStockDetailData($data)
+    {
+        //组织Excel数据
+        foreach ($data as $v) {
+           if ($v->number && $v->storage_number){
+               $v->库存变化	= $v->storage_number - $v->number;
+           }
+            unset($v->number, $v->storage_number);
+
+        }
+        return $data;
+    }
+
+    /**
+     * 使用库存盘点ID 导出选择的出库单（excel格式）
+     */
+    public function orderOutExcel(Request $request)
+    {
+        //需要下载的出库单 id数组
+        $all = $request->all();
+        $id_array = [];
+        foreach ($all as $k => $v) {
+            if (is_int($k)) {
+                $id_array[] = $v;
+            }
+        }
+
+            //查询出库单数据集合
+        $data = $this->orderOutSelect()->whereIn('id', $id_array)->get();
+
+        //构造数据
+        $data = $this->createOrderOutData($data);
+
+        //导出Excel表单
+        $this->createExcel($data, '库存盘点');
+    }
+
+    /**
+     * 使用库存盘点ID 导出出库单（excel格式）
+     */
+    public function orderOutAll(Request $request)
+    {
+        //需要下载的出库单 id数组
+        $all = $request->except('_token');
+
+        if (is_array($all)){
+            if (count($all) > 0){
+                $type = $all[0];
+            }
+        }
+        //查询出库单数据集合
+      if ($type == 1){
+          $data = $this->orderOutSelect()->where('storage_status', 5)->get();
+      }else{
+          $data = $this->orderOutSelect()->where('type', $type)->where('storage_status', '!=', 5)->get();
+      }
+
+
+
+        //构造数据
+        $data = $this->createOrderOutData($data);
+
+        //导出Excel表单
+        $this->createExcel($data, '库存盘点');
+    }
+
+    /**
+     * 导出出库单条件
+     */
+    public function orderOutSelect()
+    {
+        $orderObj = OutWarehousesModel::select([
+            'number as 出库单编号',
+            'count as 出库数量',
+            'out_count as 已出库数量',
+            'created_at as 制单时间',
+            'type',
+            'storage_id',
+            'department',
+            'target_id',
+            'status',
+            'storage_status',
+            'user_id',
+            'id',
+        ]);
+        return $orderObj;
+    }
+
+
+    /**
+     * 根据出库单查询的数据对象 构造Excel数据
+     *
+     * @param TakeStock $option 查询where条件
+     */
+    protected function createOrderOutData($data)
+    {
+        //组织Excel数据
+        foreach ($data as $v) {
+            $v->OutEmpty();
+            switch ($v->type) {
+                case 1:
+                    if ($v->returnedPurchase) {
+                        $v->相关单 = $v->returnedPurchase->number;
+                    } else {
+                        $v->相关单 = '';
+                    }
+                    break;
+                case 2:
+                    if ($v->order) {
+                        $v->相关单 = $v->order->number;
+                    } else {
+                        $v->相关单 = '';
+                    }
+                    break;
+                case 3:
+                    if ($v->changeWarehouse) {
+                        $v->相关单 = $v->changeWarehouse->number;
+                    } else {
+                        $v->相关单 = '';
+                    }
+                    break;
+                default:
+                    return view('errors.503');
+            }
+            if ($v->storage){
+                $v->出库仓库 = $v->storage->name;
+            }else{
+                $v->出库仓库 = '';
+            }
+            $v->部门 = $v->department_val;
+
+            if ($v->user) {
+                $v->制单人 = $v->user->realname;
+            } else {
+                $v->制单人 = '';
+            }
+            if ($v->status) {
+                $v->审核状态 = $v->status_val;
+            }else{
+                $v->审核状态 = '';
+            }
+            if ($v->storage_status) {
+                $v->出库状态 = $v->storage_status_val;
+            }else{
+                $v->出库状态 = '';
+            }
+
+
+            unset($v->type,$v->target_id, $v->storage_id, $v->id, $v->user_id,$v->department,$v->status,$v->storage_status,$v->user,$v->order,$v->storage,$v->appends);
+
+        }
+        return $data;
+    }
+
+
     /**
      * 导出订单查询条件
      */
@@ -92,9 +374,11 @@ class ExcelController extends Controller
             'pay_money as 付款金额',
             'freight as 邮费',
             'id',
-            'buyer_name as 买家名',
+            'payment_type',
+            'payment_time as 支付时间',
+            'buyer_name as 收货人',
+            'distributor_id',
             'buyer_address as 收货地址',
-            'buyer_summary as 买家备注',
             'store_id',
             'express_id',
             'express_no as 快递单号',
@@ -112,6 +396,7 @@ class ExcelController extends Controller
     {
         //组织Excel数据
         foreach ($data as $v) {
+            $v->orderEmpty();
             if ($v->logistics) {
                 $v->物流 = $v->logistics->name;
             } else {
@@ -127,12 +412,13 @@ class ExcelController extends Controller
             foreach ($v->orderSkuRelation as $s) {
                 $sku_info = $sku_info . $s->sku_name . '*' . $s->quantity . ';';
             }
+            $v->支付方式 = $v->payment_type;
             $v->明细 = $sku_info;
+            $v->门店名称 = $v->distributor ? $v->distributor->store_name : '';
 
-            unset($v->store_id, $v->express_id, $v->id, $v->change_status);
+            unset($v->store_id, $v->express_id, $v->id,$v->logistics,$v->distributor_id,$v->payment_type,$v->store,$v->distributor);
 
         }
-
         return $data;
     }
 

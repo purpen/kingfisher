@@ -42,6 +42,15 @@ class PurchaseModel extends BaseModel
         return $this->belongsTo('App\Models\UserModel','user_id');
     }
 
+    /**
+     * 一对一关联sku_unique表
+     *
+     */
+    public function skuUnique()
+    {
+        return $this->hasOne('App\Models\SkuUniqueModel', 'purchase_id');
+    }
+
     //一对一关联入库表
     public function enterWarehouses()
     {

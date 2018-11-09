@@ -103,6 +103,18 @@ class StorageModel extends BaseModel
     }
 
     /**
+     * 一对一关联sku_unique表
+     *
+     */
+    public function skuUnique()
+    {
+        return $this->hasOne('App\Models\SkuUniqueModel', 'storage_id');
+    }
+
+
+
+
+    /**
      * 一对多关联库存盘点
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

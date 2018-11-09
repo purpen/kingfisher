@@ -60,7 +60,7 @@
                                 <li for="ein" class="mb-0r control-label col-md-6"><b>税号:</b>{{ $supplier->ein }}</li>
                                 <li for="tax_rate" class="mb-0r control-label col-md-6"><b>开票税率:</b>{{ $supplier->tax_rate }}</li>
                                 <li for="bank_number" class="mb-0r control-label col-md-6"><b>开户行号:</b>{{ $supplier->bank_number }}</li>
-                                <li for="bank_address" class="mb-0r control-label col-md-6"><b>开户行地址:</b>{{ $supplier->bank_address }}</li>
+                                <li for="bank_address" class="mb-0r control-label col-md-6"><b>开户行名称:</b>{{ $supplier->bank_address }}</li>
                                 <li for="start_time" class="mb-0r control-label col-md-6"><b>合作开始时间:</b>{{ $supplier->start_time == '0000-00-00' ? '' : $supplier->start_time }}</li>
                                 <li for="end_time" class="mb-0r control-label col-md-6"><b>合作结束时间:</b>{{ $supplier->end_time == '0000-00-00' ? '' : $supplier->end_time }}</li>
                                 <li for="authorization_deadline" class="mb-0r control-label col-md-6"><b>授权期限:</b>{{ $supplier->authorization_deadline == '0000-00-00' ? '' : $supplier->authorization_deadline }}</li>

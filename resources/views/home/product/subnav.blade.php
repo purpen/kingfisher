@@ -5,23 +5,7 @@
     <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
-    <li>
-        <form class="navbar-form navbar-left" role="search" id="supplier_search" action="{{ url('/product/search') }}" method="POST">
-            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-            <span>供应商</span>
-            <div class="form-group">
-                <div class="input-group">
-                <select class="form-control chosen-select" id="add_supplier_id" onchange="submitForm(this.value);" name="supplier_id" style="display: none;">
-                    <option value="0">选择供应商</option>
-                    @foreach($suppliers as $supplier)
-                            <option @if($supplier->id == $supplier_id) selected @endif value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
-                    @endforeach
-                </select>
-                </div>
 
-            </div>
-        </form>
-    </li>
     <li>
         <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/product/search') }}" method="POST">
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

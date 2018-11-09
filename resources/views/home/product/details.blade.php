@@ -130,7 +130,7 @@
                                         <li for="title" class="mb-0r control-label"><b>商品名称:</b>{{ $product->title }}</li></br>
                                         <li for="tit" class="mb-0r control-label"><b>商品简称:</b>{{ $product->tit }}</li></br>
                                         <li for="category" class="mb-0r control-label"><b>商品分类:</b>{{ $product->CategoriesModel ? $product->CategoriesModel->title :'' }}</li></br>
-                                        <li for="supplier" class="mb-0r control-label"><b>供应商:</b>{{ $product->supplier ? $product->supplier->name :'' }}</li></br>
+                                        {{--<li for="supplier" class="mb-0r control-label"><b>供应商:</b>{{ $product->supplier ? $product->supplier->name :'' }}</li></br>--}}
                                         {{--@if($product->product_type == 1)--}}
                                         {{--<li for="product_type" class="mb-0r control-label"><b>商品类别:</b>京东众筹</li></br>--}}
                                         {{--@endif--}}

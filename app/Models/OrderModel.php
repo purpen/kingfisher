@@ -2426,4 +2426,12 @@ class OrderModel extends BaseModel
         return $query;
     }
 
+    /**
+     * 删除追加的字段
+     */
+    public function orderEmpty()
+    {
+        $this->appends = null;
+    }
+
 }

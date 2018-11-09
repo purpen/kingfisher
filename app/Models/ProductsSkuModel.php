@@ -49,6 +49,15 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     * 一对一关联sku_unique表
+     *
+     */
+    public function skuUnique()
+    {
+        return $this->hasOne('App\Models\SkuUniqueModel', 'sku_id');
+    }
+
+    /**
      * 一对多关联StorageSkuCount表
      */
     public function StorageSkuCount()
@@ -184,6 +193,53 @@ class ProductsSkuModel extends BaseModel
         $sell_count = $this->quantity - $this->reserve_count - $this->pay_count;
 
         return $sell_count;
+    }
+
+
+    /**
+     *sku列表
+     * @param $where <模糊搜索查询参数>
+     * @param $supplier_id <供应商id>
+     * @return mixed
+     */
+    public function listOf($where = null)
+    {
+        if ($where) {
+          $skus = self
+              ::where('number', 'like', "%$where%")
+              ->where('status', '!=', 3)
+              ->get();
+          if ($skus->isEmpty()) {
+              $skus_id = ProductsModel
+                  ::where('status', '!=', 3)
+                  ->where('title', 'like', "%$where%")
+                  ->get()->pluck('id')->all();
+                if ($skus) {
+                    $skus = ProductsSkuModel
+                        ::whereIn('product_id', $skus_id)
+                        ->get();
+                }
+            }
+        } else {
+            $id_array = ProductsModel
+                ::where('status', '!=', 3)->select('id')
+                ->get()
+                ->pluck('id')->all();
+            $skus = ProductsSkuModel::whereIn('product_id', $id_array)->get();
+        }
+        foreach ($skus as $sku) {
+            if ($sku->assets) {
+                $sku->path = $sku->assets->file->small;
+            } else {
+                $sku->path = url('images/default/erp_product.png');
+            }
+            if ($sku->product) {
+                $sku->name = $sku->product->title;
+                $sku->sale_price = $sku->product->sale_price;
+            }
+
+        }
+        return $skus;
     }
 
     /**

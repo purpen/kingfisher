@@ -96,7 +96,7 @@
 						<th>缩略图</th>
 						<th>编号</th>
 						<th>商品简称</th>
-						<th>供应商</th>
+						{{--<th>供应商</th>--}}
 						@role(['buyer', 'director', 'admin'])
 						<th>成本价</th>
 						@endrole
@@ -135,9 +135,9 @@
 								<td class="table-name" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->title }}">
 								<span class="proname">{{ $product->tit }}</span>
 							</td>
-							<td>
-								@if ($product->supplier) {{ $product->supplier->nam }}【{{$product->supplier->type_val}}】 @endif
-							</td>
+							{{--<td>--}}
+								{{--@if ($product->supplier) {{ $product->supplier->nam }}【{{$product->supplier->type_val}}】 @endif--}}
+							{{--</td>--}}
 							@role(['buyer', 'director', 'admin'])
 							<td>
 								{{ $product->cost_price }}
@@ -194,7 +194,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 text-center">{!! $products->appends(['search' => $name, 'per_page' => $per_page , 'supplier_id' => $supplier_id])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $products->appends(['search' => $name, 'per_page' => $per_page ])->render() !!}</div>
         </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">

@@ -121,10 +121,12 @@ class OutWarehouseController extends Controller
             }
 
         }
+        $type = 1;
 
         return view('home/storage.returnedOutWarehouse', [
             'out_warehouses' => $out_warehouses,
             'tab_menu' => $this->tab_menu,
+            'type'=>$type,
             'where' => $where,
             'logistics_list' => [],
         ]);
@@ -175,6 +177,7 @@ class OutWarehouseController extends Controller
 
         return view('home/storage.returnedOutWarehouse', [
             'out_warehouses' => $out_warehouses,
+            'type'=>$type,
             'tab_menu' => $this->tab_menu,
             'where' => $where,
             'logistics_list' => $logistics_list,
