@@ -367,6 +367,11 @@ class AuthenticateController extends BaseController
                 ];
             }
 
+            $users = UserModel::where('phone', $credentials['account'])->orWhere('account',$credentials['account'])->select('supplier_distributor_type')->first();
+            if ($users->supplier_distributor_type !=3) {
+                return $this->response->array(ApiHelper::error('您还没有注册经销商，请先注册吧！', 412));
+            }
+
             if (!$token = JWTAuth::attempt($data)) {
                 return $this->response->array(ApiHelper::error('账户名或密码错误', 412));
             }
