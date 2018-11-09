@@ -208,7 +208,7 @@ class AuthenticateController extends BaseController
     {
         // 验证规则
         $rules = [
-            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|6[56]|7[0135678]|8[0-9]|9[89])\\d{8}$/'],
 //            'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
             'password' => 'required',
             'province_id' => 'integer',
@@ -355,7 +355,7 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
             // attempt to verify the credentials and create a token for the user
-            if (preg_match("/^1[34578]{1}\d{9}$/", $credentials['account'])) {//手机号
+            if (preg_match("/^1[3456789]{1}\d{9}$/", $credentials['account'])) {//手机号
                 $data = [
                     'phone' => $credentials['account'],
                     'password' => $credentials['password'],
@@ -401,7 +401,7 @@ class AuthenticateController extends BaseController
         $credentials = $request->only('phone');
 
         $rules = [
-            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|6[56]|7[0135678]|8[0-9]|9[89])\\d{8}$/'],
         ];
         $validator = Validator::make($credentials, $rules);
         if ($validator->fails()) {
