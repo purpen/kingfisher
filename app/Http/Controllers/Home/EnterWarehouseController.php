@@ -114,6 +114,7 @@ class EnterWarehouseController extends Controller
     function getOutWarehousesData($id, $detail = false)
     {
         $enter_warehouse = EnterWarehousesModel::find($id);
+
         //如果是调拨单入库，检测调拨单是否已出库
         if ($enter_warehouse->type == 3) {
             //调拨单ID
@@ -239,6 +240,18 @@ class EnterWarehouseController extends Controller
      */
     public function showPurchase(Request $request, $id)
     {
+        $enter_warehouse = EnterWarehousesModel::find($id);
+        if ($enter_warehouse->type == 3) {
+            //调拨单ID
+            $chang_id = $enter_warehouse->target_id;
+            $out_warehouse = OutWarehousesModel::where(['type' => 3, 'target_id' => $chang_id])->first();
+            if (!$out_warehouse) {
+                return '参数错误';
+            }
+            if ($out_warehouse->storage_status == 0) {
+                return '调拨仓库还没有出库，不能入库操作';
+            }
+        }
         $data = $this->getOutWarehousesData($id);
         return view('home.storage.purchasingWarehousing', $data );
     }
@@ -536,6 +549,19 @@ class EnterWarehouseController extends Controller
 //            'tab_menu' => $this->tab_menu,
 //            'number' => ''
 //        ]);
+
+        $enter_warehouse = EnterWarehousesModel::find($id);
+        if ($enter_warehouse->type == 3) {
+            //调拨单ID
+            $chang_id = $enter_warehouse->target_id;
+            $out_warehouse = OutWarehousesModel::where(['type' => 3, 'target_id' => $chang_id])->first();
+            if (!$out_warehouse) {
+                return '参数错误';
+            }
+            if ($out_warehouse->storage_status == 0) {
+                return '调拨仓库还没有出库，不能入库操作';
+            }
+        }
 
         $data = $this->getOutWarehousesData($id,true);
         return view('home.storage.enter_warehouse_show', $data );
