@@ -11,7 +11,9 @@ use App\Models\OutWarehousesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseModel;
+use App\Models\PurchaseSkuRelationModel;
 use App\Models\PurchasingWarehousingModel;
+use App\Models\SkuUniqueModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
@@ -120,9 +122,9 @@ class EnterWarehouseController extends Controller
             if (!$out_warehouse) {
                 return '参数错误';
             }
-            if ($out_warehouse->storage_status == 0) {
-                return '调拨仓库还没有出库，不能入库操作';
-            }
+//            if ($out_warehouse->storage_status == 0) {
+//                return '调拨仓库还没有出库，不能入库操作';
+//            }
         }
 
         $enter_warehouse->changeWarehouse_id = $enter_warehouse->changeWarehouse ? $enter_warehouse->changeWarehouse->id : '';
@@ -373,7 +375,7 @@ class EnterWarehouseController extends Controller
         $enter_sku_id_arr = $request->input('enter_sku_id');
         $sku_id_arr = array_values($request->input('sku_id'));
         $count_arr = array_values($request->input('count'));
-        
+
         $sum = 0;
         foreach ($count_arr as $count){
             $sum = $sum + $count;
@@ -452,6 +454,30 @@ class EnterWarehouseController extends Controller
                 DB::rollBack();
                 return view('errors.503');
             }
+            if (count($sku_arr) >0){
+                foreach($sku_arr as $k=>$v){
+                  for ($x=1;$x<=$v;$x++){
+                    $where['purchase_id'] = $purchase_id;
+                    $where['sku_id'] = $k;
+                    $pruchase = PurchaseSkuRelationModel::where($where)->first();
+                    $data['purchase_id'] = $purchase_id;//采购单id
+                    $data['price'] = $pruchase->price;//查询采购成本价
+                    $data['sku_id'] = $k;//sku_id
+                    $data['storage_id'] = $storage_id;//仓库id
+                    $data['created_at'] = date('Y-m-d H:i:s',time());
+                    $data['status'] = 1;
+                    $data['type'] = 1;
+                    $sku_unique = SkuUniqueModel::insert($data);
+                    if (!$sku_unique){
+                        DB::rollBack();
+                        return view('errors.503');
+                    }
+                  }
+
+                }
+            }
+
+
         }elseif ($enter_warehouse_model->type == 3){//调拨入库
             $allocation_out = new AllocationOutModel();
             $allocation_out->user_id = Auth::user()->id;
