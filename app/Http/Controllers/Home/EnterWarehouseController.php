@@ -374,7 +374,7 @@ class EnterWarehouseController extends Controller
         $enter_sku_id_arr = $request->input('enter_sku_id');
         $sku_id_arr = array_values($request->input('sku_id'));
         $count_arr = array_values($request->input('count'));
-        
+
         $sum = 0;
         foreach ($count_arr as $count){
             $sum = $sum + $count;
@@ -453,6 +453,30 @@ class EnterWarehouseController extends Controller
                 DB::rollBack();
                 return view('errors.503');
             }
+            if (count($sku_arr) >0){
+                foreach($sku_arr as $k=>$v){
+                  for ($x=1;$x<=$v;$x++){
+                    $where['purchase_id'] = $purchase_id;
+                    $where['sku_id'] = $k;
+                    $pruchase = PurchaseSkuRelationModel::where($where)->first();
+                    $data['purchase_id'] = $purchase_id;//采购单id
+                    $data['price'] = $pruchase->price;//查询采购成本价
+                    $data['sku_id'] = $k;//sku_id
+                    $data['storage_id'] = $storage_id;//仓库id
+                    $data['created_at'] = date('Y-m-d H:i:s',time());
+                    $data['status'] = 1;
+                    $data['type'] = 1;
+                    $sku_unique = SkuUniqueModel::insert($data);
+                    if (!$sku_unique){
+                        DB::rollBack();
+                        return view('errors.503');
+                    }
+                  }
+
+                }
+            }
+
+
         }elseif ($enter_warehouse_model->type == 3){//调拨入库
             $allocation_out = new AllocationOutModel();
             $allocation_out->user_id = Auth::user()->id;
