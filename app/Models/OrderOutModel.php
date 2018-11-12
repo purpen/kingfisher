@@ -18,7 +18,7 @@ class OrderOutModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['number','sku_id','storage_id','user_id','order_id','department','outage_time','odd_numbers'];
+    protected $fillable = ['number','sku_id','storage_id','user_id','order_id','department','outage_time','odd_numbers','unique_id'];
 
     /**
      * 相对关联到订单表
