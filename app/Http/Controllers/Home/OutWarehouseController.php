@@ -16,6 +16,7 @@ use App\Models\OutgoingLogisticsModel;
 use App\Models\OutWarehouseSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
+use App\Models\SkuUniqueModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\UserModel;
@@ -773,41 +774,6 @@ class OutWarehouseController extends Controller
                         }
                     }
 
-                    // 编辑出库处理
-//            $out_warehouse_model = OutWarehousesModel::query()->where(['target_id' => $order_id, 'type' => 2])->first();
-//            $out_warehouse_model->out_count = $out_warehouse_model->count;
-//            $out_warehouse_model->storage_status = 5;
-//            $out_warehouse_model->summary = '';
-//            if ($out_warehouse_model->save()) {
-//                $sku_arr = [];
-//                $out_sku_s = $out_warehouse_model->outWarehouseSkuRelation;
-//                foreach ($out_sku_s as $out_sku) {
-//
-//                    $out_sku->out_count = $out_sku->count;
-//                    if (!$out_sku->save()) {
-//                        DB::rollBack();
-//                        return view('errors.503');
-//                    }
-//
-//                    //减少商品/SKU 总库存
-//                    $skuModel = new ProductsSkuModel();
-//                    if (!$skuModel->reduceInventory($out_sku->sku_id, $out_sku->count)) {
-//                        DB::rollBack();
-//                        return view('errors.503');
-//                    }
-//
-//                    //如果为订单出库，修改付款占货
-//                    if ($out_warehouse_model->type == 2) {
-//                        if (!$skuModel->decreasePayCount($out_sku->sku_id, $out_sku->count)) {
-//                            DB::rollBack();
-//                            Log::error('订单发货修改付款占货比错误');
-//                            return view('errors.503');
-//                        }
-//                    }
-//
-//                    $sku_arr[$out_sku->sku_id] = $out_sku->count;
-//                }
-
                     //减少对应仓库/部门 SKU库存
                     $storage_id = $out_warehouse_model->storage_id;
                     $department = $out_warehouse_model->department;
@@ -929,8 +895,8 @@ class OutWarehouseController extends Controller
                         ];
                         $arr[] = $sku_num;
                     }
+                    $allocation_out = new AllocationOutModel();
                     if ($out_warehouse_model->type == 3) {//调拨出库
-                        $allocation_out = new AllocationOutModel();
                         $allocation_out->user_id = Auth::user()->id;
                         $allocation_out->storage_id = $storage_id;
                         $allocation_out->allocation_id = $changeWarehouse_id;
@@ -942,6 +908,41 @@ class OutWarehouseController extends Controller
                         if (!$allocation_out->save()) {
                             DB::rollBack();
                             return view('errors.503');
+                        }
+
+                    $sku_unique_model = new SkuUniqueModel();
+                    foreach($sku_arr as $key=>$val) {
+                        $where['sku_id'] = $key;
+                        $where['status'] = 1;
+                        $where['storage_id'] = $storage_id;
+                        $where['type'] = 1;
+                        $sku_unique = SkuUniqueModel::where($where)->select('id', 'sku_id', 'price')->orderBy('created_at', 'asc')->orderBy('price','desc')->orderBy('id','asc')->take($val)->get();
+                        if ($val < count($sku_unique)) {
+                            DB::rollBack();
+                            return back()->withErrors(['sku唯一标识库存不足']);
+                        }
+                        if ($sku_unique) {
+                            $ids[] = array_column($sku_unique->toArray(), 'id');
+                            $result = [];
+                            foreach ($ids as $v){
+                                $result = array_merge($result, array_values($v));
+                            }
+                            $unique_ids = implode(',', $result);
+                        }
+                    }
+                        $unique_ides = AllocationOutModel::where('id','=',$allocation_out->id)->update(['unique_id'=>$unique_ids]);
+                        if (!$unique_ides){
+                            DB::rollBack();
+                            return back()->withErrors(['更新调拨出库sku标记失败']);
+                        }
+                        $ides = explode(',',$unique_ids);
+                        $sku_only = SkuUniqueModel::whereIn('id',$ides)->get();
+                        foreach ($sku_only as $vv){
+                            $update_status = SkuUniqueModel::where('id',$vv->id)->update(['status'=>3]);
+                            if (!$update_status){
+                                DB::rollBack();
+                                return back()->withErrors(['sku唯一标识状态改变失败']);
+                            }
                         }
                     }
                     //修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
